@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.aire-ux.components</groupId>
+    <artifactId>bom-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+  <groupId>com.aire-ux.components</groupId>
+  <artifactId>bom-imported</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <url>https://www.aire-ux.com</url>
+  <name>Aire Components Imported Bill-Of-Materials</name>
+
+  <properties>
+    <junit-jupiter-engine.version>5.8.0-M1</junit-jupiter-engine.version>
+    <!--    <vaadin-bom.version>19.0.2</vaadin-bom.version>-->
+    <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
+    <vaadin-bom.version>17.0.11</vaadin-bom.version>
+    <arcus.version>1.0.2.Final</arcus.version>
+    <smoothie-map.version>2.0.2</smoothie-map.version>
+    <junit-pioneer.version>1.3.8</junit-pioneer.version>
+    <spring.version>5.3.5</spring.version>
+    <spring-boot.version>2.4.4</spring-boot.version>
+    <vaadin-helper.version>1.6.0</vaadin-helper.version>
+    <byte-buddy.version>1.10.22</byte-buddy.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-bom</artifactId>
+        <version>${vaadin-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.arcus</groupId>
+        <artifactId>arcus-lang</artifactId>
+        <version>${arcus.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.arcus</groupId>
+        <artifactId>arcus-lambda</artifactId>
+        <version>${arcus.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.arcus</groupId>
+        <artifactId>arcus-log</artifactId>
+        <version>${arcus.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.timeandspace</groupId>
+        <artifactId>smoothie-map</artifactId>
+        <version>${smoothie-map.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy-agent</artifactId>
+        <version>${byte-buddy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>${byte-buddy.version}</version>
+      </dependency>
+      <!--      <dependency>-->
+      <!--        <groupId>org.vaadin.artur</groupId>-->
+      <!--        <artifactId>a-vaadin-helper</artifactId>-->
+      <!--        <version>${vaadin-helper.version}</version>-->
+      <!--      </dependency>-->
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit-jupiter-engine.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit-jupiter-engine.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit-pioneer</groupId>
+        <artifactId>junit-pioneer</artifactId>
+        <version>${junit-pioneer.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-suite-engine</artifactId>
+        <version>${junit-jupiter-engine.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+</project>
