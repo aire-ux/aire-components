@@ -18,7 +18,18 @@
 
 
     <dependencyManagement>
-        <dependencies>
-        </dependencies>
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>com.aire-ux.components</groupId>-->
+<!--                <artifactId>aire-spectrum-theme</artifactId>-->
+<!--                <version>${aire-ux.version}</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>com.aire-ux.components</groupId>-->
+<!--                <artifactId>aire-theme</artifactId>-->
+<!--                <version>${aire-ux.version}</version>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
     </dependencyManagement>
 </project>

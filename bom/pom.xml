@@ -17,6 +17,9 @@
         <module>exported</module>
     </modules>
 
+    <properties>
+        <aire-ux.version>1.0.0-SNAPSHOT</aire-ux.version>
+    </properties>
 
     <distributionManagement>
         <repository>
