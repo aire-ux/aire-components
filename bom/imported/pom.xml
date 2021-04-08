@@ -29,6 +29,7 @@
     <spring-boot.version>2.4.4</spring-boot.version>
     <vaadin-helper.version>1.6.0</vaadin-helper.version>
     <byte-buddy.version>1.10.22</byte-buddy.version>
+    <karibu-testing.version>1.2.12</karibu-testing.version>
   </properties>
 
   <dependencyManagement>
@@ -39,6 +40,12 @@
         <version>${vaadin-bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.mvysny.kaributesting</groupId>
+        <artifactId>karibu-testing-v10</artifactId>
+        <version>${karibu-testing.version}</version>
       </dependency>
 
       <dependency>

@@ -1,0 +1,6 @@
+dependencies {
+    implementation 'com.vaadin:vaadin'
+    implementation 'com.vaadin:flow-server'
+    implementation 'com.vaadin:flow-html-components'
+    implementation 'com.github.mvysny.kaributesting:karibu-testing-v10'
+}
