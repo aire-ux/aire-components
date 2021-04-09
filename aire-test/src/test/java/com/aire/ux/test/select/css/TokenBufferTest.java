@@ -102,4 +102,17 @@ class TokenBufferTest {
         List.of(Element, Universal, Element, Universal, Element, Element, Universal, Element);
     assertEquals(expected, results);
   }
+
+  @Test
+  void ensureComplexOperatorSetWorks() {
+    val expr = "hello[world^=\"coobeans\"][test|=whatever] > beans#coolbeans ~ whatever + nosh[hello$=\"world\"] + frapper[coolbeans*=whatever]";
+    val results =
+        CssSelectorToken.createTokenBuffer().stream(expr)
+            .collect(Collectors.toList());
+    for(val token : results) {
+      System.out.println(token);
+    }
+
+
+  }
 }

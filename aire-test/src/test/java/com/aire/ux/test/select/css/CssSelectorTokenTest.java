@@ -55,4 +55,44 @@ class CssSelectorTokenTest {
     val group = matcher.group(CssSelectorToken.Identifier.name());
     assertEquals(group, "#my-porgler");
   }
+
+  @Test
+  void ensureSiblingTokenWorks() {
+    val matcher = CssSelectorToken.NextSibling.getPattern().matcher("+");
+    assertTrue(matcher.matches());
+    val group = matcher.group(CssSelectorToken.NextSibling.name());
+    assertEquals(group, "+");
+  }
+
+  @Test
+  void ensureChildTokenWorks() {
+    val matcher = CssSelectorToken.Child.getPattern().matcher(">");
+    assertTrue(matcher.matches());
+    val group = matcher.group(CssSelectorToken.Child.name());
+    assertEquals(group, ">");
+  }
+
+  @Test
+  void ensureAttributeStartWorks() {
+    expect("[", CssSelectorToken.AttributeOpen, "[");
+  }
+
+  @Test
+  void ensureAttributeEndWorks() {
+    expect("]", CssSelectorToken.AttributeClose, "]");
+  }
+
+  @Test
+  void ensureStringLiteralWorks() {
+    expect("\"hello world! How are you?\"", CssSelectorToken.StringLiteral, "\"hello world! How are you?\"");
+  }
+
+
+  private void expect(String expr, CssSelectorToken token, String lexeme) {
+    val matcher = token.getPattern().matcher(expr);
+    assertTrue(matcher.matches());
+    val group = matcher.group(token.name());
+    assertEquals(group, lexeme);
+  }
+
 }

@@ -8,8 +8,10 @@ import java.util.Spliterators;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import javax.annotation.concurrent.ThreadSafe;
 import lombok.val;
 
+@ThreadSafe
 final class TokenBuffer {
 
   private final Pattern patternBuffer;
