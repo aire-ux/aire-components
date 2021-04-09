@@ -2,7 +2,6 @@ package com.aire.ux.test.select.css;
 
 interface TokenPatterns {
 
-
   String UNICODE = "\\\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?";
 
   String ESCAPE = "%s|\\\\[^\n\r\f0-9a-f]".formatted(UNICODE);
@@ -21,10 +20,11 @@ interface TokenPatterns {
 
   String STRING_FORM_2 = "\'([^\n\r\f\\\"]|\\\\%s|%s|%s)*\'".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
-  String UNCLOSED_STRING_FORM_1 = "\"([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
+  String UNCLOSED_STRING_FORM_1 =
+      "\"([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
-  String UNCLOSED_STRING_FORM_2 = "\'([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
+  String UNCLOSED_STRING_FORM_2 =
+      "\'([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
   String IDENTIFIER = "[-]?(%s)(%s)*".formatted(NAME_START, NAME_CHARACTER);
-
 }

@@ -1,41 +1,27 @@
 package com.aire.ux.test.select.css;
 
 import static com.aire.ux.test.select.css.TokenPatterns.IDENTIFIER;
-import static com.aire.ux.test.select.css.TokenPatterns.NAME_CHARACTER;
-import static com.aire.ux.test.select.css.TokenPatterns.NAME_START;
 import static com.aire.ux.test.select.css.TokenPatterns.NUMBER;
 import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_1;
 import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_2;
 import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
 import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
 
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-/**
- * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex
- */
+/** pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex */
 public enum CssSelectorToken implements Type {
 
-  /**
-   * identifier: an entity name
-   */
-
+  /** identifier: an entity name */
   String("%s|%s".formatted(STRING_FORM_1, STRING_FORM_2)),
 
-  /**
-   * Numeric value
-   */
+  /** Numeric value */
   Numeric(NUMBER),
 
-  /**
-   * Lex unclosed strings
-   */
+  /** Lex unclosed strings */
   UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
-
 
   StrictEqualityOperator("="),
 
@@ -81,20 +67,10 @@ public enum CssSelectorToken implements Type {
 
   Identifier(IDENTIFIER);
 
-
-
-
-
-
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final String pattern;
 
-
-  /**
-   * mutable internal state
-   */
+  /** mutable internal state */
   private volatile Pattern cachedPattern;
 
   CssSelectorToken(@Nonnull String pattern) {
@@ -111,7 +87,7 @@ public enum CssSelectorToken implements Type {
   }
 
   private static void bufferTokenPattern(StringBuilder buffer, CssSelectorToken token) {
-      buffer.append("|(?<%s>%s)".formatted(token.name(), token.pattern));
+    buffer.append("|(?<%s>%s)".formatted(token.name(), token.pattern));
   }
 
   @Nonnull
@@ -128,5 +104,4 @@ public enum CssSelectorToken implements Type {
     }
     return result;
   }
-
 }

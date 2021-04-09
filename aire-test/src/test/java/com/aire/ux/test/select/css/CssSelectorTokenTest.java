@@ -60,7 +60,6 @@ class CssSelectorTokenTest {
     assertEquals(group, "#my-porgler");
   }
 
-
   @Test
   void ensureIdentifierMatchesIdentifiers() {
     expect("hello", Identifier, "hello");
@@ -80,12 +79,10 @@ class CssSelectorTokenTest {
     expect("0.0", Numeric, "0.0");
   }
 
-
   private void expect(String expr, CssSelectorToken token, String lexeme) {
     val matcher = token.getPattern().matcher(expr);
     assertTrue(matcher.matches());
     val group = matcher.group(token.name());
     assertEquals(group, lexeme);
   }
-
 }

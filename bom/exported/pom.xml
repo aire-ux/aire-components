@@ -1,35 +1,37 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.aire-ux.components</groupId>
-        <artifactId>bom-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
-    </parent>
+  <parent>
     <groupId>com.aire-ux.components</groupId>
-    <artifactId>bom-exported</artifactId>
+    <artifactId>bom-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <relativePath>../</relativePath>
+  </parent>
+  <groupId>com.aire-ux.components</groupId>
+  <artifactId>bom-exported</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-    <name>Aire-UX Exported Bill-Of-Materials</name>
-    <url>http://www.sunshower.io</url>
+  <name>Aire-UX Exported Bill-Of-Materials</name>
+  <url>http://www.sunshower.io</url>
 
 
-    <dependencyManagement>
-<!--        <dependencies>-->
-<!--            <dependency>-->
-<!--                <groupId>com.aire-ux.components</groupId>-->
-<!--                <artifactId>aire-spectrum-theme</artifactId>-->
-<!--                <version>${aire-ux.version}</version>-->
-<!--            </dependency>-->
+  <dependencyManagement>
+    <!--        <dependencies>-->
+    <!--            <dependency>-->
+    <!--                <groupId>com.aire-ux.components</groupId>-->
+    <!--                <artifactId>aire-spectrum-theme</artifactId>-->
+    <!--                <version>${aire-ux.version}</version>-->
+    <!--            </dependency>-->
 
-<!--            <dependency>-->
-<!--                <groupId>com.aire-ux.components</groupId>-->
-<!--                <artifactId>aire-theme</artifactId>-->
-<!--                <version>${aire-ux.version}</version>-->
-<!--            </dependency>-->
-<!--        </dependencies>-->
-    </dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-test</artifactId>
+        <version>${aire-ux.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

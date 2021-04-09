@@ -32,6 +32,4 @@ class TokenPatternsTest {
     val pattern = Pattern.compile(TokenPatterns.STRING_FORM_1).matcher("\"hello  \\' World\"");
     assertTrue(pattern.matches());
   }
-
-
 }

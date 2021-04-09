@@ -3,10 +3,8 @@ package com.aire.ux.test.select.css;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
-import lombok.val;
 
 public interface Type {
-
 
   @Nonnull
   default Matcher matcher(@Nonnull CharSequence sequence) {
@@ -16,5 +14,4 @@ public interface Type {
   /** @return the pattern backing this token type */
   @Nonnull
   Pattern getPattern();
-
 }
