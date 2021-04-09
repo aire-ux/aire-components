@@ -1,9 +1,13 @@
 package com.aire.ux.test.select.css;
 
-import static com.aire.ux.test.select.css.CssSelectorToken.Element;
-import static com.aire.ux.test.select.css.CssSelectorToken.Universal;
+import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupEnd;
+import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupStart;
+import static com.aire.ux.test.select.css.CssSelectorToken.FunctionEnd;
+import static com.aire.ux.test.select.css.CssSelectorToken.GreaterThan;
+import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
+import static com.aire.ux.test.select.css.CssSelectorToken.Not;
+import static com.aire.ux.test.select.css.CssSelectorToken.StrictEqualityOperator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,106 +17,31 @@ import org.junit.jupiter.api.Test;
 class TokenBufferTest {
 
   @Test
-  void ensureTokenBufferReturnsCorrectTokenForSingleCharacterElement() {
-    val iter = CssSelectorToken.createTokenBuffer().tokenize("p").iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getStart(), 0);
-    assertEquals(next.getEnd(), 1);
-    assertEquals(next.getType(), Element);
-    assertEquals(next.getLexeme(), "p");
+  void ensureComplexOperatorSetWorks() {
+    val expr = "hello -world- > input:not([type=\"hidden\"]):not([type=\"radio\"]):not([type=\"checkbox\"]) * porglesbees";
+    expectTokens(expr, Identifier, Identifier, GreaterThan, Identifier, Not, AttributeGroupStart,
+        Identifier, StrictEqualityOperator,
+        CssSelectorToken.String, AttributeGroupEnd, FunctionEnd, Not, AttributeGroupStart,
+        Identifier, StrictEqualityOperator, CssSelectorToken.String, AttributeGroupEnd, FunctionEnd,
+        Not,
+        AttributeGroupStart, Identifier, StrictEqualityOperator, CssSelectorToken.String,
+        AttributeGroupEnd,
+        FunctionEnd, Identifier);
   }
 
   @Test
-  void ensureTokenBufferReturnsCorrectTokenForComplexCharacterElement() {
-    val elementName = "vaadin-button-button123";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(elementName).iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getStart(), 0);
-    assertEquals(next.getEnd(), elementName.length());
-    assertEquals(next.getType(), Element);
-    assertEquals(next.getLexeme(), elementName);
+  void ensureStringParsingWorks() {
+    expectTokens("\"hello world\"  \"how are you?\"", CssSelectorToken.String,
+        CssSelectorToken.String);
   }
 
-  @Test
-  void ensureUniversalSelectorIsMatched() {
-    val elementName = "*";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(elementName).iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getStart(), 0);
-    assertEquals(next.getEnd(), elementName.length());
-    assertEquals(next.getType(), Universal);
-    assertEquals(next.getLexeme(), elementName);
-  }
 
-  @Test
-  void ensurePreceedingWhitespaceOfElementIsMatched() {
-    val expr = " hello";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(expr).iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getType(), Element);
-    assertEquals(next.getLexeme(), "hello");
-  }
-
-  @Test
-  void ensureSucceedingWhitespaceOfElementIsMatched() {
-    val expr = "hello ";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(expr).iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getType(), Element);
-    assertEquals(next.getLexeme(), "hello");
-  }
-
-  @Test
-  void ensureSurroundingWhitespaceOfElementsIsMatched() {
-    val expr = " hello ";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(expr).iterator();
-    assertTrue(iter.hasNext());
-    val next = iter.next();
-    assertEquals(next.getType(), Element);
-    assertEquals(next.getLexeme(), "hello");
-  }
-
-  @Test
-  void ensureSelectorsAreParsedCorrectly() {
-    val expr = " parent child-element ";
-    val iter = CssSelectorToken.createTokenBuffer().tokenize(expr).iterator();
-    assertTrue(iter.hasNext());
-
-    var next = iter.next();
-    assertEquals("parent", next.getLexeme());
-    assertEquals(next.getType(), Element);
-    next = iter.next();
-    assertEquals("child-element", next.getLexeme());
-    assertEquals(next.getType(), Element);
-  }
-
-  @Test
-  void ensureAlternationBetweenUniversalAndElementWorks() {
-    val expr = " hello * world * how are * you";
+  private void expectTokens(String s, CssSelectorToken... tokens) {
+    CssSelectorToken.createTokenBuffer().stream(s).forEach(System.out::println);
     val results =
-        CssSelectorToken.createTokenBuffer().stream(expr)
+        CssSelectorToken.createTokenBuffer().stream(s)
             .map(Token::getType)
             .collect(Collectors.toList());
-    val expected =
-        List.of(Element, Universal, Element, Universal, Element, Element, Universal, Element);
-    assertEquals(expected, results);
-  }
-
-  @Test
-  void ensureComplexOperatorSetWorks() {
-    val expr = "hello[world^=\"coobeans\"][test|=whatever] > beans#coolbeans ~ whatever + nosh[hello$=\"world\"] + frapper[coolbeans*=whatever]";
-    val results =
-        CssSelectorToken.createTokenBuffer().stream(expr)
-            .collect(Collectors.toList());
-    for(val token : results) {
-      System.out.println(token);
-    }
-
-
+    assertEquals(List.of(tokens), results);
   }
 }

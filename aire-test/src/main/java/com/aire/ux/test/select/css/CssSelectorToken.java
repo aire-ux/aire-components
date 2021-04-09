@@ -1,93 +1,81 @@
 package com.aire.ux.test.select.css;
 
+import static com.aire.ux.test.select.css.TokenPatterns.IDENTIFIER;
+import static com.aire.ux.test.select.css.TokenPatterns.NAME_CHARACTER;
+import static com.aire.ux.test.select.css.TokenPatterns.NAME_START;
+import static com.aire.ux.test.select.css.TokenPatterns.NUMBER;
+import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_1;
+import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_2;
+import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
+import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
+/**
+ * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex
+ */
 public enum CssSelectorToken implements Type {
 
   /**
-   * CSS class selector cf: https://www.w3.org/TR/selectors-4/#class-html
-   */
-  Class("\\.\\w{1}[a-zA-Z0-9-]*", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * CSS Universal Selector cf: https://www.w3.org/TR/2018/REC-selectors-3-20181106/#universal-selector
-   */
-  Universal("\\*", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * CSS element selector
-   */
-  Element("\\w{1}[a-zA-Z0-9-]*", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * CSS Identifier selector cf: https://www.w3.org/TR/selectors-4/#id-selectors
-   */
-  Identifier("\\#\\w{1}[a-zA-Z0-9-]*", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * Combinators
+   * identifier: an entity name
    */
 
+  String("%s|%s".formatted(STRING_FORM_1, STRING_FORM_2)),
+
   /**
-   * select immediate children https://www.w3.org/TR/2018/REC-selectors-3-20181106/#descendant-combinators
+   * Numeric value
    */
-  Child(">", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
+  Numeric(NUMBER),
 
   /**
-   * Select next sibling https://www.w3.org/TR/2018/REC-selectors-3-20181106/#descendant-combinators
+   * Lex unclosed strings
    */
-  NextSibling("\\+", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * Select subsequent sibling https://www.w3.org/TR/2018/REC-selectors-3-20181106/#descendant-combinators
-   */
-  SubsequentSibling("~", WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd),
-
-  /**
-   * Attributes
-   */
-
-  /**
-   * denote the beginning of an attribute selector expression
-   */
-  AttributeOpen("\\[", WhitespacePolicy.SkipStart),
-
-  /**
-   * denote the end of an attribute selector expression
-   */
-  AttributeClose("\\]", WhitespacePolicy.SkipEnd),
+  UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
 
 
-  StringLiteral("\"([^\\\"]|\\.)*\""),
+  StrictEqualityOperator("="),
 
-  /**
-   * attribute matching operators
-   */
+  AttributeValueInSetOperator("~="),
 
-  /**
-   * match value exactly
-   */
-  ExactEqualityOperator("="),
-
-  /**
-   * determine if the attribute is in a list of values
-    */
-  SetContainsOperator("~="),
-
-  /**
-   *
-    */
-  HyphenatedPrefixOperator("\\|="),
+  DashedPrefixOperator("\\|="),
 
   PrefixOperator("\\^="),
 
   SuffixOperator("\\$="),
 
-  SubstringOperator("\\*=");
+  SubstringOperator("\\*="),
+
+  FunctionStart("%s\\(".formatted(IDENTIFIER)),
+
+  FunctionEnd("\\)"),
+
+  AttributeGroupStart("\\["),
+
+  AttributeGroupEnd("\\]"),
+
+  IdentifierSelector("#%s".formatted(IDENTIFIER)),
+
+  AdditionOperator("\s*\\+"),
+
+  GreaterThan("\s*>"),
+
+  Comma("\s*,"),
+
+  Tilde("\s*~"),
+
+  Not(":not\\("),
+
+  AtKeyword("@%s".formatted(IDENTIFIER)),
+
+  Percentage(NUMBER + "%"),
+
+  Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
+
+  Identifier(IDENTIFIER);
 
 
 
@@ -99,20 +87,14 @@ public enum CssSelectorToken implements Type {
    */
   private final String pattern;
 
-  /**
-   * determine whether the whitespace surrounding a token works
-   */
-  private final EnumSet<WhitespacePolicy> policies;
 
   /**
    * mutable internal state
    */
   private volatile Pattern cachedPattern;
 
-  CssSelectorToken(@Nonnull String pattern, @Nonnull WhitespacePolicy... whitespacePolicies) {
+  CssSelectorToken(@Nonnull String pattern) {
     this.pattern = pattern;
-    this.policies = EnumSet.noneOf(WhitespacePolicy.class);
-    this.policies.addAll(Arrays.asList(whitespacePolicies));
   }
 
   @Nonnull
@@ -125,15 +107,7 @@ public enum CssSelectorToken implements Type {
   }
 
   private static void bufferTokenPattern(StringBuilder buffer, CssSelectorToken token) {
-    if (token.hasPolicies(WhitespacePolicy.SkipStart, WhitespacePolicy.SkipEnd)) {
-      buffer.append("|\\s*(?<%s>%s)\\s*".formatted(token.name(), token.pattern));
-    } else if (token.hasPolicy(WhitespacePolicy.SkipStart)) {
-      buffer.append("|\\s*(?<%s>%s)".formatted(token.name(), token.pattern));
-    } else if (token.hasPolicy(WhitespacePolicy.SkipEnd)) {
-      buffer.append("|(?<%s>%s)\\s*".formatted(token.name(), token.pattern));
-    } else {
       buffer.append("|(?<%s>%s)".formatted(token.name(), token.pattern));
-    }
   }
 
   @Nonnull
@@ -151,8 +125,4 @@ public enum CssSelectorToken implements Type {
     return result;
   }
 
-  @Override
-  public boolean hasPolicy(@Nonnull WhitespacePolicy policy) {
-    return policies.contains(policy);
-  }
 }
