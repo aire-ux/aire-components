@@ -7,6 +7,7 @@ import static com.aire.ux.test.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.test.select.css.CssSelectorToken.Not;
 import static com.aire.ux.test.select.css.CssSelectorToken.StrictEqualityOperator;
+import static com.aire.ux.test.select.css.CssSelectorToken.Universal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -26,7 +27,7 @@ class TokenBufferTest {
         Not,
         AttributeGroupStart, Identifier, StrictEqualityOperator, CssSelectorToken.String,
         AttributeGroupEnd,
-        FunctionEnd, Identifier);
+        FunctionEnd, Universal, Identifier);
   }
 
   @Test

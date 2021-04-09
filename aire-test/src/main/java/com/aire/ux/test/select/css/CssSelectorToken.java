@@ -67,6 +67,8 @@ public enum CssSelectorToken implements Type {
 
   Tilde("\s*~"),
 
+  Universal("\s*\\*"),
+
   Not(":not\\("),
 
   AtKeyword("@%s".formatted(IDENTIFIER)),
@@ -74,6 +76,8 @@ public enum CssSelectorToken implements Type {
   Percentage(NUMBER + "%"),
 
   Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
+
+  Class("\\.%s".formatted(IDENTIFIER)),
 
   Identifier(IDENTIFIER);
 
