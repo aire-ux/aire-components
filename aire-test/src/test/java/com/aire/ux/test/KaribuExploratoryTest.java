@@ -8,8 +8,6 @@ import com.aire.ux.test.scenarios.exploratory.SecondRoute;
 import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Section;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +31,7 @@ public class KaribuExploratoryTest {
   @Test
   void ensureObtainingRouteWorks() {
     val classes = routes.getRoutes();
-    assertEquals(1, classes.size());
+    assertEquals(2, classes.size());
   }
 
   @Test

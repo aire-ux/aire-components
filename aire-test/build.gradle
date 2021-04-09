@@ -1,6 +1,17 @@
 dependencies {
+
+    implementation 'io.sunshower.arcus:arcus-lang'
+    implementation 'io.sunshower.arcus:arcus-lambda'
+
     implementation 'com.vaadin:vaadin'
     implementation 'com.vaadin:flow-server'
     implementation 'com.vaadin:flow-html-components'
     implementation 'com.github.mvysny.kaributesting:karibu-testing-v10'
+
+
+    [
+            'vaadin-button-flow'
+    ].each {
+        testImplementation 'com.vaadin:vaadin-button-flow'
+    }
 }
