@@ -89,6 +89,11 @@ final class TokenBuffer {
     }
 
     @Override
+    public Token setType(Type type) {
+      return new TokenWord(start, end, lexeme, type);
+    }
+
+    @Override
     public Type getType() {
       return type;
     }

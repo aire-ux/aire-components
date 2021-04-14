@@ -18,9 +18,11 @@
   <name>Aire Components Imported Bill-Of-Materials</name>
 
   <properties>
+    <junit-suite-engine.version>1.8.0-M1</junit-suite-engine.version>
     <junit-jupiter-engine.version>5.8.0-M1</junit-jupiter-engine.version>
-        <vaadin-bom.version>19.0.3</vaadin-bom.version>
-<!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
+    <junit-jupiter.version>${junit-jupiter-engine.version}</junit-jupiter.version>
+    <vaadin-bom.version>19.0.3</vaadin-bom.version>
+    <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
     <!--    <vaadin-bom.version>17.0.11</vaadin-bom.version>-->
     <arcus.version>1.0.2.Final</arcus.version>
     <smoothie-map.version>2.0.2</smoothie-map.version>
@@ -90,22 +92,6 @@
       <!--      </dependency>-->
 
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-framework-bom</artifactId>
-        <version>${spring.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
         <version>${junit-jupiter-engine.version}</version>
@@ -127,12 +113,34 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-suite-api</artifactId>
+        <version>${junit-suite-engine.version}</version>
+        <scope>test</scope>
+      </dependency>
 
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-suite-engine</artifactId>
-        <version>${junit-jupiter-engine.version}</version>
+        <version>${junit-suite-engine.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
     </dependencies>

@@ -13,4 +13,6 @@ public interface Token {
 
   /** @return the position indicating the end of the matched lexeme */
   int getStart();
+
+  Token setType(Type type);
 }

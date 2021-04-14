@@ -1,34 +1,31 @@
 package com.aire.ux.parsers.ast;
 
-import com.sun.source.doctree.DocTree;
 import java.util.List;
-import javax.lang.model.element.Element;
 import lombok.Getter;
 import lombok.val;
 
-public class NamedSyntaxNode extends AbstractSyntaxNode {
+public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
 
   @Getter final String name;
 
   public NamedSyntaxNode(
       String name,
       Symbol symbol,
-      Element source,
-      DocTree comment,
+      U source,
+      T value,
       String content,
-      List<SyntaxNode> children) {
-    super(symbol, source, content, comment, children);
+      List<SyntaxNode<T, U>> children) {
+    super(symbol, source, content, value, children);
     this.name = name;
   }
 
-  public NamedSyntaxNode(
-      String name, Symbol symbol, Element source, DocTree comment, String content) {
-    super(symbol, source, content, comment);
+  public NamedSyntaxNode(String name, Symbol symbol, U source, T value, String content) {
+    super(symbol, source, content, value);
     this.name = name;
   }
 
-  public NamedSyntaxNode(String name, Symbol symbol, Element source, DocTree comment) {
-    this(name, symbol, source, comment, null);
+  public NamedSyntaxNode(String name, Symbol symbol, U source, T value) {
+    this(name, symbol, source, value, null);
   }
 
   public String toString() {

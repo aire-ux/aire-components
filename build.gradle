@@ -58,7 +58,7 @@ subprojects {
     }
 
     pmd {
-        toolVersion = '6.27.0'
+        toolVersion = '6.33.0'
         sourceSets = [sourceSets.main]
         ruleSets = [
                 "${project.rootDir}/check/pmd/rules/errorprone.xml"
@@ -145,7 +145,6 @@ subprojects {
 
 
         testImplementation 'org.junit-pioneer:junit-pioneer'
-//        testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.0-M1'
 
         [
                 'api',
@@ -153,6 +152,7 @@ subprojects {
 
         ].each { dep ->
             testImplementation "org.junit.jupiter:junit-jupiter-$dep"
+            testImplementation "org.junit.platform:junit-platform-suite-$dep"
         }
     }
 

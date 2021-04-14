@@ -1,9 +1,12 @@
 package com.aire.ux.parsers.ast;
 
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.function.BiFunction;
 import lombok.Getter;
 import lombok.val;
 
-public class AbstractSyntaxTree {
+public class AbstractSyntaxTree<T, U> {
 
   static final Symbol ROOT_SYMBOL =
       new Symbol() {
@@ -12,14 +15,15 @@ public class AbstractSyntaxTree {
           return "RootSymbol";
         }
       };
-  @Getter private final SyntaxNode root;
 
-  public AbstractSyntaxTree(SyntaxNode root) {
+  @Getter private final SyntaxNode<T, U> root;
+
+  public AbstractSyntaxTree(SyntaxNode<T, U> root) {
     this.root = root;
   }
 
   public AbstractSyntaxTree() {
-    this(new RootSyntaxNode());
+    this(new RootSyntaxNode<>());
   }
 
   public String toString() {
@@ -28,7 +32,30 @@ public class AbstractSyntaxTree {
     return result.toString();
   }
 
-  private void toString(SyntaxNode node, StringBuilder out, String indent, boolean last) {
+  public <V> V reduce(V initial, BiFunction<SyntaxNode<T, U>, V, V> f) {
+    return reduce(Order.Pre, initial, f);
+  }
+
+  public <V> V reduce(Order order, V initial, BiFunction<SyntaxNode<T, U>, V, V> f) {
+    val struct =
+        order == Order.Pre ? new Stack<SyntaxNode<T, U>>() : new LinkedList<SyntaxNode<T, U>>();
+    struct.add(root);
+    var result = f.apply(root, initial);
+    while (!struct.isEmpty()) {
+      val iterator = struct.listIterator();
+      while (iterator.hasNext()) {
+        val next = iterator.next();
+        result = f.apply(next, result);
+        iterator.remove();
+        for (val c : next.getChildren()) {
+          iterator.add(c);
+        }
+      }
+    }
+    return result;
+  }
+
+  private void toString(SyntaxNode<T, U> node, StringBuilder out, String indent, boolean last) {
 
     if (node == root) {
       out.append(node).append("\n");
@@ -45,7 +72,12 @@ public class AbstractSyntaxTree {
     }
   }
 
-  static final class RootSyntaxNode extends AbstractSyntaxNode {
+  public enum Order {
+    Pre,
+    Post
+  }
+
+  static final class RootSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
 
     public RootSyntaxNode() {
       super(ROOT_SYMBOL, null, null, null);

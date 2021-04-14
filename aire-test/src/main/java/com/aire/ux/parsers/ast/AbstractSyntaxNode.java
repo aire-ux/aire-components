@@ -1,46 +1,44 @@
 package com.aire.ux.parsers.ast;
 
-import com.sun.source.doctree.DocTree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.Element;
 
-public class AbstractSyntaxNode implements SyntaxNode {
+public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   /** immutable state */
   final Symbol symbol;
 
-  final Element source;
-  final DocTree comment;
-  final List<SyntaxNode> children;
+  final U source;
+  final T value;
   final Map<String, String> properties;
+  final List<SyntaxNode<T, U>> children;
 
   /** private state */
   private String content;
 
-  public AbstractSyntaxNode(Symbol symbol, Element source, DocTree comment) {
-    this(symbol, source, null, comment, new ArrayList<>());
+  public AbstractSyntaxNode(Symbol symbol, U source, T value) {
+    this(symbol, source, null, value, new ArrayList<>());
   }
 
   /**
    * @param symbol the associated symbol (element type)
    * @param source the language element this was retrieved from
    * @param content the String content (if any)
-   * @param comment the actual comment node (if any)
+   * @param value the actual value node (if any)
    */
-  public AbstractSyntaxNode(Symbol symbol, Element source, String content, DocTree comment) {
-    this(symbol, source, content, comment, new ArrayList<>());
+  public AbstractSyntaxNode(Symbol symbol, U source, String content, T value) {
+    this(symbol, source, content, value, new ArrayList<>());
   }
 
   public AbstractSyntaxNode(
-      Symbol symbol, Element source, String content, DocTree comment, List<SyntaxNode> children) {
+      Symbol symbol, U source, String content, T value, List<SyntaxNode<T, U>> children) {
     this.symbol = symbol;
     this.source = source;
     this.content = content;
-    this.comment = comment;
+    this.value = value;
     this.children = children;
     this.properties = new LinkedHashMap<>();
   }
@@ -51,12 +49,12 @@ public class AbstractSyntaxNode implements SyntaxNode {
   }
 
   @Override
-  public DocTree getComment() {
-    return comment;
+  public T getValue() {
+    return value;
   }
 
   @Override
-  public Element getSource() {
+  public U getSource() {
     return source;
   }
 
@@ -96,7 +94,12 @@ public class AbstractSyntaxNode implements SyntaxNode {
   }
 
   @Override
-  public List<SyntaxNode> getChildren() {
+  public void addChildren(List<SyntaxNode<T, U>> children) {
+    this.children.addAll(children);
+  }
+
+  @Override
+  public List<SyntaxNode<T, U>> getChildren() {
     return Collections.unmodifiableList(children);
   }
 
@@ -106,7 +109,7 @@ public class AbstractSyntaxNode implements SyntaxNode {
   }
 
   @Override
-  public boolean addChild(SyntaxNode child) {
+  public boolean addChild(SyntaxNode<T, U> child) {
     return children.add(child);
   }
 }

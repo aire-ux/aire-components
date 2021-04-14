@@ -9,6 +9,7 @@ import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.test.select.css.CssSelectorToken.Not;
 import static com.aire.ux.test.select.css.CssSelectorToken.StrictEqualityOperator;
 import static com.aire.ux.test.select.css.CssSelectorToken.Universal;
+import static com.aire.ux.test.select.css.CssSelectorToken.Whitespace;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -19,9 +20,21 @@ import org.junit.jupiter.api.Test;
 class TokenBufferTest {
 
   @Test
+  void ensureDescendantSelectorWorks() {
+    val expr = "ancestor descendant";
+    expectTokens(expr, Identifier, Whitespace, Identifier);
+  }
+
+  @Test
+  void ensureChildConsumesWhitespaceCorrectly() {
+    val expr = "parent > child";
+    expectTokens(expr, Identifier, GreaterThan, Whitespace, Identifier);
+  }
+
+  @Test
   void ensureWhitespaceIsChompedCorrectlyForSelectorGroup() {
     val expr = "hello, \t world";
-    expectTokens(expr, Identifier, Comma, Identifier);
+    expectTokens(expr, Identifier, Comma, Whitespace, Whitespace, Identifier);
   }
 
   @Test
@@ -31,8 +44,10 @@ class TokenBufferTest {
     expectTokens(
         expr,
         Identifier,
+        Whitespace,
         Identifier,
         GreaterThan,
+        Whitespace,
         Identifier,
         Not,
         AttributeGroupStart,
@@ -56,13 +71,17 @@ class TokenBufferTest {
         AttributeGroupEnd,
         FunctionEnd,
         Universal,
+        Whitespace,
         Identifier);
   }
 
   @Test
   void ensureStringParsingWorks() {
     expectTokens(
-        "\"hello world\"  \"how are you?\"", CssSelectorToken.String, CssSelectorToken.String);
+        "\"hello world\"  \"how are you?\"",
+        CssSelectorToken.String,
+        Whitespace,
+        CssSelectorToken.String);
   }
 
   private void expectTokens(String s, CssSelectorToken... tokens) {

@@ -1,25 +1,29 @@
 package com.aire.ux.parsers.ast;
 
-import com.sun.source.doctree.DocTree;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.Element;
 
-public interface SyntaxNode {
+/**
+ * Base class for a generic, homogeneous AST
+ *
+ * @param <T> the value contained (usually a symbol-like structure)
+ * @param <U> the relevant source object (such as an element)
+ */
+public interface SyntaxNode<T, U> {
 
   Symbol getSymbol();
 
-  DocTree getComment();
+  T getValue();
 
-  Element getSource();
+  U getSource();
 
   String getContent();
 
-  List<SyntaxNode> getChildren();
+  List<SyntaxNode<T, U>> getChildren();
 
   boolean hasChildren();
 
-  boolean addChild(SyntaxNode child);
+  boolean addChild(SyntaxNode<T, U> child);
 
   void setContent(String content);
 
@@ -32,4 +36,6 @@ public interface SyntaxNode {
   Map<String, String> getProperties();
 
   String clearProperty(String key);
+
+  void addChildren(List<SyntaxNode<T, U>> children);
 }

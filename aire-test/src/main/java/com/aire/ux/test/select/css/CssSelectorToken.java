@@ -65,23 +65,46 @@ public enum CssSelectorToken implements Type {
 
   Class("\\.%s".formatted(IDENTIFIER)),
 
+  Whitespace("\s+"),
+
+  FirstLine(":first-line"),
+
+  FirstLetter(":first-letter"),
+
+  Before(":before"),
+
+  After(":after"),
+
+  PseudoElement(":%s".formatted(IDENTIFIER)),
+
+  PseudoClass("::%s".formatted(IDENTIFIER)),
+
   Identifier(IDENTIFIER);
 
   /** immutable state */
   private final String pattern;
 
+  private final boolean include;
+
   /** mutable internal state */
   private volatile Pattern cachedPattern;
 
   CssSelectorToken(@Nonnull String pattern) {
+    this(pattern, true);
+  }
+
+  CssSelectorToken(@Nonnull String pattern, boolean include) {
     this.pattern = pattern;
+    this.include = include;
   }
 
   @Nonnull
   public static TokenBuffer createTokenBuffer() {
     val buffer = new StringBuilder();
     for (val token : values()) {
-      bufferTokenPattern(buffer, token);
+      if (token.include) {
+        bufferTokenPattern(buffer, token);
+      }
     }
     return new TokenBuffer(buffer);
   }

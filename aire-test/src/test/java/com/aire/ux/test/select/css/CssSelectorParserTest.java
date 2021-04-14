@@ -1,24 +1,34 @@
 package com.aire.ux.test.select.css;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import lombok.val;
+import com.aire.ux.parsers.ast.AbstractSyntaxTree;
+import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.test.select.css.CssSelectorParser.ElementSymbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
 
-class CssSelectorParserTest {
-
-  private CssSelectorParser parser;
-
-  @BeforeEach
-  void setUp() {
-    parser = new CssSelectorParser();
-  }
+@Suite
+@SelectPackages("com.aire.ux.test.select.css.scenarios.type")
+public class CssSelectorParserTest {
 
   @Test
-  void ensureSelectorCanParseClass() {
-    val expr = ".hello";
-    val selector = parser.parse(expr);
-    //    val root = selector.getRoot();
+  void whatever() {}
+
+  public static class TestCase {
+
+    protected CssSelectorParser parser;
+
+    @BeforeEach
+    void setUp() {
+      parser = new CssSelectorParser();
+    }
+
+    public static void expectSymbolCount(
+        AbstractSyntaxTree<Symbol, Token> tree, ElementSymbol type, int i) {
+      assertEquals(i, tree.reduce(0, (node, n) -> node.getSymbol() == type ? n + 1 : n));
+    }
   }
 }
