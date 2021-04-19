@@ -42,4 +42,13 @@ public class CssTypeSelectorTest extends TestCase {
     val t = parser.parse(expr).getSyntaxTree();
     expectSymbolCount(t, ElementSymbol.ClassSelector, 4);
   }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"[href]",
+      "a[hello=\"world\"][cool~=beans][sup='people'][attribute] > cool.bean.whatever#world ~ whatever#sup[hello] ~ a[href$=_blank--] + b.c.e.f.g h h i j k"})
+  void ensureAttributeSelectorWorks(String v) {
+    val parse = parser.parse(v);
+    System.out.println(parse.getSyntaxTree());
+
+  }
 }

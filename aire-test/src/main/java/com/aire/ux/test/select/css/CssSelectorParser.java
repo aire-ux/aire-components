@@ -2,9 +2,16 @@ package com.aire.ux.test.select.css;
 
 import static com.aire.ux.parsers.LookaheadIterator.wrap;
 import static com.aire.ux.test.select.css.CssSelectorToken.AdditionOperator;
+import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupEnd;
+import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupStart;
+import static com.aire.ux.test.select.css.CssSelectorToken.AttributeValueInSetOperator;
 import static com.aire.ux.test.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.test.select.css.CssSelectorToken.IdentifierSelector;
+import static com.aire.ux.test.select.css.CssSelectorToken.PrefixOperator;
+import static com.aire.ux.test.select.css.CssSelectorToken.StrictEqualityOperator;
+import static com.aire.ux.test.select.css.CssSelectorToken.SubstringOperator;
+import static com.aire.ux.test.select.css.CssSelectorToken.SuffixOperator;
 import static com.aire.ux.test.select.css.CssSelectorToken.Tilde;
 import static com.aire.ux.test.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.test.select.css.CssSelectorToken.Whitespace;
@@ -34,7 +41,7 @@ public class CssSelectorParser {
   static {
     mappedTokens = new EnumMap<CssSelectorToken, ElementSymbol>(CssSelectorToken.class);
     for (val t : ElementSymbol.values()) {
-      if(t.token != null) {
+      if (t.token != null) {
         mappedTokens.put(t.token, t);
       }
     }
@@ -102,7 +109,6 @@ public class CssSelectorParser {
           combinator.addChildren(simpleSelectorSequence(tokens));
           current = combinator;
         }
-
       }
     }
     return result;
@@ -115,11 +121,11 @@ public class CssSelectorParser {
       val next = tokens.next();
       val nextType = (CssSelectorToken) next.getType();
       result.add(new CssSyntaxNode(symbolForToken(nextType), next));
-      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class)) {
+      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class, AttributeGroupStart)) {
         composite(tokens, result);
       }
     } else {
-      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class)) {
+      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class, AttributeGroupStart)) {
         composite(tokens, result);
       }
     }
@@ -127,13 +133,59 @@ public class CssSelectorParser {
     return result;
   }
 
+  private void parseAttributeGroup(LookaheadIterator<Token> tokens,
+      List<SyntaxNode<Symbol, Token>> result) {
+    expectAndDiscard(tokens, AttributeGroupStart);
+    eatWhitespace(tokens);
+    val attribute = expect(tokens, Identifier);
+    eatWhitespace(tokens);
+    if (!nextIs(tokens, PrefixOperator, SuffixOperator, SubstringOperator, StrictEqualityOperator,
+        AttributeValueInSetOperator)) {
+      expectAndDiscard(tokens, AttributeGroupEnd);
+      result.add(attribute);
+      return;
+    }
+
+    val operator = expect(tokens, PrefixOperator, SuffixOperator, SubstringOperator,
+        StrictEqualityOperator, AttributeValueInSetOperator);
+
+    eatWhitespace(tokens);
+
+    val operand = expect(tokens, Identifier, CssSelectorToken.String);
+
+    attribute.addChildren(List.of(operator, operand));
+    eatWhitespace(tokens);
+    expectAndDiscard(tokens, AttributeGroupEnd);
+    result.add(attribute);
+  }
+
+  private void expectAndDiscard(LookaheadIterator<Token> tokens,
+      CssSelectorToken token) {
+    if (!tokens.hasNext()) {
+      throw new IllegalArgumentException("Error: expected %s, got EOF".formatted(token));
+    }
+
+    val next = tokens.next();
+    val type = next.getType();
+
+    if (token != type) {
+      throw new IllegalArgumentException("Error: expected %s, got %s at (%d, %d): lexeme: %s"
+          .formatted(token, type, next.getStart(), next.getEnd(), next.getLexeme()));
+    }
+
+  }
+
   private void composite(LookaheadIterator<Token> tokens,
       List<SyntaxNode<Symbol, Token>> result) {
-    val t = tokens.next();
+    val t = tokens.peek();
     val type = (CssSelectorToken) t.getType();
-    val selector = new CssSyntaxNode(symbolForToken(type), t);
-    result.add(selector);
-    selector.addChild(expect(tokens, Identifier, CssSelectorToken.Class));
+    if (type == AttributeGroupStart) {
+      parseAttributeGroup(tokens, result);
+    } else {
+      val selector = new CssSyntaxNode(symbolForToken(type), tokens.next());
+      result.add(selector);
+      selector.addChild(expect(tokens, Identifier, CssSelectorToken.Class));
+    }
   }
 
   private SyntaxNode<Symbol, Token> expect(LookaheadIterator<Token> tokens,
@@ -224,6 +276,20 @@ public class CssSelectorParser {
   public enum ElementSymbol implements Symbol {
 
     SelectorGroup("<group>", null),
+
+
+    StringValue("<string>", CssSelectorToken.String),
+    PrefixMatch("^=", CssSelectorToken.PrefixOperator),
+    SuffixMatch("$=", CssSelectorToken.SuffixOperator),
+    SubstringMatch("*=", CssSelectorToken.SubstringOperator),
+    DashMatch("|=", CssSelectorToken.DashedPrefixOperator),
+    Includes("~=", CssSelectorToken.AttributeValueInSetOperator),
+    StrictEquality("=", CssSelectorToken.StrictEqualityOperator),
+
+    /**
+     * attribute selector
+     */
+    AttributeSelector("<attribute>", CssSelectorToken.AttributeGroupStart),
     /**
      * a comma operator denotes set union a,b = union(select(a), select(b))
      */
@@ -293,6 +359,7 @@ public class CssSelectorParser {
 
     /**
      * useful for when there is no associated token
+     *
      * @param symbol the symbol to associated with this node
      */
     private CssSyntaxNode(ElementSymbol symbol) {
