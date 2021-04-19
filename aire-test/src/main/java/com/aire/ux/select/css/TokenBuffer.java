@@ -32,7 +32,7 @@ final class TokenBuffer {
    *     that
    */
   public TokenBuffer(StringBuilder buffer) {
-    this.patternBuffer = Pattern.compile(buffer.substring(1));
+    this.patternBuffer = Pattern.compile(buffer.substring(1), Pattern.CASE_INSENSITIVE);
   }
 
   public Iterable<Token> tokenize(CharSequence sequence) {

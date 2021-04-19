@@ -8,8 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CssSelectorTokenTest {
+
 
   @Test
   void ensureElementRegexMatchesSimpleElement() {
@@ -77,6 +80,12 @@ class CssSelectorTokenTest {
   void ensureNumericPatternMatchesNumbers() {
     expect("0", Numeric, "0");
     expect("0.0", Numeric, "0.0");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"'string one'",  "\"string ' two\""})
+  void ensureStringValuesAreParsedCorrectly(String str) {
+    expect(str, CssSelectorToken.String, str);
   }
 
   private void expect(String expr, CssSelectorToken token, String lexeme) {
