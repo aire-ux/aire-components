@@ -1,4 +1,4 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Iterator;

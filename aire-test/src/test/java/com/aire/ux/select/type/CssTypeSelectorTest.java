@@ -1,9 +1,7 @@
-package com.aire.ux.test.select.css.scenarios.type;
+package com.aire.ux.select.type;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.aire.ux.test.select.css.CssSelectorParser.ElementSymbol;
-import com.aire.ux.test.select.css.CssSelectorParserTest.TestCase;
+import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
+import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,11 +42,13 @@ public class CssTypeSelectorTest extends TestCase {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"[href]",
-      "a[hello=\"world\"][cool~=beans][sup='people'][attribute] > cool.bean.whatever#world ~ whatever#sup[hello] ~ a[href$=_blank--] + b.c.e.f.g h h i j k"})
+  @ValueSource(
+      strings = {
+        "[href]",
+        "a[hello=\"world\"][cool~=beans][sup='people'][attribute] > cool.bean.whatever#world ~ whatever#sup[hello] ~ a[href$=_blank--] + b.c.e.f.g h h i j k"
+      })
   void ensureAttributeSelectorWorks(String v) {
     val parse = parser.parse(v);
     System.out.println(parse.getSyntaxTree());
-
   }
 }

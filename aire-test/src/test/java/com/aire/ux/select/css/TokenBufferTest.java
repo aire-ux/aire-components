@@ -1,15 +1,15 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
-import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupEnd;
-import static com.aire.ux.test.select.css.CssSelectorToken.AttributeGroupStart;
-import static com.aire.ux.test.select.css.CssSelectorToken.Comma;
-import static com.aire.ux.test.select.css.CssSelectorToken.FunctionEnd;
-import static com.aire.ux.test.select.css.CssSelectorToken.GreaterThan;
-import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
-import static com.aire.ux.test.select.css.CssSelectorToken.Not;
-import static com.aire.ux.test.select.css.CssSelectorToken.StrictEqualityOperator;
-import static com.aire.ux.test.select.css.CssSelectorToken.Universal;
-import static com.aire.ux.test.select.css.CssSelectorToken.Whitespace;
+import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
+import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupStart;
+import static com.aire.ux.select.css.CssSelectorToken.Comma;
+import static com.aire.ux.select.css.CssSelectorToken.FunctionEnd;
+import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
+import static com.aire.ux.select.css.CssSelectorToken.Identifier;
+import static com.aire.ux.select.css.CssSelectorToken.Not;
+import static com.aire.ux.select.css.CssSelectorToken.StrictEqualityOperator;
+import static com.aire.ux.select.css.CssSelectorToken.Universal;
+import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;

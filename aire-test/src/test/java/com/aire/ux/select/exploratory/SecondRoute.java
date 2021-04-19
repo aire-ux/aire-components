@@ -1,4 +1,4 @@
-package com.aire.ux.test.scenarios.exploratory;
+package com.aire.ux.select.exploratory;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.Route;

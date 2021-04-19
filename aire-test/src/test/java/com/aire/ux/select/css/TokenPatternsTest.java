@@ -1,4 +1,4 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

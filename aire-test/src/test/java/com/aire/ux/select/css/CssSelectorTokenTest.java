@@ -1,8 +1,8 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
-import static com.aire.ux.test.select.css.CssSelectorToken.Identifier;
-import static com.aire.ux.test.select.css.CssSelectorToken.Numeric;
-import static com.aire.ux.test.select.css.CssSelectorToken.UnclosedString;
+import static com.aire.ux.select.css.CssSelectorToken.Identifier;
+import static com.aire.ux.select.css.CssSelectorToken.Numeric;
+import static com.aire.ux.select.css.CssSelectorToken.UnclosedString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

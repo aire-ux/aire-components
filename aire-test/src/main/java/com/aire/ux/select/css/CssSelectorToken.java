@@ -1,11 +1,11 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
-import static com.aire.ux.test.select.css.TokenPatterns.IDENTIFIER;
-import static com.aire.ux.test.select.css.TokenPatterns.NUMBER;
-import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_1;
-import static com.aire.ux.test.select.css.TokenPatterns.STRING_FORM_2;
-import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
-import static com.aire.ux.test.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
+import static com.aire.ux.select.css.TokenPatterns.IDENTIFIER;
+import static com.aire.ux.select.css.TokenPatterns.NUMBER;
+import static com.aire.ux.select.css.TokenPatterns.STRING_FORM_1;
+import static com.aire.ux.select.css.TokenPatterns.STRING_FORM_2;
+import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
+import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
 
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;

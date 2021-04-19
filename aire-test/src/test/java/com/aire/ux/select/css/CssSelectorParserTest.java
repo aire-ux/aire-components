@@ -1,11 +1,11 @@
-package com.aire.ux.test.select.css;
+package com.aire.ux.select.css;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aire.ux.parsers.ast.AbstractSyntaxTree;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
-import com.aire.ux.test.select.css.CssSelectorParser.ElementSymbol;
+import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import java.util.function.Predicate;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,16 +18,16 @@ import org.junit.platform.suite.api.Suite;
 public class CssSelectorParserTest {
 
   @Test
-  void whatever() {
-  }
+  void whatever() {}
 
   public static class TestCase {
 
     protected CssSelectorParser parser;
 
-
-    public static void expectSymbolCount(AbstractSyntaxTree<Symbol, Token> tree,
-        Predicate<SyntaxNode<Symbol, Token>> predicate, int i) {
+    public static void expectSymbolCount(
+        AbstractSyntaxTree<Symbol, Token> tree,
+        Predicate<SyntaxNode<Symbol, Token>> predicate,
+        int i) {
       assertEquals(i, tree.reduce(0, (node, n) -> predicate.test(node) ? n + 1 : n));
     }
 
@@ -38,7 +38,7 @@ public class CssSelectorParserTest {
 
     public static boolean isCombinator(SyntaxNode<Symbol, Token> node) {
       val t = node.getSymbol();
-      if(t instanceof ElementSymbol type) {
+      if (t instanceof ElementSymbol type) {
         switch (type) {
           case ChildSelector:
           case AdjacentSiblingSelector:

@@ -1,6 +1,4 @@
-package com.aire.ux.test.select.css;
-
-import static org.junit.jupiter.api.Assertions.*;
+package com.aire.ux.select.css;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

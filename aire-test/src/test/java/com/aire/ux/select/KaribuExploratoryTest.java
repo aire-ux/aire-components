@@ -1,10 +1,10 @@
-package com.aire.ux.test;
+package com.aire.ux.select;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-import com.aire.ux.test.scenarios.exploratory.FirstRoute;
-import com.aire.ux.test.scenarios.exploratory.SecondRoute;
+import com.aire.ux.select.exploratory.FirstRoute;
+import com.aire.ux.select.exploratory.SecondRoute;
 import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.vaadin.flow.component.UI;
