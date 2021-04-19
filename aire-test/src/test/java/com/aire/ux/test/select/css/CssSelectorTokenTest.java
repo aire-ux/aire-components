@@ -46,18 +46,18 @@ class CssSelectorTokenTest {
 
   @Test
   void ensureClassSelectorIsMatched() {
-    val matcher = CssSelectorToken.Class.getPattern().matcher(".p");
+    val matcher = CssSelectorToken.Class.getPattern().matcher(".");
     assertTrue(matcher.matches());
     val group = matcher.group(CssSelectorToken.Class.name());
-    assertEquals(group, ".p");
+    assertEquals(group, ".");
   }
 
   @Test
   void ensureIdMatcherIsSelected() {
-    val matcher = CssSelectorToken.IdentifierSelector.getPattern().matcher("#my-porgler");
+    val matcher = CssSelectorToken.IdentifierSelector.getPattern().matcher("#");
     assertTrue(matcher.matches());
     val group = matcher.group(CssSelectorToken.IdentifierSelector.name());
-    assertEquals(group, "#my-porgler");
+    assertEquals(group, "#");
   }
 
   @Test

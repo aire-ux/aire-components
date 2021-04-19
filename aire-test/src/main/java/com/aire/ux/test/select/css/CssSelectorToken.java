@@ -43,7 +43,7 @@ public enum CssSelectorToken implements Type {
 
   AttributeGroupEnd("\\]"),
 
-  IdentifierSelector("#%s".formatted(IDENTIFIER)),
+  IdentifierSelector("\\#"),
 
   AdditionOperator("\s*\\+"),
 
@@ -63,7 +63,7 @@ public enum CssSelectorToken implements Type {
 
   Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
 
-  Class("\\.%s".formatted(IDENTIFIER)),
+  Class("\\."),
 
   Whitespace("\s+"),
 

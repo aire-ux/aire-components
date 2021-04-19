@@ -145,6 +145,7 @@ subprojects {
 
 
         testImplementation 'org.junit-pioneer:junit-pioneer'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
 
         [
                 'api',
