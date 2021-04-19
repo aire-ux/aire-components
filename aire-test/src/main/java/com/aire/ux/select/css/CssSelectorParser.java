@@ -29,8 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import javax.annotation.concurrent.ThreadSafe;
 import lombok.val;
 
+@ThreadSafe
 @SuppressFBWarnings
 public class CssSelectorParser {
 
