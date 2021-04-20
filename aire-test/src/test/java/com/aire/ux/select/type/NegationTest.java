@@ -15,7 +15,7 @@ class NegationTest extends TestCase {
         ":not(::first-line)",
         ":not(a[href='google.com'])",
         "a b > c + d ~whatever p:not(article) :not([world*=whatever])",
-        "p:not(*.whatever[href='cool.com'][bean*=stuff][single] ~ whodat:second-child(2rem)):nth-child(2n + 1), hello > world:not(:not(p))"
+        "p:not(*.whatever[href='cool.com'][bean*=stuff][single] ~ #whodat:second-child(2rem)):nth-child(2n + 1), hello > world:not(:not(p))"
       })
   void ensureNotWorks(String value) {
     val t = parser.parse(value);

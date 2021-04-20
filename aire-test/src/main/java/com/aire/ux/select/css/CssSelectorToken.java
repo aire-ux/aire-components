@@ -26,56 +26,81 @@ public enum CssSelectorToken implements Type {
   /** Lex unclosed strings */
   UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
 
+  /** strict equality operator <code>=</code> */
   StrictEqualityOperator("="),
 
+  /** attribute value in set */
   AttributeValueInSetOperator("~="),
 
+  /** dashed prefix operator */
   DashedPrefixOperator("\\|="),
 
+  /** */
   PrefixOperator("\\^="),
 
+  /** */
   SuffixOperator("\\$="),
 
+  /** */
   SubstringOperator("\\*="),
 
+  /** */
   FunctionStart("%s\\(".formatted(IDENTIFIER)),
 
+  /** */
   ApplicationEnd("\\)"),
 
+  /** */
   AttributeGroupStart("\\["),
 
+  /** */
   AttributeGroupEnd("\\]"),
 
+  /** */
   IdentifierSelector("\\#"),
 
+  /** */
   AdditionOperator("\s*\\+"),
 
+  /** greater-than */
   GreaterThan("\s*>"),
 
   Comma("\s*,"),
 
+  /** tilde */
   Tilde("\s*~"),
 
+  /** universal operator */
   Universal("\s*\\*"),
 
+  /** negation prefix */
   Not(":not\\("),
 
+  /** at keyword such as @import */
   AtKeyword("@%s".formatted(IDENTIFIER)),
 
+  /** percentage operator */
   Percentage(NUMBER + "%"),
 
+  /** dimension, such as 2em, 1rem, 0.1em */
   Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
 
+  /** class operator */
   Class("\\."),
 
+  /** whitespace */
   Whitespace("\s+"),
 
+  /** pseudo-class prefix */
   PseudoClass("::"),
 
+  /** pseudo--lower precedent than pseudoclass */
   PseudoElement(":"),
 
+  /** identifier element */
   Identifier(IDENTIFIER),
 
+  /** minus--lower precedent than Identifier */
   Minus("-");
 
   /** immutable state */

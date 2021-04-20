@@ -2,9 +2,13 @@ package com.aire.ux.select.css;
 
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-@ThreadSafe
+/**
+ * wraps CssSelectorToken in a Lexer.
+ */
+@NotThreadSafe
 public class DefaultCssSelectorLexer implements SelectorLexer {
 
   final TokenBuffer buffer;
