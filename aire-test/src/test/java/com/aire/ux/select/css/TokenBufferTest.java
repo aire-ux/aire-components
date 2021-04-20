@@ -1,9 +1,9 @@
 package com.aire.ux.select.css;
 
+import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupStart;
 import static com.aire.ux.select.css.CssSelectorToken.Comma;
-import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.select.css.CssSelectorToken.Not;
@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.val;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class TokenBufferTest {

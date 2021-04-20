@@ -11,20 +11,17 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-
 /**
- * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex
- * re-order these elements with care as their ordinal defines the lexer precedence for tokens
- * */
+ * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex re-order
+ * these elements with care as their ordinal defines the lexer precedence for tokens
+ */
 public enum CssSelectorToken implements Type {
-
 
   /** identifier: an entity name */
   String("%s|%s".formatted(STRING_FORM_1, STRING_FORM_2)),
 
   /** Numeric value */
   Numeric(NUMBER),
-
 
   /** Lex unclosed strings */
   UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
@@ -53,8 +50,6 @@ public enum CssSelectorToken implements Type {
 
   AdditionOperator("\s*\\+"),
 
-
-
   GreaterThan("\s*>"),
 
   Comma("\s*,"),
@@ -79,13 +74,9 @@ public enum CssSelectorToken implements Type {
 
   PseudoElement(":"),
 
-
-
   Identifier(IDENTIFIER),
 
   Minus("-");
-
-
 
   /** immutable state */
   private final String pattern;
@@ -102,6 +93,10 @@ public enum CssSelectorToken implements Type {
   CssSelectorToken(@Nonnull String pattern, boolean include) {
     this.pattern = pattern;
     this.include = include;
+  }
+
+  public String getRegularExpression() {
+    return pattern;
   }
 
   @Nonnull

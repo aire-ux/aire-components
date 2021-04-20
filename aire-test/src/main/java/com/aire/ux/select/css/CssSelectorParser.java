@@ -12,6 +12,7 @@ import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.select.css.CssSelectorToken.IdentifierSelector;
 import static com.aire.ux.select.css.CssSelectorToken.Minus;
+import static com.aire.ux.select.css.CssSelectorToken.Not;
 import static com.aire.ux.select.css.CssSelectorToken.Numeric;
 import static com.aire.ux.select.css.CssSelectorToken.PrefixOperator;
 import static com.aire.ux.select.css.CssSelectorToken.PseudoClass;
@@ -38,15 +39,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.validation.constraints.Min;
 import lombok.val;
 
 @ThreadSafe
 @SuppressFBWarnings
 public class CssSelectorParser {
 
-  static final Symbol GROUP = new Symbol() {
-  };
+  static final Symbol GROUP = new Symbol() {};
   private static final EnumMap<CssSelectorToken, ElementSymbol> mappedTokens;
 
   static {
@@ -138,7 +137,8 @@ public class CssSelectorParser {
           AttributeGroupStart,
           PseudoClass,
           PseudoElement,
-          FunctionStart)) {
+          FunctionStart,
+          Not)) {
         composite(tokens, result);
       }
     } else {
@@ -149,7 +149,8 @@ public class CssSelectorParser {
           AttributeGroupStart,
           PseudoClass,
           PseudoElement,
-          FunctionStart)) {
+          FunctionStart,
+          Not)) {
         composite(tokens, result);
       }
     }
@@ -159,7 +160,8 @@ public class CssSelectorParser {
 
   private void expectAndDiscard(LookaheadIterator<Token> tokens, CssSelectorToken token) {
     if (!tokens.hasNext()) {
-      throw new IllegalArgumentException("Error: expected %s, got EOF".formatted(token));
+      throw new IllegalArgumentException(
+          "Error: expected %s (%s), got EOF".formatted(token, token.getRegularExpression()));
     }
 
     val next = tokens.next();
@@ -178,15 +180,9 @@ public class CssSelectorParser {
     if (type == AttributeGroupStart) {
       parseAttributeGroup(tokens, result);
     } else if (type == PseudoClass || type == PseudoElement) {
-      val pseudo = expect(tokens, PseudoClass, PseudoElement);
-      result.add(pseudo);
-      val next = (CssSelectorToken) tokens.peek().getType();
-      if(next == FunctionStart) {
-        pseudo.addChild(expression(tokens));
-      } else {
-        val id = expect(tokens, Identifier);
-        pseudo.addChild(id);
-      }
+      pseudo(tokens, result);
+    } else if (type == Not) {
+      negation(tokens, result);
     } else {
       val selector = new CssSyntaxNode(symbolForToken(type), tokens.next());
       result.add(selector);
@@ -194,11 +190,51 @@ public class CssSelectorParser {
     }
   }
 
+  private void negation(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
+    val negation = expect(tokens, Not);
+    eatWhitespace(tokens);
+    if (isSequence(tokens)) {
+      var current = negation;
+      var next = simpleSelectorSequence(tokens);
+      current.addChildren(next);
+      while (isCombinator(tokens)) {
+        val combinator = combinator(tokens);
+        current.addChild(combinator);
+        combinator.addChildren(simpleSelectorSequence(tokens));
+        current = combinator;
+      }
+    } else if (nextIs(tokens, AttributeGroupStart)) {
+      val results = new ArrayList<SyntaxNode<Symbol, Token>>();
+      parseAttributeGroup(tokens, results);
+      negation.addChildren(results);
+    } else if (nextIs(tokens, PseudoElement, PseudoClass)) {
+      val results = new ArrayList<SyntaxNode<Symbol, Token>>();
+      pseudo(tokens, results);
+      negation.addChildren(results);
+    }
+    eatWhitespace(tokens);
+    expectAndDiscard(tokens, ApplicationEnd);
+    result.add(negation);
+  }
+
+  private void pseudo(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
+    val pseudo = expect(tokens, PseudoClass, PseudoElement);
+    result.add(pseudo);
+    val next = (CssSelectorToken) tokens.peek().getType();
+    if (next == FunctionStart) {
+      pseudo.addChild(expression(tokens));
+    } else {
+      val id = expect(tokens, Identifier);
+      pseudo.addChild(id);
+    }
+  }
+
   private SyntaxNode<Symbol, Token> expression(LookaheadIterator<Token> tokens) {
     eatWhitespace(tokens);
     val function = expect(tokens, FunctionStart);
     while (nextIs(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier)) {
-      function.addChild(expect(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier));
+      function.addChild(
+          expect(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier));
       eatWhitespace(tokens);
     }
     expectAndDiscard(tokens, ApplicationEnd);
@@ -255,11 +291,20 @@ public class CssSelectorParser {
    * @return
    */
   private boolean isSequence(LookaheadIterator<Token> tokens) {
-    return nextIs(tokens, Identifier, Universal, IdentifierSelector, CssSelectorToken.Class);
+    return nextIs(
+        tokens,
+        Identifier,
+        Universal,
+        IdentifierSelector,
+        CssSelectorToken.Class,
+        PseudoClass,
+        PseudoElement,
+        Not);
   }
 
   private boolean isCombinator(LookaheadIterator<Token> tokens) {
-    return nextIs(tokens, Tilde, Whitespace, GreaterThan, AdditionOperator);
+    return nextIs(
+        tokens, Tilde, Whitespace, GreaterThan, AdditionOperator, PseudoClass, PseudoElement, Not);
   }
 
   private boolean nextIs(LookaheadIterator<Token> tokens, CssSelectorToken... match) {
@@ -335,9 +380,7 @@ public class CssSelectorParser {
   public enum ElementSymbol implements Symbol {
     SelectorGroup("<group>", null),
 
-    /**
-     * operators
-     */
+    /** operators */
     StringValue("<string>", CssSelectorToken.String),
     PrefixMatch("^=", CssSelectorToken.PrefixOperator),
     SuffixMatch("$=", CssSelectorToken.SuffixOperator),
@@ -351,23 +394,15 @@ public class CssSelectorParser {
     Number("<number>", CssSelectorToken.Numeric),
 
     FunctionApplication("<function>()", FunctionStart),
-    /**
-     * pseudoclass
-     */
+    /** pseudoclass */
     PseudoClass("::<class>", CssSelectorToken.PseudoClass),
     PseudoElement(":<element>", CssSelectorToken.PseudoElement),
-    /**
-     * attribute selector
-     */
+    /** attribute selector */
     AttributeSelector("<attribute>", CssSelectorToken.AttributeGroupStart),
-    /**
-     * a comma operator denotes set union a,b = union(select(a), select(b))
-     */
+    /** a comma operator denotes set union a,b = union(select(a), select(b)) */
     Union(",", CssSelectorToken.Comma),
 
-    /**
-     * the <code>not</code> operator negates enclosed operations
-     */
+    /** the <code>not</code> operator negates enclosed operations */
     Negation(":not", CssSelectorToken.Not),
 
     /**
@@ -375,39 +410,25 @@ public class CssSelectorParser {
      * unless they are omitted by subsequent selectors
      */
     UniversalSelector("*", CssSelectorToken.Universal),
-    /**
-     * select by node-type (h1, span, etc.)
-     */
+    /** select by node-type (h1, span, etc.) */
     TypeSelector("<type>", CssSelectorToken.Identifier),
 
-    /**
-     * select by class (.red)
-     */
+    /** select by class (.red) */
     ClassSelector(".<identifier>", CssSelectorToken.Class),
 
-    /**
-     * select children (parent > child)
-     */
+    /** select children (parent > child) */
     ChildSelector(">", CssSelectorToken.GreaterThan),
 
-    /**
-     * select by identity (#my-distinguished-node)
-     */
+    /** select by identity (#my-distinguished-node) */
     IdentitySelector("#<identifier>", CssSelectorToken.IdentifierSelector),
 
-    /**
-     * selects any subsequent matching siblings (a ~ b)
-     */
+    /** selects any subsequent matching siblings (a ~ b) */
     GeneralSiblingSelector("~", Tilde),
 
-    /**
-     * selects any immediately-subsequent matching siblings (a + b)
-     */
+    /** selects any immediately-subsequent matching siblings (a + b) */
     AdjacentSiblingSelector("+", CssSelectorToken.AdditionOperator),
 
-    /**
-     * selects any descendants
-     */
+    /** selects any descendants */
     DescendantSelector("<a desc b>", Whitespace);
 
     private final String value;

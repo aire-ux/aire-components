@@ -27,5 +27,4 @@ interface TokenPatterns {
       "\'([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
   String IDENTIFIER = "[-]?(%s)(%s)*".formatted(NAME_START, NAME_CHARACTER);
-
 }

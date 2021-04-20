@@ -28,7 +28,6 @@ class CssSelectorTokenTest {
     expect("-", Minus, "-");
   }
 
-
   @ParameterizedTest
   @ValueSource(strings = {":"})
   void ensurePseudoElementMatches(String value) {
