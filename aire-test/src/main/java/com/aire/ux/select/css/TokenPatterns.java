@@ -14,7 +14,7 @@ interface TokenPatterns {
 
   String NEWLINE = "\n|\r\n|\r|\f";
 
-  String NUMBER = "[0-9]+|[0-9]*\\.[0-9]+";
+  String NUMBER = "\\d+(\\.?\\d+)*";
 
   String STRING_FORM_1 = "\"([^\n\r\f\\\"]|\\\\%s|%s|%s)*\"".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
@@ -27,4 +27,5 @@ interface TokenPatterns {
       "\'([^\n\r\f\\\"]|\\\\%s|%s|%s)*".formatted(NEWLINE, NON_ASCII, ESCAPE);
 
   String IDENTIFIER = "[-]?(%s)(%s)*".formatted(NAME_START, NAME_CHARACTER);
+
 }

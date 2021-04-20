@@ -11,14 +11,20 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-/** pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex */
+
+/**
+ * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex
+ * re-order these elements with care as their ordinal defines the lexer precedence for tokens
+ * */
 public enum CssSelectorToken implements Type {
+
 
   /** identifier: an entity name */
   String("%s|%s".formatted(STRING_FORM_1, STRING_FORM_2)),
 
   /** Numeric value */
   Numeric(NUMBER),
+
 
   /** Lex unclosed strings */
   UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
@@ -37,7 +43,7 @@ public enum CssSelectorToken implements Type {
 
   FunctionStart("%s\\(".formatted(IDENTIFIER)),
 
-  FunctionEnd("\\)"),
+  ApplicationEnd("\\)"),
 
   AttributeGroupStart("\\["),
 
@@ -46,6 +52,8 @@ public enum CssSelectorToken implements Type {
   IdentifierSelector("\\#"),
 
   AdditionOperator("\s*\\+"),
+
+
 
   GreaterThan("\s*>"),
 
@@ -67,19 +75,17 @@ public enum CssSelectorToken implements Type {
 
   Whitespace("\s+"),
 
-  FirstLine(":first-line"),
+  PseudoClass("::"),
 
-  FirstLetter(":first-letter"),
+  PseudoElement(":"),
 
-  Before(":before"),
 
-  After(":after"),
 
-  PseudoElement(":%s".formatted(IDENTIFIER)),
+  Identifier(IDENTIFIER),
 
-  PseudoClass("::%s".formatted(IDENTIFIER)),
+  Minus("-");
 
-  Identifier(IDENTIFIER);
+
 
   /** immutable state */
   private final String pattern;
