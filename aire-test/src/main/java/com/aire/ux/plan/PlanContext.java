@@ -1,3 +1,3 @@
 package com.aire.ux.plan;
 
-public class PlanContext {}
+public interface PlanContext {}

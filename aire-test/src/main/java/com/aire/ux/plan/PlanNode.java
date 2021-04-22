@@ -1,3 +1,3 @@
 package com.aire.ux.plan;
 
-public class PlanNode {}
+public interface PlanNode {}

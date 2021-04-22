@@ -162,6 +162,7 @@ public class CssSelectorParser {
         var current = result.peek();
         while (isCombinator(tokens)) {
           val combinator = combinator(tokens);
+
           current.addChild(combinator);
           combinator.addChildren(simpleSelectorSequence(tokens));
           current = combinator;
@@ -184,32 +185,42 @@ public class CssSelectorParser {
       val next = tokens.next();
       val nextType = (CssSelectorToken) next.getType();
       result.add(new CssSyntaxNode(symbolForToken(nextType), next));
-      while (nextIs(
-          tokens,
-          IdentifierSelector,
-          CssSelectorToken.Class,
-          AttributeGroupStart,
-          PseudoClass,
-          PseudoElement,
-          FunctionStart,
-          Not)) {
+      while (isComposite(tokens)) {
         composite(tokens, result);
       }
-    } else {
-      while (nextIs(
-          tokens,
-          IdentifierSelector,
-          CssSelectorToken.Class,
-          AttributeGroupStart,
-          PseudoClass,
-          PseudoElement,
-          FunctionStart,
-          Not)) {
+      return result;
+    } else if (isComposite(tokens)) {
+      while (isComposite(tokens)) {
         composite(tokens, result);
       }
+      return result;
     }
 
-    return result;
+    if (tokens.hasNext()) {
+      val next = tokens.next();
+      throw new IllegalArgumentException(
+          "Unexpected token '%s' at (%d, %d), lexeme: %s"
+              .formatted(next.getType(), next.getStart(), next.getEnd(), next.getLexeme()));
+    }
+    throw new IllegalStateException(
+        "Bad state.  Remaining tokens: [%s]"
+            .formatted(tokens.toStream().map(t -> t.toString()).collect(Collectors.joining(","))));
+  }
+
+  /**
+   * @param tokens the token sequence to check
+   * @return true if the next token is a composite member
+   */
+  private boolean isComposite(LookaheadIterator<Token> tokens) {
+    return nextIs(
+        tokens,
+        IdentifierSelector,
+        CssSelectorToken.Class,
+        AttributeGroupStart,
+        PseudoClass,
+        PseudoElement,
+        FunctionStart,
+        Not);
   }
 
   /**
@@ -398,8 +409,7 @@ public class CssSelectorParser {
    * @return true if the next token is a combinator
    */
   private boolean isCombinator(LookaheadIterator<Token> tokens) {
-    return nextIs(
-        tokens, Tilde, Whitespace, GreaterThan, AdditionOperator, PseudoClass, PseudoElement, Not);
+    return nextIs(tokens, Tilde, Whitespace, GreaterThan, AdditionOperator);
   }
 
   /**

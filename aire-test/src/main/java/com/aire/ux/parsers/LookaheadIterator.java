@@ -1,8 +1,13 @@
 package com.aire.ux.parsers;
 
+import com.google.common.collect.Streams;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.Stack;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import lombok.val;
 
@@ -17,6 +22,8 @@ public interface LookaheadIterator<T> extends Iterator<T> {
   void pushBack(T next);
 
   void pushBack(T... all);
+
+  Stream<T> toStream();
 }
 
 final class DefaultLookaheadIterator<T> implements LookaheadIterator<T> {
@@ -62,5 +69,13 @@ final class DefaultLookaheadIterator<T> implements LookaheadIterator<T> {
       return lookback.pop();
     }
     return delegate.next();
+  }
+
+  @Override
+  public Stream<T> toStream() {
+    return Streams.concat(
+        StreamSupport.stream(lookback.spliterator(), false),
+        StreamSupport.stream(
+            Spliterators.spliteratorUnknownSize(delegate, Spliterator.ORDERED), false));
   }
 }
