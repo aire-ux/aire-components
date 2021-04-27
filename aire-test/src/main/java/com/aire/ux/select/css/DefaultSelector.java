@@ -8,8 +8,10 @@ import com.aire.ux.plan.Plan;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.PlanNode;
 import java.util.function.BiFunction;
+import lombok.val;
 
 public class DefaultSelector implements Selector {
+
   private final AbstractSyntaxTree<Symbol, Token> tree;
 
   public DefaultSelector() {
@@ -23,30 +25,80 @@ public class DefaultSelector implements Selector {
 
   @Override
   public Plan plan(PlanContext context) {
-    return tree.reduce(new LinkedPlan(), new PlanBuilder(context));
+    return tree.reduce(new LinkedPlan(), new PlanBuilder(context)).freeze();
   }
 
   static class LinkedPlanNode implements PlanNode {
-    final PlanNode next;
-    final Evaluator evaluator;
 
-    public LinkedPlanNode(PlanNode next, Evaluator evaluator) {
+    private final LinkedPlanNode next;
+    private final Evaluator evaluator;
+
+
+    public LinkedPlanNode(LinkedPlanNode next, Evaluator evaluator) {
       this.next = next;
       this.evaluator = evaluator;
     }
   }
 
-  private static class LinkedPlan implements Plan {}
+  private static class LinkedPlan implements Plan {
+
+    private LinkedPlanNode head;
+
+    LinkedPlan() {
+    }
+
+    LinkedPlan(LinkedPlanNode head) {
+      this.head = head;
+    }
+
+    static <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
+      var result = value;
+      for (var c = init; c != null; c = c.next) {
+        result = f.apply(c, result);
+      }
+      return result;
+    }
+
+    public Plan freeze() {
+      return fold(head, new LinkedPlan(), (node, plan) -> plan.prepend(node.evaluator));
+    }
+
+
+    public String toString() {
+      val result = new StringBuilder("[");
+      for (var h = head; h != null; h = h.next) {
+        result.append(h.evaluator);
+        if (h.next != null) {
+          result.append(",");
+        }
+      }
+      return result.append("]").toString();
+    }
+
+
+    LinkedPlan prepend(Evaluator evaluator) {
+      if (head == null) {
+        head = new LinkedPlanNode(null, evaluator);
+      } else {
+        val result = new LinkedPlanNode(head, evaluator);
+        head = result;
+      }
+      return this;
+    }
+  }
 
   private static class PlanBuilder
       implements BiFunction<SyntaxNode<Symbol, Token>, LinkedPlan, LinkedPlan> {
 
-    public PlanBuilder(PlanContext context) {}
+    final PlanContext context;
+
+    public PlanBuilder(PlanContext context) {
+      this.context = context;
+    }
 
     @Override
     public LinkedPlan apply(SyntaxNode<Symbol, Token> node, LinkedPlan plan) {
-      System.out.println(node);
-      return plan;
+      return plan.prepend(context.lookup(node).create(node, context));
     }
   }
 }
