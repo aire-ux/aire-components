@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Stack;
 import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
-  static final Symbol ROOT_SYMBOL =
+  public static final Symbol ROOT_SYMBOL =
       new Symbol() {
         @Override
         public String toString() {
@@ -21,8 +20,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
         }
       };
 
-  @Getter
-  private final SyntaxNode<T, U> root;
+  @Getter private final SyntaxNode<T, U> root;
 
   /**
    * construct a new AST with the provided root
@@ -34,7 +32,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
   }
 
   /**
-   * construct a new AST with an empty root node.  This root-node is identified by the ROOT_SYMBOL
+   * construct a new AST with an empty root node. This root-node is identified by the ROOT_SYMBOL
    * symbol
    */
   public AbstractSyntaxTree() {
@@ -50,8 +48,8 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
   /**
    * @param initial the initial value (nonnul)
-   * @param f       the function to reduce the abstract syntax tree over
-   * @param <V>     the type-parameter of the initial value (and result)
+   * @param f the function to reduce the abstract syntax tree over
+   * @param <V> the type-parameter of the initial value (and result)
    * @return the result of reducing the AST over the function
    */
   public <V> V reduce(@Nonnull V initial, @Nonnull BiFunction<SyntaxNode<T, U>, V, V> f) {
@@ -59,10 +57,10 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
   }
 
   /**
-   * @param order   reduce in either pre-order or post-order
+   * @param order reduce in either pre-order or post-order
    * @param initial the initial value
-   * @param f       the function to reduce this abstract syntax tree over
-   * @param <V>     the type of the initial value (and result)
+   * @param f the function to reduce this abstract syntax tree over
+   * @param <V> the type of the initial value (and result)
    * @return the reduction result
    */
   public <V> V reduce(
@@ -83,7 +81,6 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     }
     return result;
   }
-
 
   /**
    * generate an interable over this AST in the specified order
@@ -136,12 +133,10 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     }
   }
 
-
   public enum Order {
     Pre,
     Post
   }
-
 
   static final class RootSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
 
@@ -163,7 +158,6 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
       this.order = order;
       this.deque = new LinkedList<>();
     }
-
 
     void add(SyntaxNode<T, U> node) {
       if (order == Order.Pre) {

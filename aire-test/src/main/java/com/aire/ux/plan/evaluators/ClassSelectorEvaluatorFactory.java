@@ -8,27 +8,22 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 
-public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
+public class ClassSelectorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
   public Symbol getEvaluationTarget() {
-    return ElementSymbol.TypeSelector;
+    return ElementSymbol.ClassSelector;
   }
 
   @Override
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
-    return new TypeSelectorEvaluator(node);
+    return new ClassSelectorEvaluator(node, context);
   }
 
-  public static class TypeSelectorEvaluator implements Evaluator {
-    final SyntaxNode<Symbol, Token> syntaxNode;
+  private static class ClassSelectorEvaluator implements Evaluator {
 
-    public TypeSelectorEvaluator(SyntaxNode<Symbol, Token> syntaxNode) {
-      this.syntaxNode = syntaxNode;
-    }
-
-    public String toString() {
-      return "%s".formatted(syntaxNode.getSymbol());
+    public ClassSelectorEvaluator(
+        SyntaxNode<Symbol, Token> node, PlanContext context) {
     }
   }
 }

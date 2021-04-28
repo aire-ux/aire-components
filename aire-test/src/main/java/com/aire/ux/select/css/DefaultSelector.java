@@ -7,6 +7,9 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.Plan;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.PlanNode;
+import io.sunshower.arcus.reflect.Reflect;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import lombok.val;
 
@@ -32,7 +35,6 @@ public class DefaultSelector implements Selector {
 
     private final LinkedPlanNode next;
     private final Evaluator evaluator;
-
 
     public LinkedPlanNode(LinkedPlanNode next, Evaluator evaluator) {
       this.next = next;
@@ -63,7 +65,6 @@ public class DefaultSelector implements Selector {
       return fold(head, new LinkedPlan(), (node, plan) -> plan.prepend(node.evaluator));
     }
 
-
     public String toString() {
       val result = new StringBuilder("[");
       for (var h = head; h != null; h = h.next) {
@@ -75,7 +76,6 @@ public class DefaultSelector implements Selector {
       return result.append("]").toString();
     }
 
-
     LinkedPlan prepend(Evaluator evaluator) {
       if (head == null) {
         head = new LinkedPlanNode(null, evaluator);
@@ -84,6 +84,16 @@ public class DefaultSelector implements Selector {
         head = result;
       }
       return this;
+    }
+
+    @Override
+    public <T extends Evaluator> List<T> getEvaluators(Class<T> evaluatorType) {
+      return fold(head, new ArrayList<T>(), (node, list) -> {
+        if (Reflect.isCompatible(evaluatorType, node.evaluator.getClass())) {
+          list.add((T) node.evaluator);
+        }
+        return list;
+      });
     }
   }
 

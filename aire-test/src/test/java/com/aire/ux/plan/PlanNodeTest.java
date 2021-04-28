@@ -11,7 +11,7 @@ class PlanNodeTest extends TestCase {
   @Test
   void ensureCollectingSimpleTypeSelectorWorks() {
     val result = parser.parse("hello");
-    //    val plan = result.plan();
+//        val plan = result.plan();
 
   }
 }

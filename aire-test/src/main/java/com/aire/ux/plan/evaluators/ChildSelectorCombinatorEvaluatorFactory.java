@@ -5,30 +5,26 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 
-public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
+public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
   public Symbol getEvaluationTarget() {
-    return ElementSymbol.TypeSelector;
+    return ElementSymbol.ChildSelector;
   }
 
   @Override
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
-    return new TypeSelectorEvaluator(node);
+    return new ChildSelectorCombinatorEvaluator(node, context);
   }
 
-  public static class TypeSelectorEvaluator implements Evaluator {
-    final SyntaxNode<Symbol, Token> syntaxNode;
+  private static class ChildSelectorCombinatorEvaluator implements Evaluator {
 
-    public TypeSelectorEvaluator(SyntaxNode<Symbol, Token> syntaxNode) {
-      this.syntaxNode = syntaxNode;
-    }
-
-    public String toString() {
-      return "%s".formatted(syntaxNode.getSymbol());
+    public ChildSelectorCombinatorEvaluator(
+        SyntaxNode<Symbol, Token> node, PlanContext context) {
     }
   }
 }

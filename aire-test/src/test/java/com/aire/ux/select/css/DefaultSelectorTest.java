@@ -1,8 +1,11 @@
 package com.aire.ux.select.css;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.aire.ux.plan.DefaultPlanContext;
+import com.aire.ux.plan.evaluators.RootNodeEvaluatorFactory.RootNodeEvaluator;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
-import java.util.function.BiFunction;
+import com.aire.ux.test.Nodes;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +23,16 @@ class DefaultSelectorTest extends TestCase {
 
   @Test
   void ensureCollectingSimpleTypeSelectorWorks() {
-    val plan = parser.parse("hello world").plan(context);
-    System.out.println(plan);
+    val plan = parser.parse("hello").plan(context);
+    val evals = plan.getEvaluators(RootNodeEvaluator.class);
+    assertEquals(1, evals.size());
   }
 
+  @Test
+  void ensureCollectingSimpleTypeSelectorDescendantCombinatorClassSelectorWorks() {
+    val plan = parser.parse("hello > .world").plan(context);
 
+    val tree = Nodes.node("hello").child(Nodes.node("world").attribute("class", "world"));
+
+  }
 }

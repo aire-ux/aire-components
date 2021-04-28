@@ -2,7 +2,6 @@ package com.aire.ux.plan;
 
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
-import com.aire.ux.plan.evaluators.TypeSelectorEvaluatorFactory;
 import com.aire.ux.select.css.Token;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,13 +13,17 @@ public class DefaultPlanContext implements PlanContext {
 
   private static final Map<Symbol, EvaluatorFactory> factories;
 
-
   static {
     factories = new LinkedHashMap<>();
-    for (val service : ServiceLoader
-        .load(EvaluatorFactory.class, Thread.currentThread().getContextClassLoader())) {
+    for (val service :
+        ServiceLoader.load(
+            EvaluatorFactory.class, Thread.currentThread().getContextClassLoader())) {
       factories.put(service.getEvaluationTarget(), service);
     }
+  }
+
+  public static final PlanContext getInstance() {
+    return Holder.instance;
   }
 
   public void register(EvaluatorFactory factory) {
@@ -29,21 +32,16 @@ public class DefaultPlanContext implements PlanContext {
 
   @Override
   public EvaluatorFactory lookup(SyntaxNode<Symbol, Token> node) {
-    return new TypeSelectorEvaluatorFactory();
-//    val result = factories.get(node.getSymbol());
-//    if (result == null) {
-//      throw new NoSuchElementException(
-//          "Error: no evaluator factory for symbol '%s'".formatted(node.getSymbol()));
-//    }
-//    return result;
-  }
-
-
-  public static final PlanContext getInstance() {
-    return Holder.instance;
+    val result = factories.get(node.getSymbol());
+    if (result == null) {
+      throw new NoSuchElementException(
+          "Error: no evaluator factory for symbol '%s'".formatted(node.getSymbol()));
+    }
+    return result;
   }
 
   private static class Holder {
+
     static final PlanContext instance = new DefaultPlanContext();
   }
 }
