@@ -2,23 +2,41 @@ package com.aire.ux.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.val;
 
 public class Node {
 
+  static final String EMPTY_CONTENT = "".intern();
   private final String type;
+  private final String content;
   private final List<Node> children;
   private final Map<String, String> attributes;
 
   public Node(String type) {
-    this.type = type;
-    this.children = new ArrayList<>();
-    this.attributes = new HashMap<>();
+    this(type, EMPTY_CONTENT);
   }
 
+  public Node(String type, String content) {
+    this(type, content, new ArrayList<>(), new LinkedHashMap<>());
+  }
+
+  Node(String type, String content, List<Node> children, Map<String, String> attributes) {
+    this.type = type;
+    this.content = content;
+    this.children = children;
+    this.attributes = attributes;
+  }
+
+  public static NodeAdapter<Node> getAdapter() {
+    return new NodeNodeAdapter();
+  }
+
+  public Node setContent(String content) {
+    return new Node(type, content, children, attributes);
+  }
 
   public void addChildren(Collection<? extends Node> children) {
     this.children.addAll(children);
@@ -27,7 +45,6 @@ public class Node {
   public void addChild(Node child) {
     this.children.add(child);
   }
-
 
   public List<Node> setChildren(Collection<? extends Node> children) {
     val result = new ArrayList<>(this.children);
@@ -52,6 +69,10 @@ public class Node {
     return this;
   }
 
+  public Node id(String id) {
+    return attribute("id", id);
+  }
+
   public Node attribute(String key, String value) {
     setAttribute(key, value);
     return this;
@@ -61,12 +82,20 @@ public class Node {
     return children(this);
   }
 
+  public Node content(String content) {
+    return setContent(content);
+  }
+
   @Override
   public String toString() {
     val result = new StringBuilder();
     int depth = 0;
     writeNode(this, result, depth);
     return result.toString();
+  }
+
+  boolean hasContent() {
+    return content != EMPTY_CONTENT;
   }
 
   private void writeNode(Node node, StringBuilder result, int depth) {
@@ -78,12 +107,40 @@ public class Node {
       }
     }
     result.append(">").append("\n");
+    if (node.hasContent()) {
+      val content = node.content.split("\\R");
+      val ind = indent + " ";
+      for (val c : content) {
+        result.append(ind).append(c).append("\n");
+      }
+    }
 
     for (val child : node.children) {
       writeNode(child, result, depth + 1);
     }
     result.append(indent).append("</%s>".formatted(node.type)).append("\n");
 
+  }
+
+  public String getAttribute(String key) {
+    return attributes.get(key);
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public static class NodeNodeAdapter implements NodeAdapter<Node> {
+
+    @Override
+    public List<Node> getChildren(Node current) {
+      return current.children;
+    }
+
+    @Override
+    public String getAttribute(Node current, String key) {
+      return current.getAttribute(key);
+    }
   }
 
 
