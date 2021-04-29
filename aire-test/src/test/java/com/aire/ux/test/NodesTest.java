@@ -37,6 +37,7 @@ class NodesTest {
     );
     count = Node.getAdapter().reduce(t, 0, (c, n) -> adapter.hasAttribute(c, "hello") ? n + 1 : n);
     assertEquals(3, count);
+    System.out.println(t);
   }
 
 }
