@@ -1,6 +1,7 @@
 package com.aire.ux.test;
 
-import static java.lang.Math.max;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -14,23 +15,28 @@ class NodesTest {
             .children(Nodes.node("h1").content("hello world, how "
                 + "\nare you?"))
     );
-    new NodeHierarchyWalker<Node>().walk(r, Node.getAdapter(),
-        new NodeVisitor<Node>() {
-          int depth = 0;
-          @Override
-          public void openNode(Node node, NodeAdapter<Node> adapter) {
-            val indent = " ".repeat(depth);
-            System.out.println(indent + node.getType());
-            depth += 1;
-          }
+    val result = Node.getAdapter().reduce(r, 0, (c, n) -> n + 1);
+    assertEquals(3, result);
 
-          @Override
-          public void closeNode(Node node, NodeAdapter<Node> adapter) {
-            val indent = " ".repeat(max(depth, 0));
-            System.out.println(indent + node.getType());
-            depth =- 1;
-          }
-        });
+  }
+
+  @Test
+  void ensureMappingWorks() {
+    val r = Nodes.node("p").attribute("class", "red").children(
+        Nodes.node("a").attribute("href", "www.google.com")
+            .children(Nodes.node("h1").content("hello world, how "
+                + "\nare you?"))
+    );
+    val adapter = Node.getAdapter();
+
+    var count = Node.getAdapter()
+        .reduce(r, 0, (c, n) -> adapter.hasAttribute(c, "hello") ? n + 1 : n);
+    assertEquals(0, count);
+    val t = Node.getAdapter().map(r, Node.getAdapter(), (node, hom) ->
+        hom.setAttribute(node, "hello", "world")
+    );
+    count = Node.getAdapter().reduce(t, 0, (c, n) -> adapter.hasAttribute(c, "hello") ? n + 1 : n);
+    assertEquals(3, count);
   }
 
 }

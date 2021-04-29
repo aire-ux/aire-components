@@ -138,8 +138,30 @@ public class Node {
     }
 
     @Override
+    public Node setChildren(Node current, Collection<? extends Node> children) {
+      current.setChildren(children);
+      return current;
+    }
+
+    @Override
     public String getAttribute(Node current, String key) {
       return current.getAttribute(key);
+    }
+
+    @Override
+    public Node setAttribute(Node node, String key, String value) {
+      node.setAttribute(key, value);
+      return node;
+    }
+
+    @Override
+    public boolean hasAttribute(Node c, String key) {
+      return c.attributes.containsKey(key);
+    }
+
+    @Override
+    public Node clone(Node value) {
+      return new Node(value.type, value.content, new ArrayList<>(), value.attributes);
     }
   }
 
