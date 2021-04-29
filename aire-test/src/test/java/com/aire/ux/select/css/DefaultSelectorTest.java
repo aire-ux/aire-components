@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.plan.evaluators.RootNodeEvaluatorFactory.RootNodeEvaluator;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
+import com.aire.ux.test.Node;
 import com.aire.ux.test.Nodes;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,7 @@ class DefaultSelectorTest extends TestCase {
   private DefaultPlanContext context;
 
   @BeforeEach
-  void setUp() {
+  protected void setUp() {
     super.setUp();
     context = new DefaultPlanContext();
   }
@@ -29,10 +30,16 @@ class DefaultSelectorTest extends TestCase {
   }
 
   @Test
+  void ensureSelectorCanRetrieveNodesAtFirstLevel() {
+    val plan = parser.parse("hello").plan(context);
+    val tree = Nodes.node("hello");
+    val results = plan.evaluate(tree, Node.getAdapter());
+    //    assertEquals(1, results.size());
+  }
+
+  @Test
   void ensureCollectingSimpleTypeSelectorDescendantCombinatorClassSelectorWorks() {
     val plan = parser.parse("hello > .world").plan(context);
-
     val tree = Nodes.node("hello").child(Nodes.node("world").attribute("class", "world"));
-
   }
 }

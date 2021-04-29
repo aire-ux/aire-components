@@ -1,3 +1,9 @@
 package com.aire.ux.plan;
 
-public interface Evaluator {}
+import com.aire.ux.test.NodeAdapter;
+import java.util.List;
+
+public interface Evaluator {
+
+  <T> List<T> evaluate(List<T> workingSet, NodeAdapter<T> hom);
+}

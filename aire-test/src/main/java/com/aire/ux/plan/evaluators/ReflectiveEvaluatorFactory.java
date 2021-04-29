@@ -16,17 +16,17 @@ public class ReflectiveEvaluatorFactory implements EvaluatorFactory {
   private final Class<? extends Evaluator> evaluatorType;
   private final Constructor<? extends Evaluator> constructor;
 
-
-  public ReflectiveEvaluatorFactory(Symbol evaluationTarget,
-      Class<? extends Evaluator> evaluatorType) {
+  public ReflectiveEvaluatorFactory(
+      Symbol evaluationTarget, Class<? extends Evaluator> evaluatorType) {
     this.evaluatorType = evaluatorType;
     this.evaluationTarget = evaluationTarget;
-    this.constructor = Reflect
-        .findConstructor(evaluatorType, Symbol.class, PlanContext.class)
-        .orElseThrow(() -> new IllegalArgumentException(
-            "Evaluator must have a public constructor accepting a Symbol and a PlanContext"));
+    this.constructor =
+        Reflect.findConstructor(evaluatorType, Symbol.class, PlanContext.class)
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "Evaluator must have a public constructor accepting a Symbol and a PlanContext"));
   }
-
 
   @Override
   public Symbol getEvaluationTarget() {

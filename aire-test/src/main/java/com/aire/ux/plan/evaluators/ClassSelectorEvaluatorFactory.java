@@ -7,6 +7,8 @@ import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
+import com.aire.ux.test.NodeAdapter;
+import java.util.List;
 
 public class ClassSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -22,8 +24,11 @@ public class ClassSelectorEvaluatorFactory implements EvaluatorFactory {
 
   private static class ClassSelectorEvaluator implements Evaluator {
 
-    public ClassSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    public ClassSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {}
+
+    @Override
+    public <T> List<T> evaluate(List<T> workingSet, NodeAdapter<T> hom) {
+      return null;
     }
   }
 }

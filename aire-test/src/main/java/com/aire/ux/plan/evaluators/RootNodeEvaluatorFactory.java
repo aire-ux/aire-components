@@ -7,6 +7,8 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.Token;
+import com.aire.ux.test.NodeAdapter;
+import java.util.List;
 
 public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
@@ -25,10 +27,14 @@ public class RootNodeEvaluatorFactory implements EvaluatorFactory {
     private final PlanContext context;
     private final SyntaxNode<Symbol, Token> node;
 
-    public RootNodeEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    public RootNodeEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       this.node = node;
       this.context = context;
+    }
+
+    @Override
+    public <T> List<T> evaluate(List<T> tree, NodeAdapter<T> hom) {
+      return null;
     }
   }
 }

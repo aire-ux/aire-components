@@ -11,5 +11,4 @@ public class NodeHierarchyWalker<T> {
     }
     visitor.closeNode(initial, adapter);
   }
-
 }

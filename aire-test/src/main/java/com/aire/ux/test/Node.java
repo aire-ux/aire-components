@@ -2,6 +2,7 @@ package com.aire.ux.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,13 @@ public class Node {
 
   static final String EMPTY_CONTENT = "".intern();
   private final String type;
+
+  @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final String content;
+
+  @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final List<Node> children;
+
   private final Map<String, String> attributes;
 
   public Node(String type) {
@@ -61,9 +67,7 @@ public class Node {
     return attributes.containsKey(attribute);
   }
 
-  /**
-   * Builder methods
-   */
+  /** Builder methods */
   public Node children(Node... children) {
     setChildren(List.of(children));
     return this;
@@ -79,7 +83,7 @@ public class Node {
   }
 
   public Node child(Node child) {
-    return children(this);
+    return children(child);
   }
 
   public Node content(String content) {
@@ -95,12 +99,12 @@ public class Node {
   }
 
   boolean hasContent() {
-    return content != EMPTY_CONTENT;
+    return !EMPTY_CONTENT.equals(content);
   }
 
   private void writeNode(Node node, StringBuilder result, int depth) {
     val indent = " ".repeat(depth);
-    result.append(indent).append("<%s".formatted(node.type));
+    result.append(indent).append("<").append(node.type);
     if (!node.attributes.isEmpty()) {
       for (val kv : node.attributes.entrySet()) {
         result.append(" ").append(kv.getKey()).append("=\"").append(kv.getValue()).append("\"");
@@ -119,7 +123,6 @@ public class Node {
       writeNode(child, result, depth + 1);
     }
     result.append(indent).append("</%s>".formatted(node.type)).append("\n");
-
   }
 
   public String getAttribute(String key) {
@@ -128,6 +131,10 @@ public class Node {
 
   public String getType() {
     return type;
+  }
+
+  public List<Node> getChildren() {
+    return Collections.unmodifiableList(children);
   }
 
   public static class NodeNodeAdapter implements NodeAdapter<Node> {
@@ -163,7 +170,10 @@ public class Node {
     public Node clone(Node value) {
       return new Node(value.type, value.content, new ArrayList<>(), value.attributes);
     }
+
+    @Override
+    public String getType(Node n) {
+      return n.getType();
+    }
   }
-
-
 }

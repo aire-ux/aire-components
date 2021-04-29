@@ -7,10 +7,14 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.Plan;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.PlanNode;
+import com.aire.ux.test.NodeAdapter;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import javax.annotation.Nonnull;
 import lombok.val;
 
 public class DefaultSelector implements Selector {
@@ -27,8 +31,20 @@ public class DefaultSelector implements Selector {
   }
 
   @Override
+  public List<SyntaxNode<Symbol, Token>> find(Predicate<SyntaxNode<Symbol, Token>> f) {
+    return tree.reduce(
+        new ArrayList<>(),
+        (node, list) -> {
+          if (f.test(node)) {
+            list.add(node);
+          }
+          return list;
+        });
+  }
+
+  @Override
   public Plan plan(PlanContext context) {
-    return tree.reduce(new LinkedPlan(), new PlanBuilder(context)).freeze();
+    return tree.reduce(new LinkedPlan(context), new PlanBuilder(context)).freeze();
   }
 
   static class LinkedPlanNode implements PlanNode {
@@ -42,18 +58,38 @@ public class DefaultSelector implements Selector {
     }
   }
 
-  private static class LinkedPlan implements Plan {
+  private static class PlanBuilder
+      implements BiFunction<SyntaxNode<Symbol, Token>, LinkedPlan, LinkedPlan> {
 
+    final PlanContext context;
+
+    public PlanBuilder(PlanContext context) {
+      this.context = context;
+    }
+
+    @Override
+    public LinkedPlan apply(SyntaxNode<Symbol, Token> node, LinkedPlan plan) {
+      return plan.prepend(context.lookup(node).create(node, context));
+    }
+  }
+
+  private class LinkedPlan implements Plan {
+
+    private final PlanContext context;
     private LinkedPlanNode head;
 
-    LinkedPlan() {
+    LinkedPlan(@Nonnull final PlanContext context) {
+      Objects.requireNonNull(context);
+      this.context = context;
     }
 
-    LinkedPlan(LinkedPlanNode head) {
+    LinkedPlan(LinkedPlanNode head, PlanContext context) {
+      Objects.requireNonNull(context);
       this.head = head;
+      this.context = context;
     }
 
-    static <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
+    <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
       var result = value;
       for (var c = init; c != null; c = c.next) {
         result = f.apply(c, result);
@@ -62,7 +98,7 @@ public class DefaultSelector implements Selector {
     }
 
     public Plan freeze() {
-      return fold(head, new LinkedPlan(), (node, plan) -> plan.prepend(node.evaluator));
+      return fold(head, new LinkedPlan(context), (node, plan) -> plan.prepend(node.evaluator));
     }
 
     public String toString() {
@@ -88,27 +124,22 @@ public class DefaultSelector implements Selector {
 
     @Override
     public <T extends Evaluator> List<T> getEvaluators(Class<T> evaluatorType) {
-      return fold(head, new ArrayList<T>(), (node, list) -> {
-        if (Reflect.isCompatible(evaluatorType, node.evaluator.getClass())) {
-          list.add((T) node.evaluator);
-        }
-        return list;
-      });
-    }
-  }
-
-  private static class PlanBuilder
-      implements BiFunction<SyntaxNode<Symbol, Token>, LinkedPlan, LinkedPlan> {
-
-    final PlanContext context;
-
-    public PlanBuilder(PlanContext context) {
-      this.context = context;
+      return fold(
+          head,
+          new ArrayList<T>(),
+          (node, list) -> {
+            if (Reflect.isCompatible(evaluatorType, node.evaluator.getClass())) {
+              list.add((T) node.evaluator);
+            }
+            return list;
+          });
     }
 
     @Override
-    public LinkedPlan apply(SyntaxNode<Symbol, Token> node, LinkedPlan plan) {
-      return plan.prepend(context.lookup(node).create(node, context));
+    public <T> List<T> evaluate(T tree, NodeAdapter<T> hom) {
+      //      val stack = new ArrayDeque<SyntaxNode<Symbol, Token>>();
+      //      fold
+      return null;
     }
   }
 }
