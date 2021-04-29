@@ -28,7 +28,7 @@ public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory
 
     @Override
     public <T> List<T> evaluate(List<T> workingSet, NodeAdapter<T> hom) {
-      return null;
+      return workingSet;
     }
   }
 }

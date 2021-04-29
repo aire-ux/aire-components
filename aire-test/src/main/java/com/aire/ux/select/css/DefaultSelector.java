@@ -137,9 +137,13 @@ public class DefaultSelector implements Selector {
 
     @Override
     public <T> List<T> evaluate(T tree, NodeAdapter<T> hom) {
-      //      val stack = new ArrayDeque<SyntaxNode<Symbol, Token>>();
-      //      fold
-      return null;
+      final List<T> results = new ArrayList<T>(List.of(tree));
+      return fold(
+          head,
+          results,
+          (node, list) -> {
+            return node.evaluator.evaluate(list, hom);
+          });
     }
   }
 }

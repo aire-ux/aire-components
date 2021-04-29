@@ -34,7 +34,7 @@ public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public <T> List<T> evaluate(List<T> tree, NodeAdapter<T> hom) {
-      return null;
+      return tree;
     }
   }
 }

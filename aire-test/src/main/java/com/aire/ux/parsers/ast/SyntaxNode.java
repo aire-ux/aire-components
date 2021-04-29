@@ -38,4 +38,8 @@ public interface SyntaxNode<T, U> {
   String clearProperty(String key);
 
   void addChildren(List<SyntaxNode<T, U>> children);
+
+  SyntaxNode<T, U> getChild(int i);
+  SyntaxNode<T, U> removeChild(int i);
+  SyntaxNode<T, U> removeChild(SyntaxNode<T, U> i);
 }
