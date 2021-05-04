@@ -3,7 +3,6 @@ package com.aire.ux.plan.evaluators;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
-import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
@@ -11,15 +10,15 @@ import com.aire.ux.test.NodeAdapter;
 import java.util.Objects;
 import lombok.val;
 
-public class IdSelectorEvaluatorFactory implements EvaluatorFactory {
+public class IdSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactory {
 
-  @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.IdentitySelector;
+
+  public IdSelectorEvaluatorFactory() {
+    super(ElementSymbol.IdentitySelector);
   }
 
   @Override
-  public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
+  protected Evaluator createEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
     if (!node.hasChildren()) {
       throw new IllegalStateException(
           "Error: expected #<identifier>.  Got the identity selector but not the identifier");

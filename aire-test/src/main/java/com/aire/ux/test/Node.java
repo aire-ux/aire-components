@@ -222,8 +222,8 @@ public class Node {
       if (parent != null) {
         val children = parent.children;
         val idx = children.indexOf(element);
-        if (idx >= 0 && idx < children.size()) {
-          return children.get(idx);
+        if (idx >= 0 && (idx + 1) < children.size()) {
+          return children.get(idx + 1);
         }
       }
       return null;
