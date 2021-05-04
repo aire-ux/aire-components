@@ -5,6 +5,8 @@ import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
+import java.util.Set;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class EvaluatorFactoryTestCase extends TestCase {
@@ -23,4 +25,16 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
   protected abstract EvaluatorFactory createFactory();
 
 
+  protected <T> T at(Set<T> result, int i) {
+    val iter = result.iterator();
+
+    var j = 0;
+    while(true) {
+      val current = iter.next();
+      if(j++ == i) {
+        return current;
+      }
+    }
+
+  }
 }

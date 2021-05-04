@@ -2,6 +2,7 @@ package com.aire.ux.plan.evaluators;
 
 import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.test.Node;
@@ -18,8 +19,22 @@ public class ChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase 
     val plan = parser.parse("div > div").plan(context);
     val eval = plan.evaluate(node, Node.getAdapter());
     assertEquals(1, eval.size());
-    assertEquals("true", eval.iterator().next().getAttribute("child"));
+    assertEquals("true", at(eval, 0).getAttribute("child"));
   }
+
+  @Test
+  void ensureComplexSelectorWorks() {
+    node = node("hello").child(node("world").children(
+        node("drapper").attribute("class", "frapper"),
+        node("drapper").attribute("class", "napper")
+    ));
+    val plan = parser.parse("world > drapper.frapper").plan(context);
+    val result = plan.evaluate(node, Node.getAdapter());
+    assertEquals(1, result.size());
+    val next = at(result, 0);
+    assertEquals("frapper", next.getAttribute("class"));
+  }
+
 
   @Override
   protected EvaluatorFactory createFactory() {
