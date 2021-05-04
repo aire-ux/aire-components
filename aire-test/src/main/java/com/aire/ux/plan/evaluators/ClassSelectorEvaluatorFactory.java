@@ -34,8 +34,8 @@ public class ClassSelectorEvaluatorFactory implements EvaluatorFactory {
 
     final String classValue;
 
-    public ClassSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context,
-        String classValue) {
+    public ClassSelectorEvaluator(
+        SyntaxNode<Symbol, Token> node, PlanContext context, String classValue) {
       super(node, context);
       this.classValue = classValue;
     }

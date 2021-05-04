@@ -9,6 +9,7 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.List;
+import java.util.Set;
 
 public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
 
@@ -27,7 +28,7 @@ public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
     public SelectorGroupEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {}
 
     @Override
-    public <T> List<T> evaluate(List<T> tree, NodeAdapter<T> hom) {
+    public <T> Set<T> evaluate(Set<T> tree, NodeAdapter<T> hom) {
       return tree;
     }
   }

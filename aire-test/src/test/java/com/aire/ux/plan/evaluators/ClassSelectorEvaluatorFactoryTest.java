@@ -12,18 +12,8 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ClassSelectorEvaluatorFactoryTest extends TestCase {
+class ClassSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
-  private Node tree;
-  private PlanContext context;
-  private EvaluatorFactory factory;
-
-  @BeforeEach
-  protected void setUp() {
-    super.setUp();
-    context = DefaultPlanContext.getInstance();
-    factory = new TypeSelectorEvaluatorFactory();
-  }
 
   @Test
   void ensureClassSelectorWorksForSingleNode() {
@@ -35,12 +25,14 @@ class ClassSelectorEvaluatorFactoryTest extends TestCase {
 
   @Test
   void ensureNodeMatchesMultipleSelectors() {
-    val node = node("body")
-        .children(
-            node("div").attribute("class", "frapper").child(node("div"))
-                .attribute("class", "frapper"),
-            node("porglebee").attribute("class", "frapper")
-        );
+    val node =
+        node("body")
+            .children(
+                node("div")
+                    .attribute("class", "frapper")
+                    .child(node("div"))
+                    .attribute("class", "frapper"),
+                node("porglebee").attribute("class", "frapper"));
 
     System.out.println(node);
 
@@ -52,17 +44,39 @@ class ClassSelectorEvaluatorFactoryTest extends TestCase {
   @Test
   void ensureNestedSelectorsAreMatched() {
 
-    val node = node("body")
-        .children(
-            node("div").attribute("class", "frapper").child(node("div")
-                .attribute("class", "frapper")),
-            node("porglebee").attribute("class", "frapper")
-        );
+    val expected =
+        """
 
-    System.out.println(node);
+        <body>
+          <div class="frapepr">
+
+          </div>
+          <porglebee class="frapper">
+          </porglebee>
+        """;
+
+    val node =
+        node("body")
+            .children(
+                node("div")
+                    .attribute("class", "frapper")
+                    .children(
+                        node("div").attribute("class", "frapper"),
+                        node("hello")
+                            .child(
+                                node("div")
+                                    .attribute("class", "frapper")
+                                    .attribute("data-schnorp", "blapper"))),
+                node("porglebee").attribute("class", "frapper"));
+
 
     val plan = parser.parse("div.frapper").plan(context);
     val ctx = plan.evaluate(node, Node.getAdapter());
-    assertEquals(2, ctx.size());
+    assertEquals(3, ctx.size());
+  }
+
+  @Override
+  protected EvaluatorFactory createFactory() {
+    return new ClassSelectorEvaluatorFactory();
   }
 }

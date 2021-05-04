@@ -9,6 +9,7 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.List;
+import java.util.Set;
 
 public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
@@ -33,7 +34,7 @@ public class RootNodeEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    public <T> List<T> evaluate(List<T> tree, NodeAdapter<T> hom) {
+    public <T> Set<T> evaluate(Set<T> tree, NodeAdapter<T> hom) {
       return tree;
     }
   }

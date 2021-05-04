@@ -23,16 +23,13 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
 
   public static class TypeSelectorEvaluator extends AbstractHierarchySearchingEvaluator {
 
-
-    public TypeSelectorEvaluator(SyntaxNode<Symbol, Token> syntaxNode,
-        PlanContext context) {
+    public TypeSelectorEvaluator(SyntaxNode<Symbol, Token> syntaxNode, PlanContext context) {
       super(syntaxNode, context);
     }
 
     public String toString() {
       return "%s".formatted(node.getSymbol());
     }
-
 
     protected final <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
       return hom.getType(n).equals(node.getSource().getLexeme());

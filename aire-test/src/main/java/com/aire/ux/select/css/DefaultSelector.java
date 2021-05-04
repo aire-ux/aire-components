@@ -10,8 +10,10 @@ import com.aire.ux.plan.PlanNode;
 import com.aire.ux.test.NodeAdapter;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -136,14 +138,9 @@ public class DefaultSelector implements Selector {
     }
 
     @Override
-    public <T> List<T> evaluate(T tree, NodeAdapter<T> hom) {
-      final List<T> results = new ArrayList<T>(List.of(tree));
-      return fold(
-          head,
-          results,
-          (node, list) -> {
-            return node.evaluator.evaluate(list, hom);
-          });
+    public <T> Set<T> evaluate(T tree, NodeAdapter<T> hom) {
+      final Set<T> results = new LinkedHashSet<T>(Set.of(tree));
+      return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
     }
   }
 }

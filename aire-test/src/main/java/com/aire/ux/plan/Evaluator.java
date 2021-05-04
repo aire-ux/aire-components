@@ -2,8 +2,10 @@ package com.aire.ux.plan;
 
 import com.aire.ux.test.NodeAdapter;
 import java.util.List;
+import java.util.Set;
 
 public interface Evaluator {
 
-  <T> List<T> evaluate(List<T> workingSet, NodeAdapter<T> hom);
+
+  <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom);
 }
