@@ -2,7 +2,6 @@ package com.aire.ux.plan.evaluators;
 
 import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.test.Node;
@@ -33,6 +32,31 @@ public class ChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase 
     assertEquals(1, result.size());
     val next = at(result, 0);
     assertEquals("frapper", next.getAttribute("class"));
+  }
+
+
+  @Test
+  void ensureChildSelectorDoesNotSelectParentSiblingOtherwiseMatching() {
+    node =
+        node("html").children(
+
+            node("body").children(
+                node("div")
+                    .attribute("class", "match")
+                    .attribute("data-type", "parent-sibling"),
+                node("div")
+                    .attribute("class", "porglebee")
+                    .attribute("data-type", "parent-sibling")
+                    .children(
+                        node("span").child(
+                            node("div").attribute("class", "match")
+                        )
+                    )
+            )
+        );
+    val result = parser.parse("div.porglebee > span > div.match")
+        .plan(context).evaluate(node, Node.getAdapter());
+    assertEquals(1, result.size());
   }
 
 
