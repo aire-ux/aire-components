@@ -24,7 +24,7 @@ public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
     return new AdjacentSiblingEvaluator(node, context);
   }
 
-  private class AdjacentSiblingEvaluator implements Evaluator {
+  private static class AdjacentSiblingEvaluator implements Evaluator {
 
     private final CompositeEvaluator delegate;
 

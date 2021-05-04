@@ -12,7 +12,6 @@ import lombok.val;
 
 public class IdSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactory {
 
-
   public IdSelectorEvaluatorFactory() {
     super(ElementSymbol.IdentitySelector);
   }

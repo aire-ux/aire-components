@@ -4,7 +4,6 @@ import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.aire.ux.plan.EvaluatorFactory;
-import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.Node;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ class AdjacentSiblingEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     val result = eval(param, node, Node.getAdapter());
     assertEquals(2, result.size());
   }
-
 
   @Test
   void ensureSelectorSequenceWorks() {
@@ -57,7 +55,6 @@ class AdjacentSiblingEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertTrue(result.stream().allMatch(t -> t.getParent().equals(node)));
   }
 
-
   @Test
   void ensureSimpleSelectorSelectsAllMatchingSiblings() {
     node =
@@ -71,7 +68,6 @@ class AdjacentSiblingEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertTrue(result.stream().allMatch(t -> t.getParent().equals(node)));
     assertTrue(result.stream().noneMatch(t -> t.hasAttribute("fst")));
   }
-
 
   @Override
   protected EvaluatorFactory createFactory() {
