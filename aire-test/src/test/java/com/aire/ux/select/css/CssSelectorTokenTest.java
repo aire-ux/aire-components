@@ -1,8 +1,6 @@
 package com.aire.ux.select.css;
 
-import static com.aire.ux.select.css.CssSelectorToken.Identifier;
-import static com.aire.ux.select.css.CssSelectorToken.Numeric;
-import static com.aire.ux.select.css.CssSelectorToken.UnclosedString;
+import static com.aire.ux.select.css.CssSelectorToken.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,6 +11,34 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class CssSelectorTokenTest {
 
+  @ParameterizedTest
+  @ValueSource(strings = {"1.0", "1", "2.000", "45"})
+  void ensureNumericWorks(String value) {
+    expect(value, Numeric, value);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"2em", "2rem", "2.9em", "0.1em"})
+  void ensureDimensionWorks(String value) {
+    expect(value, Dimension, value);
+  }
+
+  @Test
+  void ensureMinusWorks() {
+    expect("-", Minus, "-");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {":"})
+  void ensurePseudoElementMatches(String value) {
+    expect(value, PseudoElement, value);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"::"})
+  void ensurePseudoClassMatches(String value) {
+    expect(value, PseudoClass, value);
+  }
 
   @Test
   void ensureElementRegexMatchesSimpleElement() {
@@ -83,7 +109,7 @@ class CssSelectorTokenTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"'string one'",  "\"string ' two\""})
+  @ValueSource(strings = {"'string one'", "\"string ' two\""})
   void ensureStringValuesAreParsedCorrectly(String str) {
     expect(str, CssSelectorToken.String, str);
   }

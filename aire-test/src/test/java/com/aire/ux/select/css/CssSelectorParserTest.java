@@ -53,7 +53,7 @@ public class CssSelectorParserTest {
     }
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
       parser = new CssSelectorParser();
     }
   }

@@ -9,13 +9,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 import lombok.val;
 
 @NotThreadSafe
 final class TokenBuffer {
-
-
 
   private final Pattern patternBuffer;
 

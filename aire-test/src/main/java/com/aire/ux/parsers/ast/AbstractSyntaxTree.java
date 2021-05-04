@@ -1,16 +1,20 @@
 package com.aire.ux.parsers.ast;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Stack;
+import java.util.ListIterator;
 import java.util.function.BiFunction;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
-public class AbstractSyntaxTree<T, U> {
+public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
-  static final Symbol ROOT_SYMBOL =
+  public static final Symbol ROOT_SYMBOL =
       new Symbol() {
-
+        @Override
         public String toString() {
           return "RootSymbol";
         }
@@ -18,29 +22,52 @@ public class AbstractSyntaxTree<T, U> {
 
   @Getter private final SyntaxNode<T, U> root;
 
+  /**
+   * construct a new AST with the provided root
+   *
+   * @param root the root of the tree
+   */
   public AbstractSyntaxTree(SyntaxNode<T, U> root) {
     this.root = root;
   }
 
+  /**
+   * construct a new AST with an empty root node. This root-node is identified by the ROOT_SYMBOL
+   * symbol
+   */
   public AbstractSyntaxTree() {
     this(new RootSyntaxNode<>());
   }
 
+  @Override
   public String toString() {
     val result = new StringBuilder();
     toString(root, result, "", true);
     return result.toString();
   }
 
-  public <V> V reduce(V initial, BiFunction<SyntaxNode<T, U>, V, V> f) {
+  /**
+   * @param initial the initial value (nonnul)
+   * @param f the function to reduce the abstract syntax tree over
+   * @param <V> the type-parameter of the initial value (and result)
+   * @return the result of reducing the AST over the function
+   */
+  public <V> V reduce(@Nonnull V initial, @Nonnull BiFunction<SyntaxNode<T, U>, V, V> f) {
     return reduce(Order.Pre, initial, f);
   }
 
-  public <V> V reduce(Order order, V initial, BiFunction<SyntaxNode<T, U>, V, V> f) {
-    val struct =
-        order == Order.Pre ? new Stack<SyntaxNode<T, U>>() : new LinkedList<SyntaxNode<T, U>>();
+  /**
+   * @param order reduce in either pre-order or post-order
+   * @param initial the initial value
+   * @param f the function to reduce this abstract syntax tree over
+   * @param <V> the type of the initial value (and result)
+   * @return the reduction result
+   */
+  public <V> V reduce(
+      @Nonnull Order order, @Nonnull V initial, @Nonnull BiFunction<SyntaxNode<T, U>, V, V> f) {
+    val struct = new IterationStructure<T, U>(order);
     struct.add(root);
-    var result = f.apply(root, initial);
+    var result = initial;
     while (!struct.isEmpty()) {
       val iterator = struct.listIterator();
       while (iterator.hasNext()) {
@@ -55,14 +82,48 @@ public class AbstractSyntaxTree<T, U> {
     return result;
   }
 
-  private void toString(SyntaxNode<T, U> node, StringBuilder out, String indent, boolean last) {
+  /**
+   * generate an interable over this AST in the specified order
+   *
+   * @param order
+   * @return
+   */
+  public Iterable<SyntaxNode<T, U>> iterate(Order order) {
+    val struct = new IterationStructure<T, U>(order);
+    struct.add(root);
+    return new Iterable<SyntaxNode<T, U>>() {
+      @NotNull
+      @Override
+      public Iterator<SyntaxNode<T, U>> iterator() {
+        return new Iterator<SyntaxNode<T, U>>() {
+          @Override
+          public boolean hasNext() {
+            return !struct.isEmpty();
+          }
 
+          @Override
+          public SyntaxNode<T, U> next() {
+            val next = struct.remove();
+            struct.addAll(next.getChildren());
+            return next;
+          }
+        };
+      }
+    };
+  }
+
+  @NotNull
+  @Override
+  public Iterator<SyntaxNode<T, U>> iterator() {
+    return iterate(Order.Pre).iterator();
+  }
+
+  private void toString(SyntaxNode<T, U> node, StringBuilder out, String indent, boolean last) {
     if (node == root) {
       out.append(node).append("\n");
     } else {
       out.append(indent).append(last ? "└╴" : "├╴").append(node.toString()).append("\n");
     }
-
     indent = indent + (last ? "   " : "│  ");
     val iter = node.getChildren().iterator();
     while (iter.hasNext()) {
@@ -85,6 +146,49 @@ public class AbstractSyntaxTree<T, U> {
 
     public String toString() {
       return "RootNode";
+    }
+  }
+
+  private static final class IterationStructure<T, U> implements Iterable<SyntaxNode<T, U>> {
+
+    final Order order;
+    final LinkedList<SyntaxNode<T, U>> deque;
+
+    private IterationStructure(Order order) {
+      this.order = order;
+      this.deque = new LinkedList<>();
+    }
+
+    void add(SyntaxNode<T, U> node) {
+      if (order == Order.Pre) {
+        deque.push(node);
+      } else {
+        deque.offer(node);
+      }
+    }
+
+    SyntaxNode<T, U> remove() {
+      return order == Order.Pre ? deque.pop() : deque.poll();
+    }
+
+    ListIterator<SyntaxNode<T, U>> listIterator() {
+      return order == Order.Pre ? deque.listIterator() : deque.listIterator(deque.size());
+    }
+
+    boolean isEmpty() {
+      return deque.isEmpty();
+    }
+
+    void addAll(Collection<? extends SyntaxNode> nodes) {
+      for (val n : nodes) {
+        add(n);
+      }
+    }
+
+    @NotNull
+    @Override
+    public Iterator<SyntaxNode<T, U>> iterator() {
+      return listIterator();
     }
   }
 }

@@ -11,7 +11,10 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-/** pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex */
+/**
+ * pure-java implementation of https://www.w3.org/TR/2018/REC-selectors-3-20181106/#lex re-order
+ * these elements with care as their ordinal defines the lexer precedence for tokens
+ */
 public enum CssSelectorToken implements Type {
 
   /** identifier: an entity name */
@@ -23,63 +26,82 @@ public enum CssSelectorToken implements Type {
   /** Lex unclosed strings */
   UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
 
+  /** strict equality operator <code>=</code> */
   StrictEqualityOperator("="),
 
+  /** attribute value in set */
   AttributeValueInSetOperator("~="),
 
+  /** dashed prefix operator */
   DashedPrefixOperator("\\|="),
 
+  /** */
   PrefixOperator("\\^="),
 
+  /** */
   SuffixOperator("\\$="),
 
+  /** */
   SubstringOperator("\\*="),
 
+  /** */
   FunctionStart("%s\\(".formatted(IDENTIFIER)),
 
-  FunctionEnd("\\)"),
+  /** */
+  ApplicationEnd("\\)"),
 
+  /** */
   AttributeGroupStart("\\["),
 
+  /** */
   AttributeGroupEnd("\\]"),
 
+  /** */
   IdentifierSelector("\\#"),
 
+  /** */
   AdditionOperator("\s*\\+"),
 
+  /** greater-than */
   GreaterThan("\s*>"),
 
   Comma("\s*,"),
 
+  /** tilde */
   Tilde("\s*~"),
 
+  /** universal operator */
   Universal("\s*\\*"),
 
+  /** negation prefix */
   Not(":not\\("),
 
+  /** at keyword such as @import */
   AtKeyword("@%s".formatted(IDENTIFIER)),
 
+  /** percentage operator */
   Percentage(NUMBER + "%"),
 
+  /** dimension, such as 2em, 1rem, 0.1em */
   Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
 
+  /** class operator */
   Class("\\."),
 
+  /** whitespace */
   Whitespace("\s+"),
 
-  FirstLine(":first-line"),
+  /** pseudo-class prefix */
+  PseudoClass("::"),
 
-  FirstLetter(":first-letter"),
+  /** pseudo--lower precedent than pseudoclass */
+  PseudoElement(":"),
 
-  Before(":before"),
+  /** identifier element */
+  Identifier(IDENTIFIER),
 
-  After(":after"),
-
-  PseudoElement(":%s".formatted(IDENTIFIER)),
-
-  PseudoClass("::%s".formatted(IDENTIFIER)),
-
-  Identifier(IDENTIFIER);
+  /** minus--lower precedent than Identifier */
+  Minus("-");
 
   /** immutable state */
   private final String pattern;
@@ -96,6 +118,10 @@ public enum CssSelectorToken implements Type {
   CssSelectorToken(@Nonnull String pattern, boolean include) {
     this.pattern = pattern;
     this.include = include;
+  }
+
+  public String getRegularExpression() {
+    return pattern;
   }
 
   @Nonnull

@@ -2,14 +2,23 @@ package com.aire.ux.select.css;
 
 import static com.aire.ux.parsers.LookaheadIterator.wrap;
 import static com.aire.ux.select.css.CssSelectorToken.AdditionOperator;
+import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupStart;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeValueInSetOperator;
+import static com.aire.ux.select.css.CssSelectorToken.Dimension;
+import static com.aire.ux.select.css.CssSelectorToken.FunctionStart;
 import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.select.css.CssSelectorToken.IdentifierSelector;
+import static com.aire.ux.select.css.CssSelectorToken.Minus;
+import static com.aire.ux.select.css.CssSelectorToken.Not;
+import static com.aire.ux.select.css.CssSelectorToken.Numeric;
 import static com.aire.ux.select.css.CssSelectorToken.PrefixOperator;
+import static com.aire.ux.select.css.CssSelectorToken.PseudoClass;
+import static com.aire.ux.select.css.CssSelectorToken.PseudoElement;
 import static com.aire.ux.select.css.CssSelectorToken.StrictEqualityOperator;
+import static com.aire.ux.select.css.CssSelectorToken.String;
 import static com.aire.ux.select.css.CssSelectorToken.SubstringOperator;
 import static com.aire.ux.select.css.CssSelectorToken.SuffixOperator;
 import static com.aire.ux.select.css.CssSelectorToken.Tilde;
@@ -17,7 +26,6 @@ import static com.aire.ux.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
 
 import com.aire.ux.parsers.LookaheadIterator;
-import com.aire.ux.parsers.ast.AbstractSyntaxNode;
 import com.aire.ux.parsers.ast.NamedSyntaxNode;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
@@ -27,18 +35,32 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import lombok.val;
 
+/**
+ * selector parser: this class provides support for parsing css selectors. This current
+ * implementation parses the prospective CSS Level 4 syntax with some extensions
+ *
+ * <p>refer to https://www.w3.org/TR/2018/REC-selectors-3-20181106/#grammar
+ */
 @ThreadSafe
 @SuppressFBWarnings
 public class CssSelectorParser {
 
+  /** symbol for the tokenless element group--provided for convenience */
   static final Symbol GROUP = new Symbol() {};
-  private static final EnumMap<CssSelectorToken, ElementSymbol> mappedTokens;
 
+  /** map from tokens to their corresponding symbols */
+  private static final Map<CssSelectorToken, ElementSymbol> mappedTokens;
+
+  /** construct the mappings from symbols to tokens */
   static {
     mappedTokens = new EnumMap<CssSelectorToken, ElementSymbol>(CssSelectorToken.class);
     for (val t : ElementSymbol.values()) {
@@ -48,16 +70,31 @@ public class CssSelectorParser {
     }
   }
 
-  private final SelectorLexer lexer;
+  /** the lexer--assumed to not be null */
+  @Nonnull private final SelectorLexer lexer;
 
+  /** create a new selector parser with the provided lexer */
   public CssSelectorParser() {
     this(new DefaultCssSelectorLexer());
   }
 
-  public CssSelectorParser(final SelectorLexer lexer) {
+  /**
+   * override the default selector lexer for this parser
+   *
+   * @param lexer
+   */
+  public CssSelectorParser(@Nonnull final SelectorLexer lexer) {
+    Objects.requireNonNull(lexer, "lexer must not be null!");
     this.lexer = lexer;
   }
 
+  /**
+   * lookup a symbol from its corresponding token
+   *
+   * @param token the token to resolve a symbol for
+   * @return the symbol, if it exists
+   * @throws NoSuchElementException if there is no symbol for the token
+   */
   static ElementSymbol symbolForToken(CssSelectorToken token) {
     val result = mappedTokens.get(token);
     if (result == null) {
@@ -66,6 +103,11 @@ public class CssSelectorParser {
     return result;
   }
 
+  /**
+   * @param sequence the character sequence to extract the selector AST from
+   * @return the Selector AST
+   * @throws IllegalArgumentException if the syntax is invalid
+   */
   public Selector parse(CharSequence sequence) {
     val tokens = wrap(lexer.lex(sequence).iterator());
     val result = new DefaultSelector();
@@ -75,6 +117,13 @@ public class CssSelectorParser {
     return result;
   }
 
+  /**
+   * parse the selector grouping
+   *
+   * @param tokens the LL(1), pushback-enabled token iterator
+   * @return the list of selector groups
+   * @throws IllegalArgumentException if the syntax is invalid
+   */
   private List<SyntaxNode<Symbol, Token>> selectorGroup(LookaheadIterator<Token> tokens) {
     val result = new LinkedList<SyntaxNode<Symbol, Token>>();
     var selector = new CssSyntaxNode(ElementSymbol.SelectorGroup);
@@ -91,6 +140,13 @@ public class CssSelectorParser {
     return result;
   }
 
+  /**
+   * parse the selector component of the grammar
+   *
+   * @param tokens the token stream
+   * @return a list of selectors
+   * @throws IllegalArgumentException if the syntax is invalid
+   */
   private List<SyntaxNode<Symbol, Token>> selector(LookaheadIterator<Token> tokens) {
     val result = new LinkedList<SyntaxNode<Symbol, Token>>();
     result.addAll(simpleSelectorSequence(tokens));
@@ -106,6 +162,7 @@ public class CssSelectorParser {
         var current = result.peek();
         while (isCombinator(tokens)) {
           val combinator = combinator(tokens);
+
           current.addChild(combinator);
           combinator.addChildren(simpleSelectorSequence(tokens));
           current = combinator;
@@ -115,24 +172,181 @@ public class CssSelectorParser {
     return result;
   }
 
+  /**
+   * parse a simple selector sequence
+   *
+   * @param tokens the token stream
+   * @return the list of selector-sequences
+   * @throws IllegalArgumentException if the syntax is invalid
+   */
   private List<SyntaxNode<Symbol, Token>> simpleSelectorSequence(LookaheadIterator<Token> tokens) {
     val result = new ArrayList<SyntaxNode<Symbol, Token>>();
     if (nextIs(tokens, Identifier, Universal)) {
       val next = tokens.next();
       val nextType = (CssSelectorToken) next.getType();
       result.add(new CssSyntaxNode(symbolForToken(nextType), next));
-      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class, AttributeGroupStart)) {
+      while (isComposite(tokens)) {
         composite(tokens, result);
       }
-    } else {
-      while (nextIs(tokens, IdentifierSelector, CssSelectorToken.Class, AttributeGroupStart)) {
+      return result;
+    } else if (isComposite(tokens)) {
+      while (isComposite(tokens)) {
         composite(tokens, result);
       }
+      return result;
     }
 
-    return result;
+    if (tokens.hasNext()) {
+      val next = tokens.next();
+      throw new IllegalArgumentException(
+          "Unexpected token '%s' at (%d, %d), lexeme: %s"
+              .formatted(next.getType(), next.getStart(), next.getEnd(), next.getLexeme()));
+    }
+    throw new IllegalStateException(
+        "Bad state.  Remaining tokens: [%s]"
+            .formatted(tokens.toStream().map(t -> t.toString()).collect(Collectors.joining(","))));
   }
 
+  /**
+   * @param tokens the token sequence to check
+   * @return true if the next token is a composite member
+   */
+  private boolean isComposite(LookaheadIterator<Token> tokens) {
+    return nextIs(
+        tokens,
+        IdentifierSelector,
+        CssSelectorToken.Class,
+        AttributeGroupStart,
+        PseudoClass,
+        PseudoElement,
+        FunctionStart,
+        Not);
+  }
+
+  /**
+   * check the next token to verify that it's the expected one, and, if it is read it from the
+   * stream and discard it
+   *
+   * @param tokens the token-stream
+   * @param token the expected token
+   * @throws IllegalArgumentException if the next token in the token-stream is not equal to the
+   *     expected token
+   */
+  private void expectAndDiscard(LookaheadIterator<Token> tokens, CssSelectorToken token) {
+    if (!tokens.hasNext()) {
+      throw new IllegalArgumentException(
+          "Error: expected %s (%s), got EOF".formatted(token, token.getRegularExpression()));
+    }
+
+    val next = tokens.next();
+    val type = next.getType();
+
+    if (token != type) {
+      throw new IllegalArgumentException(
+          "Error: expected %s, got %s at (%d, %d): lexeme: %s"
+              .formatted(token, type, next.getStart(), next.getEnd(), next.getLexeme()));
+    }
+  }
+
+  /**
+   * parse a composite rule. This does not correspond to a location in the grammar
+   *
+   * @param tokens the token stream
+   * @param result the list of syntax-nodes at the current level of the syntax-tree
+   */
+  private void composite(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
+    var t = tokens.peek();
+    var type = (CssSelectorToken) t.getType();
+    if (type == AttributeGroupStart) {
+      parseAttributeGroup(tokens, result);
+    } else if (type == PseudoClass || type == PseudoElement) {
+      pseudo(tokens, result);
+    } else if (type == Not) {
+      negation(tokens, result);
+    } else {
+      val selector = new CssSyntaxNode(symbolForToken(type), tokens.next());
+      result.add(selector);
+      selector.addChild(expect(tokens, Identifier, CssSelectorToken.Class));
+    }
+  }
+
+  /**
+   * parse a negation operator. It's actually a little easier to allow this method to parse more
+   * complex expressions than those permitted by the CSS L4 spec
+   *
+   * @param tokens the token stream
+   * @param result the list of syntax-nodes at the current level of the abstract syntax tree
+   * @throws IllegalArgumentException if the syntax of the expression is not correct
+   */
+  private void negation(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
+    val negation = expect(tokens, Not);
+    eatWhitespace(tokens);
+    if (isSequence(tokens)) {
+      var current = negation;
+      var next = simpleSelectorSequence(tokens);
+      current.addChildren(next);
+      while (isCombinator(tokens)) {
+        val combinator = combinator(tokens);
+        current.addChild(combinator);
+        combinator.addChildren(simpleSelectorSequence(tokens));
+        current = combinator;
+      }
+    } else if (nextIs(tokens, AttributeGroupStart)) {
+      val results = new ArrayList<SyntaxNode<Symbol, Token>>();
+      parseAttributeGroup(tokens, results);
+      negation.addChildren(results);
+    } else if (nextIs(tokens, PseudoElement, PseudoClass)) {
+      val results = new ArrayList<SyntaxNode<Symbol, Token>>();
+      pseudo(tokens, results);
+      negation.addChildren(results);
+    }
+    eatWhitespace(tokens);
+    expectAndDiscard(tokens, ApplicationEnd);
+    result.add(negation);
+  }
+
+  /**
+   * parse a pseudo-element, class, or function invocation
+   *
+   * @param tokens the token stream
+   * @param result the node list at the current level of the AST
+   */
+  private void pseudo(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
+    val pseudo = expect(tokens, PseudoClass, PseudoElement);
+    result.add(pseudo);
+    val next = (CssSelectorToken) tokens.peek().getType();
+    if (next == FunctionStart) {
+      pseudo.addChild(expression(tokens));
+    } else {
+      val id = expect(tokens, Identifier);
+      pseudo.addChild(id);
+    }
+  }
+
+  /**
+   * parse an expression
+   *
+   * @param tokens the tokens
+   * @return a syntax-node containing the expression contents as children
+   */
+  private SyntaxNode<Symbol, Token> expression(LookaheadIterator<Token> tokens) {
+    eatWhitespace(tokens);
+    val function = expect(tokens, FunctionStart);
+    while (nextIs(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier)) {
+      function.addChild(
+          expect(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier));
+      eatWhitespace(tokens);
+    }
+    expectAndDiscard(tokens, ApplicationEnd);
+    return function;
+  }
+
+  /**
+   * parse a single attribute group
+   *
+   * @param tokens the current token-set
+   * @param result the result to add the element to
+   */
   private void parseAttributeGroup(
       LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
     expectAndDiscard(tokens, AttributeGroupStart);
@@ -170,51 +384,6 @@ public class CssSelectorParser {
     result.add(attribute);
   }
 
-  private void expectAndDiscard(LookaheadIterator<Token> tokens, CssSelectorToken token) {
-    if (!tokens.hasNext()) {
-      throw new IllegalArgumentException("Error: expected %s, got EOF".formatted(token));
-    }
-
-    val next = tokens.next();
-    val type = next.getType();
-
-    if (token != type) {
-      throw new IllegalArgumentException(
-          "Error: expected %s, got %s at (%d, %d): lexeme: %s"
-              .formatted(token, type, next.getStart(), next.getEnd(), next.getLexeme()));
-    }
-  }
-
-  private void composite(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
-    val t = tokens.peek();
-    val type = (CssSelectorToken) t.getType();
-    if (type == AttributeGroupStart) {
-      parseAttributeGroup(tokens, result);
-    } else {
-      val selector = new CssSyntaxNode(symbolForToken(type), tokens.next());
-      result.add(selector);
-      selector.addChild(expect(tokens, Identifier, CssSelectorToken.Class));
-    }
-  }
-
-  private SyntaxNode<Symbol, Token> expect(
-      LookaheadIterator<Token> tokens, CssSelectorToken... types) {
-    if (!tokens.hasNext()) {
-      val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
-      throw new IllegalArgumentException("Expected one of [%s], got EOF".formatted(expected));
-    }
-    val next = tokens.peek();
-    val nextType = (CssSelectorToken) next.getType();
-    for (val type : types) {
-      if (nextType.equals(type)) {
-        return new CssSyntaxNode(symbolForToken(nextType), tokens.next());
-      }
-    }
-    val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
-    throw new IllegalArgumentException(
-        "Expected one of [%s], got %s (%s)".formatted(expected, nextType, next));
-  }
-
   /**
    * todo: add attrib, pseudo, negation
    *
@@ -222,13 +391,35 @@ public class CssSelectorParser {
    * @return
    */
   private boolean isSequence(LookaheadIterator<Token> tokens) {
-    return nextIs(tokens, Identifier, Universal, IdentifierSelector, CssSelectorToken.Class);
+    return nextIs(
+        tokens,
+        Identifier,
+        Universal,
+        IdentifierSelector,
+        CssSelectorToken.Class,
+        PseudoClass,
+        PseudoElement,
+        Not);
   }
 
+  /**
+   * determine if the next token is a combinator without advancing the stream
+   *
+   * @param tokens the token stream to check
+   * @return true if the next token is a combinator
+   */
   private boolean isCombinator(LookaheadIterator<Token> tokens) {
     return nextIs(tokens, Tilde, Whitespace, GreaterThan, AdditionOperator);
   }
 
+  /**
+   * utility method for determining whether the next element is in the target list
+   *
+   * @param tokens the token stream
+   * @param match the set of elements to determine membership in
+   * @return true if the next token is a member of the target set, false if not or the stream has no
+   *     more tokens
+   */
   private boolean nextIs(LookaheadIterator<Token> tokens, CssSelectorToken... match) {
     if (tokens.hasNext()) {
       val next = tokens.peek();
@@ -242,6 +433,14 @@ public class CssSelectorParser {
     return false;
   }
 
+  /**
+   * parse a combinator node
+   *
+   * @param tokens the token stream to extract a combinator from
+   * @return the combinator
+   * @throws IllegalArgumentException if the parser-state is in combinator position, but no known
+   *     combinator exists
+   */
   private SyntaxNode<Symbol, Token> combinator(LookaheadIterator<Token> tokens) {
     val token = tokens.peek();
     val type = (CssSelectorToken) token.getType();
@@ -261,6 +460,14 @@ public class CssSelectorParser {
     }
   }
 
+  /**
+   * expect a "union" operator (comma)
+   *
+   * @param tokens the token stream
+   * @return a union operator
+   * @throws IllegalArgumentException if the parser state is in union position, but the next
+   *     operator is not a union operator
+   */
   private SyntaxNode<Symbol, Token> union(LookaheadIterator<Token> tokens) {
     val next = tokens.peek();
     if (next.getType() != CssSelectorToken.Comma) {
@@ -271,6 +478,11 @@ public class CssSelectorParser {
     return node;
   }
 
+  /**
+   * consume until the next token is non-whitespace and place the iterator head there
+   *
+   * @param tokens the tokens stream
+   */
   private void eatWhitespace(LookaheadIterator<Token> tokens) {
     while (tokens.hasNext()) {
       val next = tokens.next();
@@ -281,17 +493,91 @@ public class CssSelectorParser {
     }
   }
 
+  /**
+   * determine if the next token in the stream is a member of the expected set, and, if it is return
+   * a syntax node marking its placement in the abstract syntax tree
+   *
+   * @param tokens the token stream
+   * @param types the set of tokens to expect such that the next element in the stream is in it
+   * @return a syntax node backed by the token
+   * @throws IllegalArgumentException if there is not a next token or the next token is not within
+   *     the set
+   */
+  private SyntaxNode<Symbol, Token> expect(
+      LookaheadIterator<Token> tokens, CssSelectorToken... types) {
+    if (!tokens.hasNext()) {
+      val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
+      throw new IllegalArgumentException("Expected one of [%s], got EOF".formatted(expected));
+    }
+    val next = tokens.peek();
+    val nextType = (CssSelectorToken) next.getType();
+    for (val type : types) {
+      if (nextType.equals(type)) {
+        return new CssSyntaxNode(symbolForToken(nextType), tokens.next());
+      }
+    }
+    val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
+    throw new IllegalArgumentException(
+        "Expected one of [%s], got %s (%s)".formatted(expected, nextType, next));
+  }
+
+  /** the set of known CSS selector symbols, along with some that make processing the AST nicer */
   public enum ElementSymbol implements Symbol {
+    /** a selector group. Individual CSS selector-sets are grouped beneath this for convenience */
     SelectorGroup("<group>", null),
 
+    /** operators */
+
+    /**
+     * string value a string enclosed by either single-quotes ('), or double-quotes (") if the
+     * string is single-quoted, then single-quotes must be escaped. Vice-versa for
+     * double-quotes/single-quote escapes
+     */
     StringValue("<string>", CssSelectorToken.String),
+
+    /**
+     * operator that matches a string prefix. Equivalent to: attribute.value.startsWith([operand])
+     */
     PrefixMatch("^=", CssSelectorToken.PrefixOperator),
+
+    /** operator that matches a string suffix. Equivalent to: attribute.value.endsWith([operand]) */
     SuffixMatch("$=", CssSelectorToken.SuffixOperator),
+
+    /** operator that matches a substring. Equivalent to: attribute.value.contains([operand]) */
     SubstringMatch("*=", CssSelectorToken.SubstringOperator),
+
+    /**
+     * operator that matches a hyphen-separated list of values for instance, given an element e:
+     *
+     * <p>{@code <a lang="en_US-en_UK"></a> } a[lang|="en"] will match
+     */
     DashMatch("|=", CssSelectorToken.DashedPrefixOperator),
+
+    /**
+     * includes is like dash-match only that, instead of a hyphen, it uses a space to delineat the
+     * values
+     *
+     * <p>{@code <a lang="en whatever"> } will be matched by a[lang~=en]
+     */
     Includes("~=", CssSelectorToken.AttributeValueInSetOperator),
+
+    /** operator that matches a string exactly */
     StrictEquality("=", CssSelectorToken.StrictEqualityOperator),
 
+    /** either an addition operator or an expression value, depending on state */
+    Addition("+", AdditionOperator),
+
+    /** subtraction operator */
+    Subtraction("-", CssSelectorToken.Minus),
+
+    /** numeric value--may be decimal or integral */
+    Number("<number>", CssSelectorToken.Numeric),
+
+    /** denotes the beginning of a selector call such as {@code :nth-child(2n + 1) } */
+    FunctionApplication("<function>()", FunctionStart),
+    /** pseudoclass */
+    PseudoClass("::<class>", CssSelectorToken.PseudoClass),
+    PseudoElement(":<element>", CssSelectorToken.PseudoElement),
     /** attribute selector */
     AttributeSelector("<attribute>", CssSelectorToken.AttributeGroupStart),
     /** a comma operator denotes set union a,b = union(select(a), select(b)) */
@@ -326,10 +612,19 @@ public class CssSelectorParser {
     /** selects any descendants */
     DescendantSelector("<a desc b>", Whitespace);
 
+    /** description */
     private final String value;
+
+    /** the associated token */
     private final CssSelectorToken token;
 
-    ElementSymbol(String value, CssSelectorToken token) {
+    /**
+     * constructor for the symbol
+     *
+     * @param value the string value
+     * @param token the token, may be null
+     */
+    ElementSymbol(@Nonnull String value, @Nullable CssSelectorToken token) {
       this.value = value;
       this.token = token;
     }
@@ -358,13 +653,6 @@ public class CssSelectorParser {
           """
           .strip()
           .formatted(getSymbol(), getName(), getSource());
-    }
-  }
-
-  static class IntermediateNode extends AbstractSyntaxNode<Symbol, Token> {
-
-    IntermediateNode() {
-      super(null, null, null, null);
     }
   }
 }

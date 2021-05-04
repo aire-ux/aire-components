@@ -1,0 +1,7 @@
+com.aire.ux.plan.evaluators.TypeSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.RootNodeEvaluatorFactory
+com.aire.ux.plan.evaluators.SelectorGroupEvaluatorFactory
+com.aire.ux.plan.evaluators.ChildSelectorCombinatorEvaluatorFactory
+com.aire.ux.plan.evaluators.ClassSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.DescendantSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.IdSelectorEvaluatorFactory
