@@ -20,7 +20,6 @@ class IdSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertEquals(1, result.size());
   }
 
-
   @Test
   void ensureTypelessSelectorWorks() {
     val node = node("div").id("test");
@@ -31,14 +30,7 @@ class IdSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureDescedantSelectedByIdWorks() {
-    node = node("html")
-        .child(
-            node("body")
-              .children(
-                  node("span"),
-                  node("span").id("test")
-              )
-        );
+    node = node("html").child(node("body").children(node("span"), node("span").id("test")));
     val result = eval("span#test", node, Node.getAdapter());
     assertEquals(1, result.size());
     val n = at(result, 0);
@@ -46,23 +38,16 @@ class IdSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertEquals("span", n.getType());
   }
 
-
   @Test
   void ensureTypelessSelectionByIdWorks() {
-    node = node("html")
-        .child(
-            node("body")
-                .children(
-                    node("span"),
-                    node("span").id("test")
-                )
-        );
+    node = node("html").child(node("body").children(node("span"), node("span").id("test")));
     val result = eval("#test", node, Node.getAdapter());
     assertEquals(1, result.size());
     val n = at(result, 0);
     assertEquals("test", n.getAttribute("id"));
     assertEquals("span", n.getType());
   }
+
   @Override
   protected EvaluatorFactory createFactory() {
     return new IdSelectorEvaluatorFactory();

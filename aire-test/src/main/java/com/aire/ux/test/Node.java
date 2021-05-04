@@ -67,9 +67,7 @@ public class Node {
     return attributes.containsKey(attribute);
   }
 
-  /**
-   * Builder methods
-   */
+  /** Builder methods */
   public Node children(Node... children) {
     setChildren(List.of(children));
     return this;

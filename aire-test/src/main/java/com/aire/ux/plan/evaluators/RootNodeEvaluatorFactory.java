@@ -8,7 +8,6 @@ import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.List;
 import java.util.Set;
 
 public class RootNodeEvaluatorFactory implements EvaluatorFactory {

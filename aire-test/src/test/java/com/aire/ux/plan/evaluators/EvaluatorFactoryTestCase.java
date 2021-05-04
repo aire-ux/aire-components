@@ -29,7 +29,6 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
 
   protected abstract EvaluatorFactory createFactory();
 
-
   protected <T> T at(Set<T> result, int i) {
     val iter = result.iterator();
 
@@ -40,6 +39,5 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
         return current;
       }
     }
-
   }
 }

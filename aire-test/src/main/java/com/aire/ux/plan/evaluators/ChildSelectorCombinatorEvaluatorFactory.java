@@ -9,7 +9,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import lombok.val;
 
@@ -32,7 +31,7 @@ public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val result = new LinkedHashSet<T>();
-      for(val child : workingSet) {
+      for (val child : workingSet) {
         result.addAll(hom.getChildren(child));
       }
       return result;

@@ -3,17 +3,12 @@ package com.aire.ux.plan.evaluators;
 import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.plan.EvaluatorFactory;
-import com.aire.ux.plan.PlanContext;
-import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ClassSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
-
 
   @Test
   void ensureClassSelectorWorksForSingleNode() {
@@ -68,7 +63,6 @@ class ClassSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                                     .attribute("class", "frapper")
                                     .attribute("data-schnorp", "blapper"))),
                 node("porglebee").attribute("class", "frapper"));
-
 
     val plan = parser.parse("div.frapper").plan(context);
     val ctx = plan.evaluate(node, Node.getAdapter());

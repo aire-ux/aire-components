@@ -9,7 +9,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Objects;
-import java.util.Set;
 import lombok.val;
 
 public class IdSelectorEvaluatorFactory implements EvaluatorFactory {
@@ -32,14 +31,14 @@ public class IdSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     /**
-     * for class, id, etc. you have to remove the child ID type or it will be
-     * filtered in subsequent evaluation epochs
+     * for class, id, etc. you have to remove the child ID type or it will be filtered in subsequent
+     * evaluation epochs
      */
     val idNode = node.removeChild(0);
     return new IdSelectorEvaluator(node, idNode, context);
   }
 
-  private static class IdSelectorEvaluator extends AbstractHierarchySearchingEvaluator{
+  private static class IdSelectorEvaluator extends AbstractHierarchySearchingEvaluator {
 
     private final String id;
 

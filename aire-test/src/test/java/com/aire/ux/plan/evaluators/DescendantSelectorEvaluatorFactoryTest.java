@@ -15,23 +15,14 @@ public class DescendantSelectorEvaluatorFactoryTest extends EvaluatorFactoryTest
 
   @Test
   void ensureDescendantSelectorSelectsAllDescendantsFromRoot() {
-    node = node("html")
-        .children(
-            node("span").attribute("not", "selected"),
-            node("body")
-                .children(
-                    node("div")
-                        .attribute("class", "whatever")
-                        .children(
-                            node("span")
-                        ),
-
-                    node("section")
-                        .children(
-                            node("span")
-                        )
-                )
-        );
+    node =
+        node("html")
+            .children(
+                node("span").attribute("not", "selected"),
+                node("body")
+                    .children(
+                        node("div").attribute("class", "whatever").children(node("span")),
+                        node("section").children(node("span"))));
 
     val result = parser.parse("html > body span").plan(context).evaluate(node, Node.getAdapter());
     assertEquals(2, result.size());
@@ -42,31 +33,24 @@ public class DescendantSelectorEvaluatorFactoryTest extends EvaluatorFactoryTest
   @Test
   void ensureNestedDescendantSelectorWorks() {
 
-    node = node("html")
-        .children(
-            node("span").attribute("not", "selected"),
-            node("body")
-                .children(
-                    node("div")
-                        .attribute("class", "whatever")
-                        .children(
-                            node("span")
-                        ),
+    node =
+        node("html")
+            .children(
+                node("span").attribute("not", "selected"),
+                node("body")
+                    .children(
+                        node("div").attribute("class", "whatever").children(node("span")),
+                        node("section")
+                            .children(
+                                node("span")
+                                    .children(
+                                        node("h1").attribute("class", "child"),
+                                        node("h2")
+                                            .attribute("class", "child")
+                                            .child(node("span").attribute("class", "child"))))));
 
-                    node("section")
-                        .children(
-                            node("span")
-                                .children(
-                                    node("h1").attribute("class", "child"),
-                                    node("h2").attribute("class", "child")
-                                        .child(node("span").attribute("class", "child"))
-                                )
-                        )
-                )
-        );
-
-    val result = parser.parse("html > body span .child").plan(context)
-        .evaluate(node, Node.getAdapter());
+    val result =
+        parser.parse("html > body span .child").plan(context).evaluate(node, Node.getAdapter());
     assertTrue(result.stream().allMatch(t -> "child".equals(t.getAttribute("class"))));
   }
 

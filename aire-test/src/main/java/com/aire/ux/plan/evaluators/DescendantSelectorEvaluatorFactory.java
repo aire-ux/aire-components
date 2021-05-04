@@ -15,9 +15,7 @@ import lombok.val;
 
 public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
 
-  public DescendantSelectorEvaluatorFactory() {
-
-  }
+  public DescendantSelectorEvaluatorFactory() {}
 
   @Override
   public Symbol getEvaluationTarget() {
@@ -49,7 +47,5 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
       }
       return result;
     }
-
   }
-
 }
