@@ -14,8 +14,10 @@ import lombok.val;
 
 public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
 
-  @Nonnull protected final PlanContext context;
-  @Nonnull protected final SyntaxNode<Symbol, Token> node;
+  @Nonnull
+  protected final PlanContext context;
+  @Nonnull
+  protected final SyntaxNode<Symbol, Token> node;
 
   public AbstractHierarchySearchingEvaluator(
       @Nonnull SyntaxNode<Symbol, Token> node, @Nonnull PlanContext context) {
@@ -29,16 +31,15 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
   public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
     val results = new LinkedHashSet<T>();
     for (val node : workingSet) {
-      val result =
-          hom.reduce(
-              node,
-              results,
-              (n, rs) -> {
-                if (appliesTo(hom, n)) {
-                  rs.add(n);
-                }
-                return rs;
-              });
+      hom.reduce(
+          node,
+          results,
+          (n, rs) -> {
+            if (appliesTo(hom, n)) {
+              rs.add(n);
+            }
+            return rs;
+          });
     }
     return results;
   }
