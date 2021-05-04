@@ -6,12 +6,17 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Node {
 
   static final String EMPTY_CONTENT = "".intern();
   private final String type;
+
+  private final Node parent;
 
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final String content;
@@ -26,14 +31,32 @@ public class Node {
   }
 
   public Node(String type, String content) {
-    this(type, content, new ArrayList<>(), new LinkedHashMap<>());
+    this(null, type, content);
+  }
+
+  public Node(Node parent, String type, String content) {
+    this(type, content, parent, new ArrayList<>(), new LinkedHashMap<>());
   }
 
   Node(String type, String content, List<Node> children, Map<String, String> attributes) {
+    this(type, content, null, children, attributes);
+  }
+
+  Node(
+      String type,
+      String content,
+      Node parent,
+      List<Node> children,
+      Map<String, String> attributes) {
     this.type = type;
+    this.parent = parent;
     this.content = content;
     this.children = children;
     this.attributes = attributes;
+  }
+
+  Node(Node parent, Node copy) {
+    this(copy.type, copy.content, parent, copy.children, copy.attributes);
   }
 
   public static NodeAdapter<Node> getAdapter() {
@@ -45,17 +68,19 @@ public class Node {
   }
 
   public void addChildren(Collection<? extends Node> children) {
-    this.children.addAll(children);
+    this.children.addAll(
+        children.stream().map(t -> new Node(this, t)).collect(Collectors.toList()));
   }
 
   public void addChild(Node child) {
-    this.children.add(child);
+    this.children.add(new Node(this, child));
   }
 
   public List<Node> setChildren(Collection<? extends Node> children) {
     val result = new ArrayList<>(this.children);
     this.children.clear();
-    this.children.addAll(children);
+    this.children.addAll(
+        children.stream().map(t -> new Node(this, t)).collect(Collectors.toList()));
     return result;
   }
 
@@ -141,11 +166,21 @@ public class Node {
     return Collections.unmodifiableList(children);
   }
 
+  public Node getParent() {
+    return parent;
+  }
+
   public static class NodeNodeAdapter implements NodeAdapter<Node> {
 
     @Override
     public List<Node> getChildren(Node current) {
       return current.children;
+    }
+
+    @Nullable
+    @Override
+    public Node getParent(@NotNull Node current) {
+      return current.parent;
     }
 
     @Override
@@ -178,6 +213,20 @@ public class Node {
     @Override
     public String getType(Node n) {
       return n.getType();
+    }
+
+    @Nullable
+    @Override
+    public Node getSucceedingSibling(@NotNull Node element) {
+      val parent = element.parent;
+      if (parent != null) {
+        val children = parent.children;
+        val idx = children.indexOf(element);
+        if (idx >= 0 && idx < children.size()) {
+          return children.get(idx);
+        }
+      }
+      return null;
     }
   }
 }

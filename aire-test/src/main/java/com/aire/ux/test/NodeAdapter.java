@@ -1,8 +1,11 @@
 package com.aire.ux.test;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -67,7 +70,69 @@ public interface NodeAdapter<T> {
    * @return the children, or an empty list if none exist
    */
   @Nonnull
-  List<T> getChildren(T current);
+  List<T> getChildren(@Nonnull T current);
+
+  /**
+   * @param current the node to get the siblings of
+   * @return the siblings, or an empty list if there are none (i.e. root node)
+   */
+  @Nonnull
+  default List<T> getSiblings(@Nonnull T current) {
+    val parent = getParent(current);
+    if (parent != null) {
+      val children = getChildren(parent);
+      return children.stream()
+          .filter(child -> !Objects.equals(child, this))
+          .collect(Collectors.toList());
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @param current the node to retrieve the preceeding siblings of
+   * @return the preceeding siblings, or an empty list if there are none
+   */
+  @Nonnull
+  default List<T> getPreceedingSiblings(@Nonnull T current) {
+    val parent = getParent(current);
+    if (parent != null) {
+      val iter = getChildren(parent).iterator();
+      val result = new ArrayList<T>();
+      while (iter.hasNext()) {
+        val next = iter.next();
+        if (Objects.equals(next, current)) {
+          return result;
+        } else {
+          result.add(next);
+        }
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @param current the node to retrieve the preceeding siblings of
+   * @return the preceeding siblings, or an empty list if there are none
+   */
+  @Nonnull
+  default List<T> getSucceedingSiblings(@Nonnull T current) {
+    val parent = getParent(current);
+    if (parent != null) {
+      val children = getChildren(parent);
+      val idx = children.indexOf(current);
+      if (idx >= 0) {
+        return children.subList(idx + 1, children.size());
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @param current the node to retrieve the parent of
+   * @return the parent, or null if current is the root of the hierarchy
+   */
+  @Nullable
+  T getParent(@Nonnull T current);
 
   /**
    * @param current the current node to set the children of
@@ -122,5 +187,16 @@ public interface NodeAdapter<T> {
    */
   T clone(T value);
 
+  /**
+   * @param n the node
+   * @return the type of the node
+   */
   String getType(T n);
+
+  /**
+   * @param element the element to retrieve
+   * @return the next sibling, or null if none exists
+   */
+  @Nullable
+  T getSucceedingSibling(@Nonnull T element);
 }
