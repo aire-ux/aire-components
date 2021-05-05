@@ -68,7 +68,7 @@ public enum CssSelectorToken implements Type {
   Comma("\s*,"),
 
   /** tilde */
-  Tilde("\s*~"),
+  Tilde("\s*~(?!=)"),
 
   /** universal operator */
   Universal("\\*"),

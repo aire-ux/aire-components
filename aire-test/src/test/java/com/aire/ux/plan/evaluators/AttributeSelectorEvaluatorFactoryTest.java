@@ -39,22 +39,41 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @ParameterizedTest
   @ValueSource(strings = {
+      "[href=one]",
+      "[href='one']",
+      "[href=\"one\"]",
       "a[href=one]",
       "a[href='one']",
       "a[href=\"one\"]",
+      "[href = one]",
+      "[href =  'one']",
+      "[href = \"one\" ]",
+      "a[href= one ]",
+      "a[ href= 'one' ]",
+      "a[ href= \"one\"]",
   })
-  void ensureStrictEqualityMatchesSeparatedValues(String selector) {
+  void ensureStrictEqualityDoesntMatchSeparatedValues(String selector) {
     node = node("root").children(
         node("a").attribute("href", "one four"),
         node("a").attribute("href", "two four")
     );
     val result = eval(selector, node);
-    assertEquals(result.size(), 1);
+    assertEquals(result.size(), 0);
   }
 
-  @Test
-  void ensurePrefixMathcingWorks() {
-
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "a[href~=the-googs]",
+      "*[href~=the-googs]",
+      "[href~= 'the-googs' ]"
+  })
+  void ensureAttributeListMatchingWorks(String selector) {
+    node = node("root").children(
+        node("a").attribute("href", "the-googs not-the-googs"),
+        node("a").attribute("href", "lolwat")
+    );
+    val result = eval(selector, node);
+    assertEquals(result.size(), 1);
   }
 
   @Override
