@@ -170,7 +170,7 @@ public class Node {
     return parent;
   }
 
-  public static class NodeNodeAdapter implements NodeAdapter<Node> {
+  private static final class NodeNodeAdapter implements NodeAdapter<Node> {
 
     @Override
     public List<Node> getChildren(Node current) {
