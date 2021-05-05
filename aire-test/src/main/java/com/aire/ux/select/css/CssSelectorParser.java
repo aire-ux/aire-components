@@ -4,7 +4,7 @@ import static com.aire.ux.parsers.LookaheadIterator.wrap;
 import static com.aire.ux.select.css.CssSelectorToken.AdditionOperator;
 import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
-import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupStart;
+import static com.aire.ux.select.css.CssSelectorToken.AttributeGroup;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeValueInSetOperator;
 import static com.aire.ux.select.css.CssSelectorToken.Dimension;
 import static com.aire.ux.select.css.CssSelectorToken.FunctionStart;
@@ -216,7 +216,7 @@ public class CssSelectorParser {
         tokens,
         IdentifierSelector,
         CssSelectorToken.Class,
-        AttributeGroupStart,
+        AttributeGroup,
         PseudoClass,
         PseudoElement,
         FunctionStart,
@@ -257,8 +257,14 @@ public class CssSelectorParser {
   private void composite(LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
     var t = tokens.peek();
     var type = (CssSelectorToken) t.getType();
-    if (type == AttributeGroupStart) {
-      parseAttributeGroup(tokens, result);
+    if (type == AttributeGroup) {
+      while(tokens.hasNext() && type == AttributeGroup) {
+        parseAttributeGroup(tokens, result);
+        if(tokens.hasNext()) {
+          t = tokens.peek();
+          type = (CssSelectorToken) t.getType();
+        }
+      }
     } else if (type == PseudoClass || type == PseudoElement) {
       pseudo(tokens, result);
     } else if (type == Not) {
@@ -291,7 +297,7 @@ public class CssSelectorParser {
         combinator.addChildren(simpleSelectorSequence(tokens));
         current = combinator;
       }
-    } else if (nextIs(tokens, AttributeGroupStart)) {
+    } else if (nextIs(tokens, AttributeGroup)) {
       val results = new ArrayList<SyntaxNode<Symbol, Token>>();
       parseAttributeGroup(tokens, results);
       negation.addChildren(results);
@@ -349,10 +355,11 @@ public class CssSelectorParser {
    */
   private void parseAttributeGroup(
       LookaheadIterator<Token> tokens, List<SyntaxNode<Symbol, Token>> result) {
-    expectAndDiscard(tokens, AttributeGroupStart);
+    val group = expect(tokens, AttributeGroup);
     eatWhitespace(tokens);
     val attribute = expect(tokens, Identifier);
     eatWhitespace(tokens);
+    group.addChild(attribute);
     if (!nextIs(
         tokens,
         PrefixOperator,
@@ -361,7 +368,7 @@ public class CssSelectorParser {
         StrictEqualityOperator,
         AttributeValueInSetOperator)) {
       expectAndDiscard(tokens, AttributeGroupEnd);
-      result.add(attribute);
+      result.add(group);
       return;
     }
 
@@ -378,10 +385,10 @@ public class CssSelectorParser {
 
     val operand = expect(tokens, Identifier, CssSelectorToken.String);
 
-    attribute.addChildren(List.of(operator, operand));
+    group.addChildren(List.of(operator, operand));
     eatWhitespace(tokens);
     expectAndDiscard(tokens, AttributeGroupEnd);
-    result.add(attribute);
+    result.add(group);
   }
 
   /**
@@ -579,7 +586,7 @@ public class CssSelectorParser {
     PseudoClass("::<class>", CssSelectorToken.PseudoClass),
     PseudoElement(":<element>", CssSelectorToken.PseudoElement),
     /** attribute selector */
-    AttributeSelector("<attribute>", CssSelectorToken.AttributeGroupStart),
+    AttributeSelector("<attribute>", CssSelectorToken.AttributeGroup),
     /** a comma operator denotes set union a,b = union(select(a), select(b)) */
     Union(",", CssSelectorToken.Comma),
 

@@ -1,4 +1,4 @@
-package com.aire.ux.select.type;
+package com.aire.ux.select.scenarios.type;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

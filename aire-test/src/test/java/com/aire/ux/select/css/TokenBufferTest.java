@@ -2,7 +2,7 @@ package com.aire.ux.select.css;
 
 import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
-import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupStart;
+import static com.aire.ux.select.css.CssSelectorToken.AttributeGroup;
 import static com.aire.ux.select.css.CssSelectorToken.Comma;
 import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
 import static com.aire.ux.select.css.CssSelectorToken.Identifier;
@@ -50,21 +50,21 @@ class TokenBufferTest {
         Whitespace,
         Identifier,
         Not,
-        AttributeGroupStart,
+        AttributeGroup,
         Identifier,
         StrictEqualityOperator,
         CssSelectorToken.String,
         AttributeGroupEnd,
         ApplicationEnd,
         Not,
-        AttributeGroupStart,
+        AttributeGroup,
         Identifier,
         StrictEqualityOperator,
         CssSelectorToken.String,
         AttributeGroupEnd,
         ApplicationEnd,
         Not,
-        AttributeGroupStart,
+        AttributeGroup,
         Identifier,
         StrictEqualityOperator,
         CssSelectorToken.String,

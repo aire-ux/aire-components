@@ -51,7 +51,7 @@ public enum CssSelectorToken implements Type {
   ApplicationEnd("\\)"),
 
   /** */
-  AttributeGroupStart("\\["),
+  AttributeGroup("\\["),
 
   /** */
   AttributeGroupEnd("\\]"),

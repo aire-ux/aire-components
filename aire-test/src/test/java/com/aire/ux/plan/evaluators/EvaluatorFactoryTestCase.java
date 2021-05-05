@@ -23,6 +23,11 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
     context = DefaultPlanContext.getInstance();
   }
 
+
+  protected Set<Node> eval(String selector, Node root) {
+    return eval(selector, root, Node.getAdapter());
+  }
+
   protected <T> Set<T> eval(String selector, T root, NodeAdapter<T> adapter) {
     val s = parser.parse(selector);
     val plan = s.plan(context);
