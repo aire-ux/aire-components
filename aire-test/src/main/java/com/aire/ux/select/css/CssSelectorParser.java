@@ -6,6 +6,7 @@ import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroup;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeValueInSetOperator;
+import static com.aire.ux.select.css.CssSelectorToken.DashedPrefixOperator;
 import static com.aire.ux.select.css.CssSelectorToken.Dimension;
 import static com.aire.ux.select.css.CssSelectorToken.FunctionStart;
 import static com.aire.ux.select.css.CssSelectorToken.GreaterThan;
@@ -365,6 +366,7 @@ public class CssSelectorParser {
         PrefixOperator,
         SuffixOperator,
         SubstringOperator,
+        DashedPrefixOperator,
         StrictEqualityOperator,
         AttributeValueInSetOperator)) {
       expectAndDiscard(tokens, AttributeGroupEnd);
@@ -378,6 +380,7 @@ public class CssSelectorParser {
             PrefixOperator,
             SuffixOperator,
             SubstringOperator,
+            DashedPrefixOperator,
             StrictEqualityOperator,
             AttributeValueInSetOperator);
 

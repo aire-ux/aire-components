@@ -73,6 +73,19 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertEquals(result.size(), 1);
   }
 
+  @ParameterizedTest
+  @ValueSource(strings = {"a[href|=cool]", "[href |= 'cool']"})
+  void ensureDashMatchWorks(String selector) {
+
+    node =
+        node("root")
+            .children(
+                node("a").attribute("href", "cool-beans"),
+                node("a").attribute("href", "lolwat"));
+    val result = eval(selector, node);
+    assertEquals(result.size(), 1);
+  }
+
   @Override
   protected EvaluatorFactory createFactory() {
     return new AttributeSelectorEvaluatorFactory();
