@@ -24,9 +24,9 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
   @ParameterizedTest
   @ValueSource(
       strings = {
-        "a[href=one]",
-        "a[href='one']",
-        "a[href=\"one\"]",
+          "a[href=one]",
+          "a[href='one']",
+          "a[href=\"one\"]",
       })
   void ensureStrictEqualityMatches(String selector) {
     node =
@@ -39,18 +39,18 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
   @ParameterizedTest
   @ValueSource(
       strings = {
-        "[href=one]",
-        "[href='one']",
-        "[href=\"one\"]",
-        "a[href=one]",
-        "a[href='one']",
-        "a[href=\"one\"]",
-        "[href = one]",
-        "[href =  'one']",
-        "[href = \"one\" ]",
-        "a[href= one ]",
-        "a[ href= 'one' ]",
-        "a[ href= \"one\"]",
+          "[href=one]",
+          "[href='one']",
+          "[href=\"one\"]",
+          "a[href=one]",
+          "a[href='one']",
+          "a[href=\"one\"]",
+          "[href = one]",
+          "[href =  'one']",
+          "[href = \"one\" ]",
+          "a[href= one ]",
+          "a[ href= 'one' ]",
+          "a[ href= \"one\"]",
       })
   void ensureStrictEqualityDoesntMatchSeparatedValues(String selector) {
     node =
@@ -83,9 +83,34 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("a").attribute("href", "cool-beans"),
                 node("a").attribute("href", "lolwat"));
     val result = eval(selector, node);
+    assertEquals(result.size(), 0);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"a[href*=ol-be]", "[href *= 'ol-be']"})
+  void ensureSubstringMatchWorks(String selector) {
+
+    node =
+        node("root")
+            .children(
+                node("a").attribute("href", "cool-beans"),
+                node("a").attribute("href", "lolwat"));
+    val result = eval(selector, node);
     assertEquals(result.size(), 1);
   }
 
+  @ParameterizedTest
+  @ValueSource(strings = {"a[href$=ans]", "[href $= 'ans']"})
+  void ensureSuffixMatchWorks(String selector) {
+
+    node =
+        node("root")
+            .children(
+                node("a").attribute("href", "cool-beans"),
+                node("a").attribute("href", "lolwat"));
+    val result = eval(selector, node);
+    assertEquals(result.size(), 1);
+  }
   @Override
   protected EvaluatorFactory createFactory() {
     return new AttributeSelectorEvaluatorFactory();
