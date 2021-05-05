@@ -29,16 +29,15 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
   public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
     val results = new LinkedHashSet<T>();
     for (val node : workingSet) {
-      val result =
-          hom.reduce(
-              node,
-              results,
-              (n, rs) -> {
-                if (appliesTo(hom, n)) {
-                  rs.add(n);
-                }
-                return rs;
-              });
+      hom.reduce(
+          node,
+          results,
+          (n, rs) -> {
+            if (appliesTo(hom, n)) {
+              rs.add(n);
+            }
+            return rs;
+          });
     }
     return results;
   }

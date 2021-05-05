@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.val;
 
 public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
@@ -111,8 +110,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   @Override
   public SyntaxNode<T, U> removeChild(SyntaxNode<T, U> i) {
-    val idx = children.indexOf(i);
-    return removeChild(i);
+    return children.remove(children.indexOf(i));
   }
 
   @Override
