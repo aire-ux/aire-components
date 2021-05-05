@@ -628,6 +628,11 @@ public class CssSelectorParser {
       this.value = value;
       this.token = token;
     }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
 
   private static class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {

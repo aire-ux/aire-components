@@ -29,5 +29,10 @@ public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFact
     return memoizedEvaluators.computeIfAbsent(node, t -> createEvaluator(node, context));
   }
 
+  @Override
+  public String toString() {
+    return getEvaluationTarget().toString();
+  }
+
   protected abstract Evaluator createEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context);
 }

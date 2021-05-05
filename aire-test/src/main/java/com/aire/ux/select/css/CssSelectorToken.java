@@ -71,7 +71,7 @@ public enum CssSelectorToken implements Type {
   Tilde("\s*~"),
 
   /** universal operator */
-  Universal("\s*\\*"),
+  Universal("\\*"),
 
   /** negation prefix */
   Not(":not\\("),

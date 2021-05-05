@@ -26,7 +26,7 @@ public class FunctionApplicationTest extends TestCase {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {":not(", ".hello > > world", "p:not(sup *)", "hello[t=\"]"})
+  @ValueSource(strings = {":not(", ".hello > > world", "p:not(sup *", "hello[t=\"]"})
   void ensureErrorsWork(String value) {
     try {
       val t = parser.parse(value);

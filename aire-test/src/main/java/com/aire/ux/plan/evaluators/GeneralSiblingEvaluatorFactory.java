@@ -33,6 +33,11 @@ public class GeneralSiblingEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
+    public String toString() {
+      return "~";
+    }
+
+    @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val results = new LinkedHashSet<T>();
       for (val element : workingSet) {

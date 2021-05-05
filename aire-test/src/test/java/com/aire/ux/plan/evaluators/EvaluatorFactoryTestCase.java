@@ -24,7 +24,9 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
   }
 
   protected <T> Set<T> eval(String selector, T root, NodeAdapter<T> adapter) {
-    return parser.parse(selector).plan(context).evaluate(root, adapter);
+    val s = parser.parse(selector);
+    val plan = s.plan(context);
+    return plan.evaluate(root, adapter);
   }
 
   protected abstract EvaluatorFactory createFactory();

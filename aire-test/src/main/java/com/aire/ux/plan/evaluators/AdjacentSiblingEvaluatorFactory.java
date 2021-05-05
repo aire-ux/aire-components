@@ -43,5 +43,10 @@ public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
       }
       return results;
     }
+
+    @Override
+    public String toString() {
+      return "+ %s".formatted(delegate.toString());
+    }
   }
 }

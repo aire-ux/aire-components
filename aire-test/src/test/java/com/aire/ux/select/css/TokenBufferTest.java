@@ -70,6 +70,7 @@ class TokenBufferTest {
         CssSelectorToken.String,
         AttributeGroupEnd,
         ApplicationEnd,
+        Whitespace,
         Universal,
         Whitespace,
         Identifier);
