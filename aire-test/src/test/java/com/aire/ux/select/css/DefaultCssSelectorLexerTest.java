@@ -14,7 +14,5 @@ class DefaultCssSelectorLexerTest {
     assertEquals("~", iter.next().getLexeme());
     assertEquals(" ", iter.next().getLexeme());
     assertEquals("~=", iter.next().getLexeme());
-
   }
-
 }

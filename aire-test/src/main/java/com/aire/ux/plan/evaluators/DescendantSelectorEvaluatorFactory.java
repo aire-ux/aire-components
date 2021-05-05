@@ -29,7 +29,6 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
 
   static final class DescendantSelectorEvaluator implements Evaluator {
 
-
     @Override
     public String toString() {
       return "[descendant]";

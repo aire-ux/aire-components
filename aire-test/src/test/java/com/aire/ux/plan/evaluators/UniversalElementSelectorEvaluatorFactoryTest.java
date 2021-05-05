@@ -10,29 +10,18 @@ import org.junit.jupiter.api.Test;
 
 class UniversalElementSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
-
   Node node;
 
   @Test
   void ensureUniversalSelectorSelectsEverything() {
-    node = node("html")
-        .children(
-            node("body").children(
-                node("section").children(node("h1"))
-            )
-        );
+    node = node("html").children(node("body").children(node("section").children(node("h1"))));
     val result = eval("*", node, Node.getAdapter());
     assertEquals(4, result.size());
   }
 
   @Test
   void ensureUniversalSelectorBeneathCombinatorWorks() {
-    node = node("html")
-        .children(
-            node("body").children(
-                node("section").children(node("h1"))
-            )
-        );
+    node = node("html").children(node("body").children(node("section").children(node("h1"))));
     val result = eval("section > *", node, Node.getAdapter());
     assertEquals(1, result.size());
     assertEquals("h1", at(result, 0).getType());

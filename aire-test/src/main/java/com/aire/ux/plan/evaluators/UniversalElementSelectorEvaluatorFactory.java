@@ -29,11 +29,9 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     return getEvaluationTarget().toString();
   }
 
-
   private static class UniversalElementSelectorEvaluator implements Evaluator {
     private UniversalElementSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
-    }
+        SyntaxNode<Symbol, Token> node, PlanContext context) {}
 
     @Override
     public String toString() {
@@ -43,11 +41,14 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val result = new LinkedHashSet<T>();
-      for(val element : workingSet) {
-        hom.reduce(element, result, (t, u) -> {
-          u.add(t);
-          return u;
-        });
+      for (val element : workingSet) {
+        hom.reduce(
+            element,
+            result,
+            (t, u) -> {
+              u.add(t);
+              return u;
+            });
       }
       return result;
     }

@@ -3,8 +3,8 @@ package com.aire.ux.select.css;
 import static com.aire.ux.parsers.LookaheadIterator.wrap;
 import static com.aire.ux.select.css.CssSelectorToken.AdditionOperator;
 import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
-import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroup;
+import static com.aire.ux.select.css.CssSelectorToken.AttributeGroupEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeValueInSetOperator;
 import static com.aire.ux.select.css.CssSelectorToken.Dimension;
 import static com.aire.ux.select.css.CssSelectorToken.FunctionStart;
@@ -258,9 +258,9 @@ public class CssSelectorParser {
     var t = tokens.peek();
     var type = (CssSelectorToken) t.getType();
     if (type == AttributeGroup) {
-      while(tokens.hasNext() && type == AttributeGroup) {
+      while (tokens.hasNext() && type == AttributeGroup) {
         parseAttributeGroup(tokens, result);
-        if(tokens.hasNext()) {
+        if (tokens.hasNext()) {
           t = tokens.peek();
           type = (CssSelectorToken) t.getType();
         }

@@ -23,7 +23,6 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
     context = DefaultPlanContext.getInstance();
   }
 
-
   protected Set<Node> eval(String selector, Node root) {
     return eval(selector, root, Node.getAdapter());
   }

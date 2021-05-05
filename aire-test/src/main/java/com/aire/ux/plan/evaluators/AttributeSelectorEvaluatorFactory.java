@@ -33,27 +33,19 @@ public class AttributeSelectorEvaluatorFactory implements EvaluatorFactory {
 
   private static class AttributeSelectorEvaluator implements Evaluator {
 
+    @Nullable private final String value;
+    @Nonnull private final String attributeName;
 
-    @Nullable
-    private final String value;
-    @Nonnull
-    private final String attributeName;
+    @Nullable private final ElementSymbol combinator;
 
-    @Nullable
-    private final ElementSymbol combinator;
-
-
-    public AttributeSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    public AttributeSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       val children = node.getChildren();
       if (children.isEmpty()) {
         throw new IllegalArgumentException(
             "Somehow the parser did not catch an empty attribute selector list (node: %s)"
                 .formatted(node));
       }
-      /**
-       * prevent children from narrowing further epochs
-       */
+      /** prevent children from narrowing further epochs */
       val results = node.clearChildren();
       attributeName = results.get(0).getSource().getLexeme();
       if (results.size() == 3) {
@@ -77,14 +69,17 @@ public class AttributeSelectorEvaluatorFactory implements EvaluatorFactory {
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val result = new LinkedHashSet<T>();
       for (val element : workingSet) {
-        hom.reduce(element, result, (t, u) -> {
-          if (combinator == null) {
-            u.addAll(selectAttributeExistance(t, hom));
-          } else {
-            u.addAll(selectAttributeMatching(t, hom));
-          }
-          return u;
-        });
+        hom.reduce(
+            element,
+            result,
+            (t, u) -> {
+              if (combinator == null) {
+                u.addAll(selectAttributeExistance(t, hom));
+              } else {
+                u.addAll(selectAttributeMatching(t, hom));
+              }
+              return u;
+            });
       }
       return result;
     }
@@ -96,66 +91,71 @@ public class AttributeSelectorEvaluatorFactory implements EvaluatorFactory {
       return Option.none();
     }
 
-
     private <T> Option<T> selectAttributeMatching(T element, NodeAdapter<T> hom) {
       val attribute = hom.getAttribute(element, attributeName);
       if (attribute == null) {
         return Option.none();
       }
       switch (combinator) {
-        case StrictEquality: {
-          if (Objects.equals(attribute, value)) {
-            return Option.of(element);
-          }
-          break;
-        }
-
-        case Includes: {
-          val values = attribute.split(WS);
-          for (val value : values) {
-            if (Objects.equals(this.value, value)) {
+        case StrictEquality:
+          {
+            if (Objects.equals(attribute, value)) {
               return Option.of(element);
             }
+            break;
           }
-          break;
-        }
 
-        case DashMatch: {
-          if (Objects.equals(value, attribute) || attribute.startsWith(value + "-")) {
-            return Option.of(element);
+        case Includes:
+          {
+            val values = attribute.split(WS);
+            for (val value : values) {
+              if (Objects.equals(this.value, value)) {
+                return Option.of(element);
+              }
+            }
+            break;
           }
-          break;
-        }
 
-        case PrefixMatch: {
-          val values = attribute.split(WS);
-          for (val value : values) {
-            if (value.startsWith(this.value)) {
+        case DashMatch:
+          {
+            if (Objects.equals(value, attribute) || attribute.startsWith(value + "-")) {
               return Option.of(element);
             }
+            break;
           }
-          break;
-        }
 
-        case SuffixMatch: {
-          val values = attribute.split(WS);
-          for (val value : values) {
-            if (value.endsWith(this.value)) {
-              return Option.of(element);
+        case PrefixMatch:
+          {
+            val values = attribute.split(WS);
+            for (val value : values) {
+              if (value.startsWith(this.value)) {
+                return Option.of(element);
+              }
             }
+            break;
           }
-          break;
-        }
 
-        case SubstringMatch: {
-          val values = attribute.split(WS);
-          for (val value : values) {
-            if (value.contains(this.value)) {
-              return Option.of(element);
+        case SuffixMatch:
+          {
+            val values = attribute.split(WS);
+            for (val value : values) {
+              if (value.endsWith(this.value)) {
+                return Option.of(element);
+              }
             }
+            break;
           }
-          break;
-        }
+
+        case SubstringMatch:
+          {
+            val values = attribute.split(WS);
+            for (val value : values) {
+              if (value.contains(this.value)) {
+                return Option.of(element);
+              }
+            }
+            break;
+          }
       }
       return Option.none();
     }
