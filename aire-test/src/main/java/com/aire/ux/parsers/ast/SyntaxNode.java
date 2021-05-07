@@ -44,4 +44,6 @@ public interface SyntaxNode<T, U> {
   SyntaxNode<T, U> removeChild(int i);
 
   SyntaxNode<T, U> removeChild(SyntaxNode<T, U> i);
+
+  List<SyntaxNode<T, U>> clearChildren();
 }

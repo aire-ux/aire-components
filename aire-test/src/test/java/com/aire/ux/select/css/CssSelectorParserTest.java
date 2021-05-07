@@ -14,7 +14,7 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-@SelectPackages("com.aire.ux.test.select.css.scenarios.type")
+@SelectPackages("com.aire.ux.select.scenarios.type")
 public class CssSelectorParserTest {
 
   @Test

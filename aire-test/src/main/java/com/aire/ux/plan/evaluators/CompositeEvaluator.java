@@ -7,6 +7,7 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,9 +29,15 @@ public final class CompositeEvaluator implements Evaluator {
 
   @Override
   public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
+    val results = new LinkedHashSet<T>();
     for (val evaluator : evaluators) {
-      workingSet = evaluator.evaluate(workingSet, hom);
+      results.addAll(evaluator.evaluate(workingSet, hom));
     }
-    return workingSet;
+    return results;
+  }
+
+  @Override
+  public String toString() {
+    return evaluators.stream().map(t -> t.toString()).collect(Collectors.joining(" "));
   }
 }

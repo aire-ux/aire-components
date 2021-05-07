@@ -6,3 +6,6 @@ com.aire.ux.plan.evaluators.ClassSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.DescendantSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.IdSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.AdjacentSiblingEvaluatorFactory
+com.aire.ux.plan.evaluators.GeneralSiblingEvaluatorFactory
+com.aire.ux.plan.evaluators.UniversalElementSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.AttributeSelectorEvaluatorFactory

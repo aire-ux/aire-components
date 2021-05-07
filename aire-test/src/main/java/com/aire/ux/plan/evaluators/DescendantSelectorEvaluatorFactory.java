@@ -30,6 +30,11 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
   static final class DescendantSelectorEvaluator implements Evaluator {
 
     @Override
+    public String toString() {
+      return "[descendant]";
+    }
+
+    @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val result = new LinkedHashSet<T>();
 

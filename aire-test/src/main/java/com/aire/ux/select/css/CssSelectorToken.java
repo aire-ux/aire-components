@@ -51,7 +51,7 @@ public enum CssSelectorToken implements Type {
   ApplicationEnd("\\)"),
 
   /** */
-  AttributeGroupStart("\\["),
+  AttributeGroup("\\["),
 
   /** */
   AttributeGroupEnd("\\]"),
@@ -68,10 +68,10 @@ public enum CssSelectorToken implements Type {
   Comma("\s*,"),
 
   /** tilde */
-  Tilde("\s*~"),
+  Tilde("\s*~(?!=)"),
 
   /** universal operator */
-  Universal("\s*\\*"),
+  Universal("\\*"),
 
   /** negation prefix */
   Not(":not\\("),

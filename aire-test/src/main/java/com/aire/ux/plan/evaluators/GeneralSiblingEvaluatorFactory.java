@@ -12,41 +12,41 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.val;
 
-public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
+public class GeneralSiblingEvaluatorFactory implements EvaluatorFactory {
 
   @Override
   public Symbol getEvaluationTarget() {
-    return ElementSymbol.AdjacentSiblingSelector;
+    return ElementSymbol.GeneralSiblingSelector;
   }
 
   @Override
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
-    return new AdjacentSiblingEvaluator(node, context);
+    return new GeneralSiblingEvaluator(node, context);
   }
 
-  private static class AdjacentSiblingEvaluator implements Evaluator {
+  private static class GeneralSiblingEvaluator implements Evaluator {
 
     private final CompositeEvaluator delegate;
 
-    public AdjacentSiblingEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
+    private GeneralSiblingEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       this.delegate = new CompositeEvaluator(context, node.getChildren());
+    }
+
+    @Override
+    public String toString() {
+      return "~";
     }
 
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val results = new LinkedHashSet<T>();
       for (val element : workingSet) {
-        val sibling = hom.getSucceedingSibling(element);
+        val sibling = hom.getSucceedingSiblings(element);
         if (sibling != null) {
-          results.addAll(delegate.evaluate(Set.of(sibling), hom));
+          results.addAll(delegate.evaluate(new LinkedHashSet<>(sibling), hom));
         }
       }
       return results;
-    }
-
-    @Override
-    public String toString() {
-      return "+ %s".formatted(delegate.toString());
     }
   }
 }

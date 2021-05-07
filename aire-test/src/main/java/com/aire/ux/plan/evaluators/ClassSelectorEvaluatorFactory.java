@@ -42,5 +42,10 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
       return Objects.equals(hom.getAttribute(n, "class"), classValue);
     }
+
+    @Override
+    public String toString() {
+      return ".%s".formatted(classValue);
+    }
   }
 }

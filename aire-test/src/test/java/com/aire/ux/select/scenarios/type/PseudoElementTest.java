@@ -1,4 +1,4 @@
-package com.aire.ux.select.type;
+package com.aire.ux.select.scenarios.type;
 
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;

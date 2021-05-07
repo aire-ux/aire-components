@@ -36,5 +36,10 @@ public class RootNodeEvaluatorFactory implements EvaluatorFactory {
     public <T> Set<T> evaluate(Set<T> tree, NodeAdapter<T> hom) {
       return tree;
     }
+
+    @Override
+    public String toString() {
+      return "[root]";
+    }
   }
 }
