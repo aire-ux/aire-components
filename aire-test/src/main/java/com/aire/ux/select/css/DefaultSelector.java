@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-public class DefaultSelector implements Selector {
+public final class DefaultSelector implements Selector {
 
   private final AbstractSyntaxTree<Symbol, Token> tree;
 
@@ -75,7 +75,7 @@ public class DefaultSelector implements Selector {
     }
   }
 
-  private class LinkedPlan implements Plan {
+  private static final class LinkedPlan implements Plan {
 
     private final PlanContext context;
     private LinkedPlanNode head;
