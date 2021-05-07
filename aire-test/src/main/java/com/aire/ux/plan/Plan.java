@@ -4,7 +4,7 @@ import com.aire.ux.test.NodeAdapter;
 import java.util.List;
 import java.util.Set;
 
-public interface Plan {
+public interface Plan extends AutoCloseable {
 
   <T extends Evaluator> List<T> getEvaluators(Class<T> evaluatorType);
 

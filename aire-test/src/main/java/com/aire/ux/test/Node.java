@@ -1,5 +1,7 @@
 package com.aire.ux.test;
 
+import static com.aire.ux.test.Nodes.node;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -92,6 +94,13 @@ public class Node {
     return attributes.containsKey(attribute);
   }
 
+  public Node children(String... children) {
+    for (val child : children) {
+      node(child);
+    }
+    return this;
+  }
+
   /** Builder methods */
   public Node children(Node... children) {
     setChildren(List.of(children));
@@ -113,6 +122,10 @@ public class Node {
 
   public Node child(Node child) {
     return children(child);
+  }
+
+  public Node child(String child) {
+    return child(node(child));
   }
 
   public Node content(String content) {

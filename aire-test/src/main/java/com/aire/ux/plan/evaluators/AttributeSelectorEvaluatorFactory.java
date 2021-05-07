@@ -17,17 +17,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.val;
 
-public class AttributeSelectorEvaluatorFactory implements EvaluatorFactory {
+public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactory {
 
   static final String WS = "\\s+";
 
-  @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.AttributeSelector;
+  public AttributeSelectorEvaluatorFactory() {
+    super(ElementSymbol.AttributeSelector);
   }
 
+
   @Override
-  public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
+  protected Evaluator createEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
     return new AttributeSelectorEvaluator(node, context);
   }
 
@@ -40,6 +40,7 @@ public class AttributeSelectorEvaluatorFactory implements EvaluatorFactory {
 
     public AttributeSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       val children = node.getChildren();
+      System.out.println("NODE\n" + node);
       if (children.isEmpty()) {
         throw new IllegalArgumentException(
             "Somehow the parser did not catch an empty attribute selector list (node: %s)"

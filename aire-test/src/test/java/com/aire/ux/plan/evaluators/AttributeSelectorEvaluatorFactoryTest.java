@@ -36,6 +36,61 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertEquals(result.size(), 1);
   }
 
+  @Test
+  void ensureSelectorWorksOnSubSelectorWithChildren() {
+    node =
+        node("html")
+            .child(
+                node("body")
+                    .child(
+                        node("section")
+                            .child(node("ul").attribute("first", "true")
+                                .children(
+                                    node("li").attribute("class", "first"),
+                                    node("li").attribute("class", "second"),
+                                    node("li").attribute("class", "third").children(
+                                        node("ul").attribute("ul1", "true")
+                                            .children(
+                                                node("li").attribute("class", "first"),
+                                                node("li").attribute("class", "second")
+                                                    .attribute("frapper", "dapper"),
+                                                node("li").attribute("class", "third")
+                                            )
+                                    )
+                                )
+                            )));
+    var result = eval("body ul[first='true'] > li + li.second", node);
+    result = eval("body ul[first='true'] > li + li.second", node);
+    assertEquals(2, result.size());
+  }
+
+  @Test
+  void ensureSelectingNextItemsWorks() {
+    node =
+        node("html")
+            .child(
+                node("body")
+                    .child(
+                        node("section")
+                            .child(node("ul").attribute("first", "true")
+                                .children(
+                                    node("li").attribute("class", "first"),
+                                    node("li").attribute("class", "second"),
+                                    node("li").attribute("class", "third").children(
+                                        node("ul").attribute("ul1", "true")
+                                            .children(
+                                                node("li").attribute("class", "first"),
+                                                node("li").attribute("class", "second")
+                                                    .attribute("frapper", "dapper"),
+                                                node("li").attribute("class", "third").attribute("frap", "true")
+                                            )
+                                    )
+                                )
+                            )));
+    val result = eval("body ul[first='true'] > li + li.second + li[frap *= tr]", node);
+    assertEquals(1, result.size());
+  }
+
   @ParameterizedTest
   @ValueSource(
       strings = {
@@ -80,10 +135,9 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     node =
         node("root")
             .children(
-                node("a").attribute("href", "cool-beans"),
-                node("a").attribute("href", "lolwat"));
+                node("a").attribute("href", "cool-beans"), node("a").attribute("href", "lolwat"));
     val result = eval(selector, node);
-    assertEquals(result.size(), 0);
+    assertEquals(1, result.size());
   }
 
   @ParameterizedTest
@@ -93,8 +147,7 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     node =
         node("root")
             .children(
-                node("a").attribute("href", "cool-beans"),
-                node("a").attribute("href", "lolwat"));
+                node("a").attribute("href", "cool-beans"), node("a").attribute("href", "lolwat"));
     val result = eval(selector, node);
     assertEquals(result.size(), 1);
   }
@@ -106,11 +159,11 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     node =
         node("root")
             .children(
-                node("a").attribute("href", "cool-beans"),
-                node("a").attribute("href", "lolwat"));
+                node("a").attribute("href", "cool-beans"), node("a").attribute("href", "lolwat"));
     val result = eval(selector, node);
     assertEquals(result.size(), 1);
   }
+
   @Override
   protected EvaluatorFactory createFactory() {
     return new AttributeSelectorEvaluatorFactory();

@@ -91,7 +91,7 @@ public class DefaultSelector implements Selector {
       this.context = context;
     }
 
-    <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
+    final <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
       var result = value;
       for (var c = init; c != null; c = c.next) {
         result = f.apply(c, result);
@@ -103,6 +103,7 @@ public class DefaultSelector implements Selector {
       return fold(head, new LinkedPlan(context), (node, plan) -> plan.prepend(node.evaluator));
     }
 
+    @Override
     public String toString() {
       val result = new StringBuilder("[");
       for (var h = head; h != null; h = h.next) {
@@ -141,6 +142,21 @@ public class DefaultSelector implements Selector {
     public <T> Set<T> evaluate(T tree, NodeAdapter<T> hom) {
       final Set<T> results = new LinkedHashSet<T>(Set.of(tree));
       return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
+    }
+
+    @Override
+    public void close() throws Exception {
+      fold(head, null, (node, list) -> {
+        if (node.evaluator instanceof AutoCloseable closeable) {
+          try {
+            closeable.close();
+          } catch (Exception ex) {
+            throw new IllegalStateException("Unexpected exception: %s".formatted(ex.getMessage()),
+                ex);
+          }
+        }
+        return null;
+      });
     }
   }
 }
