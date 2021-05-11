@@ -16,16 +16,19 @@ import org.jetbrains.annotations.Nullable;
 
 public class Node {
 
-
   static final String EMPTY_CONTENT = "".intern();
   private final String type;
   private final Node parent;
+
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final String content;
+
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final List<Node> children;
+
   private final BitSet states;
   private final Map<String, String> attributes;
+
   public Node(String type) {
     this(type, EMPTY_CONTENT);
   }
@@ -100,15 +103,12 @@ public class Node {
     return this;
   }
 
-
   Node state(NodeAdapter.State state) {
     setState(state);
     return this;
   }
 
-  /**
-   * Builder methods
-   */
+  /** Builder methods */
   public Node children(Node... children) {
     setChildren(List.of(children));
     return this;
@@ -199,43 +199,26 @@ public class Node {
   }
 
   public static enum DomStates implements NodeAdapter.State {
-    /**
-     * dom state active
-     */
+    /** dom state active */
     Active(":active"),
-    /**
-     * dom state focused
-     */
+    /** dom state focused */
     Focused(":focus"),
 
-    /**
-     * dom state focus-within
-     */
+    /** dom state focus-within */
     FocusWithin(":focus-within"),
-    /**
-     * dom state target
-     */
+    /** dom state target */
     Target(":target"),
-    /**
-     * dom state hover
-     */
+    /** dom state hover */
     Hover(":hover"),
-    /**
-     * dom state visited
-     */
+    /** dom state visited */
     Visited(":visited"),
-    /**
-     * dom state focus visible
-     */
+    /** dom state focus visible */
     FocusVisible(":focus-visible"),
 
-    /**
-     * has no children
-      */
+    /** has no children */
     Empty(":empty"),
 
     Checked(":checked"),
-
 
     Default(":default"),
 
@@ -252,15 +235,11 @@ public class Node {
     ReadOnly(":read-only"),
     Required(":required");
 
-
-
-
     final String value;
 
     DomStates(String value) {
       this.value = value;
     }
-
   }
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {

@@ -146,17 +146,20 @@ public final class DefaultSelector implements Selector {
 
     @Override
     public void close() throws Exception {
-      fold(head, null, (node, list) -> {
-        if (node.evaluator instanceof AutoCloseable closeable) {
-          try {
-            closeable.close();
-          } catch (Exception ex) {
-            throw new IllegalStateException("Unexpected exception: %s".formatted(ex.getMessage()),
-                ex);
-          }
-        }
-        return null;
-      });
+      fold(
+          head,
+          null,
+          (node, list) -> {
+            if (node.evaluator instanceof AutoCloseable closeable) {
+              try {
+                closeable.close();
+              } catch (Exception ex) {
+                throw new IllegalStateException(
+                    "Unexpected exception: %s".formatted(ex.getMessage()), ex);
+              }
+            }
+            return null;
+          });
     }
   }
 }

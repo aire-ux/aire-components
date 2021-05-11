@@ -24,9 +24,9 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
   @ParameterizedTest
   @ValueSource(
       strings = {
-          "a[href=one]",
-          "a[href='one']",
-          "a[href=\"one\"]",
+        "a[href=one]",
+        "a[href='one']",
+        "a[href=\"one\"]",
       })
   void ensureStrictEqualityMatches(String selector) {
     node =
@@ -44,21 +44,24 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("body")
                     .child(
                         node("section")
-                            .child(node("ul").attribute("first", "true")
-                                .children(
-                                    node("li").attribute("class", "first"),
-                                    node("li").attribute("class", "second"),
-                                    node("li").attribute("class", "third").children(
-                                        node("ul").attribute("ul1", "true")
+                            .child(
+                                node("ul")
+                                    .attribute("first", "true")
+                                    .children(
+                                        node("li").attribute("class", "first"),
+                                        node("li").attribute("class", "second"),
+                                        node("li")
+                                            .attribute("class", "third")
                                             .children(
-                                                node("li").attribute("class", "first"),
-                                                node("li").attribute("class", "second")
-                                                    .attribute("frapper", "dapper"),
-                                                node("li").attribute("class", "third")
-                                            )
-                                    )
-                                )
-                            )));
+                                                node("ul")
+                                                    .attribute("ul1", "true")
+                                                    .children(
+                                                        node("li").attribute("class", "first"),
+                                                        node("li")
+                                                            .attribute("class", "second")
+                                                            .attribute("frapper", "dapper"),
+                                                        node("li")
+                                                            .attribute("class", "third")))))));
     var result = eval("body ul[first='true'] > li + li.second", node);
     result = eval("body ul[first='true'] > li + li.second", node);
     assertEquals(2, result.size());
@@ -72,21 +75,25 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("body")
                     .child(
                         node("section")
-                            .child(node("ul").attribute("first", "true")
-                                .children(
-                                    node("li").attribute("class", "first"),
-                                    node("li").attribute("class", "second"),
-                                    node("li").attribute("class", "third").children(
-                                        node("ul").attribute("ul1", "true")
+                            .child(
+                                node("ul")
+                                    .attribute("first", "true")
+                                    .children(
+                                        node("li").attribute("class", "first"),
+                                        node("li").attribute("class", "second"),
+                                        node("li")
+                                            .attribute("class", "third")
                                             .children(
-                                                node("li").attribute("class", "first"),
-                                                node("li").attribute("class", "second")
-                                                    .attribute("frapper", "dapper"),
-                                                node("li").attribute("class", "third").attribute("frap", "true")
-                                            )
-                                    )
-                                )
-                            )));
+                                                node("ul")
+                                                    .attribute("ul1", "true")
+                                                    .children(
+                                                        node("li").attribute("class", "first"),
+                                                        node("li")
+                                                            .attribute("class", "second")
+                                                            .attribute("frapper", "dapper"),
+                                                        node("li")
+                                                            .attribute("class", "third")
+                                                            .attribute("frap", "true")))))));
     val result = eval("body ul[first='true'] > li + li.second + li[frap *= tr]", node);
     assertEquals(1, result.size());
   }
@@ -94,18 +101,18 @@ class AttributeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
   @ParameterizedTest
   @ValueSource(
       strings = {
-          "[href=one]",
-          "[href='one']",
-          "[href=\"one\"]",
-          "a[href=one]",
-          "a[href='one']",
-          "a[href=\"one\"]",
-          "[href = one]",
-          "[href =  'one']",
-          "[href = \"one\" ]",
-          "a[href= one ]",
-          "a[ href= 'one' ]",
-          "a[ href= \"one\"]",
+        "[href=one]",
+        "[href='one']",
+        "[href=\"one\"]",
+        "a[href=one]",
+        "a[href='one']",
+        "a[href=\"one\"]",
+        "[href = one]",
+        "[href =  'one']",
+        "[href = \"one\" ]",
+        "a[href= one ]",
+        "a[ href= 'one' ]",
+        "a[ href= \"one\"]",
       })
   void ensureStrictEqualityDoesntMatchSeparatedValues(String selector) {
     node =
