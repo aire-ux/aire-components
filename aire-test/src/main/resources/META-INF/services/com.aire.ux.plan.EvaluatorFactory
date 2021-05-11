@@ -9,3 +9,4 @@ com.aire.ux.plan.evaluators.AdjacentSiblingEvaluatorFactory
 com.aire.ux.plan.evaluators.GeneralSiblingEvaluatorFactory
 com.aire.ux.plan.evaluators.UniversalElementSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.AttributeSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.PseudoElementEvaluatorFactory
