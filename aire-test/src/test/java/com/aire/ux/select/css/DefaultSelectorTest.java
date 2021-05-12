@@ -23,6 +23,15 @@ class DefaultSelectorTest extends TestCase {
   }
 
   @Test
+  void ensurePlanToStringIsHelpful() {
+//    val result = parser.parse(
+//        "span > span[sup $=beans]:nth-child(1) > span.test:nth-child(1).test:nth-child(1).test")
+//        .plan(context);
+//    val result = parser.parse("div > test").plan(context).analyze(node(""));
+//    System.out.println(result);
+  }
+
+  @Test
   void ensureCollectingSimpleTypeSelectorWorks() {
     val plan = parser.parse("hello").plan(context);
     val evals = plan.getEvaluators(RootNodeEvaluator.class);

@@ -28,7 +28,7 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     public String toString() {
-      return "[type:%s]".formatted(node.getSource().getLexeme());
+      return "<type: selecting %s.  Cost: N>".formatted(node.getSource().getLexeme());
     }
 
     protected final <T> boolean appliesTo(NodeAdapter<T> hom, T n) {

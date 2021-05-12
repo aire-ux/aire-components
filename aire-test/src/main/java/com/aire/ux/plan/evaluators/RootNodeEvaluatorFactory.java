@@ -39,7 +39,7 @@ public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public String toString() {
-      return "[root]";
+      return "<root: select working set.  Cost: 0>";
     }
   }
 }

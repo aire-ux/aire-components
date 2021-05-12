@@ -33,7 +33,7 @@ public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public String toString() {
-      return "[group]";
+      return "<group: select working set.  Cost: 0>";
     }
   }
 }

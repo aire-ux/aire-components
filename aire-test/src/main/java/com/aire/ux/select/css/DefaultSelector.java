@@ -91,6 +91,7 @@ public final class DefaultSelector implements Selector {
       this.context = context;
     }
 
+
     final <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
       var result = value;
       for (var c = init; c != null; c = c.next) {
@@ -105,14 +106,18 @@ public final class DefaultSelector implements Selector {
 
     @Override
     public String toString() {
-      val result = new StringBuilder("[");
-      for (var h = head; h != null; h = h.next) {
-        result.append(h.evaluator);
-        if (h.next != null) {
-          result.append(",");
-        }
+      val result = new StringBuilder();
+      toString(head, result, 0);
+      return result.toString();
+    }
+
+    private void toString(LinkedPlanNode node, StringBuilder result, int depth) {
+      if(node != null) {
+        val indent = " ".repeat(depth);
+        val evaluator = indent + "└╴" + node.evaluator.toString();
+        result.append(evaluator).append("").append("\n");
+        toString(node.next, result, evaluator.length());
       }
-      return result.append("]").toString();
     }
 
     LinkedPlan prepend(Evaluator evaluator) {

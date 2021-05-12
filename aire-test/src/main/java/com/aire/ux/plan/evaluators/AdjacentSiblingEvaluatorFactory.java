@@ -33,6 +33,18 @@ public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
+    public <T> int computeCost(Set<T> workingSet, NodeAdapter<T> hom) {
+      int results = 0;
+      for (val element : workingSet) {
+        val sibling = hom.getSucceedingSibling(element);
+        if (sibling != null) {
+          results += delegate.computeCost(Set.of(sibling), hom);
+        }
+      }
+      return results;
+    }
+
+    @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val results = new LinkedHashSet<T>();
       for (val element : workingSet) {

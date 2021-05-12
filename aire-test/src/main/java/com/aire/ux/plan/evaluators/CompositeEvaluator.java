@@ -28,6 +28,13 @@ public final class CompositeEvaluator implements Evaluator {
   }
 
   @Override
+  public <T> int computeCost(Set<T> workingSet, NodeAdapter<T> hom) {
+    return evaluators.stream()
+        .reduce(0, (t, u) -> t + u.computeCost(workingSet, hom), (t, u) -> u + t);
+
+  }
+
+  @Override
   public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
     val results = new LinkedHashSet<T>();
     for (val evaluator : evaluators) {
