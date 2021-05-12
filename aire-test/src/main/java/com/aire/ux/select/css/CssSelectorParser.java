@@ -30,6 +30,7 @@ import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.NamedSyntaxNode;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.select.css.TokenBuffer.TokenWord;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,10 +56,15 @@ import lombok.val;
 @SuppressFBWarnings
 public class CssSelectorParser {
 
-  /** symbol for the tokenless element group--provided for convenience */
-  static final Symbol GROUP = new Symbol() {};
+  /**
+   * symbol for the tokenless element group--provided for convenience
+   */
+  static final Symbol GROUP = new Symbol() {
+  };
 
-  /** map from tokens to their corresponding symbols */
+  /**
+   * map from tokens to their corresponding symbols
+   */
   private static final Map<CssSelectorToken, ElementSymbol> mappedTokens;
 
   /** construct the mappings from symbols to tokens */
@@ -71,10 +77,15 @@ public class CssSelectorParser {
     }
   }
 
-  /** the lexer--assumed to not be null */
-  @Nonnull private final SelectorLexer lexer;
+  /**
+   * the lexer--assumed to not be null
+   */
+  @Nonnull
+  private final SelectorLexer lexer;
 
-  /** create a new selector parser with the provided lexer */
+  /**
+   * create a new selector parser with the provided lexer
+   */
   public CssSelectorParser() {
     this(new DefaultCssSelectorLexer());
   }
@@ -229,9 +240,9 @@ public class CssSelectorParser {
    * stream and discard it
    *
    * @param tokens the token-stream
-   * @param token the expected token
+   * @param token  the expected token
    * @throws IllegalArgumentException if the next token in the token-stream is not equal to the
-   *     expected token
+   *                                  expected token
    */
   private void expectAndDiscard(LookaheadIterator<Token> tokens, CssSelectorToken token) {
     if (!tokens.hasNext()) {
@@ -338,7 +349,7 @@ public class CssSelectorParser {
    */
   private SyntaxNode<Symbol, Token> expression(LookaheadIterator<Token> tokens) {
     eatWhitespace(tokens);
-    val function = expect(tokens, FunctionStart);
+    val function = functionNode(expect(tokens, FunctionStart));
     while (nextIs(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier)) {
       function.addChild(
           expect(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier));
@@ -346,6 +357,19 @@ public class CssSelectorParser {
     }
     expectAndDiscard(tokens, ApplicationEnd);
     return function;
+  }
+
+  private SyntaxNode<Symbol, Token> functionNode(SyntaxNode<Symbol, Token> node) {
+    val lexeme = node.getSource().getLexeme();
+    val functionName = lexeme.substring(0, lexeme.length() - 1);
+    val source = node.getSource();
+    return new CssSyntaxNode(Symbol.symbol(functionName),
+        new TokenWord(
+            source.getStart(),
+            source.getEnd(),
+            functionName,
+            source.getType())
+    );
   }
 
   /**
@@ -426,9 +450,9 @@ public class CssSelectorParser {
    * utility method for determining whether the next element is in the target list
    *
    * @param tokens the token stream
-   * @param match the set of elements to determine membership in
+   * @param match  the set of elements to determine membership in
    * @return true if the next token is a member of the target set, false if not or the stream has no
-   *     more tokens
+   * more tokens
    */
   private boolean nextIs(LookaheadIterator<Token> tokens, CssSelectorToken... match) {
     if (tokens.hasNext()) {
@@ -449,7 +473,7 @@ public class CssSelectorParser {
    * @param tokens the token stream to extract a combinator from
    * @return the combinator
    * @throws IllegalArgumentException if the parser-state is in combinator position, but no known
-   *     combinator exists
+   *                                  combinator exists
    */
   private SyntaxNode<Symbol, Token> combinator(LookaheadIterator<Token> tokens) {
     val token = tokens.peek();
@@ -476,7 +500,7 @@ public class CssSelectorParser {
    * @param tokens the token stream
    * @return a union operator
    * @throws IllegalArgumentException if the parser state is in union position, but the next
-   *     operator is not a union operator
+   *                                  operator is not a union operator
    */
   private SyntaxNode<Symbol, Token> union(LookaheadIterator<Token> tokens) {
     val next = tokens.peek();
@@ -508,10 +532,10 @@ public class CssSelectorParser {
    * a syntax node marking its placement in the abstract syntax tree
    *
    * @param tokens the token stream
-   * @param types the set of tokens to expect such that the next element in the stream is in it
+   * @param types  the set of tokens to expect such that the next element in the stream is in it
    * @return a syntax node backed by the token
    * @throws IllegalArgumentException if there is not a next token or the next token is not within
-   *     the set
+   *                                  the set
    */
   private SyntaxNode<Symbol, Token> expect(
       LookaheadIterator<Token> tokens, CssSelectorToken... types) {
@@ -531,9 +555,13 @@ public class CssSelectorParser {
         "Expected one of [%s], got %s (%s)".formatted(expected, nextType, next));
   }
 
-  /** the set of known CSS selector symbols, along with some that make processing the AST nicer */
+  /**
+   * the set of known CSS selector symbols, along with some that make processing the AST nicer
+   */
   public enum ElementSymbol implements Symbol {
-    /** a selector group. Individual CSS selector-sets are grouped beneath this for convenience */
+    /**
+     * a selector group. Individual CSS selector-sets are grouped beneath this for convenience
+     */
     SelectorGroup("<group>", null),
 
     /** operators */
@@ -550,10 +578,14 @@ public class CssSelectorParser {
      */
     PrefixMatch("^=", CssSelectorToken.PrefixOperator),
 
-    /** operator that matches a string suffix. Equivalent to: attribute.value.endsWith([operand]) */
+    /**
+     * operator that matches a string suffix. Equivalent to: attribute.value.endsWith([operand])
+     */
     SuffixMatch("$=", CssSelectorToken.SuffixOperator),
 
-    /** operator that matches a substring. Equivalent to: attribute.value.contains([operand]) */
+    /**
+     * operator that matches a substring. Equivalent to: attribute.value.contains([operand])
+     */
     SubstringMatch("*=", CssSelectorToken.SubstringOperator),
 
     /**
@@ -571,29 +603,47 @@ public class CssSelectorParser {
      */
     Includes("~=", CssSelectorToken.AttributeValueInSetOperator),
 
-    /** operator that matches a string exactly */
+    /**
+     * operator that matches a string exactly
+     */
     StrictEquality("=", CssSelectorToken.StrictEqualityOperator),
 
-    /** either an addition operator or an expression value, depending on state */
+    /**
+     * either an addition operator or an expression value, depending on state
+     */
     Addition("+", AdditionOperator),
 
-    /** subtraction operator */
+    /**
+     * subtraction operator
+     */
     Subtraction("-", CssSelectorToken.Minus),
 
-    /** numeric value--may be decimal or integral */
+    /**
+     * numeric value--may be decimal or integral
+     */
     Number("<number>", CssSelectorToken.Numeric),
 
-    /** denotes the beginning of a selector call such as {@code :nth-child(2n + 1) } */
+    /**
+     * denotes the beginning of a selector call such as {@code :nth-child(2n + 1) }
+     */
     FunctionApplication("<function>()", FunctionStart),
-    /** pseudoclass */
+    /**
+     * pseudoclass
+     */
     PseudoClass("::<class>", CssSelectorToken.PseudoClass),
     PseudoElement(":<element>", CssSelectorToken.PseudoElement),
-    /** attribute selector */
+    /**
+     * attribute selector
+     */
     AttributeSelector("<attribute>", CssSelectorToken.AttributeGroup),
-    /** a comma operator denotes set union a,b = union(select(a), select(b)) */
+    /**
+     * a comma operator denotes set union a,b = union(select(a), select(b))
+     */
     Union(",", CssSelectorToken.Comma),
 
-    /** the <code>not</code> operator negates enclosed operations */
+    /**
+     * the <code>not</code> operator negates enclosed operations
+     */
     Negation(":not", CssSelectorToken.Not),
 
     /**
@@ -601,31 +651,49 @@ public class CssSelectorParser {
      * unless they are omitted by subsequent selectors
      */
     UniversalSelector("*", CssSelectorToken.Universal),
-    /** select by node-type (h1, span, etc.) */
+    /**
+     * select by node-type (h1, span, etc.)
+     */
     TypeSelector("<type>", CssSelectorToken.Identifier),
 
-    /** select by class (.red) */
+    /**
+     * select by class (.red)
+     */
     ClassSelector(".<identifier>", CssSelectorToken.Class),
 
-    /** select children (parent > child) */
+    /**
+     * select children (parent > child)
+     */
     ChildSelector(">", CssSelectorToken.GreaterThan),
 
-    /** select by identity (#my-distinguished-node) */
+    /**
+     * select by identity (#my-distinguished-node)
+     */
     IdentitySelector("#<identifier>", CssSelectorToken.IdentifierSelector),
 
-    /** selects any subsequent matching siblings (a ~ b) */
+    /**
+     * selects any subsequent matching siblings (a ~ b)
+     */
     GeneralSiblingSelector("~", Tilde),
 
-    /** selects any immediately-subsequent matching siblings (a + b) */
+    /**
+     * selects any immediately-subsequent matching siblings (a + b)
+     */
     AdjacentSiblingSelector("+", CssSelectorToken.AdditionOperator),
 
-    /** selects any descendants */
+    /**
+     * selects any descendants
+     */
     DescendantSelector("<a desc b>", Whitespace);
 
-    /** description */
+    /**
+     * description
+     */
     private final String value;
 
-    /** the associated token */
+    /**
+     * the associated token
+     */
     private final CssSelectorToken token;
 
     /**
@@ -647,7 +715,7 @@ public class CssSelectorParser {
 
   private static class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {
 
-    private CssSyntaxNode(ElementSymbol symbol, Token token) {
+    private CssSyntaxNode(Symbol symbol, Token token) {
       super(symbol.name(), symbol, token, symbol);
     }
 
@@ -656,7 +724,7 @@ public class CssSelectorParser {
      *
      * @param symbol the symbol to associated with this node
      */
-    private CssSyntaxNode(ElementSymbol symbol) {
+    private CssSyntaxNode(Symbol symbol) {
       this(symbol, null);
     }
 

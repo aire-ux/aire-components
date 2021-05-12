@@ -70,7 +70,7 @@ final class TokenBuffer {
 
   /** idk why lombok isn't recognizing generated getters */
   @SuppressFBWarnings
-  private static final record TokenWord(int start, int end, String lexeme, Type type)
+  public static final record TokenWord(int start, int end, String lexeme, Type type)
       implements Token {
 
     @Override
