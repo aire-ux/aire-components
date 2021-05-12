@@ -38,7 +38,6 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
 
     public AttributeSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       val children = node.getChildren();
-      System.out.println("NODE\n" + node);
       if (children.isEmpty()) {
         throw new IllegalArgumentException(
             "Somehow the parser did not catch an empty attribute selector list (node: %s)"

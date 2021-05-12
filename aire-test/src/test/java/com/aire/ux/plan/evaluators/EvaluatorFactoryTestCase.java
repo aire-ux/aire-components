@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
@@ -7,6 +9,7 @@ import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -25,6 +28,15 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
 
   protected Set<Node> eval(String selector, Node root) {
     return eval(selector, root, Node.getAdapter());
+  }
+
+  protected void assertContainsTypes(Set<Node> nodes, String... types) {
+    val ts = nodes.stream().map(t -> t.getType()).collect(Collectors.toSet());
+    for (val t : types) {
+      if(!ts.contains(t)) {
+        fail("Expected type: '%s' out of %s".formatted(t, ts));
+      }
+    }
   }
 
   protected <T> Set<T> eval(String selector, T root, NodeAdapter<T> adapter) {

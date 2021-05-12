@@ -43,9 +43,9 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       return delegate.evaluate(workingSet, hom);
     }
 
-    static Evaluator detectDelegate(SyntaxNode<Symbol, Token> node) {
+    final Evaluator detectDelegate(SyntaxNode<Symbol, Token> node) {
       if (isScalarNumber(node)) {
-        return new ScalarEvaluator(node);
+        return new ScalarEvaluator(node, context);
       }
       return null;
     }
@@ -57,12 +57,11 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
   }
 
-  static class ScalarEvaluator implements Evaluator {
+  static class ScalarEvaluator extends AbstractHierarchySearchingEvaluator {
     final int offset;
-    final SyntaxNode<Symbol, Token> node;
 
-    ScalarEvaluator(SyntaxNode<Symbol, Token> node) {
-      this.node = node;
+    ScalarEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
+      super(node, context);
       this.offset = readOffset();
     }
 
@@ -72,15 +71,13 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val results = new LinkedHashSet<T>();
-      for (val item : workingSet) {
-        val children = hom.getChildren(item);
-        if (offset >= 0 && offset < children.size()) {
-          results.add(children.get(offset));
-        }
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
+      val parent = hom.getParent(n);
+      if(parent == null) {
+        return false;
       }
-      return results;
+      val children = hom.getChildren(parent);
+      return children.indexOf(n) + 1 == offset;
     }
   }
 }
