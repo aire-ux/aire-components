@@ -32,8 +32,8 @@ public class CssSelectorParserTest {
     }
 
     public static void expectSymbolCount(
-        AbstractSyntaxTree<Symbol, Token> tree, ElementSymbol type, int i) {
-      assertEquals(i, tree.reduce(0, (node, n) -> node.getSymbol() == type ? n + 1 : n));
+        AbstractSyntaxTree<Symbol, Token> tree, Symbol type, int i) {
+      assertEquals(i, tree.reduce(0, (node, n) -> type.equals(node.getSymbol()) ? n + 1 : n));
     }
 
     public static boolean isCombinator(SyntaxNode<Symbol, Token> node) {

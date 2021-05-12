@@ -2,6 +2,7 @@ package com.aire.ux.test;
 
 import static com.aire.ux.test.Nodes.node;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -96,6 +97,7 @@ public class Node {
     return attributes.containsKey(attribute);
   }
 
+  @SuppressFBWarnings
   public Node children(String... children) {
     for (val child : children) {
       node(child);

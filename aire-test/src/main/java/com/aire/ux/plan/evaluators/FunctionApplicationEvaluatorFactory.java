@@ -10,7 +10,6 @@ import com.aire.ux.select.css.Token;
 
 public class FunctionApplicationEvaluatorFactory implements EvaluatorFactory {
 
-
   @Override
   public Symbol getEvaluationTarget() {
     return ElementSymbol.FunctionApplication;

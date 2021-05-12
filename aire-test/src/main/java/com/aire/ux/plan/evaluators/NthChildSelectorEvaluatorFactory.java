@@ -15,6 +15,7 @@ import lombok.val;
 public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
   static final Symbol symbol = Symbol.symbol("nth-child");
+
   @Override
   public Symbol getEvaluationTarget() {
     return symbol;
@@ -30,21 +31,20 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     final Evaluator delegate;
     final PlanContext context;
     final SyntaxNode<Symbol, Token> node;
+
     public NthChildSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       this.node = node;
       this.context = context;
       this.delegate = detectDelegate(node);
     }
 
-
-
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       return delegate.evaluate(workingSet, hom);
     }
 
-    static Evaluator detectDelegate(SyntaxNode<Symbol, Token> node)  {
-      if(isScalarNumber(node)) {
+    static Evaluator detectDelegate(SyntaxNode<Symbol, Token> node) {
+      if (isScalarNumber(node)) {
         return new ScalarEvaluator(node);
       }
       return null;
@@ -52,10 +52,10 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
     private static boolean isScalarNumber(SyntaxNode<Symbol, Token> node) {
       val children = node.getChildren();
-      return children.size() == 1 && children.get(0).getSource().getType() == CssSelectorToken.Numeric;
+      return children.size() == 1
+          && children.get(0).getSource().getType() == CssSelectorToken.Numeric;
     }
   }
-
 
   static class ScalarEvaluator implements Evaluator {
     final int offset;
@@ -74,9 +74,9 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val results = new LinkedHashSet<T>();
-      for(val item : workingSet) {
+      for (val item : workingSet) {
         val children = hom.getChildren(item);
-        if(offset >= 0 && offset < children.size()) {
+        if (offset >= 0 && offset < children.size()) {
           results.add(children.get(offset));
         }
       }
