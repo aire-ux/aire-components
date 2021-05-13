@@ -28,14 +28,14 @@ public class FunctionApplicationTest extends TestCase {
   @MethodSource("ensureSimpleFunctionApplicationWorks_factory")
   void ensureSimpleFunctionApplicationWorks(MethodDescriptor descriptor) {
     val t = parser.parse(descriptor.expression);
-    expectSymbolCount(t.getSyntaxTree(), u -> has(descriptor, u.getSymbol().name()), 1);
+    expectNodePropertyCount(t.getSyntaxTree(), u -> has(descriptor, u.getSymbol().name()), 1);
   }
 
   @ParameterizedTest
   @MethodSource("ensureMultipleFunctionApplicationWorks_factory")
   void ensureMultipleFunctionApplicationWorks(MethodDescriptor descriptor) {
     val t = parser.parse(descriptor.expression);
-    expectSymbolCount(t.getSyntaxTree(), u -> has(descriptor, u.getSymbol().name()), 2);
+    expectNodePropertyCount(t.getSyntaxTree(), u -> has(descriptor, u.getSymbol().name()), 2);
   }
 
   @ParameterizedTest

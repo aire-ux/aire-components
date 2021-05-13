@@ -23,7 +23,7 @@ public class CssTypeSelectorTest extends TestCase {
   @ValueSource(strings = {"hello > world", "hello>world", "a>b", "a+b", "a b", "a ~ b", "a ~   b"})
   void ensureSimpleCombinatorWorks(String value) {
     val parse = parser.parse(value);
-    expectSymbolCount(parse.getSyntaxTree(), TestCase::isCombinator, 1);
+    expectNodePropertyCount(parse.getSyntaxTree(), TestCase::isCombinator, 1);
     expectSymbolCount(parse.getSyntaxTree(), ElementSymbol.TypeSelector, 2);
   }
 

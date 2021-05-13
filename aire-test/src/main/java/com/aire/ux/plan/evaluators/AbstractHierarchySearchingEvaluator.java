@@ -28,7 +28,7 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
   @Override
   public <T> int computeCost(Set<T> workingSet, NodeAdapter<T> hom) {
     int i = 0;
-    for(val node : workingSet) {
+    for (val node : workingSet) {
       hom.reduce(node, i, (n, cost) -> cost + 1);
     }
     return i;

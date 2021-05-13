@@ -26,11 +26,10 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     return getEvaluationTarget().toString();
   }
 
-  private static class UniversalElementSelectorEvaluator extends
-      AbstractHierarchySearchingEvaluator {
+  private static class UniversalElementSelectorEvaluator
+      extends AbstractHierarchySearchingEvaluator {
 
-    private UniversalElementSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    private UniversalElementSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       super(node, context);
     }
 
@@ -43,6 +42,5 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     public String toString() {
       return "<universal: select descendant working set.  Cost: N>";
     }
-
   }
 }

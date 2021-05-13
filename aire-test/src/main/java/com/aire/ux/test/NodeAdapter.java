@@ -43,23 +43,25 @@ public interface NodeAdapter<T> {
         getChildren(root).stream().map(c -> map(c, hom, f)).collect(Collectors.toList()));
   }
 
+
   /**
    * @param current the root node
    * @param initial the initial value to reduce over
    * @param f the reducer function
    * @param <U> the type-parameter of the result
-   * @return the hierarchy reduced over the reducer function
+   * @return the hierarchy reduced over the reducer function in breadth-first
+   * order
    */
   default <U> U reduce(
       @Nonnull final T current, @Nonnull final U initial, @Nonnull final BiFunction<T, U, U> f) {
     val stack = new ArrayDeque<T>();
-    stack.push(current);
+    stack.add(current);
     var result = initial;
     while (!stack.isEmpty()) {
-      val c = stack.pop();
+      val c = stack.poll();
       result = f.apply(c, result);
       for (val child : getChildren(c)) {
-        stack.push(child);
+        stack.add(child);
       }
     }
     return result;

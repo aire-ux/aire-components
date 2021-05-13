@@ -10,6 +10,8 @@ import com.aire.ux.test.Nodes;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class DefaultSelectorTest extends TestCase {
 
@@ -23,12 +25,28 @@ class DefaultSelectorTest extends TestCase {
   }
 
   @Test
+  void ensureEvenWorks() {
+    val result = parser.parse("div:nth-child(even)");
+    expectNodePropertyCount(result.getSyntaxTree(),
+        (node) -> node.getSource() != null
+            && node.getSource().getLexeme().equals("even"), 1);
+  }
+
+  @Test
+  void ensureOddWorks() {
+    val result = parser.parse("div:nth-child(odd)");
+    expectNodePropertyCount(result.getSyntaxTree(),
+        (node) -> node.getSource() != null
+            && node.getSource().getLexeme().equals("odd"), 1);
+  }
+
+  @Test
   void ensurePlanToStringIsHelpful() {
-//    val result = parser.parse(
-//        "span > span[sup $=beans]:nth-child(1) > span.test:nth-child(1).test:nth-child(1).test")
-//        .plan(context);
-//    val result = parser.parse("div > test").plan(context).analyze(node(""));
-//    System.out.println(result);
+    val result = parser.parse(
+        "span > span[sup $=beans]:nth-child(1) > span.test:nth-child(1).test:nth-child(1).test");
+
+    val s = result.plan(context).toString();
+    System.out.println(s);
   }
 
   @Test

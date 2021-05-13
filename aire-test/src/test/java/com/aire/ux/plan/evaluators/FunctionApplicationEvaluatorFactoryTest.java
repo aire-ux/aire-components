@@ -1,6 +1,8 @@
 package com.aire.ux.plan.evaluators;
 
 import static com.aire.ux.test.Nodes.node;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.plan.EvaluatorFactory;
 import lombok.val;
@@ -10,18 +12,14 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureSimpleSelectorWorks() {
-    val node = node("html")
-        .children(
-            node("head"),
-            node("body").child(
-                node("ul")
-                    .children(
-                        node("li").content("test"),
-                        node("li").content("hello")
-                    )
-
-            )
-        );
+    val node =
+        node("html")
+            .children(
+                node("head"),
+                node("body")
+                    .child(
+                        node("ul")
+                            .children(node("li").content("test"), node("li").content("hello"))));
 
     val results = eval(":nth-child(1)", node);
     assertContainsTypes(results, "head", "ul", "li");
@@ -33,6 +31,38 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
     val result = eval("html :nth-child(1)", node);
     assertContainsTypes(result, "body", "div");
+  }
+
+  @Test
+  void ensureOddWorks() {
+    val node = node("ul")
+        .children(
+            node("li").attribute("first", "true"),
+            node("li").attribute("second", "true"),
+            node("li").attribute("third", "true")
+        );
+    val results = eval(":nth-child(odd)", node);
+    assertEquals(2, results.size());
+    System.out.println(results);
+    val iter = results.iterator();
+    var n = iter.next();
+    assertTrue(n.hasAttribute("first"));
+    n = iter.next();
+    assertTrue(n.hasAttribute("third"));
+  }
+
+  @Test
+  void ensureEvenWorks() {
+    val node = node("ul")
+        .children(
+            node("li").attribute("first", "true"),
+            node("li").attribute("second", "true"),
+            node("li").attribute("third", "true")
+        );
+    val results = eval(":nth-child(even)", node);
+    assertEquals(1, results.size());
+    val n = results.iterator().next();
+    assertTrue(n.hasAttribute("second"));
   }
 
   @Test
@@ -64,19 +94,20 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureRepeatedFunctionApplicationWorks() {
-    val node = node(
-        "span"
-    ).children(
-        node("span").attribute("sup", "coolbeans").child(
-            node("span").attribute("class", "test").child(
-                node("span").attribute("class", "selected"))
-        )
-    );
+    val node =
+        node("span")
+            .children(
+                node("span")
+                    .attribute("sup", "coolbeans")
+                    .child(
+                        node("span")
+                            .attribute("class", "test")
+                            .child(node("span").attribute("class", "selected"))));
 
-    val result = eval(
-        "span > span[sup $=beans]:nth-child(1) > span.test:nth-child(1).test:nth-child(1).test",
-        node);
-    System.out.println(result);
+    val result =
+        eval(
+            "span > span[sup $=beans]:nth-child(1) > span.test:nth-child(1).test:nth-child(1).test",
+            node);
     assertContainsTypes(result, "span");
   }
 

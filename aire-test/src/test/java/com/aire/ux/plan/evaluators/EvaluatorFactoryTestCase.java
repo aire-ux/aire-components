@@ -33,7 +33,7 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
   protected void assertContainsTypes(Set<Node> nodes, String... types) {
     val ts = nodes.stream().map(t -> t.getType()).collect(Collectors.toSet());
     for (val t : types) {
-      if(!ts.contains(t)) {
+      if (!ts.contains(t)) {
         fail("Expected type: '%s' out of %s".formatted(t, ts));
       }
     }

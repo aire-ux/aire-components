@@ -24,7 +24,7 @@ public class CssSelectorParserTest {
 
     protected CssSelectorParser parser;
 
-    public static void expectSymbolCount(
+    public static void expectNodePropertyCount(
         AbstractSyntaxTree<Symbol, Token> tree,
         Predicate<SyntaxNode<Symbol, Token>> predicate,
         int i) {
