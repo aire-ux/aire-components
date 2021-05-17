@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 /** marker for a parsed symbol. Probably best to not overload Symbols and Tokens */
+@SuppressWarnings("PMD")
 public interface Symbol {
 
   /**
@@ -25,6 +26,7 @@ public interface Symbol {
 }
 
 @SuppressFBWarnings
+@SuppressWarnings("PMD")
 final record StringSymbol(String symbol) implements Symbol {
 
   static final Map<String, Symbol> internmap;

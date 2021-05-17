@@ -35,12 +35,12 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureOddWorks() {
-    val node = node("ul")
-        .children(
-            node("li").attribute("first", "true"),
-            node("li").attribute("second", "true"),
-            node("li").attribute("third", "true")
-        );
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("first", "true"),
+                node("li").attribute("second", "true"),
+                node("li").attribute("third", "true"));
     val results = eval(":nth-child(odd)", node);
     assertEquals(2, results.size());
     System.out.println(results);
@@ -53,12 +53,12 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureEvenWorks() {
-    val node = node("ul")
-        .children(
-            node("li").attribute("first", "true"),
-            node("li").attribute("second", "true"),
-            node("li").attribute("third", "true")
-        );
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("first", "true"),
+                node("li").attribute("second", "true"),
+                node("li").attribute("third", "true"));
     val results = eval(":nth-child(even)", node);
     assertEquals(1, results.size());
     val n = results.iterator().next();

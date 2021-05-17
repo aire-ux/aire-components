@@ -39,13 +39,12 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       this.delegate = detectDelegate(node);
     }
 
-
     private static boolean is(SyntaxNode<Symbol, Token> node, String value) {
       val children = node.getChildren();
       if (children.size() == 1) {
         val child = children.get(0);
-        return child.getSource().getType() == CssSelectorToken.Identifier &&
-            value.equals(child.getSource().getLexeme().toLowerCase());
+        return child.getSource().getType() == CssSelectorToken.Identifier
+            && value.equalsIgnoreCase(child.getSource().getLexeme());
       }
       return false;
     }
@@ -65,21 +64,19 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       if (isScalarNumber(node)) {
         return new ScalarEvaluator(node, context);
       }
-      if(is(node, "odd")) {
+      if (is(node, "odd")) {
         return new OddEvaluator(node, context);
       }
-      if(is(node, "even")) {
+      if (is(node, "even")) {
         return new EvenEvaluator(node, context);
       }
       return null;
     }
   }
 
-  static abstract class AbstractCountEvaluator extends AbstractHierarchySearchingEvaluator {
+  abstract static class AbstractCountEvaluator extends AbstractHierarchySearchingEvaluator {
 
-    AbstractCountEvaluator(
-        @NotNull SyntaxNode<Symbol, Token> node,
-        @NotNull PlanContext context) {
+    AbstractCountEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
       super(node, context);
       node.removeChild(0);
     }
@@ -98,14 +95,12 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
   }
 
   /**
-   * these take advantage of the fact that odd(n + 1) == even(n)
-   * and the fact that java collections are zero-indexed
-   * while CSS selectors are 1-indexed
+   * these take advantage of the fact that odd(n + 1) == even(n) and the fact that java collections
+   * are zero-indexed while CSS selectors are 1-indexed
    */
   static final class EvenEvaluator extends AbstractCountEvaluator {
 
-    EvenEvaluator(
-        @NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+    EvenEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
       super(node, context);
     }
 
@@ -115,10 +110,10 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       return idx >= 0 && idx % 2 == 1;
     }
   }
+
   static final class OddEvaluator extends AbstractCountEvaluator {
 
-    OddEvaluator(
-        @NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+    OddEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
       super(node, context);
     }
 
@@ -126,6 +121,25 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     <T> boolean is(List<T> children, T value) {
       val idx = children.indexOf(value);
       return idx >= 0 && idx % 2 == 0;
+    }
+  }
+
+  static final class FunctionalEvaluator extends AbstractCountEvaluator {
+
+    final int offset;
+
+    FunctionalEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+      super(node, context);
+      this.offset = computeOffset();
+    }
+
+    private int computeOffset() {
+      return 1;
+    }
+
+    @Override
+    <T> boolean is(List<T> children, T value) {
+      return false;
     }
   }
 

@@ -9,16 +9,12 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import java.util.function.Predicate;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectPackages("com.aire.ux.select.scenarios.type")
 public class CssSelectorParserTest {
-
-  @Test
-  void whatever() {}
 
   public static class TestCase {
 

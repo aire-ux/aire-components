@@ -1024,45 +1024,45 @@ class Foo {
         </example>
     </rule>
 
-    <rule name="ConstructorCallsOverridableMethod"
-          language="java"
-          since="1.04"
-          message="Overridable {0} called during object construction"
-          class="net.sourceforge.pmd.lang.java.rule.errorprone.ConstructorCallsOverridableMethodRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#constructorcallsoverridablemethod">
-        <description>
-            Calling overridable methods during construction poses a risk of invoking methods on an incompletely
-            constructed object and can be difficult to debug.
-            It may leave the sub-class unable to construct its superclass or forced to replicate the construction
-            process completely within itself, losing the ability to call super().  If the default constructor
-            contains a call to an overridable method, the subclass may be completely uninstantiable.   Note that
-            this includes method calls throughout the control flow graph - i.e., if a constructor Foo() calls a
-            private method bar() that calls a public method buz(), this denotes a problem.
-        </description>
-        <priority>1</priority>
-        <example>
-            <![CDATA[
-public class SeniorClass {
-  public SeniorClass(){
-      toString(); //may throw NullPointerException if overridden
-  }
-  public String toString(){
-    return "IAmSeniorClass";
-  }
-}
-public class JuniorClass extends SeniorClass {
-  private String name;
-  public JuniorClass(){
-    super(); //Automatic call leads to NullPointerException
-    name = "JuniorClass";
-  }
-  public String toString(){
-    return name.toUpperCase();
-  }
-}
-]]>
-        </example>
-    </rule>
+<!--    <rule name="ConstructorCallsOverridableMethod"-->
+<!--          language="java"-->
+<!--          since="1.04"-->
+<!--          message="Overridable {0} called during object construction"-->
+<!--          class="net.sourceforge.pmd.lang.java.rule.errorprone.ConstructorCallsOverridableMethodRule"-->
+<!--          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#constructorcallsoverridablemethod">-->
+<!--        <description>-->
+<!--            Calling overridable methods during construction poses a risk of invoking methods on an incompletely-->
+<!--            constructed object and can be difficult to debug.-->
+<!--            It may leave the sub-class unable to construct its superclass or forced to replicate the construction-->
+<!--            process completely within itself, losing the ability to call super().  If the default constructor-->
+<!--            contains a call to an overridable method, the subclass may be completely uninstantiable.   Note that-->
+<!--            this includes method calls throughout the control flow graph - i.e., if a constructor Foo() calls a-->
+<!--            private method bar() that calls a public method buz(), this denotes a problem.-->
+<!--        </description>-->
+<!--        <priority>1</priority>-->
+<!--        <example>-->
+<!--            <![CDATA[-->
+<!--public class SeniorClass {-->
+<!--  public SeniorClass(){-->
+<!--      toString(); //may throw NullPointerException if overridden-->
+<!--  }-->
+<!--  public String toString(){-->
+<!--    return "IAmSeniorClass";-->
+<!--  }-->
+<!--}-->
+<!--public class JuniorClass extends SeniorClass {-->
+<!--  private String name;-->
+<!--  public JuniorClass(){-->
+<!--    super(); //Automatic call leads to NullPointerException-->
+<!--    name = "JuniorClass";-->
+<!--  }-->
+<!--  public String toString(){-->
+<!--    return name.toUpperCase();-->
+<!--  }-->
+<!--}-->
+<!--]]>-->
+<!--        </example>-->
+<!--    </rule>-->
 
 
     <rule name="DetachedTestCase"
@@ -2380,28 +2380,28 @@ public class Foo {
         </example>
     </rule>
 
-    <rule name="MoreThanOneLogger"
-          language="java"
-          since="2.0"
-          message="Class contains more than one logger."
-          class="net.sourceforge.pmd.lang.java.rule.errorprone.MoreThanOneLoggerRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#morethanonelogger">
-        <description>
-            Normally only one logger is used in each class. This rule supports slf4j, log4j, Java Util Logging and
-            log4j2 (since 6.19.0).
-        </description>
-        <priority>2</priority>
-        <example>
-            <![CDATA[
-public class Foo {
-    Logger log = Logger.getLogger(Foo.class.getName());
-    // It is very rare to see two loggers on a class, normally
-    // log information is multiplexed by levels
-    Logger log2= Logger.getLogger(Foo.class.getName());
-}
-]]>
-        </example>
-    </rule>
+<!--    <rule name="MoreThanOneLogger"-->
+<!--          language="java"-->
+<!--          since="2.0"-->
+<!--          message="Class contains more than one logger."-->
+<!--          class="net.sourceforge.pmd.lang.java.rule.errorprone.MoreThanOneLoggerRule"-->
+<!--          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#morethanonelogger">-->
+<!--        <description>-->
+<!--            Normally only one logger is used in each class. This rule supports slf4j, log4j, Java Util Logging and-->
+<!--            log4j2 (since 6.19.0).-->
+<!--        </description>-->
+<!--        <priority>2</priority>-->
+<!--        <example>-->
+<!--            <![CDATA[-->
+<!--public class Foo {-->
+<!--    Logger log = Logger.getLogger(Foo.class.getName());-->
+<!--    // It is very rare to see two loggers on a class, normally-->
+<!--    // log information is multiplexed by levels-->
+<!--    Logger log2= Logger.getLogger(Foo.class.getName());-->
+<!--}-->
+<!--]]>-->
+<!--        </example>-->
+<!--    </rule>-->
 
     <rule name="NonCaseLabelInSwitchStatement"
           language="java"

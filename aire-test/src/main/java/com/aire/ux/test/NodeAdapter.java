@@ -43,14 +43,12 @@ public interface NodeAdapter<T> {
         getChildren(root).stream().map(c -> map(c, hom, f)).collect(Collectors.toList()));
   }
 
-
   /**
    * @param current the root node
    * @param initial the initial value to reduce over
    * @param f the reducer function
    * @param <U> the type-parameter of the result
-   * @return the hierarchy reduced over the reducer function in breadth-first
-   * order
+   * @return the hierarchy reduced over the reducer function in breadth-first order
    */
   default <U> U reduce(
       @Nonnull final T current, @Nonnull final U initial, @Nonnull final BiFunction<T, U, U> f) {

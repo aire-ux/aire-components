@@ -13,9 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 
-/**
- *
- */
+/** */
 public final class CompositeEvaluator implements Evaluator {
 
   final PlanContext context;
@@ -32,7 +30,8 @@ public final class CompositeEvaluator implements Evaluator {
 
   @Override
   public <T> int computeCost(Set<T> workingSet, NodeAdapter<T> hom) {
-    return evaluators.stream().sequential()
+    return evaluators.stream()
+        .sequential()
         .reduce(0, (t, u) -> t + u.computeCost(workingSet, hom), (t, u) -> u + t);
   }
 
