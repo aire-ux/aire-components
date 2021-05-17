@@ -9,13 +9,21 @@ import com.aire.ux.select.css.Token;
 import io.sunshower.lambda.Option;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ExpressionTest extends TestCase {
 
   @Test
   void ensureExpressionWorks() {
     val expr = parse("n");
-    assertTrue(expr instanceof Expression.Variable);
+    assertTrue(expr instanceof Expression.AlgebraicExpression);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"1n", "n + 3", "n - 2", "3n + 5", "2n + 4", "5n", "n", "0n + 1", "-1n - 4"})
+  void ensureAllExpressionCombinationsAreParsedWithoutException(String expr) {
+    System.out.println(parse(expr));
   }
 
   Expression parse(String value) {

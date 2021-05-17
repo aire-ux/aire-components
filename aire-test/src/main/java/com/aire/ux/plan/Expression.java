@@ -9,14 +9,12 @@ import static java.lang.Integer.parseInt;
 import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
-import com.aire.ux.plan.Expression.Constant;
-import com.aire.ux.plan.Expression.Negation;
-import com.aire.ux.plan.Expression.Variable;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.select.css.Type;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nonnull;
 import lombok.val;
 
 @SuppressFBWarnings
@@ -42,13 +40,36 @@ public interface Expression {
   }
 
   static Expression readFunctionalBody(
-      Expression lhs, LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
-    return null;
+      Expression prelude, LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
+    return operator(prelude, tokens);
   }
 
-  static Expression readFunctionalPrelude(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
-    return null;
+  static Expression operator(Expression expr, LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
+    if (is(tokens, AdditionOperator)) {
+      expect(tokens, AdditionOperator);
+      return new AdditionExpression(expr, number(tokens));
+    }
+    expect(tokens, Minus);
+    return new SubtractionExpression(expr, number(tokens));
   }
+
+  /**
+   * @param tokens the tokens to extrct the expression from
+   * @return the expression
+   */
+  static Expression readFunctionalPrelude(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
+    if (is(tokens, Numeric)) {
+      val n = number(tokens);
+      if (is(tokens, Identifier)) {
+        return new AlgebraicExpression(n, variable(tokens));
+      }
+    }
+    if (is(tokens, Identifier)) {
+      return new AlgebraicExpression(variable(tokens));
+    }
+    throw new IllegalStateException("not implemented yet");
+  }
+
 
   static Expression variable(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
     return new Variable(expect(tokens, Identifier).getSource().getLexeme());
@@ -62,10 +83,6 @@ public interface Expression {
     return new Negation(expression);
   }
 
-  //
-  //  static final record Negation(final Expression negated) extends Expression {
-  //
-  //  }
   private static SyntaxNode<Symbol, Token> expect(
       LookaheadIterator<SyntaxNode<Symbol, Token>> toks, Type... types) {
     if (!toks.hasNext()) {
@@ -94,12 +111,69 @@ public interface Expression {
     return false;
   }
 
-  public static interface Visitor {}
+  public static interface Visitor {
 
-  public record Constant(int value) implements Expression {}
+  }
 
-  public record Variable(String name) implements Expression {}
+
+  public static final class AlgebraicExpression implements Expression {
+
+    final Expression constant;
+    final Expression variable;
+
+    public AlgebraicExpression(@Nonnull Expression variable) {
+      this(new Constant(1), variable);
+    }
+
+    public AlgebraicExpression(@Nonnull Expression constant, @Nonnull Expression variable) {
+      this.constant = constant;
+      this.variable = variable;
+    }
+
+    public String toString() {
+      return "Expr(alg: [const: %s], [alg: %s])".formatted(constant, variable);
+    }
+
+  }
+
+  public record Constant(int value) implements Expression {
+
+    @Override
+    public String toString() {
+      return "Expr(const: %d)".formatted(value);
+    }
+  }
+
+  public record Variable(String name) implements Expression {
+
+    @Override
+    public String toString() {
+      return "Expr(variable: %s)".formatted(name);
+    }
+  }
 
   @SuppressFBWarnings
-  public record Negation(Expression expression) implements Expression {}
+  public record Negation(Expression expression) implements Expression {
+
+    @Override
+    public String toString() {
+      return "-%s".formatted(expression);
+    }
+  }
+
+  public record AdditionExpression(Expression lhs, Expression rhs) implements Expression {
+
+    @Override
+    public String toString() {
+      return "%s + %s".formatted(lhs, rhs);
+    }
+  }
+
+  public record SubtractionExpression(Expression lhs, Expression rhs) implements Expression {
+
+    @Override
+    public String toString() {
+      return "%s - %s".formatted(lhs, rhs);
+    }
+  }
 }
