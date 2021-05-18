@@ -22,11 +22,11 @@ class ExpressionTest extends TestCase {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"1n", "n + 3", "n - 2", "3n + 5", "2n + 4", "5n", "n", "0n + 1", "-1n - 4"})
+  @ValueSource(
+      strings = {"1n", "n + 3", "n - 2", "3n + 5", "2n + 4", "5n", "n", "0n + 1", "-1n - 4"})
   void ensureAllExpressionCombinationsAreParsedWithoutException(String expr) {
     assertTrue(parse(expr) instanceof Expression);
   }
-
 
   @Test
   void ensureSelectionApiMakesSense() {
@@ -41,7 +41,6 @@ class ExpressionTest extends TestCase {
     assertEquals(4 * v, expr.apply(v));
   }
 
-
   @ParameterizedTest
   @ValueSource(ints = {1, 2, 3, 4, 5, 6})
   void ensureMultiplesPlusOffsetsWork(int value) {
@@ -49,14 +48,12 @@ class ExpressionTest extends TestCase {
     assertEquals(2 * value + 17, expr.apply(value));
   }
 
-
   @ParameterizedTest
   @ValueSource(ints = {0, 1, 2, 3, 4, 5})
   void ensureNegationWorks(int value) {
     val expr = parse("- n + 14");
     assertEquals(-value + 14, expr.apply(value));
   }
-
 
   @ParameterizedTest
   @ValueSource(ints = {0, 1, 2, 3, 4, 5})

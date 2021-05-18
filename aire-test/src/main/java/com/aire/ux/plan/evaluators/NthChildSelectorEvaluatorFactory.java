@@ -4,10 +4,15 @@ import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
+import com.aire.ux.plan.Expression;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.val;
@@ -27,7 +32,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     return new NthChildSelectorEvaluator(node, context);
   }
 
-  static class NthChildSelectorEvaluator implements Evaluator {
+  static final class NthChildSelectorEvaluator implements Evaluator {
 
     final Evaluator delegate;
     final PlanContext context;
@@ -70,8 +75,52 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       if (is(node, "even")) {
         return new EvenEvaluator(node, context);
       }
-      return null;
+      return new ExpressionEvaluator(node, context);
     }
+  }
+
+  static class ExpressionEvaluator implements Evaluator {
+
+    final Expression expression;
+
+    ExpressionEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
+      this.expression = Expression.parse(node.clearChildren());
+    }
+
+    @Override
+    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
+      val results = new LinkedHashSet<T>();
+      for (val node : workingSet) {
+        hom.reduce(
+            node,
+            results,
+            (n, rs) -> {
+              rs.addAll(collectApplicableChildren(hom, n));
+              return rs;
+            });
+      }
+      return results;
+    }
+
+    private <T> Collection<? extends T> collectApplicableChildren(NodeAdapter<T> hom, T n) {
+      val parent = hom.getParent(n);
+      if(parent == null) {
+        return Collections.emptySet();
+      }
+      val siblings = hom.getChildren(parent);
+
+      val results = new ArrayList<T>(siblings.size());
+      for(int i = 0; i < siblings.size(); i++) {
+        val expr = expression.apply(i) - 1;
+        if(expr >= 0 && expr < siblings.size()) {
+          results.add(siblings.get(expr));
+        }
+      }
+      return results;
+
+    }
+
+
   }
 
   abstract static class AbstractCountEvaluator extends AbstractHierarchySearchingEvaluator {

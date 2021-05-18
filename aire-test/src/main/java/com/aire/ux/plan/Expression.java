@@ -27,10 +27,9 @@ public interface Expression extends Function<Integer, Integer> {
    * Evaluate this expression against the list of elements
    *
    * @param elements the elements to evaluate this against
-   * @param <T>      the list of elements to select this expression from
+   * @param <T> the list of elements to select this expression from
    * @return a possibly empty, never null list of elements
    */
-
   public static Expression parse(List<SyntaxNode<Symbol, Token>> tokens) {
     val ts = LookaheadIterator.wrap(tokens.iterator());
     return parse(ts);
@@ -57,11 +56,14 @@ public interface Expression extends Function<Integer, Integer> {
     } else {
       val next = tokens.next();
       val token = next.getSource();
-      tokens.pushBack(new CssSyntaxNode(
-          next.getSymbol(),
-          new TokenWord(token.getStart() + 1, token.getEnd(),
-              token.getLexeme().substring(1), token.getType()))
-      );
+      tokens.pushBack(
+          new CssSyntaxNode(
+              next.getSymbol(),
+              new TokenWord(
+                  token.getStart() + 1,
+                  token.getEnd(),
+                  token.getLexeme().substring(1),
+                  token.getType())));
     }
   }
 
@@ -108,7 +110,6 @@ public interface Expression extends Function<Integer, Integer> {
     throw new IllegalStateException("not implemented yet");
   }
 
-
   static Expression variable(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
     return new Variable(expect(tokens, Identifier).getSource().getLexeme());
   }
@@ -148,7 +149,6 @@ public interface Expression extends Function<Integer, Integer> {
     }
     return false;
   }
-
 
   static final class AlgebraicExpression implements Expression {
 
@@ -239,6 +239,4 @@ public interface Expression extends Function<Integer, Integer> {
       return lhs.apply(integer) - rhs.apply(integer);
     }
   }
-
-
 }

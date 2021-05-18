@@ -2,12 +2,9 @@ package com.aire.ux.select.css;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-/**
- * idk why lombok isn't recognizing generated getters
- */
+/** idk why lombok isn't recognizing generated getters */
 @SuppressFBWarnings
-public final record TokenWord(int start, int end, String lexeme, Type type)
-    implements Token {
+public final record TokenWord(int start, int end, String lexeme, Type type) implements Token {
 
   @Override
   public String getLexeme() {
