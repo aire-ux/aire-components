@@ -9,7 +9,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import java.util.function.Predicate;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
@@ -17,14 +16,11 @@ import org.junit.platform.suite.api.Suite;
 @SelectPackages("com.aire.ux.select.scenarios.type")
 public class CssSelectorParserTest {
 
-  @Test
-  void whatever() {}
-
   public static class TestCase {
 
     protected CssSelectorParser parser;
 
-    public static void expectSymbolCount(
+    public static void expectNodePropertyCount(
         AbstractSyntaxTree<Symbol, Token> tree,
         Predicate<SyntaxNode<Symbol, Token>> predicate,
         int i) {
@@ -32,8 +28,8 @@ public class CssSelectorParserTest {
     }
 
     public static void expectSymbolCount(
-        AbstractSyntaxTree<Symbol, Token> tree, ElementSymbol type, int i) {
-      assertEquals(i, tree.reduce(0, (node, n) -> node.getSymbol() == type ? n + 1 : n));
+        AbstractSyntaxTree<Symbol, Token> tree, Symbol type, int i) {
+      assertEquals(i, tree.reduce(0, (node, n) -> type.equals(node.getSymbol()) ? n + 1 : n));
     }
 
     public static boolean isCombinator(SyntaxNode<Symbol, Token> node) {

@@ -8,6 +8,7 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Set;
 
 public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -28,10 +29,10 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     public String toString() {
-      return "[type:%s]".formatted(node.getSource().getLexeme());
+      return "<type: selecting %s.  Cost: N>".formatted(node.getSource().getLexeme());
     }
 
-    protected final <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
+    protected final <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
       return hom.getType(n).equals(node.getSource().getLexeme());
     }
   }

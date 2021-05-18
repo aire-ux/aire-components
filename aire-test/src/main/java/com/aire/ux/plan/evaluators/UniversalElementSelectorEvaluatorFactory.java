@@ -8,9 +8,7 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.LinkedHashSet;
 import java.util.Set;
-import lombok.val;
 
 public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -29,28 +27,21 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     return getEvaluationTarget().toString();
   }
 
-  private static class UniversalElementSelectorEvaluator implements Evaluator {
-    private UniversalElementSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {}
+  private static class UniversalElementSelectorEvaluator
+      extends AbstractHierarchySearchingEvaluator {
 
-    @Override
-    public String toString() {
-      return "*";
+    private UniversalElementSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
+      super(node, context);
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val result = new LinkedHashSet<T>();
-      for (val element : workingSet) {
-        hom.reduce(
-            element,
-            result,
-            (t, u) -> {
-              u.add(t);
-              return u;
-            });
-      }
-      return result;
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      return "<universal: select descendant working set.  Cost: N>";
     }
   }
 }

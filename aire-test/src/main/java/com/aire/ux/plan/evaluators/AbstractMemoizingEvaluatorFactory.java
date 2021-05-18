@@ -9,7 +9,7 @@ import com.aire.ux.select.css.Token;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFactory {
+public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFactory, AutoCloseable {
 
   private final Symbol symbol;
   private Map<SyntaxNode<Symbol, Token>, Evaluator> memoizedEvaluators;
@@ -27,6 +27,11 @@ public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFact
   @Override
   public final Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
     return memoizedEvaluators.computeIfAbsent(node, t -> createEvaluator(node, context));
+  }
+
+  @Override
+  public void close() {
+    memoizedEvaluators.clear();
   }
 
   @Override

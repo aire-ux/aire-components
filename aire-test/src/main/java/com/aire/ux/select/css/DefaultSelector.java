@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-public class DefaultSelector implements Selector {
+public final class DefaultSelector implements Selector {
 
   private final AbstractSyntaxTree<Symbol, Token> tree;
 
@@ -75,7 +75,7 @@ public class DefaultSelector implements Selector {
     }
   }
 
-  private class LinkedPlan implements Plan {
+  private static final class LinkedPlan implements Plan {
 
     private final PlanContext context;
     private LinkedPlanNode head;
@@ -91,7 +91,7 @@ public class DefaultSelector implements Selector {
       this.context = context;
     }
 
-    <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
+    final <T> T fold(LinkedPlanNode init, T value, BiFunction<LinkedPlanNode, T, T> f) {
       var result = value;
       for (var c = init; c != null; c = c.next) {
         result = f.apply(c, result);
@@ -103,15 +103,20 @@ public class DefaultSelector implements Selector {
       return fold(head, new LinkedPlan(context), (node, plan) -> plan.prepend(node.evaluator));
     }
 
+    @Override
     public String toString() {
-      val result = new StringBuilder("[");
-      for (var h = head; h != null; h = h.next) {
-        result.append(h.evaluator);
-        if (h.next != null) {
-          result.append(",");
-        }
+      val result = new StringBuilder();
+      toString(head, result, 0);
+      return result.toString();
+    }
+
+    private void toString(LinkedPlanNode node, StringBuilder result, int depth) {
+      if (node != null) {
+        val indent = " ".repeat(depth);
+        val evaluator = indent + "└╴" + node.evaluator.toString();
+        result.append(evaluator).append("").append("\n");
+        toString(node.next, result, evaluator.length());
       }
-      return result.append("]").toString();
     }
 
     LinkedPlan prepend(Evaluator evaluator) {
@@ -141,6 +146,24 @@ public class DefaultSelector implements Selector {
     public <T> Set<T> evaluate(T tree, NodeAdapter<T> hom) {
       final Set<T> results = new LinkedHashSet<T>(Set.of(tree));
       return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
+    }
+
+    @Override
+    public void close() throws Exception {
+      fold(
+          head,
+          null,
+          (node, list) -> {
+            if (node.evaluator instanceof AutoCloseable closeable) {
+              try {
+                closeable.close();
+              } catch (Exception ex) {
+                throw new IllegalStateException(
+                    "Unexpected exception: %s".formatted(ex.getMessage()), ex);
+              }
+            }
+            return null;
+          });
     }
   }
 }

@@ -338,7 +338,7 @@ public class CssSelectorParser {
    */
   private SyntaxNode<Symbol, Token> expression(LookaheadIterator<Token> tokens) {
     eatWhitespace(tokens);
-    val function = expect(tokens, FunctionStart);
+    val function = functionNode(expect(tokens, FunctionStart));
     while (nextIs(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier)) {
       function.addChild(
           expect(tokens, AdditionOperator, Minus, Dimension, Numeric, String, Identifier));
@@ -346,6 +346,15 @@ public class CssSelectorParser {
     }
     expectAndDiscard(tokens, ApplicationEnd);
     return function;
+  }
+
+  private SyntaxNode<Symbol, Token> functionNode(SyntaxNode<Symbol, Token> node) {
+    val lexeme = node.getSource().getLexeme();
+    val functionName = lexeme.substring(0, lexeme.length() - 1);
+    val source = node.getSource();
+    return new CssSyntaxNode(
+        Symbol.symbol(functionName),
+        new TokenWord(source.getStart(), source.getEnd(), functionName, source.getType()));
   }
 
   /**
@@ -645,9 +654,9 @@ public class CssSelectorParser {
     }
   }
 
-  private static class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {
+  public static final class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {
 
-    private CssSyntaxNode(ElementSymbol symbol, Token token) {
+    public CssSyntaxNode(Symbol symbol, Token token) {
       super(symbol.name(), symbol, token, symbol);
     }
 
@@ -656,7 +665,7 @@ public class CssSelectorParser {
      *
      * @param symbol the symbol to associated with this node
      */
-    private CssSyntaxNode(ElementSymbol symbol) {
+    private CssSyntaxNode(Symbol symbol) {
       this(symbol, null);
     }
 

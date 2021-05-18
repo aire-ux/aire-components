@@ -48,22 +48,28 @@ public interface NodeAdapter<T> {
    * @param initial the initial value to reduce over
    * @param f the reducer function
    * @param <U> the type-parameter of the result
-   * @return the hierarchy reduced over the reducer function
+   * @return the hierarchy reduced over the reducer function in breadth-first order
    */
   default <U> U reduce(
       @Nonnull final T current, @Nonnull final U initial, @Nonnull final BiFunction<T, U, U> f) {
     val stack = new ArrayDeque<T>();
-    stack.push(current);
+    stack.add(current);
     var result = initial;
     while (!stack.isEmpty()) {
-      val c = stack.pop();
+      val c = stack.poll();
       result = f.apply(c, result);
       for (val child : getChildren(c)) {
-        stack.push(child);
+        stack.add(child);
       }
     }
     return result;
   }
+
+  boolean mark(T value);
+
+  void unmark(T value);
+
+  boolean isMarked(T value);
 
   /**
    * @param current the node to retrieve the children of
@@ -193,10 +199,33 @@ public interface NodeAdapter<T> {
    */
   String getType(T n);
 
+  void setState(@Nonnull T element, @Nonnull State state);
+
+  /**
+   * @param state
+   * @return whether the state exists on this element
+   */
+  boolean hasState(@Nonnull T element, @Nonnull State state);
   /**
    * @param element the element to retrieve
    * @return the next sibling, or null if none exists
    */
   @Nullable
   T getSucceedingSibling(@Nonnull T element);
+
+  public static interface State {
+    int ordinal();
+
+    /** @return the string representation of the state */
+    String toString();
+
+    /** @return the hashcode for this state */
+    int hashCode();
+
+    /**
+     * @param o
+     * @return true if this is equal to o, false otherwise
+     */
+    boolean equals(Object o);
+  }
 }

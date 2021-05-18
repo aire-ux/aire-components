@@ -1,11 +1,17 @@
 package com.aire.ux.test;
 
+import static com.aire.ux.test.Nodes.node;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +21,6 @@ public class Node {
 
   static final String EMPTY_CONTENT = "".intern();
   private final String type;
-
   private final Node parent;
 
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
@@ -24,6 +29,7 @@ public class Node {
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   private final List<Node> children;
 
+  private final BitSet states;
   private final Map<String, String> attributes;
 
   public Node(String type) {
@@ -53,6 +59,7 @@ public class Node {
     this.content = content;
     this.children = children;
     this.attributes = attributes;
+    this.states = new BitSet();
   }
 
   Node(Node parent, Node copy) {
@@ -92,10 +99,31 @@ public class Node {
     return attributes.containsKey(attribute);
   }
 
+  @SuppressFBWarnings
+  public Node children(String... children) {
+    for (val child : children) {
+      node(child);
+    }
+    return this;
+  }
+
+  Node state(NodeAdapter.State state) {
+    setState(state);
+    return this;
+  }
+
   /** Builder methods */
   public Node children(Node... children) {
     setChildren(List.of(children));
     return this;
+  }
+
+  public void setState(NodeAdapter.State state) {
+    this.states.set(state.ordinal());
+  }
+
+  public boolean hasState(NodeAdapter.State state) {
+    return this.states.get(state.ordinal());
   }
 
   public String id() {
@@ -113,6 +141,10 @@ public class Node {
 
   public Node child(Node child) {
     return children(child);
+  }
+
+  public Node child(String child) {
+    return child(node(child));
   }
 
   public Node content(String content) {
@@ -170,7 +202,71 @@ public class Node {
     return parent;
   }
 
+  public static enum DomStates implements NodeAdapter.State {
+    /** dom state active */
+    Active(":active"),
+    /** dom state focused */
+    Focused(":focus"),
+
+    /** dom state focus-within */
+    FocusWithin(":focus-within"),
+    /** dom state target */
+    Target(":target"),
+    /** dom state hover */
+    Hover(":hover"),
+    /** dom state visited */
+    Visited(":visited"),
+    /** dom state focus visible */
+    FocusVisible(":focus-visible"),
+
+    /** has no children */
+    Empty(":empty"),
+
+    Checked(":checked"),
+
+    Default(":default"),
+
+    Disabled(":disabled"),
+
+    Enabled(":enabled"),
+
+    FullScreen(":full-screen"),
+    InRange(":in-range"),
+    Indeterminate(":indeterminate"),
+    Invalid(":invalid"),
+
+    Link(":link"),
+    ReadOnly(":read-only"),
+    Required(":required");
+
+    final String value;
+
+    DomStates(String value) {
+      this.value = value;
+    }
+  }
+
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
+    final Set<Node> nodes;
+
+    NodeNodeAdapter() {
+      nodes = new HashSet<>();
+    }
+
+    @Override
+    public boolean mark(Node value) {
+      return nodes.add(value);
+    }
+
+    @Override
+    public void unmark(Node value) {
+      nodes.remove(value);
+    }
+
+    @Override
+    public boolean isMarked(Node value) {
+      return nodes.contains(value);
+    }
 
     @Override
     public List<Node> getChildren(Node current) {
@@ -213,6 +309,16 @@ public class Node {
     @Override
     public String getType(Node n) {
       return n.getType();
+    }
+
+    @Override
+    public void setState(@NotNull Node element, @NotNull State state) {
+      element.setState(state);
+    }
+
+    @Override
+    public boolean hasState(@NotNull Node element, @NotNull State state) {
+      return element.hasState(state);
     }
 
     @Nullable
