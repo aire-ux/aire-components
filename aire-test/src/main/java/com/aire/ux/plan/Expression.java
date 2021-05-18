@@ -36,7 +36,6 @@ public interface Expression extends Function<Integer, Integer> {
   }
 
   private static Expression parse(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
-
     boolean negated = isNegation(tokens);
     if (negated) {
       expectNegation(tokens);
@@ -67,6 +66,15 @@ public interface Expression extends Function<Integer, Integer> {
     }
   }
 
+  /**
+   * css requires a modal parser as (-n) is typically an identifier unless
+   * it appears in a functional expression.  However, we don't want to have to
+   * implement a more complex parser to handle basically the only case.  Therefore,
+   * check the lexeme to see if its first character is '-' and, if so, treat it as
+   * a minus instead of the first character of an identifier token
+   * @param tokens the tokens to check
+   * @return true if we're in a negation
+   */
   static boolean isNegation(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
     if (is(tokens, Minus)) {
       return true;
