@@ -52,7 +52,6 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("a", "10"),
                 node("li").attribute("a", "11"),
                 node("li").attribute("a", "12"),
-
                 node("li").attribute("a", "13"),
                 node("li").attribute("a", "14"),
                 node("li").attribute("a", "15"),
@@ -64,13 +63,11 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("a", "21"),
                 node("li").attribute("a", "22"),
                 node("li").attribute("a", "23"),
-                node("li").attribute("a", "24")
-            );
+                node("li").attribute("a", "24"));
 
     val result = eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd)", node);
     assertEquals(4, result.size());
   }
-
 
   @Test
   void ensureNegativeIndexesWork() {

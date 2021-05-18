@@ -6,7 +6,6 @@ import com.aire.ux.select.css.Token;
 
 public interface PlanContext {
 
-
   /**
    * @param node the node to resolve an evaluatorfactory from
    * @return the evaluator

@@ -14,10 +14,8 @@ import lombok.val;
 
 public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
 
-  @Nonnull
-  protected final PlanContext context;
-  @Nonnull
-  protected final SyntaxNode<Symbol, Token> node;
+  @Nonnull protected final PlanContext context;
+  @Nonnull protected final SyntaxNode<Symbol, Token> node;
 
   public AbstractHierarchySearchingEvaluator(
       @Nonnull SyntaxNode<Symbol, Token> node, @Nonnull PlanContext context) {
@@ -54,7 +52,6 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
   }
 
   protected abstract <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet);
-
 
   @Override
   public String toString() {

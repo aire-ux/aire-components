@@ -3,12 +3,10 @@ package com.aire.ux.plan;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.select.css.Token;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
-import java.util.Set;
 import lombok.val;
 
 public class DefaultPlanContext implements PlanContext {

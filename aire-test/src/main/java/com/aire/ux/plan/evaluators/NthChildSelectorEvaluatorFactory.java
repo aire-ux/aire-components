@@ -9,6 +9,7 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -30,7 +31,6 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
     return new NthChildSelectorEvaluator(node, context);
   }
-
 
   static final class NthChildSelectorEvaluator implements Evaluator {
 
@@ -79,7 +79,6 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
   }
 
-
   static final class ExpressionEvaluator extends NthChildEvaluator {
 
     final Expression expression;
@@ -99,8 +98,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
   }
 
-
-  static abstract class NthChildEvaluator implements Evaluator {
+  abstract static class NthChildEvaluator implements Evaluator {
 
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
@@ -126,7 +124,6 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
         return sibs.get(idx);
       }
       return null;
-
     }
 
     private <T> Collection<? extends T> collectMatching(T n, NodeAdapter<T> hom) {
@@ -154,7 +151,6 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
   }
 
-
   /**
    * these take advantage of the fact that odd(n + 1) == even(n) and the fact that java collections
    * are zero-indexed while CSS selectors are 1-indexed
@@ -171,6 +167,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
+    @SuppressFBWarnings
     protected <T> boolean is(List<T> children, T value, int index) {
       return children.indexOf(value) % 2 == 1;
     }
@@ -192,7 +189,6 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       return children.indexOf(value) % 2 == 0;
     }
   }
-
 
   static final class ScalarEvaluator extends AbstractHierarchySearchingEvaluator {
 
