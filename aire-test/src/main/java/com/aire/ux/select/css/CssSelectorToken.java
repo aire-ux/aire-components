@@ -103,6 +103,8 @@ public enum CssSelectorToken implements Type {
   /** minus--lower precedent than Identifier */
   Minus("-");
 
+
+
   /** immutable state */
   private final String pattern;
 

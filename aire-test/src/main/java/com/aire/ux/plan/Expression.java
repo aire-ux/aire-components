@@ -9,34 +9,71 @@ import static java.lang.Integer.parseInt;
 import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.select.css.CssSelectorParser.CssSyntaxNode;
 import com.aire.ux.select.css.Token;
+import com.aire.ux.select.css.TokenWord;
 import com.aire.ux.select.css.Type;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import lombok.val;
 
 @SuppressFBWarnings
-public interface Expression {
+public interface Expression extends Function<Integer, Integer> {
+
+  /**
+   * Evaluate this expression against the list of elements
+   *
+   * @param elements the elements to evaluate this against
+   * @param <T>      the list of elements to select this expression from
+   * @return a possibly empty, never null list of elements
+   */
 
   public static Expression parse(List<SyntaxNode<Symbol, Token>> tokens) {
     val ts = LookaheadIterator.wrap(tokens.iterator());
-    if (is(ts, Minus)) {
-      expect(ts, Minus);
-      return negate(parse(ts));
-    } else {
-      return parse(ts);
-    }
+    return parse(ts);
   }
 
   private static Expression parse(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
-    val lhs = readFunctionalPrelude(tokens);
+
+    boolean negated = isNegation(tokens);
+    if (negated) {
+      expectNegation(tokens);
+    }
+    val expression = readFunctionalPrelude(tokens);
+    val lhs = negated ? negate(expression) : expression;
     if (is(tokens, AdditionOperator, Minus)) {
       return readFunctionalBody(lhs, tokens);
     } else {
       return lhs;
     }
+  }
+
+  static void expectNegation(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
+    if (is(tokens, Minus)) {
+      expect(tokens, Minus);
+    } else {
+      val next = tokens.next();
+      val token = next.getSource();
+      tokens.pushBack(new CssSyntaxNode(
+          next.getSymbol(),
+          new TokenWord(token.getStart() + 1, token.getEnd(),
+              token.getLexeme().substring(1), token.getType()))
+      );
+    }
+  }
+
+  static boolean isNegation(LookaheadIterator<SyntaxNode<Symbol, Token>> tokens) {
+    if (is(tokens, Minus)) {
+      return true;
+    }
+    val next = tokens.peek();
+    if (next.getSource().getLexeme().charAt(0) == '-') {
+      return true;
+    }
+    return false;
   }
 
   static Expression readFunctionalBody(
@@ -63,6 +100,7 @@ public interface Expression {
       if (is(tokens, Identifier)) {
         return new AlgebraicExpression(n, variable(tokens));
       }
+      return n;
     }
     if (is(tokens, Identifier)) {
       return new AlgebraicExpression(variable(tokens));
@@ -111,12 +149,8 @@ public interface Expression {
     return false;
   }
 
-  public static interface Visitor {
 
-  }
-
-
-  public static final class AlgebraicExpression implements Expression {
+  static final class AlgebraicExpression implements Expression {
 
     final Expression constant;
     final Expression variable;
@@ -134,46 +168,77 @@ public interface Expression {
       return "Expr(alg: [const: %s], [alg: %s])".formatted(constant, variable);
     }
 
+    @Override
+    public Integer apply(Integer integer) {
+      return constant.apply(integer) * variable.apply(integer);
+    }
   }
 
-  public record Constant(int value) implements Expression {
+  static record Constant(int value) implements Expression {
 
     @Override
     public String toString() {
       return "Expr(const: %d)".formatted(value);
     }
+
+    @Override
+    public Integer apply(Integer integer) {
+      return value;
+    }
   }
 
-  public record Variable(String name) implements Expression {
+  static record Variable(String name) implements Expression {
 
     @Override
     public String toString() {
       return "Expr(variable: %s)".formatted(name);
     }
+
+    @Override
+    public Integer apply(Integer integer) {
+      return integer;
+    }
   }
 
   @SuppressFBWarnings
-  public record Negation(Expression expression) implements Expression {
+  static record Negation(Expression expression) implements Expression {
 
     @Override
     public String toString() {
       return "-%s".formatted(expression);
     }
+
+    @Override
+    public Integer apply(Integer integer) {
+      return -integer;
+    }
   }
 
-  public record AdditionExpression(Expression lhs, Expression rhs) implements Expression {
+  static record AdditionExpression(Expression lhs, Expression rhs) implements Expression {
 
     @Override
     public String toString() {
       return "%s + %s".formatted(lhs, rhs);
     }
+
+    @Override
+    public Integer apply(Integer integer) {
+      return lhs.apply(integer) + rhs.apply(integer);
+    }
   }
 
-  public record SubtractionExpression(Expression lhs, Expression rhs) implements Expression {
+  static record SubtractionExpression(Expression lhs, Expression rhs) implements Expression {
 
     @Override
     public String toString() {
       return "%s - %s".formatted(lhs, rhs);
     }
+
+    @Override
+    public Integer apply(Integer integer) {
+      return lhs.apply(integer) - rhs.apply(integer);
+    }
   }
+
+
 }

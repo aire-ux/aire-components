@@ -1,5 +1,6 @@
 package com.aire.ux.plan;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.parsers.ast.Symbol;
@@ -23,7 +24,45 @@ class ExpressionTest extends TestCase {
   @ParameterizedTest
   @ValueSource(strings = {"1n", "n + 3", "n - 2", "3n + 5", "2n + 4", "5n", "n", "0n + 1", "-1n - 4"})
   void ensureAllExpressionCombinationsAreParsedWithoutException(String expr) {
-    System.out.println(parse(expr));
+    assertTrue(parse(expr) instanceof Expression);
+  }
+
+
+  @Test
+  void ensureSelectionApiMakesSense() {
+    val result = parse("2").apply(0);
+    assertEquals(2, result);
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 2, 3, 4, 5, 6})
+  void ensureMultiplesWork(int v) {
+    val expr = parse("4n");
+    assertEquals(4 * v, expr.apply(v));
+  }
+
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 2, 3, 4, 5, 6})
+  void ensureMultiplesPlusOffsetsWork(int value) {
+    val expr = parse("2n + 17");
+    assertEquals(2 * value + 17, expr.apply(value));
+  }
+
+
+  @ParameterizedTest
+  @ValueSource(ints = {0, 1, 2, 3, 4, 5})
+  void ensureNegationWorks(int value) {
+    val expr = parse("- n + 14");
+    assertEquals(-value + 14, expr.apply(value));
+  }
+
+
+  @ParameterizedTest
+  @ValueSource(ints = {0, 1, 2, 3, 4, 5})
+  void ensureNegationWorksOverridingTokenPrecedence(int value) {
+    val expr = parse("-n + 14");
+    assertEquals(-value + 14, expr.apply(value));
   }
 
   Expression parse(String value) {

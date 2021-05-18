@@ -30,7 +30,6 @@ import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.NamedSyntaxNode;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
-import com.aire.ux.select.css.TokenBuffer.TokenWord;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -655,9 +654,9 @@ public class CssSelectorParser {
     }
   }
 
-  private static class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {
+  public static final class CssSyntaxNode extends NamedSyntaxNode<Symbol, Token> {
 
-    private CssSyntaxNode(Symbol symbol, Token token) {
+    public CssSyntaxNode(Symbol symbol, Token token) {
       super(symbol.name(), symbol, token, symbol);
     }
 
