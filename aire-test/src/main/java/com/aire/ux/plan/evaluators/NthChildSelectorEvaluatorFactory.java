@@ -9,7 +9,6 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -31,6 +30,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
     return new NthChildSelectorEvaluator(node, context);
   }
+
 
   static final class NthChildSelectorEvaluator implements Evaluator {
 
@@ -79,13 +79,28 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
   }
 
-  static class ExpressionEvaluator implements Evaluator {
+
+  static final class ExpressionEvaluator extends NthChildEvaluator {
 
     final Expression expression;
 
     ExpressionEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       this.expression = Expression.parse(node.clearChildren());
     }
+
+    @Override
+    protected int offset(int idx) {
+      return expression.apply(idx) - 1;
+    }
+
+    protected <T> boolean is(List<T> siblings, T value, int i) {
+      val r = offset(i);
+      return r >= 0 && r < siblings.size();
+    }
+  }
+
+
+  static abstract class NthChildEvaluator implements Evaluator {
 
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
@@ -95,99 +110,89 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
             node,
             results,
             (n, rs) -> {
-              rs.addAll(collectApplicableChildren(hom, n));
+              rs.addAll(collectMatching(n, hom));
               return rs;
             });
       }
       return results;
     }
 
-    private <T> Collection<? extends T> collectApplicableChildren(NodeAdapter<T> hom, T n) {
+    protected abstract int offset(int idx);
+
+    protected abstract <T> boolean is(List<T> child, T value, int index);
+
+    private <T> T get(List<T> sibs, int idx) {
+      if (idx >= 0 && idx < sibs.size()) {
+        return sibs.get(idx);
+      }
+      return null;
+
+    }
+
+    private <T> Collection<? extends T> collectMatching(T n, NodeAdapter<T> hom) {
       val parent = hom.getParent(n);
       if (parent == null) {
-        return Collections.emptySet();
+        return Collections.emptyList();
       }
       val siblings = hom.getChildren(parent);
-
-      val results = new ArrayList<T>(siblings.size());
+      val results = new LinkedHashSet<T>(siblings.size());
       for (int i = 0; i < siblings.size(); i++) {
-        val expr = expression.apply(i) - 1;
-        if (expr >= 0 && expr < siblings.size()) {
-          results.add(siblings.get(expr));
+        val idx = offset(i);
+        val sibling = get(siblings, idx);
+        if (sibling != null && is(siblings, sibling, i)) {
+          if (!hom.isMarked(sibling)) {
+            results.add(sibling);
+          }
+        }
+      }
+      for (val sib : siblings) {
+        if (!results.contains(sib)) {
+          hom.mark(sib);
         }
       }
       return results;
     }
   }
 
-  abstract static class AbstractCountEvaluator extends AbstractHierarchySearchingEvaluator {
-
-    AbstractCountEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
-      super(node, context);
-      node.removeChild(0);
-    }
-
-    abstract <T> boolean is(List<T> children, T value);
-
-    @Override
-    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
-      val parent = hom.getParent(n);
-      if (parent == null) {
-        return false;
-      }
-      val children = hom.getChildren(parent);
-      return is(children, n);
-    }
-  }
 
   /**
    * these take advantage of the fact that odd(n + 1) == even(n) and the fact that java collections
    * are zero-indexed while CSS selectors are 1-indexed
    */
-  static final class EvenEvaluator extends AbstractCountEvaluator {
+  static final class EvenEvaluator extends NthChildEvaluator {
 
     EvenEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
-      super(node, context);
+      node.removeChild(0);
     }
 
     @Override
-    <T> boolean is(List<T> children, T value) {
-      val idx = children.indexOf(value);
-      return idx >= 0 && idx % 2 == 1;
-    }
-  }
-
-  static final class OddEvaluator extends AbstractCountEvaluator {
-
-    OddEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
-      super(node, context);
+    protected int offset(int idx) {
+      return idx;
     }
 
     @Override
-    <T> boolean is(List<T> children, T value) {
-      val idx = children.indexOf(value);
-      return idx >= 0 && idx % 2 == 0;
+    protected <T> boolean is(List<T> children, T value, int index) {
+      return children.indexOf(value) % 2 == 1;
     }
   }
 
-  static final class FunctionalEvaluator extends AbstractCountEvaluator {
+  static final class OddEvaluator extends NthChildEvaluator {
 
-    final int offset;
-
-    FunctionalEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
-      super(node, context);
-      this.offset = computeOffset();
-    }
-
-    private int computeOffset() {
-      return 1;
+    public OddEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
+      node.removeChild(0);
     }
 
     @Override
-    <T> boolean is(List<T> children, T value) {
-      return false;
+    protected int offset(int idx) {
+      return idx;
+    }
+
+    @Override
+    protected <T> boolean is(List<T> children, T value, int index) {
+      return children.indexOf(value) % 2 == 0;
     }
   }
+
 
   static final class ScalarEvaluator extends AbstractHierarchySearchingEvaluator {
 
@@ -204,7 +209,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n) {
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
       val parent = hom.getParent(n);
       if (parent == null) {
         return false;

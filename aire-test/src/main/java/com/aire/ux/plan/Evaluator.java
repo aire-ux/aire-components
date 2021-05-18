@@ -5,6 +5,10 @@ import java.util.Set;
 
 public interface Evaluator {
 
+  default Evaluator coalesce(Evaluator next) {
+    return this;
+  }
+
   /**
    * @param workingSet the working set to compute the cost over
    * @param hom the hom functor mapping the type T to a hierarchical monoid

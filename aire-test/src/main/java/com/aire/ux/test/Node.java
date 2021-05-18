@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -245,6 +247,26 @@ public class Node {
   }
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
+    final Set<Node> nodes;
+
+    NodeNodeAdapter() {
+      nodes = new HashSet<>();
+    }
+
+    @Override
+    public boolean mark(Node value) {
+      return nodes.add(value);
+    }
+
+    @Override
+    public void unmark(Node value) {
+      nodes.remove(value);
+    }
+
+    @Override
+    public boolean isMarked(Node value) {
+      return nodes.contains(value);
+    }
 
     @Override
     public List<Node> getChildren(Node current) {

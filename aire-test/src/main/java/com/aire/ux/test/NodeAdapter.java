@@ -65,6 +65,12 @@ public interface NodeAdapter<T> {
     return result;
   }
 
+  boolean mark(T value);
+
+  void unmark(T value);
+
+  boolean isMarked(T value);
+
   /**
    * @param current the node to retrieve the children of
    * @return the children, or an empty list if none exist
