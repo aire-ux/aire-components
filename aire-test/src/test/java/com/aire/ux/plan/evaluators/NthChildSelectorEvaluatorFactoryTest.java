@@ -11,11 +11,12 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureSimpleFirstChildSelectorWorks() {
-    val node = node("ul").children(
-        node("li").attribute("a", "1"),
-        node("li").attribute("a", "2"),
-        node("li").attribute("a", "3")
-    );
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("a", "1"),
+                node("li").attribute("a", "2"),
+                node("li").attribute("a", "3"));
 
     val result = eval(":nth-child(1n+1)", node);
     assertEquals(3, result.size());
@@ -23,11 +24,12 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureNthChildSelectorWorksForOddValues() {
-    val node = node("ul").children(
-        node("li").attribute("a", "1"),
-        node("li").attribute("a", "2"),
-        node("li").attribute("a", "3")
-    );
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("a", "1"),
+                node("li").attribute("a", "2"),
+                node("li").attribute("a", "3"));
 
     val result = eval(":nth-child(2n+1)", node);
     assertEquals(2, result.size());
@@ -35,11 +37,12 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
   @Test
   void ensureNegativeIndexesWork() {
-    val node = node("ul").children(
-        node("li").attribute("a", "1"),
-        node("li").attribute("a", "2"),
-        node("li").attribute("a", "3")
-    );
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("a", "1"),
+                node("li").attribute("a", "2"),
+                node("li").attribute("a", "3"));
 
     val result = eval(":nth-child(-n+3)", node);
     assertEquals(3, result.size());

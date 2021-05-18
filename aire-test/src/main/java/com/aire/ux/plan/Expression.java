@@ -26,8 +26,7 @@ public interface Expression extends Function<Integer, Integer> {
   /**
    * Evaluate this expression against the list of elements
    *
-   * @param elements the elements to evaluate this against
-   * @param <T> the list of elements to select this expression from
+   * @param tokens the elements to evaluate this against
    * @return a possibly empty, never null list of elements
    */
   public static Expression parse(List<SyntaxNode<Symbol, Token>> tokens) {
@@ -67,11 +66,11 @@ public interface Expression extends Function<Integer, Integer> {
   }
 
   /**
-   * css requires a modal parser as (-n) is typically an identifier unless
-   * it appears in a functional expression.  However, we don't want to have to
-   * implement a more complex parser to handle basically the only case.  Therefore,
-   * check the lexeme to see if its first character is '-' and, if so, treat it as
-   * a minus instead of the first character of an identifier token
+   * css requires a modal parser as (-n) is typically an identifier unless it appears in a
+   * functional expression. However, we don't want to have to implement a more complex parser to
+   * handle basically the only case. Therefore, check the lexeme to see if its first character is
+   * '-' and, if so, treat it as a minus instead of the first character of an identifier token
+   *
    * @param tokens the tokens to check
    * @return true if we're in a negation
    */
@@ -222,6 +221,7 @@ public interface Expression extends Function<Integer, Integer> {
     }
   }
 
+  @SuppressFBWarnings
   static record AdditionExpression(Expression lhs, Expression rhs) implements Expression {
 
     @Override
@@ -235,6 +235,7 @@ public interface Expression extends Function<Integer, Integer> {
     }
   }
 
+  @SuppressFBWarnings
   static record SubtractionExpression(Expression lhs, Expression rhs) implements Expression {
 
     @Override

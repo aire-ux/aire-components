@@ -104,23 +104,20 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
     private <T> Collection<? extends T> collectApplicableChildren(NodeAdapter<T> hom, T n) {
       val parent = hom.getParent(n);
-      if(parent == null) {
+      if (parent == null) {
         return Collections.emptySet();
       }
       val siblings = hom.getChildren(parent);
 
       val results = new ArrayList<T>(siblings.size());
-      for(int i = 0; i < siblings.size(); i++) {
+      for (int i = 0; i < siblings.size(); i++) {
         val expr = expression.apply(i) - 1;
-        if(expr >= 0 && expr < siblings.size()) {
+        if (expr >= 0 && expr < siblings.size()) {
           results.add(siblings.get(expr));
         }
       }
       return results;
-
     }
-
-
   }
 
   abstract static class AbstractCountEvaluator extends AbstractHierarchySearchingEvaluator {
