@@ -127,17 +127,18 @@ public class CssSelectorParser {
    */
   private List<SyntaxNode<Symbol, Token>> selectorGroup(LookaheadIterator<Token> tokens) {
     val result = new LinkedList<SyntaxNode<Symbol, Token>>();
+    val union = new CssSyntaxNode(ElementSymbol.Union);
     var selector = new CssSyntaxNode(ElementSymbol.SelectorGroup);
     selector.addChildren(selector(tokens));
-    result.add(selector);
+    union.addChild(selector);
     while (tokens.hasNext() && tokens.peek().getType() == CssSelectorToken.Comma) {
-      val union = union(tokens);
-      result.add(union);
+      union(tokens);
       eatWhitespace(tokens);
       selector = new CssSyntaxNode(ElementSymbol.SelectorGroup);
       selector.addChildren(selector(tokens));
-      result.add(selector);
+      union.addChild(selector);
     }
+    result.add(union);
     return result;
   }
 
@@ -160,7 +161,7 @@ public class CssSelectorParser {
           result.addAll(simpleSelectorSequence(tokens));
         }
       } else if (isCombinator(tokens)) {
-        var current = result.peek();
+        var current = result.peekLast();
         while (isCombinator(tokens)) {
           val combinator = combinator(tokens);
 

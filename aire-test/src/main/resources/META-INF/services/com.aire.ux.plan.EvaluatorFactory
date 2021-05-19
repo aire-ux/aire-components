@@ -11,3 +11,4 @@ com.aire.ux.plan.evaluators.UniversalElementSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.AttributeSelectorEvaluatorFactory
 com.aire.ux.plan.evaluators.PseudoElementEvaluatorFactory
 com.aire.ux.plan.evaluators.NthChildSelectorEvaluatorFactory
+com.aire.ux.plan.evaluators.SelectorUnionEvaluatorFactory

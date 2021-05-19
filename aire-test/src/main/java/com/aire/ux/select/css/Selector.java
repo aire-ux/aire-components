@@ -10,6 +10,10 @@ import java.util.function.Predicate;
 
 public interface Selector {
 
+  public static Selector create(AbstractSyntaxTree<Symbol, Token> root) {
+    return new DefaultSelector(root);
+  }
+
   /**
    * @param context the context to plan against
    * @return the plan (may be optimized/memoized depending on implementation)

@@ -27,6 +27,10 @@ public final class DefaultSelector implements Selector {
     this.tree = new AbstractSyntaxTree<>();
   }
 
+  DefaultSelector(AbstractSyntaxTree<Symbol, Token> tree) {
+    this.tree = tree;
+  }
+
   @Override
   public AbstractSyntaxTree<Symbol, Token> getSyntaxTree() {
     return tree;
