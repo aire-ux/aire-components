@@ -217,7 +217,7 @@ public interface Expression extends Function<Integer, Integer> {
 
     @Override
     public Integer apply(Integer integer) {
-      return -integer;
+      return -expression.apply(integer);
     }
   }
 

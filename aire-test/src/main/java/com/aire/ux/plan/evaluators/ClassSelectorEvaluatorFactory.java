@@ -19,10 +19,6 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
 
   @Override
   protected Evaluator createEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
-    if (node.getChildren().size() != 1) {
-      throw new IllegalArgumentException(
-          "Expected exactly 1 child of current node, got: " + node.getChildren());
-    }
     val child = node.removeChild(0);
     val classValue = child.getSource().getLexeme();
 

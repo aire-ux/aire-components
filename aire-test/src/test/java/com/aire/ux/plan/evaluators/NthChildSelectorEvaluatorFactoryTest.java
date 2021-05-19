@@ -48,7 +48,7 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("a", "6"),
                 node("li").attribute("a", "7"),
                 node("li").attribute("a", "8"),
-                node("li").attribute("a", "9"),
+                node("li").attribute("a", "9").child(node("hello")),
                 node("li").attribute("a", "10"),
                 node("li").attribute("a", "11"),
                 node("li").attribute("a", "12"),
@@ -67,6 +67,42 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
     val result = eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd)", node);
     assertEquals(4, result.size());
+  }
+
+  @Test
+  void ensureChildSelectorWorksAfterSequence() {
+
+    val node =
+        node("ul")
+            .children(
+                node("li").attribute("a", "1"),
+                node("li").attribute("a", "2"),
+                node("li").attribute("a", "3"),
+                node("li").attribute("a", "4"),
+                node("li").attribute("a", "5"),
+                node("li").attribute("a", "6"),
+                node("li").attribute("a", "7"),
+                node("li").attribute("a", "8"),
+                node("li").attribute("a", "9").child(node("hello").attribute("class", "world")),
+                node("li").attribute("a", "10"),
+                node("li").attribute("a", "11"),
+                node("li").attribute("a", "12"),
+                node("li").attribute("a", "13"),
+                node("li").attribute("a", "14"),
+                node("li").attribute("a", "15"),
+                node("li").attribute("a", "16"),
+                node("li").attribute("a", "17"),
+                node("li").attribute("a", "18"),
+                node("li").attribute("a", "19"),
+                node("li").attribute("a", "20"),
+                node("li").attribute("a", "21"),
+                node("li").attribute("a", "22"),
+                node("li").attribute("a", "23"),
+                node("li").attribute("a", "24"));
+
+    val result = eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd) > hello.world", node);
+    assertEquals(1, result.size());
+    assertContainsTypes(result, "hello");
   }
 
   @Test
