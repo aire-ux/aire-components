@@ -37,7 +37,16 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
 
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
-      return Objects.equals(hom.getAttribute(n, "class"), classValue);
+      val classes = hom.getAttribute(n, "class");
+      if(classes != null) {
+        val cls = classes.split("\\s+");
+        for(val cl : cls) {
+          if(classValue.equals(cl)) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     @Override

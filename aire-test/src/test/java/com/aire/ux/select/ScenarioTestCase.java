@@ -2,9 +2,13 @@ package com.aire.ux.select;
 
 import static com.aire.ux.test.Nodes.node;
 
+import com.aire.ux.plan.EvaluatorFactory;
+import com.aire.ux.plan.evaluators.EvaluatorFactoryTestCase;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
+import com.helger.commons.io.stream.StringInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,7 +21,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ScenarioTestCase extends TestCase {
+public class ScenarioTestCase extends EvaluatorFactoryTestCase {
 
 
   @SneakyThrows
@@ -35,10 +39,13 @@ public class ScenarioTestCase extends TestCase {
     return parse(ClassLoader.getSystemResourceAsStream(filename));
   }
 
-  @Test
-  void ensureParsingFileWorks() {
-    val result = parse("scenarios/complex.html");
-    System.out.println(result);
+  public static Node parseString(String str) {
+    return parse(new StringInputStream(str, Charset.defaultCharset()));
+  }
+
+  @Override
+  protected EvaluatorFactory createFactory() {
+    return null;
   }
 
 
@@ -73,7 +80,6 @@ public class ScenarioTestCase extends TestCase {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
       val current = nodes.pop();
-      System.out.println(qName + " " + current.getType());
       if (nodes.isEmpty()) {
         root.set(current);
       } else {
@@ -93,7 +99,5 @@ public class ScenarioTestCase extends TestCase {
         nodes.push(nodes.pop().content(str));
       }
     }
-
-
   }
 }

@@ -10,6 +10,7 @@ import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.ArrayDeque;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import lombok.val;
 
@@ -37,16 +38,18 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
     @Override
     public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
       val result = new LinkedHashSet<T>();
-
       for (val node : workingSet) {
-        val stack = new ArrayDeque<T>(hom.getChildren(node));
+        val stack = new LinkedList<T>(hom.getChildren(node));
         while (!stack.isEmpty()) {
-          val iter = stack.descendingIterator();
+          val iter = stack.listIterator();
           while (iter.hasNext()) {
             val next = iter.next();
             result.add(next);
             iter.remove();
-            stack.addAll(hom.getChildren(next));
+            for(val e : hom.getChildren(next)) {
+              iter.add(e);
+            }
+//            iter.addAll(hom.getChildren(next));
           }
         }
       }
