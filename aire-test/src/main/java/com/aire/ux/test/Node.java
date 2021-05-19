@@ -71,7 +71,7 @@ public class Node {
   }
 
   public Node setContent(String content) {
-    return new Node(type, content, children, attributes);
+    return new Node(type, content, parent, children, attributes);
   }
 
   public void addChildren(Collection<? extends Node> children) {
@@ -149,6 +149,9 @@ public class Node {
 
   public Node content(String content) {
     return setContent(content);
+  }
+  public String content() {
+    return content;
   }
 
   @Override
