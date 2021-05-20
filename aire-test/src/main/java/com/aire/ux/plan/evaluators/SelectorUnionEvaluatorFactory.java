@@ -9,15 +9,17 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.val;
 
 public class SelectorUnionEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.Union;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(ElementSymbol.Union);
   }
 
   @Override

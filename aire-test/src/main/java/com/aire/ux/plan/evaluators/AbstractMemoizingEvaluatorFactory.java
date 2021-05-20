@@ -6,8 +6,10 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.select.css.Token;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFactory, AutoCloseable {
 
@@ -20,8 +22,8 @@ public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFact
   }
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return symbol;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(symbol);
   }
 
   @Override
@@ -36,7 +38,7 @@ public abstract class AbstractMemoizingEvaluatorFactory implements EvaluatorFact
 
   @Override
   public String toString() {
-    return getEvaluationTarget().toString();
+    return getEvaluationTargets().toString();
   }
 
   protected abstract Evaluator createEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context);

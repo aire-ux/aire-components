@@ -54,7 +54,9 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
     return results;
   }
 
-  protected abstract <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet);
+  protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
+    return !workingSet.isExcluded(n);
+  }
 
   @Override
   public String toString() {

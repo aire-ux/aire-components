@@ -9,14 +9,16 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import lombok.val;
 
 public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.ChildSelector;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(ElementSymbol.ChildSelector);
   }
 
   @Override

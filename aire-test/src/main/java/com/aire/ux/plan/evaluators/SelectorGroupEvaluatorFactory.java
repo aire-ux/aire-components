@@ -9,12 +9,14 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Collections;
+import java.util.Set;
 
 public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.SelectorGroup;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(ElementSymbol.SelectorGroup);
   }
 
   @Override

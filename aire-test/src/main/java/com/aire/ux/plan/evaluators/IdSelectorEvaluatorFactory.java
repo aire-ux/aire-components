@@ -49,7 +49,7 @@ public class IdSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactor
 
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
-      return id.equals(hom.getId(n));
+      return id.equals(hom.getId(n)) && super.appliesTo(hom, n, workingSet);
     }
   }
 }

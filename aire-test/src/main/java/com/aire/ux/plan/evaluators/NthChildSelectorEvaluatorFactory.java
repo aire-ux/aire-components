@@ -11,7 +11,9 @@ import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +22,8 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
   static final Symbol symbol = Symbol.symbol("nth-child");
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return symbol;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(symbol);
   }
 
   @Override
@@ -211,7 +213,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
         return false;
       }
       val children = hom.getChildren(parent);
-      return children.indexOf(n) + 1 == offset;
+      return super.appliesTo(hom, n, workingSet) && children.indexOf(n) + 1 == offset;
     }
   }
 }

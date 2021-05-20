@@ -41,7 +41,7 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
         val cls = classes.split("\\s+");
         for(val cl : cls) {
           if(classValue.equals(cl)) {
-            return true;
+            return super.appliesTo(hom, n, workingSet);
           }
         }
       }

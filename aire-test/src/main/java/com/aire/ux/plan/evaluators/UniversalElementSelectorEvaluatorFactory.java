@@ -9,12 +9,14 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Collections;
+import java.util.Set;
 
 public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.UniversalSelector;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(ElementSymbol.UniversalSelector);
   }
 
   @Override
@@ -24,7 +26,7 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
 
   @Override
   public String toString() {
-    return getEvaluationTarget().toString();
+    return getEvaluationTargets().toString();
   }
 
   private static class UniversalElementSelectorEvaluator
@@ -36,7 +38,7 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
 
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
-      return true;
+      return super.appliesTo(hom, n, workingSet);
     }
 
     @Override

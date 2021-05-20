@@ -30,6 +30,12 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(93, results.size());
   }
 
+  @Test
+  void ensureFirstChildWorksProperly() {
+    assertEquals(177, eval(":first-child", document).size());
+    assertEquals(36, eval("div:first-child", document).size());
+  }
+
 
   @Test
   void ensureSelectingAnchorTypesWorks() {
@@ -56,5 +62,11 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(88, results.size());
   }
 
+
+  @Test
+  void ensureDocumentSelectAllWorks() {
+    val results = eval("*", document);
+    assertEquals(808, results.size());
+  }
 
 }

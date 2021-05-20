@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
@@ -251,7 +253,13 @@ public class Node {
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
 
+    final Map<String, DomStates> nameMap;
+
     NodeNodeAdapter() {
+      nameMap = new HashMap<>();
+      for(val n : DomStates.values()) {
+        nameMap.put(n.value.substring(1), n);
+      }
     }
 
     @Override
@@ -319,6 +327,15 @@ public class Node {
         }
       }
       return null;
+    }
+
+    @Override
+    public State stateFor(String name) {
+      val r = nameMap.get(name);
+      if(r == null) {
+        throw new NoSuchElementException("No state with name: " + name);
+      }
+      return r;
     }
   }
 }

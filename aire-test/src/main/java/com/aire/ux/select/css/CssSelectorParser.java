@@ -327,7 +327,8 @@ public class CssSelectorParser {
       pseudo.addChild(expression(tokens));
     } else {
       val id = expect(tokens, Identifier);
-      pseudo.addChild(id);
+      val actualId = new CssSyntaxNode(Symbol.symbol(id.getSource().getLexeme()), id.getSource());
+      pseudo.addChild(actualId);
     }
   }
 

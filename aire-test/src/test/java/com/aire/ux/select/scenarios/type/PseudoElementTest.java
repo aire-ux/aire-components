@@ -1,5 +1,6 @@
 package com.aire.ux.select.scenarios.type;
 
+import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import lombok.val;
@@ -13,7 +14,7 @@ class PseudoElementTest extends TestCase {
   void ensurePseudoClassWorks(String value) {
     val result = parser.parse(value);
     expectSymbolCount(result.getSyntaxTree(), ElementSymbol.PseudoClass, 1);
-    expectSymbolCount(result.getSyntaxTree(), ElementSymbol.TypeSelector, 1);
+    expectSymbolCount(result.getSyntaxTree(), Symbol.symbol(value.substring(2)), 1);
   }
 
   @ParameterizedTest
@@ -21,6 +22,6 @@ class PseudoElementTest extends TestCase {
   void ensurePseudoElementWorks(String value) {
     val result = parser.parse(value);
     expectSymbolCount(result.getSyntaxTree(), ElementSymbol.PseudoElement, 1);
-    expectSymbolCount(result.getSyntaxTree(), ElementSymbol.TypeSelector, 1);
+    expectSymbolCount(result.getSyntaxTree(), Symbol.symbol(value.substring(1)), 1);
   }
 }

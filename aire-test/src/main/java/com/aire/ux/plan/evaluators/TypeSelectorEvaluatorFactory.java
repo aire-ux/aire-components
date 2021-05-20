@@ -14,8 +14,8 @@ import java.util.Set;
 public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.TypeSelector;
+  public Set<Symbol> getEvaluationTargets() {
+    return Set.of(ElementSymbol.TypeSelector);
   }
 
   @Override

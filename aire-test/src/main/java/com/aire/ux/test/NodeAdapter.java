@@ -207,6 +207,8 @@ public interface NodeAdapter<T> {
   @Nullable
   T getSucceedingSibling(@Nonnull T element);
 
+  State stateFor(String name);
+
   public static interface State {
     int ordinal();
 
