@@ -5,11 +5,11 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import lombok.val;
 
 public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory {
@@ -29,8 +29,8 @@ public class ChildSelectorCombinatorEvaluatorFactory implements EvaluatorFactory
     public ChildSelectorCombinatorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {}
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val result = new LinkedHashSet<T>();
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+      val result = WorkingSet.<T>create();
       for (val child : workingSet) {
         result.addAll(hom.getChildren(child));
       }

@@ -5,10 +5,9 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import io.sunshower.lang.Environment.Holder;
-import java.util.Set;
 
 public class NoOpEvaluatorFactory implements EvaluatorFactory {
 
@@ -35,7 +34,7 @@ public class NoOpEvaluatorFactory implements EvaluatorFactory {
   static final class NoOpEvaluator implements Evaluator {
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
       return workingSet;
     }
   }

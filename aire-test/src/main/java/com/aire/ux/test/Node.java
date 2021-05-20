@@ -250,25 +250,8 @@ public class Node {
   }
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
-    final Set<Node> nodes;
 
     NodeNodeAdapter() {
-      nodes = new HashSet<>();
-    }
-
-    @Override
-    public boolean mark(Node value) {
-      return nodes.add(value);
-    }
-
-    @Override
-    public void unmark(Node value) {
-      nodes.remove(value);
-    }
-
-    @Override
-    public boolean isMarked(Node value) {
-      return nodes.contains(value);
     }
 
     @Override

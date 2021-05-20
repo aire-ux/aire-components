@@ -16,6 +16,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ExpressionTest extends TestCase {
 
   @Test
+  void ensureExpressionProducesCorrectValues() {
+    val expr = parse("-n + 3");
+    assertEquals(3, expr.apply(0));
+    assertEquals(2, expr.apply(1));
+    assertEquals(1, expr.apply(2));
+  }
+
+  @Test
   void ensureExpressionWorks() {
     val expr = parse("n");
     assertTrue(expr instanceof Expression.AlgebraicExpression);

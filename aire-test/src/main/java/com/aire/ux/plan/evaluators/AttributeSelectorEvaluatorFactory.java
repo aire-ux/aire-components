@@ -4,6 +4,7 @@ import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
@@ -11,7 +12,6 @@ import io.sunshower.lambda.Option;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.val;
@@ -64,8 +64,8 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val result = new LinkedHashSet<T>();
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+      val result = WorkingSet.<T>create();
       for (val element : workingSet) {
         hom.reduce(
             element,

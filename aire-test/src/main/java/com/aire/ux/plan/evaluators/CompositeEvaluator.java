@@ -4,6 +4,7 @@ import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Collection;
@@ -36,8 +37,8 @@ public final class CompositeEvaluator implements Evaluator {
   }
 
   @Override
-  public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-    val results = new LinkedHashSet<T>();
+  public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+    val results = WorkingSet.<T>create();
     for (val evaluator : evaluators) {
       results.addAll(evaluator.evaluate(workingSet, hom));
     }
