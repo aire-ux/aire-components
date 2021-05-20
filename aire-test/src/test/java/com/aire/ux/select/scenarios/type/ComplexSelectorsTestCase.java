@@ -36,5 +36,12 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(189, results.size());
   }
 
+  @Test
+  void ensureClassSelectorWorks() {
+    val results = eval("a.w3-bar-item", document);
+    assertEquals(184, results.size());
+
+  }
+
 
 }
