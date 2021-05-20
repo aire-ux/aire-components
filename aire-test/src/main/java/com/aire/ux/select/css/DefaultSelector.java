@@ -7,6 +7,7 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.Plan;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.PlanNode;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.test.NodeAdapter;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayList;
@@ -147,8 +148,8 @@ public final class DefaultSelector implements Selector {
     }
 
     @Override
-    public <T> Set<T> evaluate(T tree, NodeAdapter<T> hom) {
-      final Set<T> results = new LinkedHashSet<T>(Set.of(tree));
+    public <T> WorkingSet<T> evaluate(T tree, NodeAdapter<T> hom) {
+      val results = WorkingSet.of(tree);
       return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
     }
 

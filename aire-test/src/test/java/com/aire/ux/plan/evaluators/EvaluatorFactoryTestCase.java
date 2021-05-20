@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
 import com.aire.ux.test.NodeAdapter;
@@ -26,11 +27,11 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
     context = DefaultPlanContext.getInstance();
   }
 
-  protected Set<Node> eval(String selector, Node root) {
+  protected WorkingSet<Node> eval(String selector, Node root) {
     return eval(selector, root, Node.getAdapter());
   }
 
-  protected void assertContainsTypes(Set<Node> nodes, String... types) {
+  protected void assertContainsTypes(WorkingSet<Node> nodes, String... types) {
     val ts = nodes.stream().map(t -> t.getType()).collect(Collectors.toSet());
     for (val t : types) {
       if (!ts.contains(t)) {
@@ -39,7 +40,7 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
     }
   }
 
-  protected <T> Set<T> eval(String selector, T root, NodeAdapter<T> adapter) {
+  protected <T> WorkingSet<T> eval(String selector, T root, NodeAdapter<T> adapter) {
     val s = parser.parse(selector);
     val plan = s.plan(context);
     return plan.evaluate(root, adapter);
@@ -47,7 +48,7 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
 
   protected abstract EvaluatorFactory createFactory();
 
-  protected <T> T at(Set<T> result, int i) {
+  protected <T> T at(WorkingSet<T> result, int i) {
     val iter = result.iterator();
 
     var j = 0;

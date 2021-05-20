@@ -71,7 +71,7 @@ public class Node {
   }
 
   public Node setContent(String content) {
-    return new Node(type, content, children, attributes);
+    return new Node(type, content, parent, children, attributes);
   }
 
   public void addChildren(Collection<? extends Node> children) {
@@ -149,6 +149,9 @@ public class Node {
 
   public Node content(String content) {
     return setContent(content);
+  }
+  public String content() {
+    return content;
   }
 
   @Override
@@ -247,25 +250,8 @@ public class Node {
   }
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
-    final Set<Node> nodes;
 
     NodeNodeAdapter() {
-      nodes = new HashSet<>();
-    }
-
-    @Override
-    public boolean mark(Node value) {
-      return nodes.add(value);
-    }
-
-    @Override
-    public void unmark(Node value) {
-      nodes.remove(value);
-    }
-
-    @Override
-    public boolean isMarked(Node value) {
-      return nodes.contains(value);
     }
 
     @Override

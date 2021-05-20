@@ -4,6 +4,7 @@ import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.LinkedHashSet;
@@ -35,8 +36,8 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
   }
 
   @Override
-  public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-    val results = new LinkedHashSet<T>();
+  public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+    val results = WorkingSet.<T>withExclusions(workingSet);
     for (val node : workingSet) {
       hom.reduce(
           node,
@@ -44,6 +45,8 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
           (n, rs) -> {
             if (appliesTo(hom, n, workingSet)) {
               rs.add(n);
+            } else {
+              rs.exclude(n);
             }
             return rs;
           });
@@ -51,7 +54,7 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
     return results;
   }
 
-  protected abstract <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet);
+  protected abstract <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet);
 
   @Override
   public String toString() {

@@ -4,11 +4,10 @@ import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.Objects;
-import java.util.Set;
 import lombok.val;
 
 public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactory {
@@ -36,8 +35,17 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
     }
 
     @Override
-    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
-      return Objects.equals(hom.getAttribute(n, "class"), classValue);
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
+      val classes = hom.getAttribute(n, "class");
+      if(classes != null) {
+        val cls = classes.split("\\s+");
+        for(val cl : cls) {
+          if(classValue.equals(cl)) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     @Override

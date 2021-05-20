@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.plan.EvaluatorFactory;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.test.Node;
-import java.util.Set;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ class TypeSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     System.out.println(tree);
     System.out.println(tree.getChildren());
     val result =
-        factory.create(selectors.get(0), context).evaluate(Set.of(tree), Node.getAdapter());
+        factory.create(selectors.get(0), context).evaluate(WorkingSet.of(tree), Node.getAdapter());
     assertEquals(result.size(), 1);
     assertEquals("div", result.iterator().next().getType());
   }

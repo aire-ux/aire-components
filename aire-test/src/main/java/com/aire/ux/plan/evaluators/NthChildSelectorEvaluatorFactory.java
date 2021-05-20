@@ -6,15 +6,12 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.Expression;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +58,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
       return delegate.evaluate(workingSet, hom);
     }
 
@@ -101,19 +98,21 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
   abstract static class NthChildEvaluator implements Evaluator {
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val results = new LinkedHashSet<T>();
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+      val results = WorkingSet.<T>create();
       for (val node : workingSet) {
         hom.reduce(
             node,
             results,
             (n, rs) -> {
-              rs.addAll(collectMatching(n, hom));
+              rs.addAll(collectMatching(workingSet, n, hom));
               return rs;
-            });
+            }
+        );
       }
       return results;
     }
+
 
     protected abstract int offset(int idx);
 
@@ -126,25 +125,26 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
       return null;
     }
 
-    private <T> Collection<? extends T> collectMatching(T n, NodeAdapter<T> hom) {
+    private <T> WorkingSet<T> collectMatching(WorkingSet<T> workingSet, T n, NodeAdapter<T> hom) {
       val parent = hom.getParent(n);
       if (parent == null) {
-        return Collections.emptyList();
+        return WorkingSet.empty();
       }
+      val results = WorkingSet.<T>withExclusions(workingSet);
+
       val siblings = hom.getChildren(parent);
-      val results = new LinkedHashSet<T>(siblings.size());
       for (int i = 0; i < siblings.size(); i++) {
         val idx = offset(i);
         val sibling = get(siblings, idx);
         if (sibling != null && is(siblings, sibling, i)) {
-          if (!hom.isMarked(sibling)) {
+          if (!workingSet.isExcluded(sibling)) {
             results.add(sibling);
           }
         }
       }
       for (val sib : siblings) {
         if (!results.contains(sib)) {
-          hom.mark(sib);
+          results.exclude(sib);
         }
       }
       return results;
@@ -205,7 +205,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
       val parent = hom.getParent(n);
       if (parent == null) {
         return false;

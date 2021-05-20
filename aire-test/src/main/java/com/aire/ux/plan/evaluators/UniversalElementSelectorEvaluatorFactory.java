@@ -5,10 +5,10 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.Set;
 
 public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -35,7 +35,7 @@ public class UniversalElementSelectorEvaluatorFactory implements EvaluatorFactor
     }
 
     @Override
-    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
       return true;
     }
 

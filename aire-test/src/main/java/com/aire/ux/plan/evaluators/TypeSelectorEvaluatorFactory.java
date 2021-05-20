@@ -5,6 +5,7 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
@@ -28,12 +29,14 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
       super(syntaxNode, context);
     }
 
+    @Override
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
+      return hom.getType(n).equals(node.getSource().getLexeme());
+    }
+
     public String toString() {
       return "<type: selecting %s.  Cost: N>".formatted(node.getSource().getLexeme());
     }
 
-    protected final <T> boolean appliesTo(NodeAdapter<T> hom, T n, Set<T> workingSet) {
-      return hom.getType(n).equals(node.getSource().getLexeme());
-    }
   }
 }

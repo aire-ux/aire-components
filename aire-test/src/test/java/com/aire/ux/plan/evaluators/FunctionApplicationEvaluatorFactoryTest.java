@@ -42,6 +42,10 @@ class FunctionApplicationEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("second", "true"),
                 node("li").attribute("third", "true"));
     val results = eval(":nth-child(odd)", node);
+
+    val p = parser.parse(":nth-child(odd)").plan(context);
+    System.out.println(p);
+
     assertEquals(2, results.size());
     System.out.println(results);
     val iter = results.iterator();

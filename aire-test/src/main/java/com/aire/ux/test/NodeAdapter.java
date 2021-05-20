@@ -66,30 +66,6 @@ public interface NodeAdapter<T> {
   }
 
   /**
-   * sometimes we need to determine whether a node has been excluded by a previous evaluator. Mark
-   * can flag a node for exclusion by a subsequent evaluator
-   *
-   * @param value the value to exclude
-   * @return true if it has not been marked
-   */
-  boolean mark(T value);
-
-  /**
-   * free a node to be considered by subsequent evaluators
-   *
-   * @param value the value to unmark
-   */
-  void unmark(T value);
-
-  /**
-   * determine whether a preceding evaluator has flagged this node
-   *
-   * @param value the node to check
-   * @return true if the node has been flagged for exclusion
-   */
-  boolean isMarked(T value);
-
-  /**
    * @param current the node to retrieve the children of
    * @return the children, or an empty list if none exist
    */

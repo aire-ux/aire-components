@@ -5,10 +5,10 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.Set;
 
 public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
 
@@ -27,7 +27,7 @@ public class SelectorGroupEvaluatorFactory implements EvaluatorFactory {
     public SelectorGroupEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {}
 
     @Override
-    public <T> Set<T> evaluate(Set<T> tree, NodeAdapter<T> hom) {
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> tree, NodeAdapter<T> hom) {
       return tree;
     }
 

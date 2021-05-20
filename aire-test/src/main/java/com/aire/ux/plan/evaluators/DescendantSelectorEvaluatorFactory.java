@@ -5,12 +5,12 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.ArrayDeque;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedList;
 import lombok.val;
 
 public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
@@ -35,18 +35,19 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val result = new LinkedHashSet<T>();
-
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+      val result = WorkingSet.<T>create();
       for (val node : workingSet) {
-        val stack = new ArrayDeque<T>(hom.getChildren(node));
+        val stack = new LinkedList<T>(hom.getChildren(node));
         while (!stack.isEmpty()) {
-          val iter = stack.descendingIterator();
+          val iter = stack.listIterator();
           while (iter.hasNext()) {
             val next = iter.next();
             result.add(next);
             iter.remove();
-            stack.addAll(hom.getChildren(next));
+            for(val e : hom.getChildren(next)) {
+              iter.add(e);
+            }
           }
         }
       }

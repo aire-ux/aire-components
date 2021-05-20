@@ -5,6 +5,7 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
@@ -45,12 +46,12 @@ public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
     }
 
     @Override
-    public <T> Set<T> evaluate(Set<T> workingSet, NodeAdapter<T> hom) {
-      val results = new LinkedHashSet<T>();
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
+      val results = WorkingSet.<T>create();
       for (val element : workingSet) {
         val sibling = hom.getSucceedingSibling(element);
         if (sibling != null) {
-          results.addAll(delegate.evaluate(Set.of(sibling), hom));
+          results.addAll(delegate.evaluate(WorkingSet.of(sibling), hom));
         }
       }
       return results;
