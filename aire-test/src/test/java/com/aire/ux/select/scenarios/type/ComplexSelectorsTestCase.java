@@ -10,6 +10,8 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM)
@@ -23,6 +25,23 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     document = parse("scenarios/complex.html");
   }
 
+  @ParameterizedTest
+  @MethodSource("com.aire.ux.select.scenarios.type.AuxiliaryStateTest#names")
+  void ensureAttributesWorks(String name) {
+    val t1 = System.currentTimeMillis();
+    val results = eval("html > body *.fa:nth-child(n+4), div[class*='3'],body", document);
+
+    val state = Node.getAdapter().stateFor(name);
+    for(val result : results) {
+      result.setState(state);
+    }
+
+
+    val selectors = eval("* :%s".formatted(state.toSymbol().name()), document);
+    val t2 = System.currentTimeMillis();
+    System.out.println("Ran: " + (t2 - t1));
+    assertEquals(65, selectors.size());
+  }
 
   @Test
   @RepeatedTest(100)
@@ -33,8 +52,8 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
 
     System.out.println("Ran: " + (t2 - t1));
     assertEquals(65, results.size());
-
   }
+
   @Test
   @RepeatedTest(100)
   void ensureUnionWorksCorrectly() {

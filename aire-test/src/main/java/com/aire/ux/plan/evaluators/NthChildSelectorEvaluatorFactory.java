@@ -19,11 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
-  static final Symbol symbol = Symbol.symbol("nth-child");
+  static final Symbol nthChild = Symbol.symbol("nth-child");
+  static final Symbol nthOfType = Symbol.symbol("nth-of-type");
 
   @Override
   public Set<Symbol> getEvaluationTargets() {
-    return Collections.singleton(symbol);
+    return Set.of(nthChild, nthOfType) ;
   }
 
   @Override

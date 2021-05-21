@@ -1,7 +1,9 @@
 package com.aire.ux.plan.evaluators;
 
+import static com.aire.ux.select.ScenarioTestCase.parseString;
 import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.plan.EvaluatorFactory;
 import lombok.val;
@@ -67,6 +69,24 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
 
     val result = eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd)", node);
     assertEquals(4, result.size());
+  }
+
+
+  @Test
+  void ensureNthOfTypeWorks() {
+    var doc = parseString("""
+        <div>
+          <div>This element isn't counted.</div>
+          <p>1st paragraph.</p>
+          <p class="fancy">2nd paragraph.</p>
+          <div>This element isn't counted.</div>
+          <p class="fancy">3rd paragraph.</p>
+          <p>4th paragraph.</p>
+        </div> 
+         """);
+    val docs = eval("p:nth-of-type(2n+1)", doc);
+    assertEquals(2, docs.size());
+    assertTrue(docs.stream().allMatch(t -> "p".equals(t.getType())));
   }
 
   @Test

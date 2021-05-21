@@ -21,7 +21,7 @@ public class AuxiliaryStateTest extends ScenarioTestCase {
   }
 
 
-  static List<String> names() {
+  public static List<String> names() {
     return Arrays.stream(DomStates.values()).map(t -> t.toSymbol().name())
         .collect(Collectors.toList());
   }
