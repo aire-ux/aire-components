@@ -1,6 +1,7 @@
 package com.aire.ux.test;
 
 import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.plan.WorkingSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,19 +21,23 @@ import lombok.val;
  */
 public interface NodeAdapter<T> {
 
-  /** id constant */
+  /**
+   * id constant
+   */
   String ID = "id";
 
-  /** class constant */
+  /**
+   * class constant
+   */
   String CLASS = "class";
 
   /**
    * map a tree-like structure to a tree-like structure
    *
    * @param root the root of the first tree
-   * @param hom the hom functor used to perform the mapping
-   * @param f the morphism T -> U
-   * @param <U> the type of the second structure
+   * @param hom  the hom functor used to perform the mapping
+   * @param f    the morphism T -> U
+   * @param <U>  the type of the second structure
    * @return a "hierarchy" encoded by <code>hom</code>
    */
   default <U> U map(
@@ -47,8 +52,8 @@ public interface NodeAdapter<T> {
   /**
    * @param current the root node
    * @param initial the initial value to reduce over
-   * @param f the reducer function
-   * @param <U> the type-parameter of the result
+   * @param f       the reducer function
+   * @param <U>     the type-parameter of the result
    * @return the hierarchy reduced over the reducer function in breadth-first order
    */
   default <U> U reduce(
@@ -64,6 +69,31 @@ public interface NodeAdapter<T> {
       }
     }
     return result;
+  }
+
+
+  /**
+   *
+   * @param workingSet
+   * @param initial
+   * @param f
+   * @param <U>
+   * @return
+   */
+  default <U> U reduce(@Nonnull final WorkingSet<T> workingSet, @Nonnull final U initial,
+      final BiFunction<T, U, U> f) {
+    val stack = new ArrayDeque<T>();
+    stack.addAll(workingSet.results());
+    var result = initial;
+    while (!stack.isEmpty()) {
+      val c = stack.poll();
+      result = f.apply(c, result);
+      for (val child : getChildren(c)) {
+        stack.add(child);
+      }
+    }
+    return result;
+
   }
 
   /**
@@ -136,7 +166,7 @@ public interface NodeAdapter<T> {
   T getParent(@Nonnull T current);
 
   /**
-   * @param current the current node to set the children of
+   * @param current  the current node to set the children of
    * @param children the new children
    * @return the node
    */
@@ -144,7 +174,7 @@ public interface NodeAdapter<T> {
 
   /**
    * @param current the node to retrieve the attribute value for
-   * @param key the attribute key
+   * @param key     the attribute key
    * @return the attribute value, or null
    */
   @Nullable
@@ -168,15 +198,15 @@ public interface NodeAdapter<T> {
   }
 
   /**
-   * @param node the node to set the attribute on
-   * @param key the attribute key
+   * @param node  the node to set the attribute on
+   * @param key   the attribute key
    * @param value the attribute value
    * @return the node
    */
   T setAttribute(T node, String key, String value);
 
   /**
-   * @param c the node to determine if the attribute exists for
+   * @param c   the node to determine if the attribute exists for
    * @param key the attribute key
    * @return true if the key exists
    */
@@ -201,6 +231,7 @@ public interface NodeAdapter<T> {
    * @return whether the state exists on this element
    */
   boolean hasState(@Nonnull T element, @Nonnull State state);
+
   /**
    * @param element the element to retrieve
    * @return the next sibling, or null if none exists
@@ -211,14 +242,19 @@ public interface NodeAdapter<T> {
   State stateFor(String name);
 
   public static interface State {
+
     int ordinal();
 
     Symbol toSymbol();
 
-    /** @return the string representation of the state */
+    /**
+     * @return the string representation of the state
+     */
     String toString();
 
-    /** @return the hashcode for this state */
+    /**
+     * @return the hashcode for this state
+     */
     int hashCode();
 
     /**

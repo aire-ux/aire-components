@@ -3,6 +3,7 @@ package com.aire.ux.parsers.ast;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
@@ -37,6 +38,11 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
    */
   public AbstractSyntaxTree() {
     this(new RootSyntaxNode<>());
+  }
+
+  public AbstractSyntaxTree(List<SyntaxNode<T, U>> children) {
+    this();
+    root.addChildren(children);
   }
 
   @Override
