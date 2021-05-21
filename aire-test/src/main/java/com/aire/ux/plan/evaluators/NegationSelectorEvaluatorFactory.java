@@ -27,7 +27,7 @@ public class NegationSelectorEvaluatorFactory implements EvaluatorFactory {
     return new NegationSelectorEvaluator(node, context);
   }
 
-  private static class NegationSelectorEvaluator implements Evaluator {
+  private static class NegationSelectorEvaluator extends AbstractHierarchySearchingEvaluator {
 
     private final Plan plan;
     private final PlanContext context;
@@ -35,14 +35,19 @@ public class NegationSelectorEvaluatorFactory implements EvaluatorFactory {
 
     public NegationSelectorEvaluator(
         SyntaxNode<Symbol, Token> node, PlanContext context) {
+      super(node, context);
       this.context = context;
       this.subroot = new AbstractSyntaxTree<Symbol, Token>(node.clearChildren());
       this.plan = context.create(subroot.getRoot()).plan(context);
     }
 
     @Override
-    public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
-      return workingSet;
+    protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
+      val current = WorkingSet.withExclusions(workingSet);
+      current.addAll(workingSet.results());
+      val exclusions = plan.evaluate(current, hom);
+      return !exclusions.contains(n);
     }
+
   }
 }

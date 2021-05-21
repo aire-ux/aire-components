@@ -2,7 +2,6 @@ package com.aire.ux.plan;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -26,12 +25,12 @@ public interface WorkingSet<T> extends Iterable<T> {
 
   @Nonnull
   public static <T> WorkingSet<T> create(@Nonnull Collection<? extends T> items) {
-    return new LinkedWorkingSet<>(new LinkedHashSet<>(items), new HashSet<>());
+    return new LinkedWorkingSet<>(new LinkedHashSet<>(items), new LinkedHashSet<>());
   }
 
   @Nonnull
   public static <T> WorkingSet<T> backedBy(@Nonnull Set<T> items) {
-    return new LinkedWorkingSet<T>(items, new HashSet<>());
+    return new LinkedWorkingSet<T>(items, new LinkedHashSet<>());
   }
 
   static <T> WorkingSet<T> empty() {
@@ -43,7 +42,7 @@ public interface WorkingSet<T> extends Iterable<T> {
   }
 
   public static <T> WorkingSet<T> sized(int inclusions, int exclusions) {
-    return new LinkedWorkingSet<>(new LinkedHashSet<>(inclusions), new HashSet<>(exclusions));
+    return new LinkedWorkingSet<>(new LinkedHashSet<>(inclusions), new LinkedHashSet<>(exclusions));
   }
 
   public static <T> WorkingSet<T> of(T... values) {
@@ -83,19 +82,29 @@ public interface WorkingSet<T> extends Iterable<T> {
   Set<T> results();
 
   void excludeAll(WorkingSet<T> workingSet);
+
+  WorkingSet<T> flip();
+
+  WorkingSet<T> intersect(WorkingSet<T> exclusions);
+
+  void removeAll(Iterable<T> exclusions);
 }
 
 class LinkedWorkingSet<T> implements WorkingSet<T> {
 
-  /** include list */
+  /**
+   * include list
+   */
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   final Set<T> exclusions;
 
-  /** exclude list */
+  /**
+   * exclude list
+   */
   final Set<T> inclusions;
 
   LinkedWorkingSet() {
-    this(new LinkedHashSet<>(), new HashSet<>());
+    this(new LinkedHashSet<>(), new LinkedHashSet<>());
   }
 
   LinkedWorkingSet(final Set<T> inclusions, final Set<T> exclusions) {
@@ -183,6 +192,26 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   public void excludeAll(WorkingSet<T> workingSet) {
     if (workingSet instanceof LinkedWorkingSet ws) {
       exclusions.addAll(ws.exclusions);
+    }
+  }
+
+  @Override
+  public WorkingSet<T> flip() {
+    return new LinkedWorkingSet<>(exclusions, inclusions);
+  }
+
+  @Override
+  public WorkingSet<T> intersect(WorkingSet<T> other) {
+    val ws = (LinkedWorkingSet) other;
+    inclusions.removeAll(ws.inclusions);
+    exclusions.removeAll(ws.exclusions);
+    return this;
+  }
+
+  @Override
+  public void removeAll(Iterable<T> exclusions) {
+    for(val exclusion : exclusions) {
+      inclusions.remove(exclusion);
     }
   }
 
