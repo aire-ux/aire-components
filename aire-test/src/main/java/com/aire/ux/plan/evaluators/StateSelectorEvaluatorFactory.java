@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class StateSelectorEvaluatorFactory implements EvaluatorFactory {
 
-
   private final Set<Symbol> symbols;
 
   public StateSelectorEvaluatorFactory(State... states) {
@@ -37,9 +36,8 @@ public class StateSelectorEvaluatorFactory implements EvaluatorFactory {
   static final class StateSelectorEvaluator extends AbstractHierarchySearchingEvaluator {
 
     final String state;
-    StateSelectorEvaluator(
-        @NotNull SyntaxNode<Symbol, Token> node,
-        @NotNull PlanContext context) {
+
+    StateSelectorEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
       super(node, context);
       this.state = node.getSource().getLexeme();
     }

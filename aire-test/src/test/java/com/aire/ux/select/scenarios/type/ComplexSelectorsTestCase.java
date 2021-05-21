@@ -13,9 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-/**
- * test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM)
- */
+/** test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM) */
 public class ComplexSelectorsTestCase extends ScenarioTestCase {
 
   private static Node document;
@@ -32,10 +30,9 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     val results = eval("html > body *.fa:nth-child(n+4), div[class*='3'],body", document);
 
     val state = Node.getAdapter().stateFor(name);
-    for(val result : results) {
+    for (val result : results) {
       result.setState(state);
     }
-
 
     val selectors = eval("* :%s".formatted(state.toSymbol().name()), document);
     val t2 = System.currentTimeMillis();
@@ -63,12 +60,14 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
 
     System.out.println("Ran: " + (t2 - t1));
 
-
-
     assertEquals(545, results.size());
 
-    assertTrue(results.stream().allMatch(t ->
-        (t.getType().equals("a") || (t.getType().equals("div") && t.hasAttribute("class")))));
+    assertTrue(
+        results.stream()
+            .allMatch(
+                t ->
+                    (t.getType().equals("a")
+                        || (t.getType().equals("div") && t.hasAttribute("class")))));
   }
 
   @Test

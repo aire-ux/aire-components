@@ -34,7 +34,6 @@ public class DefaultPlanContext implements PlanContext {
     }
   }
 
-
   @Override
   public EvaluatorFactory lookup(SyntaxNode<Symbol, Token> node) {
     val result = factories.get(node.getSymbol());

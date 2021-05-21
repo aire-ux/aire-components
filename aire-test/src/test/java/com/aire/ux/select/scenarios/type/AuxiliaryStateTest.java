@@ -20,9 +20,9 @@ public class AuxiliaryStateTest extends ScenarioTestCase {
     PlanContext.register(new StateSelectorEvaluatorFactory(), Node.DomStates.values());
   }
 
-
   public static List<String> names() {
-    return Arrays.stream(DomStates.values()).map(t -> t.toSymbol().name())
+    return Arrays.stream(DomStates.values())
+        .map(t -> t.toSymbol().name())
         .collect(Collectors.toList());
   }
 
@@ -30,7 +30,9 @@ public class AuxiliaryStateTest extends ScenarioTestCase {
   @MethodSource("names")
   void ensureStatesCanBeSelected(String value) {
 
-    val root = parseString("""
+    val root =
+        parseString(
+            """
         <html>
           <body>
             <ul>
@@ -47,7 +49,5 @@ public class AuxiliaryStateTest extends ScenarioTestCase {
     li.setState(Node.getAdapter().stateFor(value));
     val result = at(eval(state, root), 0);
     assertEquals(result, li);
-
   }
-
 }

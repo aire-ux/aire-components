@@ -71,10 +71,11 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
     assertEquals(4, result.size());
   }
 
-
   @Test
   void ensureNthOfTypeWorks() {
-    var doc = parseString("""
+    var doc =
+        parseString(
+            """
         <div>
           <div>This element isn't counted.</div>
           <p>1st paragraph.</p>
@@ -82,7 +83,7 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
           <div>This element isn't counted.</div>
           <p class="fancy">3rd paragraph.</p>
           <p>4th paragraph.</p>
-        </div> 
+        </div>
          """);
     val docs = eval("p:nth-of-type(2n+1)", doc);
     assertEquals(2, docs.size());

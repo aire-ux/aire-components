@@ -11,7 +11,6 @@ import com.aire.ux.select.css.CssSelectorToken;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import lombok.val;
@@ -24,7 +23,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
   @Override
   public Set<Symbol> getEvaluationTargets() {
-    return Set.of(nthChild, nthOfType) ;
+    return Set.of(nthChild, nthOfType);
   }
 
   @Override

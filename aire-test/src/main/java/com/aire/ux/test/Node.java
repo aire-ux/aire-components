@@ -246,7 +246,6 @@ public class Node {
 
     final String value;
 
-
     DomStates(String value) {
       this.value = value;
     }
@@ -254,6 +253,7 @@ public class Node {
     public String getValue() {
       return value;
     }
+
     public Symbol toSymbol() {
       return Symbol.symbol(value.substring(1));
     }
