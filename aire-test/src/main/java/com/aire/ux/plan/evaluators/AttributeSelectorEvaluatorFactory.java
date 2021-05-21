@@ -145,8 +145,8 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
             if (value.endsWith(this.value) && !workingSet.isExcluded(element)) {
               return Option.of(element);
             }
-            workingSet.exclude(element);
           }
+          workingSet.exclude(element);
           break;
         }
 
