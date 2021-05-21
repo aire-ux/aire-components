@@ -10,7 +10,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.val;
@@ -40,7 +39,7 @@ public class SelectorUnionEvaluatorFactory implements EvaluatorFactory {
     @Override
     public String toString() {
       val result = new StringBuilder();
-      for(val c : groups) {
+      for (val c : groups) {
         result.append(c).append("\n");
       }
       return result.toString();

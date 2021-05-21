@@ -22,8 +22,4 @@ public interface Evaluator {
    * @return the cost of this evaluation node
    */
   <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom);
-
-
-
-
 }

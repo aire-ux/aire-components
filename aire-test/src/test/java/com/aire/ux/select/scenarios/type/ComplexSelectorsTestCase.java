@@ -10,14 +10,11 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * test off of https://www.w3schools.com/xml/dom_examples.asp
- * (use fully-rendered DOM)
- */
+/** test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM) */
 public class ComplexSelectorsTestCase extends ScenarioTestCase {
 
-
   private static Node document;
+
   @BeforeAll
   static void setUpScenario() {
     document = parse("scenarios/complex.html");
@@ -35,7 +32,6 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(177, eval(":first-child", document).size());
     assertEquals(36, eval("div:first-child", document).size());
   }
-
 
   @Test
   void ensureSelectingAnchorTypesWorks() {
@@ -62,11 +58,9 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(88, results.size());
   }
 
-
   @Test
   void ensureDocumentSelectAllWorks() {
     val results = eval("*", document);
     assertEquals(808, results.size());
   }
-
 }

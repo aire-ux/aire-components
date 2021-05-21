@@ -4,7 +4,6 @@ import static com.aire.ux.test.Nodes.node;
 
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.evaluators.EvaluatorFactoryTestCase;
-import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
 import com.helger.commons.io.stream.StringInputStream;
 import java.io.InputStream;
@@ -15,14 +14,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.parsers.SAXParserFactory;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.jupiter.api.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ScenarioTestCase extends EvaluatorFactoryTestCase {
-
 
   @SneakyThrows
   public static Node parse(InputStream stream) {
@@ -48,12 +45,10 @@ public class ScenarioTestCase extends EvaluatorFactoryTestCase {
     return null;
   }
 
-
   static final class Handler extends DefaultHandler {
 
     final ArrayDeque<Node> nodes;
     final AtomicReference<Node> root;
-
 
     Handler() {
       nodes = new ArrayDeque<>();
@@ -63,7 +58,6 @@ public class ScenarioTestCase extends EvaluatorFactoryTestCase {
     public Node getRoot() {
       return root.get();
     }
-
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes)

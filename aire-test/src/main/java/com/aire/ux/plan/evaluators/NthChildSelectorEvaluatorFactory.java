@@ -109,12 +109,10 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
             (n, rs) -> {
               rs.addAll(collectMatching(workingSet, n, hom));
               return rs;
-            }
-        );
+            });
       }
       return results;
     }
-
 
     protected abstract int offset(int idx);
 

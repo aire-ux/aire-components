@@ -7,7 +7,6 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;

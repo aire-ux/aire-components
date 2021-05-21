@@ -89,7 +89,9 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("a", "12"),
                 node("li").attribute("a", "13"),
                 node("li").attribute("a", "14"),
-                node("li").attribute("a", "15").child(node("hello").attribute("class", "world beans sup")),
+                node("li")
+                    .attribute("a", "15")
+                    .child(node("hello").attribute("class", "world beans sup")),
                 node("li").attribute("a", "16"),
                 node("li").attribute("a", "17"),
                 node("li").attribute("a", "18"),
@@ -100,9 +102,9 @@ class NthChildSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
                 node("li").attribute("a", "23"),
                 node("li").attribute("a", "24"));
 
-    val results = eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd) > hello.world", node).results();
+    val results =
+        eval(":nth-child(n+8):nth-child(-n + 15):nth-child(odd) > hello.world", node).results();
     assertEquals(1, results.size());
-
   }
 
   @Test

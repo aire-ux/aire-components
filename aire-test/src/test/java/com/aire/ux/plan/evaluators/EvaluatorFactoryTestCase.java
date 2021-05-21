@@ -9,7 +9,6 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import com.aire.ux.test.Node;
 import com.aire.ux.test.NodeAdapter;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;

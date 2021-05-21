@@ -37,10 +37,10 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
       val classes = hom.getAttribute(n, "class");
-      if(classes != null) {
+      if (classes != null) {
         val cls = classes.split("\\s+");
-        for(val cl : cls) {
-          if(classValue.equals(cl)) {
+        for (val cl : cls) {
+          if (classValue.equals(cl)) {
             return super.appliesTo(hom, n, workingSet);
           }
         }

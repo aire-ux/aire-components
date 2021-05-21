@@ -1,5 +1,6 @@
 package com.aire.ux.test;
 
+import com.aire.ux.parsers.ast.Symbol;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -211,6 +212,8 @@ public interface NodeAdapter<T> {
 
   public static interface State {
     int ordinal();
+
+    Symbol toSymbol();
 
     /** @return the string representation of the state */
     String toString();

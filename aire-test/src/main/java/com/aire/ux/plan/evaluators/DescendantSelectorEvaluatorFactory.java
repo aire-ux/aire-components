@@ -10,7 +10,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import lombok.val;
@@ -47,7 +46,7 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
             val next = iter.next();
             result.add(next);
             iter.remove();
-            for(val e : hom.getChildren(next)) {
+            for (val e : hom.getChildren(next)) {
               iter.add(e);
             }
           }

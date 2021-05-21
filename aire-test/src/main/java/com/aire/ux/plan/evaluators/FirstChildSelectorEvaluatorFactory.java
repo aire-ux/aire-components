@@ -15,6 +15,7 @@ import lombok.val;
 public class FirstChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
   static final Symbol symbol = Symbol.symbol("first-child");
+
   @Override
   public Set<Symbol> getEvaluationTargets() {
     return Collections.singleton(symbol);
@@ -25,22 +26,20 @@ public class FirstChildSelectorEvaluatorFactory implements EvaluatorFactory {
     return new FirstChildEvaluator(node, context);
   }
 
-  private class FirstChildEvaluator extends AbstractHierarchySearchingEvaluator {
+  private static final class FirstChildEvaluator extends AbstractHierarchySearchingEvaluator {
 
-    FirstChildEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    FirstChildEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       super(node, context);
     }
 
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
       val parent = hom.getParent(n);
-      if(parent == null) {
+      if (parent == null) {
         return false;
       }
       val children = hom.getChildren(parent);
       return super.appliesTo(hom, n, workingSet) && children.indexOf(n) == 0;
     }
-
   }
 }

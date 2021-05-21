@@ -10,7 +10,9 @@ class FirstChildSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
   @Test
   void ensureFirstChildWorks() {
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html>
           <head></head>
           <body>
@@ -22,6 +24,4 @@ class FirstChildSelectorEvaluatorFactoryTest extends ScenarioTestCase {
     assertEquals(1, result.size());
     assertContainsTypes(result, "head");
   }
-
-
 }

@@ -29,9 +29,7 @@ public class LastChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
   static final class LastChildEvaluator extends AbstractHierarchySearchingEvaluator {
 
-    LastChildEvaluator(
-        @NotNull SyntaxNode<Symbol, Token> node,
-        @NotNull PlanContext context) {
+    LastChildEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
       super(node, context);
     }
 
@@ -44,7 +42,5 @@ public class LastChildSelectorEvaluatorFactory implements EvaluatorFactory {
       val children = hom.getChildren(parent);
       return super.appliesTo(hom, n, workingSet) && children.lastIndexOf(n) == children.size() - 1;
     }
-
-
   }
 }

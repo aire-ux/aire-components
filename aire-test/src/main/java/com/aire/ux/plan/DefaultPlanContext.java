@@ -11,14 +11,14 @@ import lombok.val;
 
 public class DefaultPlanContext implements PlanContext {
 
-  private static final Map<Symbol, EvaluatorFactory> factories;
+  static final Map<Symbol, EvaluatorFactory> factories;
 
   static {
     factories = new LinkedHashMap<>();
     for (val service :
         ServiceLoader.load(
             EvaluatorFactory.class, Thread.currentThread().getContextClassLoader())) {
-      for(val symbol : service.getEvaluationTargets()) {
+      for (val symbol : service.getEvaluationTargets()) {
         factories.put(symbol, service);
       }
     }
@@ -29,11 +29,11 @@ public class DefaultPlanContext implements PlanContext {
   }
 
   public void register(EvaluatorFactory factory) {
-    for(Symbol s : factory.getEvaluationTargets()) {
+    for (Symbol s : factory.getEvaluationTargets()) {
       factories.put(s, factory);
-
     }
   }
+
 
   @Override
   public EvaluatorFactory lookup(SyntaxNode<Symbol, Token> node) {

@@ -37,6 +37,5 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
     public String toString() {
       return "<type: selecting %s.  Cost: N>".formatted(node.getSource().getLexeme());
     }
-
   }
 }

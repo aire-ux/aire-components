@@ -52,8 +52,8 @@ public interface WorkingSet<T> extends Iterable<T> {
 
   @SuppressWarnings("unchecked")
   static <T> WorkingSet<T> withExclusions(WorkingSet<T> workingSet) {
-    return new LinkedWorkingSet<>(new LinkedHashSet<>(),
-        ((LinkedWorkingSet) workingSet).exclusions);
+    return new LinkedWorkingSet<>(
+        new LinkedHashSet<>(), ((LinkedWorkingSet) workingSet).exclusions);
   }
 
   int size();
@@ -85,17 +85,13 @@ public interface WorkingSet<T> extends Iterable<T> {
   void excludeAll(WorkingSet<T> workingSet);
 }
 
-
 class LinkedWorkingSet<T> implements WorkingSet<T> {
 
-  /**
-   * include list
-   */
+  /** include list */
+  @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   final Set<T> exclusions;
 
-  /**
-   * exclude list
-   */
+  /** exclude list */
   final Set<T> inclusions;
 
   LinkedWorkingSet() {
@@ -105,9 +101,7 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   LinkedWorkingSet(final Set<T> inclusions, final Set<T> exclusions) {
     this.inclusions = inclusions;
     this.exclusions = exclusions;
-
   }
-
 
   @Override
   public int size() {
@@ -191,7 +185,6 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
       exclusions.addAll(ws.exclusions);
     }
   }
-
 
   @Nonnull
   @Override

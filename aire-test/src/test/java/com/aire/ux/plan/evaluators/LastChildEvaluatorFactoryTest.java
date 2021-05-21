@@ -8,10 +8,11 @@ import org.junit.jupiter.api.Test;
 
 class LastChildEvaluatorFactoryTest extends ScenarioTestCase {
 
-
   @Test
   void ensureFirstChildWorks() {
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html>
           <head></head>
           <body>
