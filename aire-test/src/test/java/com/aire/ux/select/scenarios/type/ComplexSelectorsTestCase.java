@@ -8,9 +8,12 @@ import com.aire.ux.select.ScenarioTestCase;
 import com.aire.ux.test.Node;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-/** test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM) */
+/**
+ * test off of https://www.w3schools.com/xml/dom_examples.asp (use fully-rendered DOM)
+ */
 public class ComplexSelectorsTestCase extends ScenarioTestCase {
 
   private static Node document;
@@ -18,6 +21,35 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
   @BeforeAll
   static void setUpScenario() {
     document = parse("scenarios/complex.html");
+  }
+
+
+  @Test
+  @RepeatedTest(100)
+  void ensureUnionWithNthChildSelectorWorks() {
+    val t1 = System.currentTimeMillis();
+    val results = eval("html > body *.fa:nth-child(n+4), div[class*='3'],body", document);
+    val t2 = System.currentTimeMillis();
+
+    System.out.println("Ran: " + (t2 - t1));
+    assertEquals(65, results.size());
+
+  }
+  @Test
+  @RepeatedTest(100)
+  void ensureUnionWorksCorrectly() {
+    val t1 = System.currentTimeMillis();
+    val results = eval("html > body a,div[class]", document);
+    val t2 = System.currentTimeMillis();
+
+    System.out.println("Ran: " + (t2 - t1));
+
+
+
+    assertEquals(545, results.size());
+
+    assertTrue(results.stream().allMatch(t ->
+        (t.getType().equals("a") || (t.getType().equals("div") && t.hasAttribute("class")))));
   }
 
   @Test
