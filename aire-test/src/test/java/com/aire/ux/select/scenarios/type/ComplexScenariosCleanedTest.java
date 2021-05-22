@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 public class ComplexScenariosCleanedTest extends ScenarioTestCase {
 
   private static Node document;
+
   @BeforeAll
   static void setUpScenario() {
     document = parse("scenarios/complex2.html");
@@ -30,7 +31,7 @@ public class ComplexScenariosCleanedTest extends ScenarioTestCase {
 
   @Test
   void ensureComplexSelectorWorks2() {
-    val results = eval("html > body :nth-child(n+5) + a", document);
-    assertEquals(310, results.size());
+    val results = eval("html > body :nth-child(n+5) > * *:nth-child(-2n+1):not(b)", document);
+    assertEquals(86, results.size());
   }
 }

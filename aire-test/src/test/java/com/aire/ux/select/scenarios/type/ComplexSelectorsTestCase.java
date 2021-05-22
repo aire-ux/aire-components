@@ -4,11 +4,8 @@ import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.ScenarioTestCase;
 import com.aire.ux.test.Node;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
@@ -61,8 +58,6 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
         eval("html > body :not(* div[class]):not(i):not(a):nth-child(2n+5).cls-3", document);
     assertEquals(9, results.size());
   }
-
-
 
   @Test
   void ensureNegativeIndexesWork() {
