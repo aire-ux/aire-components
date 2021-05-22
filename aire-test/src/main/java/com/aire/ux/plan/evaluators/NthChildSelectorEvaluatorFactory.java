@@ -101,7 +101,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
-      val results = WorkingSet.<T>create();
+      val results = WorkingSet.<T>withExclusions(workingSet);
       for (val node : workingSet) {
         hom.reduce(
             node,

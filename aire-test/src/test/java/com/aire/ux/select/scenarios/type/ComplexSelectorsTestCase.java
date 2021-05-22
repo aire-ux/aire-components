@@ -49,10 +49,6 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(17, results.size());
   }
 
-  static Set<Node> filter(WorkingSet<Node> nodes, String type) {
-    return nodes.stream().filter(t -> t.getType().equals(type)).collect(Collectors.toSet());
-  }
-
   @Test
   void ensureNegationInComplexSelectorWithExpression() {
     val results = eval("html > body :not(* div[class]):not(i):not(a):nth-child(2n+5)", document);
@@ -65,6 +61,8 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
         eval("html > body :not(* div[class]):not(i):not(a):nth-child(2n+5).cls-3", document);
     assertEquals(9, results.size());
   }
+
+
 
   @Test
   void ensureNegativeIndexesWork() {
