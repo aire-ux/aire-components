@@ -149,7 +149,7 @@ public final class DefaultSelector implements Selector {
     public <T> WorkingSet<T> evaluate(T tree, NodeAdapter<T> hom) {
       val results = WorkingSet.of(tree);
       return evaluate(results, hom);
-//      return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
+      //      return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
     }
 
     @Override

@@ -5,11 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.select.ScenarioTestCase;
 import lombok.val;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
-
 
   @Test
   void ensureSimpleTypeNegationSelectsCorrectNodes() {
@@ -40,7 +38,9 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
   @Test
   void ensureSelectingNegationOnClassWorks() {
 
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html>
           <body class="coolbeans"></body>
         </html>
@@ -51,11 +51,12 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
     assertContainsTypes(result, "html");
   }
 
-
   @Test
   void ensureSelectingNegationOnClassWorks2() {
 
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html class="coolbeans">
           <body></body>
         </html>
@@ -66,12 +67,12 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
     assertContainsTypes(result, "body");
   }
 
-
   @Test
   void ensureConjunctionWorks() {
 
-
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html class="coolbeans">
           <body>
             <ul>
@@ -87,8 +88,6 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
           </body>
         </html>
         """);
-
-
 
     val result = eval("li:not(.first):not(li.third)", node);
     assertEquals(1, result.size());
@@ -98,8 +97,9 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
   @Test
   void ensureSelectingDeeplyNestedValuesWorks() {
 
-
-    val node = parseString("""
+    val node =
+        parseString(
+            """
         <html class="coolbeans">
           <body>
             <ul>
@@ -115,8 +115,6 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
           </body>
         </html>
         """);
-
-
 
     val result = eval("li:not(.first)", node);
     assertEquals(2, result.size());

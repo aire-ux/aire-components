@@ -92,15 +92,11 @@ public interface WorkingSet<T> extends Iterable<T> {
 
 class LinkedWorkingSet<T> implements WorkingSet<T> {
 
-  /**
-   * include list
-   */
+  /** include list */
   @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   final Set<T> exclusions;
 
-  /**
-   * exclude list
-   */
+  /** exclude list */
   final Set<T> inclusions;
 
   LinkedWorkingSet() {
@@ -210,7 +206,7 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
 
   @Override
   public void removeAll(Iterable<T> exclusions) {
-    for(val exclusion : exclusions) {
+    for (val exclusion : exclusions) {
       inclusions.remove(exclusion);
     }
   }

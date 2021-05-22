@@ -34,13 +34,11 @@ public class NegationSelectorEvaluatorFactory implements EvaluatorFactory {
     private final PlanContext context;
     private final AbstractSyntaxTree<Symbol, Token> subroot;
 
-    public NegationSelectorEvaluator(
-        SyntaxNode<Symbol, Token> node, PlanContext context) {
+    public NegationSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       this.context = context;
       this.subroot = new AbstractSyntaxTree<Symbol, Token>(node.clearChildren());
       this.plan = context.create(subroot.getRoot()).plan(context);
     }
-
 
     @Override
     public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
@@ -53,14 +51,14 @@ public class NegationSelectorEvaluatorFactory implements EvaluatorFactory {
       while (!stack.isEmpty()) {
         val next = stack.pop();
         if ((exclusions.isExcluded(next) || !exclusions.contains(next))) {
-          if(!current.isExcluded(next)) {
+          if (!current.isExcluded(next)) {
             results.add(next);
           }
         }
         stack.addAll(hom.getChildren(next));
       }
       results.excludeAll(workingSet);
-      for(val c : exclusions) {
+      for (val c : exclusions) {
         results.exclude(c);
       }
       return results;
