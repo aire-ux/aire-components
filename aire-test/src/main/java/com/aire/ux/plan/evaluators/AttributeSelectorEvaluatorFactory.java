@@ -9,7 +9,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import io.sunshower.lambda.Option;
-import java.util.Collection;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,10 +29,13 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
 
   private static class AttributeSelectorEvaluator implements Evaluator {
 
-    @Nullable private final String value;
-    @Nonnull private final String attributeName;
+    @Nullable
+    private final String value;
+    @Nonnull
+    private final String attributeName;
 
-    @Nullable private final ElementSymbol combinator;
+    @Nullable
+    private final ElementSymbol combinator;
 
     public AttributeSelectorEvaluator(SyntaxNode<Symbol, Token> node, PlanContext context) {
       val children = node.getChildren();
@@ -65,23 +67,16 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
     @Override
     public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
       val result = WorkingSet.<T>withExclusions(workingSet);
-      for (val element : workingSet) {
-        hom.reduce(
-            element,
-            result,
-            (t, u) -> {
-              if (combinator == null) {
-                u.addAll(selectAttributeExistance(result, t, hom));
-              } else {
-                u.addAll(selectAttributeMatching(result, t, hom));
-              }
-              return u;
-            });
-      }
-      return result;
+      return hom.reduce(workingSet, result, (t, u) -> {
+        val attrs = combinator == null ?
+            selectAttributeExistance(result, t, hom) :
+            selectAttributeMatching(result, t, hom);
+        u.addAll(attrs);
+        return u;
+      });
     }
 
-    private <T> Collection<T> selectAttributeExistance(
+    private <T> Option<T> selectAttributeExistance(
         WorkingSet<T> workingSet, T element, NodeAdapter<T> hom) {
       if (hom.hasAttribute(element, attributeName) && !workingSet.isExcluded(element)) {
         return Option.of(element);
@@ -97,72 +92,66 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
         return Option.none();
       }
       switch (combinator) {
-        case StrictEquality:
-          {
-            if (Objects.equals(attribute, value) && !workingSet.isExcluded(element)) {
+        case StrictEquality: {
+          if (Objects.equals(attribute, value) && !workingSet.isExcluded(element)) {
+            return Option.of(element);
+          }
+          workingSet.exclude(element);
+          break;
+        }
+
+        case Includes: {
+          val values = attribute.split(WS);
+          for (val value : values) {
+            if (Objects.equals(this.value, value) && !workingSet.isExcluded(element)) {
               return Option.of(element);
             }
-            workingSet.exclude(element);
-            break;
           }
+          workingSet.exclude(element);
+          break;
+        }
 
-        case Includes:
-          {
-            val values = attribute.split(WS);
-            for (val value : values) {
-              if (Objects.equals(this.value, value) && !workingSet.isExcluded(element)) {
-                return Option.of(element);
-              }
-            }
-            workingSet.exclude(element);
-            break;
+        case DashMatch: {
+          if ((Objects.equals(value, attribute) || attribute.startsWith(value + "-"))
+              && !workingSet.isExcluded(element)) {
+            return Option.of(element);
           }
+          workingSet.exclude(element);
+          break;
+        }
 
-        case DashMatch:
-          {
-            if ((Objects.equals(value, attribute) || attribute.startsWith(value + "-"))
-                && !workingSet.isExcluded(element)) {
+        case PrefixMatch: {
+          val values = attribute.split(WS);
+          for (val value : values) {
+            if (value.startsWith(this.value) && !workingSet.isExcluded(element)) {
               return Option.of(element);
             }
-            workingSet.exclude(element);
-            break;
           }
+          workingSet.exclude(element);
+          break;
+        }
 
-        case PrefixMatch:
-          {
-            val values = attribute.split(WS);
-            for (val value : values) {
-              if (value.startsWith(this.value) && !workingSet.isExcluded(element)) {
-                return Option.of(element);
-              }
+        case SuffixMatch: {
+          val values = attribute.split(WS);
+          for (val value : values) {
+            if (value.endsWith(this.value) && !workingSet.isExcluded(element)) {
+              return Option.of(element);
             }
-            workingSet.exclude(element);
-            break;
           }
+          workingSet.exclude(element);
+          break;
+        }
 
-        case SuffixMatch:
-          {
-            val values = attribute.split(WS);
-            for (val value : values) {
-              if (value.endsWith(this.value) && !workingSet.isExcluded(element)) {
-                return Option.of(element);
-              }
+        case SubstringMatch: {
+          val values = attribute.split(WS);
+          for (val value : values) {
+            if (value.contains(this.value) && !workingSet.isExcluded(element)) {
+              return Option.of(element);
             }
-            workingSet.exclude(element);
-            break;
           }
-
-        case SubstringMatch:
-          {
-            val values = attribute.split(WS);
-            for (val value : values) {
-              if (value.contains(this.value) && !workingSet.isExcluded(element)) {
-                return Option.of(element);
-              }
-            }
-            workingSet.exclude(element);
-            break;
-          }
+          workingSet.exclude(element);
+          break;
+        }
       }
       return Option.none();
     }

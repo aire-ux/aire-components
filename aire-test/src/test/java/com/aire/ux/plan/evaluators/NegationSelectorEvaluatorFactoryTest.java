@@ -1,9 +1,11 @@
 package com.aire.ux.plan.evaluators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.select.ScenarioTestCase;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
@@ -64,6 +66,35 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
     assertContainsTypes(result, "body");
   }
 
+
+  @Test
+  void ensureConjunctionWorks() {
+
+
+    val node = parseString("""
+        <html class="coolbeans">
+          <body>
+            <ul>
+              <li class="first">
+              </li>
+              <li class="second">
+                <a>one</a>
+              </li>
+              <li class="third">
+                <a>two</a>
+              </li>
+            </ul>
+          </body>
+        </html>
+        """);
+
+
+
+    val result = eval("li:not(.first):not(li.third)", node);
+    assertEquals(1, result.size());
+    assertTrue(result.stream().allMatch(t -> t.getType().equals("li")));
+  }
+
   @Test
   void ensureSelectingDeeplyNestedValuesWorks() {
 
@@ -88,10 +119,7 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
 
     val result = eval("li:not(.first)", node);
-    for(val r : result) {
-      System.out.println(r.getType());
-    }
-//    assertEquals(2, result.size());
-//    assertContainsTypes(result, "body");
+    assertEquals(2, result.size());
+    assertTrue(result.stream().allMatch(t -> t.getType().equals("li")));
   }
 }

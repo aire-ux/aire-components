@@ -51,8 +51,8 @@ public interface WorkingSet<T> extends Iterable<T> {
 
   @SuppressWarnings("unchecked")
   static <T> WorkingSet<T> withExclusions(WorkingSet<T> workingSet) {
-    return new LinkedWorkingSet<>(
-        new LinkedHashSet<>(), ((LinkedWorkingSet) workingSet).exclusions);
+    return new LinkedWorkingSet<T>(
+        new LinkedHashSet<>(), new LinkedHashSet<>(workingSet.exclusions()));
   }
 
   int size();
@@ -74,7 +74,7 @@ public interface WorkingSet<T> extends Iterable<T> {
   boolean addAll(@Nonnull Collection<T> values);
 
   @Nonnull
-  Iterable<T> exclusions();
+  Collection<T> exclusions();
 
   @Nonnull
   Stream<T> stream();
@@ -173,7 +173,7 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
 
   @NotNull
   @Override
-  public Iterable<T> exclusions() {
+  public @Nonnull Collection<T> exclusions() {
     return exclusions;
   }
 

@@ -31,7 +31,7 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
-      return hom.getType(n).equals(node.getSource().getLexeme());
+      return super.appliesTo(hom, n, workingSet) && hom.getType(n).equals(node.getSource().getLexeme());
     }
 
     public String toString() {

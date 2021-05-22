@@ -4,8 +4,11 @@ import static com.aire.ux.test.Nodes.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.ScenarioTestCase;
 import com.aire.ux.test.Node;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
@@ -41,6 +44,35 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
   }
 
   @Test
+  void ensureNegationInComplexSelectorWorks() {
+    val results = eval("html > body :not(p) > div[id][style]", document);
+    assertEquals(17, results.size());
+  }
+
+
+  static Set<Node> filter(WorkingSet<Node> nodes, String type) {
+    return nodes.stream().filter(t -> t.getType().equals(type)).collect(Collectors.toSet());
+  }
+
+  @Test
+  void ensureNegationInComplexSelectorWithExpression() {
+    val results = eval("html > body :not(* div[class]):not(i):not(a):nth-child(2n+5)", document);
+    assertEquals(53, results.size());
+  }
+
+  @Test
+  void ensureNegationInComplexSelectorWithExpression2() {
+    val results = eval("html > body :not(* div[class]):not(i):not(a):nth-child(2n+5).cls-3", document);
+    assertEquals(9, results.size());
+  }
+
+  @Test
+  void ensureNegativeIndexesWork() {
+    val results = eval("html > body h3:not(b):not(br):not(hr):not(* div[class]):not(i):not(a):nth-child(-n+5).w3-margin-top", document);
+    assertEquals(12, results.size());
+  }
+
+
   @RepeatedTest(100)
   void ensureUnionWithNthChildSelectorWorks() {
     val t1 = System.currentTimeMillis();
@@ -51,7 +83,6 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
     assertEquals(65, results.size());
   }
 
-  @Test
   @RepeatedTest(100)
   void ensureUnionWorksCorrectly() {
     val t1 = System.currentTimeMillis();
