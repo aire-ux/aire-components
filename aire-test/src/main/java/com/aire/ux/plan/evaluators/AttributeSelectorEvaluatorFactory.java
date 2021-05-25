@@ -9,8 +9,6 @@ import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import io.sunshower.lambda.Option;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,31 +63,31 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
 
     @Override
     public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
-      val result = WorkingSet.<T>create();
-      for (val element : workingSet) {
-        hom.reduce(
-            element,
-            result,
-            (t, u) -> {
-              if (combinator == null) {
-                u.addAll(selectAttributeExistance(t, hom));
-              } else {
-                u.addAll(selectAttributeMatching(t, hom));
-              }
-              return u;
-            });
-      }
-      return result;
+      val result = WorkingSet.<T>withExclusions(workingSet);
+      return hom.reduce(
+          workingSet,
+          result,
+          (t, u) -> {
+            val attrs =
+                combinator == null
+                    ? selectAttributeExistance(result, t, hom)
+                    : selectAttributeMatching(result, t, hom);
+            u.addAll(attrs);
+            return u;
+          });
     }
 
-    private <T> Collection<T> selectAttributeExistance(T element, NodeAdapter<T> hom) {
-      if (hom.hasAttribute(element, attributeName)) {
+    private <T> Option<T> selectAttributeExistance(
+        WorkingSet<T> workingSet, T element, NodeAdapter<T> hom) {
+      if (hom.hasAttribute(element, attributeName) && !workingSet.isExcluded(element)) {
         return Option.of(element);
       }
+      workingSet.exclude(element);
       return Option.none();
     }
 
-    private <T> Option<T> selectAttributeMatching(T element, NodeAdapter<T> hom) {
+    private <T> Option<T> selectAttributeMatching(
+        WorkingSet<T> workingSet, T element, NodeAdapter<T> hom) {
       val attribute = hom.getAttribute(element, attributeName);
       if (attribute == null) {
         return Option.none();
@@ -97,9 +95,10 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
       switch (combinator) {
         case StrictEquality:
           {
-            if (Objects.equals(attribute, value)) {
+            if (Objects.equals(attribute, value) && !workingSet.isExcluded(element)) {
               return Option.of(element);
             }
+            workingSet.exclude(element);
             break;
           }
 
@@ -107,18 +106,21 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
           {
             val values = attribute.split(WS);
             for (val value : values) {
-              if (Objects.equals(this.value, value)) {
+              if (Objects.equals(this.value, value) && !workingSet.isExcluded(element)) {
                 return Option.of(element);
               }
             }
+            workingSet.exclude(element);
             break;
           }
 
         case DashMatch:
           {
-            if (Objects.equals(value, attribute) || attribute.startsWith(value + "-")) {
+            if ((Objects.equals(value, attribute) || attribute.startsWith(value + "-"))
+                && !workingSet.isExcluded(element)) {
               return Option.of(element);
             }
+            workingSet.exclude(element);
             break;
           }
 
@@ -126,10 +128,11 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
           {
             val values = attribute.split(WS);
             for (val value : values) {
-              if (value.startsWith(this.value)) {
+              if (value.startsWith(this.value) && !workingSet.isExcluded(element)) {
                 return Option.of(element);
               }
             }
+            workingSet.exclude(element);
             break;
           }
 
@@ -137,10 +140,11 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
           {
             val values = attribute.split(WS);
             for (val value : values) {
-              if (value.endsWith(this.value)) {
+              if (value.endsWith(this.value) && !workingSet.isExcluded(element)) {
                 return Option.of(element);
               }
             }
+            workingSet.exclude(element);
             break;
           }
 
@@ -148,10 +152,11 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
           {
             val values = attribute.split(WS);
             for (val value : values) {
-              if (value.contains(this.value)) {
+              if (value.contains(this.value) && !workingSet.isExcluded(element)) {
                 return Option.of(element);
               }
             }
+            workingSet.exclude(element);
             break;
           }
       }

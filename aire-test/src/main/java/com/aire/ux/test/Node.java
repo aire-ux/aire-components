@@ -2,16 +2,17 @@ package com.aire.ux.test;
 
 import static com.aire.ux.test.Nodes.node;
 
+import com.aire.ux.parsers.ast.Symbol;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -150,6 +151,7 @@ public class Node {
   public Node content(String content) {
     return setContent(content);
   }
+
   public String content() {
     return content;
   }
@@ -247,11 +249,25 @@ public class Node {
     DomStates(String value) {
       this.value = value;
     }
+
+    public String getValue() {
+      return value;
+    }
+
+    public Symbol toSymbol() {
+      return Symbol.symbol(value.substring(1));
+    }
   }
 
   private static final class NodeNodeAdapter implements NodeAdapter<Node> {
 
+    final Map<String, DomStates> nameMap;
+
     NodeNodeAdapter() {
+      nameMap = new HashMap<>();
+      for (val n : DomStates.values()) {
+        nameMap.put(n.value.substring(1), n);
+      }
     }
 
     @Override
@@ -319,6 +335,15 @@ public class Node {
         }
       }
       return null;
+    }
+
+    @Override
+    public State stateFor(String name) {
+      val r = nameMap.get(name);
+      if (r == null) {
+        throw new NoSuchElementException("No state with name: " + name);
+      }
+      return r;
     }
   }
 }

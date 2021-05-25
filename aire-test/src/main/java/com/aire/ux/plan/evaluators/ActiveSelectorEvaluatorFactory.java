@@ -5,20 +5,21 @@ import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
-import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import java.util.Collections;
 import java.util.Set;
 
-public class FunctionApplicationEvaluatorFactory implements EvaluatorFactory {
+public class ActiveSelectorEvaluatorFactory implements EvaluatorFactory {
+
+  static final Symbol symbol = Symbol.symbol(":active");
 
   @Override
   public Set<Symbol> getEvaluationTargets() {
-    return Collections.singleton(ElementSymbol.FunctionApplication);
+    return Collections.singleton(symbol);
   }
 
   @Override
   public Evaluator create(SyntaxNode<Symbol, Token> node, PlanContext context) {
-    return null;
+    return new ScalarSymbolEvaluator(node, context, symbol);
   }
 }

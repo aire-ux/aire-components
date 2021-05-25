@@ -7,7 +7,6 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -54,7 +53,9 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
     return results;
   }
 
-  protected abstract <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet);
+  protected <T> boolean appliesTo(NodeAdapter<T> hom, T n, WorkingSet<T> workingSet) {
+    return !workingSet.isExcluded(n);
+  }
 
   @Override
   public String toString() {

@@ -9,12 +9,14 @@ import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
+import java.util.Collections;
+import java.util.Set;
 
 public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return AbstractSyntaxTree.ROOT_SYMBOL;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(AbstractSyntaxTree.ROOT_SYMBOL);
   }
 
   @Override

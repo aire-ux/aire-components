@@ -12,16 +12,18 @@ import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
+import java.util.Set;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
-  static final Symbol symbol = Symbol.symbol("nth-child");
+  static final Symbol nthChild = Symbol.symbol("nth-child");
+  static final Symbol nthOfType = Symbol.symbol("nth-of-type");
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return symbol;
+  public Set<Symbol> getEvaluationTargets() {
+    return Set.of(nthChild, nthOfType);
   }
 
   @Override
@@ -99,7 +101,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public <T> WorkingSet<T> evaluate(WorkingSet<T> workingSet, NodeAdapter<T> hom) {
-      val results = WorkingSet.<T>create();
+      val results = WorkingSet.<T>withExclusions(workingSet);
       for (val node : workingSet) {
         hom.reduce(
             node,
@@ -107,12 +109,10 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
             (n, rs) -> {
               rs.addAll(collectMatching(workingSet, n, hom));
               return rs;
-            }
-        );
+            });
       }
       return results;
     }
-
 
     protected abstract int offset(int idx);
 
@@ -211,7 +211,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
         return false;
       }
       val children = hom.getChildren(parent);
-      return children.indexOf(n) + 1 == offset;
+      return super.appliesTo(hom, n, workingSet) && children.indexOf(n) + 1 == offset;
     }
   }
 }

@@ -9,8 +9,9 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
-import java.util.LinkedHashSet;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Set;
 import lombok.val;
 
 public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
@@ -18,8 +19,8 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
   public DescendantSelectorEvaluatorFactory() {}
 
   @Override
-  public Symbol getEvaluationTarget() {
-    return ElementSymbol.DescendantSelector;
+  public Set<Symbol> getEvaluationTargets() {
+    return Collections.singleton(ElementSymbol.DescendantSelector);
   }
 
   @Override
@@ -45,7 +46,7 @@ public class DescendantSelectorEvaluatorFactory implements EvaluatorFactory {
             val next = iter.next();
             result.add(next);
             iter.remove();
-            for(val e : hom.getChildren(next)) {
+            for (val e : hom.getChildren(next)) {
               iter.add(e);
             }
           }

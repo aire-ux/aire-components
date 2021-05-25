@@ -11,10 +11,8 @@ import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.test.NodeAdapter;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -150,7 +148,13 @@ public final class DefaultSelector implements Selector {
     @Override
     public <T> WorkingSet<T> evaluate(T tree, NodeAdapter<T> hom) {
       val results = WorkingSet.of(tree);
-      return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
+      return evaluate(results, hom);
+      //      return fold(head, results, (node, list) -> node.evaluator.evaluate(list, hom));
+    }
+
+    @Override
+    public <T> WorkingSet<T> evaluate(WorkingSet<T> tree, NodeAdapter<T> hom) {
+      return fold(head, tree, (node, list) -> node.evaluator.evaluate(list, hom));
     }
 
     @Override

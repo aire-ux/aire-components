@@ -1,5 +1,7 @@
 package com.aire.ux.test;
 
+import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.plan.WorkingSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +56,30 @@ public interface NodeAdapter<T> {
       @Nonnull final T current, @Nonnull final U initial, @Nonnull final BiFunction<T, U, U> f) {
     val stack = new ArrayDeque<T>();
     stack.add(current);
+    var result = initial;
+    while (!stack.isEmpty()) {
+      val c = stack.poll();
+      result = f.apply(c, result);
+      for (val child : getChildren(c)) {
+        stack.add(child);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * @param workingSet
+   * @param initial
+   * @param f
+   * @param <U>
+   * @return
+   */
+  default <U> U reduce(
+      @Nonnull final WorkingSet<T> workingSet,
+      @Nonnull final U initial,
+      final BiFunction<T, U, U> f) {
+    val stack = new ArrayDeque<T>();
+    stack.addAll(workingSet.results());
     var result = initial;
     while (!stack.isEmpty()) {
       val c = stack.poll();
@@ -200,6 +226,7 @@ public interface NodeAdapter<T> {
    * @return whether the state exists on this element
    */
   boolean hasState(@Nonnull T element, @Nonnull State state);
+
   /**
    * @param element the element to retrieve
    * @return the next sibling, or null if none exists
@@ -207,8 +234,13 @@ public interface NodeAdapter<T> {
   @Nullable
   T getSucceedingSibling(@Nonnull T element);
 
+  State stateFor(String name);
+
   public static interface State {
+
     int ordinal();
+
+    Symbol toSymbol();
 
     /** @return the string representation of the state */
     String toString();
