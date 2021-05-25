@@ -1,3 +1,5 @@
 include(
-  'aire-test'
+  'aire-css-selectors',
+  'aire-test-common',
+  'aire-test-vaadin'
 )
