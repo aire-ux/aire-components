@@ -6,7 +6,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/** */
 @Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Element {}
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface Routes {
+
+  /**
+   * specify which package(s) to load routes into a test-frame from
+   *
+   * @return the routes to create a frame from
+   */
+  String scanPackage() default "";
+}
