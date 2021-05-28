@@ -16,6 +16,7 @@ dependencies {
     api 'org.junit.platform:junit-platform-launcher'
     api 'org.junit.platform:junit-platform-engine'
 
+    implementation 'io.sunshower.arcus:arcus-lang'
     implementation 'io.sunshower.arcus:arcus-lambda'
     implementation 'io.sunshower.arcus:arcus-reflect'
 

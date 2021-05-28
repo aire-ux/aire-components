@@ -1,1 +1,2 @@
 com.aire.ux.test.resolvers.TypeResolvingElementResolverFactory
+com.aire.ux.test.resolvers.SelectorResolvingElementResolverFactory
