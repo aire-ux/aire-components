@@ -1,0 +1,30 @@
+dependencies {
+
+    api 'com.vaadin:vaadin'
+    api 'com.vaadin:flow-server'
+    api 'com.vaadin:flow-html-components'
+    api 'com.github.mvysny.kaributesting:karibu-testing-v10'
+
+
+
+    api project(':aire-css-selectors')
+
+
+    api 'org.junit-pioneer:junit-pioneer'
+    api 'org.junit.jupiter:junit-jupiter-params'
+
+    api 'org.junit.platform:junit-platform-launcher'
+    api 'org.junit.platform:junit-platform-engine'
+
+    implementation 'io.sunshower.arcus:arcus-lambda'
+    implementation 'io.sunshower.arcus:arcus-reflect'
+
+    [
+            'api',
+            'engine'
+
+    ].each { dep ->
+        testImplementation "org.junit.jupiter:junit-jupiter-$dep"
+        testImplementation "org.junit.platform:junit-platform-suite-$dep"
+    }
+}
