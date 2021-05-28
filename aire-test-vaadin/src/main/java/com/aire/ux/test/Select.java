@@ -9,4 +9,15 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Element {}
+public @interface Select {
+
+  String default_value = "__default__";
+  /**
+   * @return
+   */
+  String selector() default default_value;
+
+  String value() default default_value;
+
+
+}

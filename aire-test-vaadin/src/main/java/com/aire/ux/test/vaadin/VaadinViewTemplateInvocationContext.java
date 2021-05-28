@@ -1,9 +1,10 @@
 package com.aire.ux.test.vaadin;
 
-import com.aire.ux.test.Element;
+import com.aire.ux.test.Select;
 import java.util.Deque;
-import lombok.SneakyThrows;
+import java.util.List;
 import lombok.val;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -17,7 +18,7 @@ public class VaadinViewTemplateInvocationContext
   public boolean supportsParameter(
       ParameterContext parameterContext, ExtensionContext extensionContext)
       throws ParameterResolutionException {
-    return parameterContext.getParameter().isAnnotationPresent(Element.class);
+    return parameterContext.getParameter().isAnnotationPresent(Select.class);
   }
 
   @Override
@@ -27,12 +28,16 @@ public class VaadinViewTemplateInvocationContext
       throws ParameterResolutionException {
 
     val ext = extensionContext.getRequiredTestClass();
+    val parameter = parameterContext.getParameter();
     val deque = (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
         .get(ext);
     val frame = deque.peek();
-    return null;
+    return frame.getElementResolver(parameter).resolve();
+  }
 
 
-
+  @Override
+  public List<Extension> getAdditionalExtensions() {
+    return List.of(new VaadinNavigationExtension());
   }
 }

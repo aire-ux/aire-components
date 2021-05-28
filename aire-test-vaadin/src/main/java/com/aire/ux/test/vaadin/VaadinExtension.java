@@ -2,11 +2,8 @@ package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
 import com.aire.ux.test.AireTest;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 import lombok.extern.java.Log;
@@ -24,12 +21,12 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 @Log
 public class VaadinExtension
     implements AireExtension,
-        Extension,
-        BeforeEachCallback,
-        AfterEachCallback,
-        BeforeAllCallback,
-        AfterAllCallback,
-        TestTemplateInvocationContextProvider {
+    Extension,
+    BeforeEachCallback,
+    AfterEachCallback,
+    BeforeAllCallback,
+    AfterAllCallback,
+    TestTemplateInvocationContextProvider {
 
   static final Namespace ROOT_AIRE_NAMESPACE = Namespace.create("aire:root");
 
@@ -67,9 +64,9 @@ public class VaadinExtension
   /**
    * set up an Aire test context surrounding the entire class
    *
-   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate it
-   * (but don't close it) 3. Create a new test context for the executing class and push it onto the
-   * stack
+   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate
+   * it (but don't close it) 3. Create a new test context for the executing class and push it onto
+   * the stack
    *
    * @param context the context
    * @throws Exception TODO
@@ -77,14 +74,7 @@ public class VaadinExtension
   @Override
   @SuppressWarnings("unchecked")
   public void beforeAll(ExtensionContext context) throws Exception {
-    val testClass = context.getRequiredTestClass();
-    val stack =
-        (Deque<TestFrame>)
-            context
-                .getStore(ROOT_AIRE_NAMESPACE)
-                .getOrComputeIfAbsent(
-                    testClass, (Function<Class<?>, Deque<TestFrame>>) aClass -> new ArrayDeque<>());
-
+    val stack = Frames.resolveFrameStack(context);
     if (!stack.isEmpty()) {
       deactivateFrame(stack.peek());
     }
@@ -92,7 +82,9 @@ public class VaadinExtension
   }
 
 
-  private void deactivateFrame(TestFrame peek) {}
+  private void deactivateFrame(TestFrame peek) {
+    peek.deactivate();
+  }
 
   /**
    * If there's an active test-context for this class, pop it off and destroy it
@@ -101,13 +93,17 @@ public class VaadinExtension
    * @throws Exception
    */
   @Override
-  public void afterAll(ExtensionContext context) throws Exception {}
+  public void afterAll(ExtensionContext context) throws Exception {
+  }
 
   @Override
-  public void afterEach(ExtensionContext context) throws Exception {}
+  public void afterEach(ExtensionContext context) throws Exception {
+  }
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {}
+  public void beforeEach(ExtensionContext context) throws Exception {
+
+  }
 
   private RuntimeException noMatchingProvider(ExtensionContext context) {
     return new IllegalArgumentException(
@@ -118,11 +114,13 @@ public class VaadinExtension
     val loader =
         ServiceLoader.load(
             RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader());
-    return loader.stream()
+    val frame = loader.stream()
         .map(Provider::get)
         .filter(t -> t.appliesTo(context, this))
         .findFirst()
         .map(t -> new TestFrame(t.create(context, this)))
         .orElseThrow(() -> noMatchingProvider(context));
+    frame.activate();
+    return frame;
   }
 }
