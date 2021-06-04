@@ -69,6 +69,15 @@ final class TestFrame implements AutoCloseable {
     }
   }
 
+  public boolean hasElementResolver(AnnotatedElement element) {
+    for (val resolverFactory : resolverFactories()) {
+      if (resolverFactory.appliesTo(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public ElementResolver getElementResolver(AnnotatedElement element) {
     for (val resolverFactory : resolverFactories()) {
       if (resolverFactory.appliesTo(element)) {

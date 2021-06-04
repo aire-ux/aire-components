@@ -71,9 +71,13 @@ public class TypeResolvingElementResolverFactory implements ElementResolverFacto
             }
           }
         }
-        val children = init.getChildren().iterator();
-        while(children.hasNext()) {
-          result.add(children.next());
+        val children = next.getChildren();
+        if(children != null) {
+          val citer = children.iterator();
+          while (citer.hasNext()) {
+            val child = citer.next();
+            result.add(child);
+          }
         }
       }
       throw new NoSuchElementException("No element of type: " + type + " found in the hierarchy");

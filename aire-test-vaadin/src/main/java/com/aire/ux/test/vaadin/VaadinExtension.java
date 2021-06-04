@@ -75,6 +75,7 @@ public class VaadinExtension
   @SuppressWarnings("unchecked")
   public void beforeAll(ExtensionContext context) throws Exception {
     val stack = Frames.resolveFrameStack(context);
+    Frames.pushContext(context);
     if (!stack.isEmpty()) {
       deactivateFrame(stack.peek());
     }
@@ -94,6 +95,7 @@ public class VaadinExtension
    */
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
+    Frames.popContext();
   }
 
   @Override

@@ -1,6 +1,5 @@
 package com.aire.ux.test.vaadin;
 
-import com.aire.ux.test.Select;
 import java.util.Deque;
 import java.util.List;
 import lombok.val;
@@ -15,10 +14,16 @@ public class VaadinViewTemplateInvocationContext
     implements TestTemplateInvocationContext, ParameterResolver {
 
   @Override
+  @SuppressWarnings("unchecked")
   public boolean supportsParameter(
       ParameterContext parameterContext, ExtensionContext extensionContext)
       throws ParameterResolutionException {
-    return parameterContext.getParameter().isAnnotationPresent(Select.class);
+    val ext = extensionContext.getRequiredTestClass();
+    val parameter = parameterContext.getParameter();
+    val deque = (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
+        .get(ext);
+    val frame = deque.peek();
+    return frame != null && frame.hasElementResolver(parameter);
   }
 
   @Override

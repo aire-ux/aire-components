@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.test.vaadin.scenarios.routes.MainLayout;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.dom.Element;
 import java.util.List;
+import lombok.val;
 
 @AireTest
 @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.routes")
@@ -23,6 +25,15 @@ class ComponentHierarchyNodeAdapterTest {
   void ensureCssSelectorWorksOnCollectionType(
       @Select("span:nth-child(-n + 2)") List<Span> children) {
     assertNotNull(children);
+  }
+
+  @ViewTest(navigateTo = "main")
+  void ensureItemIsSelectable(@Context TestContext context, @Select Checkbox checkbox) {
+    assertNotNull(context);
+    checkbox.setValue(true);
+    val selected = context.selectFirst(Checkbox.class);
+    assertNotNull(selected);
+    assertTrue(selected.getValue());
   }
 
 
