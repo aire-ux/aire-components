@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Context;

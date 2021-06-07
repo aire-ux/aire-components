@@ -7,25 +7,33 @@ import com.github.mvysny.kaributesting.v10.Routes;
 import com.vaadin.flow.component.UI;
 import java.lang.reflect.AnnotatedElement;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import lombok.val;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 @Log
 public final class TestFrame implements AutoCloseable {
 
   private final AtomicBoolean alive;
   private final RoutesCreator creator;
+
+  @Getter
+  private final ExtensionContext context;
   private final AtomicReference<Routes> routes;
+
   private String location;
 
-  TestFrame(RoutesCreator creator) {
+  TestFrame(RoutesCreator creator, ExtensionContext context) {
     this.creator = creator;
-    this.alive = new AtomicBoolean(true);
+    this.context = context;
     this.routes = new AtomicReference<>();
+    this.alive = new AtomicBoolean(true);
   }
 
   static Iterable<ElementResolverFactory> resolverFactories() {

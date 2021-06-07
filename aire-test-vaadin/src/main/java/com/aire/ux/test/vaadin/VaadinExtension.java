@@ -2,6 +2,7 @@ package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
 import com.aire.ux.test.AireTest;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.logging.Level;
@@ -15,8 +16,6 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 /**
  * lifecycle is:
@@ -33,35 +32,10 @@ public class VaadinExtension
     BeforeEachCallback,
     AfterEachCallback,
     BeforeAllCallback,
-    AfterAllCallback,
-    TestTemplateInvocationContextProvider {
+    AfterAllCallback {
 
   static final Namespace ROOT_AIRE_NAMESPACE = Namespace.create("aire:root");
 
-  /**
-   * @param context are we annotated with {@link @AireTest}?
-   * @return true if we are, false otherwise
-   */
-  @Override
-  public boolean supportsTestTemplate(ExtensionContext context) {
-    val type = context.getRequiredTestClass();
-    if (log.isLoggable(Level.FINE)) {
-      log.log(Level.FINE, "Checking AireExtension support for {}", type);
-    }
-    boolean supported = type.isAnnotationPresent(AireTest.class);
-    logIsSupported(type, supported);
-    return supported;
-  }
-
-  /**
-   * @param context the context to check against
-   * @return the AireVaadin root invocation context if we're applicable
-   */
-  @Override
-  public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-      ExtensionContext context) {
-    return Stream.of(new VaadinViewTemplateInvocationContext());
-  }
 
   /**
    * set up an Aire test context surrounding the entire class
@@ -82,16 +56,12 @@ public class VaadinExtension
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    if (methodOverridesClass(context)) {
-      activateFrame(context);
-    }
+    activateFrame(context);
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    if (methodOverridesClass(context)) {
-      deactivateFrame(context);
-    }
+    deactivateFrame(context);
   }
 
   /**
@@ -104,7 +74,6 @@ public class VaadinExtension
   public void afterAll(ExtensionContext context) throws Exception {
     deactivateFrame(context);
   }
-
 
 
   private void activateFrame(ExtensionContext context) {
@@ -123,11 +92,13 @@ public class VaadinExtension
   }
 
   private TestFrame createFrame(ExtensionContext context) {
+    val frames = Frames.resolveFrameStack(context);
     val frame =
         routesCreatorFactories()
             .filter(t -> t.appliesTo(context, this))
             .findFirst()
-            .map(t -> new TestFrame(t.create(context, this)))
+            .map(t -> new TestFrame(t.create(context, this), context))
+            .or(() -> Optional.ofNullable(frames.peek()))
             .orElseThrow(() -> noMatchingProvider(context));
     frame.activate();
     return frame;
@@ -145,7 +116,7 @@ public class VaadinExtension
     }
     currentFrame.deactivate();
 
-    if(!stack.isEmpty()) {
+    if (!stack.isEmpty()) {
       stack.peek().activate();
     }
 
@@ -160,18 +131,6 @@ public class VaadinExtension
         .map(Provider::get);
   }
 
-  private void logIsSupported(Class<?> type, boolean supported) {
-    if (log.isLoggable(Level.FINE)) {
-      if (supported) {
-        log.log(Level.FINE, "AireExtension is supported for type {}", type);
-      } else {
-        log.log(Level.FINE, "AireExtension is not supported for type {}", type);
-      }
-    }
-  }
 
 
-  private boolean methodOverridesClass(ExtensionContext context) {
-    return routesCreatorFactories().anyMatch(t -> t.appliesTo(context, this));
-  }
 }
