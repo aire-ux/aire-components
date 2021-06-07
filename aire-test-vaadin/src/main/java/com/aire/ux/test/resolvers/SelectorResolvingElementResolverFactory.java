@@ -35,12 +35,14 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     val param = (Parameter) element;
     val selector = element.getAnnotation(Select.class);
     if (Reflect.isCompatible(Collection.class, param.getType())) {
-      val collectionType = (Class<? extends Collection<?>>) Utilities
-          .resolveCollectionType(param.getType());
+      val collectionType =
+          (Class<? extends Collection<?>>) Utilities.resolveCollectionType(param.getType());
       val type = Reflect.getTypeParametersOfParameter(param);
       boolean isElement = type.isNone() || Element.class.isAssignableFrom((Class<?>) type.get()[0]);
-      return new CollectionElementSelectorResolver(collectionType,
-          Utilities.firstNonDefault(selector.selector(), selector.value()), isElement);
+      return new CollectionElementSelectorResolver(
+          collectionType,
+          Utilities.firstNonDefault(selector.selector(), selector.value()),
+          isElement);
 
     } else {
       return new SingleElementSelectorResolver(
@@ -48,7 +50,6 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
           Utilities.firstNonDefault(selector.selector(), selector.value()));
     }
   }
-
 
   private static final class CollectionElementSelectorResolver implements ElementResolver {
 
@@ -58,10 +59,7 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     private final Class<? extends Collection<?>> collection;
 
     public CollectionElementSelectorResolver(
-        Class<? extends Collection<?>> collection,
-        String selector,
-        boolean isElement
-    ) {
+        Class<? extends Collection<?>> collection, String selector, boolean isElement) {
       this.selector = selector;
       this.isElement = isElement;
       this.collection = collection;
@@ -71,19 +69,24 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <T> T resolve() {
-      val result = parser.parse(selector).plan(DefaultPlanContext.getInstance())
-          .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter());
+      val result =
+          parser
+              .parse(selector)
+              .plan(DefaultPlanContext.getInstance())
+              .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter());
       if (isElement) {
         val collect = Reflect.instantiate(collection);
         collect.addAll((Collection) result.results());
         return (T) collect;
       } else {
-        return (T) result.results().stream().flatMap(t -> t.getComponent().stream())
-            .collect(Collectors.toCollection(() -> (Collection) Reflect.instantiate(collection)));
+        return (T)
+            result.results().stream()
+                .flatMap(t -> t.getComponent().stream())
+                .collect(
+                    Collectors.toCollection(() -> (Collection) Reflect.instantiate(collection)));
       }
     }
   }
-
 
   private static final class SingleElementSelectorResolver implements ElementResolver {
 
@@ -91,8 +94,7 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     private final boolean element;
     private final CssSelectorParser parser;
 
-    public SingleElementSelectorResolver(
-        boolean element, String selector) {
+    public SingleElementSelectorResolver(boolean element, String selector) {
       this.element = element;
       this.selector = selector;
       this.parser = new CssSelectorParser();
@@ -101,8 +103,11 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     @Override
     @SuppressWarnings("unchecked")
     public <T> T resolve() {
-      val result = parser.parse(selector).plan(DefaultPlanContext.getInstance())
-          .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter());
+      val result =
+          parser
+              .parse(selector)
+              .plan(DefaultPlanContext.getInstance())
+              .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter());
       if (result.size() > 0) {
         if (element) {
           return (T) result.results().iterator().next();

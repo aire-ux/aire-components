@@ -12,12 +12,14 @@ import java.lang.reflect.Parameter;
 public class TestContextResolvingElementResolverFactory implements ElementResolverFactory {
 
   static final TestContext instance;
+
   static {
     instance = new DefaultTestContext();
   }
+
   @Override
   public boolean appliesTo(AnnotatedElement element) {
-    if(element.isAnnotationPresent(Context.class) && element instanceof Parameter parameter) {
+    if (element.isAnnotationPresent(Context.class) && element instanceof Parameter parameter) {
       return Reflect.isCompatible(TestContext.class, parameter.getType());
     }
     return false;
@@ -30,9 +32,7 @@ public class TestContextResolvingElementResolverFactory implements ElementResolv
 
   private static class TestContextResolvingElementResolver implements ElementResolver {
 
-    public TestContextResolvingElementResolver(
-        AnnotatedElement element) {
-    }
+    public TestContextResolvingElementResolver(AnnotatedElement element) {}
 
     @Override
     @SuppressWarnings("unchecked")

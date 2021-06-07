@@ -20,12 +20,11 @@ public class Frames {
   @SuppressWarnings("unchecked")
   public static Deque<TestFrame> resolveFrameStack(ExtensionContext context) {
     val testClass = context.getRequiredTestClass();
-    return
-        (Deque<TestFrame>)
-            context
-                .getStore(ROOT_AIRE_NAMESPACE)
-                .getOrComputeIfAbsent(
-                    testClass, (Function<Class<?>, Deque<TestFrame>>) aClass -> new ArrayDeque<>());
+    return (Deque<TestFrame>)
+        context
+            .getStore(ROOT_AIRE_NAMESPACE)
+            .getOrComputeIfAbsent(
+                testClass, (Function<Class<?>, Deque<TestFrame>>) aClass -> new ArrayDeque<>());
   }
 
   public static TestFrame resolveCurrentFrame(ExtensionContext context) {
@@ -38,7 +37,7 @@ public class Frames {
 
   public static ExtensionContext currentContext() {
     val result = contexts.peek();
-    if(result == null) {
+    if (result == null) {
       throw new IllegalStateException("Invalid test state: no test context");
     }
     return result;

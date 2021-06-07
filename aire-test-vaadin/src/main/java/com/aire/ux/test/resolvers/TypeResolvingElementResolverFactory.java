@@ -45,12 +45,11 @@ public class TypeResolvingElementResolverFactory implements ElementResolverFacto
     }
   }
 
-
   private static class TypeResolvingElementResolver implements ElementResolver {
 
     final Class<?> type;
-    public TypeResolvingElementResolver(
-        Type type) {
+
+    public TypeResolvingElementResolver(Type type) {
       this.type = (Class<?>) type;
     }
 
@@ -60,19 +59,19 @@ public class TypeResolvingElementResolverFactory implements ElementResolverFacto
       val result = new ArrayDeque<Element>();
       val init = UI.getCurrent().getElement();
       result.add(init);
-      while(!result.isEmpty()) {
+      while (!result.isEmpty()) {
         val next = result.poll();
-        if(next != null) {
+        if (next != null) {
           val component = next.getComponent();
-          if(component.isPresent()) {
+          if (component.isPresent()) {
             val comp = component.get();
-            if(type.isAssignableFrom(comp.getClass())) {
+            if (type.isAssignableFrom(comp.getClass())) {
               return (T) comp;
             }
           }
         }
         val children = next.getChildren();
-        if(children != null) {
+        if (children != null) {
           val citer = children.iterator();
           while (citer.hasNext()) {
             val child = citer.next();
@@ -84,11 +83,9 @@ public class TypeResolvingElementResolverFactory implements ElementResolverFacto
     }
   }
 
-  private class CollectionTypeResolvingElementResolver implements ElementResolver {
+  private static class CollectionTypeResolvingElementResolver implements ElementResolver {
 
-    public CollectionTypeResolvingElementResolver(
-        Class<?> type, Type optTypeParam) {
-    }
+    public CollectionTypeResolvingElementResolver(Class<?> type, Type optTypeParam) {}
 
     @Override
     public <T> T resolve() {

@@ -9,10 +9,6 @@ import com.vaadin.flow.router.Route;
 public class MainLayout extends Section {
 
   public MainLayout() {
-    add(
-        new Span("hello"),
-        new Span("World"),
-        new Checkbox("Click me, bub!")
-    );
+    add(new Span("hello"), new Span("World"), new Checkbox("Click me, bub!"));
   }
 }

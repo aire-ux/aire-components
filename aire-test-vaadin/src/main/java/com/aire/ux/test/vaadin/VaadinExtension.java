@@ -18,6 +18,14 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
+/**
+ * lifecycle is:
+ * <p>
+ * 1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides?  Create Frame
+ * b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides?  Get Current Frame b. Overrides?
+ * Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a. Deactivate Current
+ * Frame b. Pop Current Frame
+ */
 @Log
 public class VaadinExtension
     implements AireExtension,
@@ -41,13 +49,7 @@ public class VaadinExtension
       log.log(Level.FINE, "Checking AireExtension support for {}", type);
     }
     boolean supported = type.isAnnotationPresent(AireTest.class);
-    if (log.isLoggable(Level.FINE)) {
-      if (supported) {
-        log.log(Level.FINE, "AireExtension is supported for type {}", type);
-      } else {
-        log.log(Level.FINE, "AireExtension is not supported for type {}", type);
-      }
-    }
+    logIsSupported(type, supported);
     return supported;
   }
 
@@ -74,17 +76,22 @@ public class VaadinExtension
   @Override
   @SuppressWarnings("unchecked")
   public void beforeAll(ExtensionContext context) throws Exception {
-    val stack = Frames.resolveFrameStack(context);
-    Frames.pushContext(context);
-    if (!stack.isEmpty()) {
-      deactivateFrame(stack.peek());
-    }
-    stack.push(createFrame(context));
+    activateFrame(context);
   }
 
 
-  private void deactivateFrame(TestFrame peek) {
-    peek.deactivate();
+  @Override
+  public void beforeEach(ExtensionContext context) throws Exception {
+    if (methodOverridesClass(context)) {
+      activateFrame(context);
+    }
+  }
+
+  @Override
+  public void afterEach(ExtensionContext context) throws Exception {
+    if (methodOverridesClass(context)) {
+      deactivateFrame(context);
+    }
   }
 
   /**
@@ -95,17 +102,20 @@ public class VaadinExtension
    */
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
-    Frames.popContext();
+    deactivateFrame(context);
   }
 
-  @Override
-  public void afterEach(ExtensionContext context) throws Exception {
+
+
+  private void activateFrame(ExtensionContext context) {
+    val stack = Frames.resolveFrameStack(context);
+    Frames.pushContext(context);
+    if (!stack.isEmpty()) {
+      stack.peek().deactivate();
+    }
+    stack.push(createFrame(context));
   }
 
-  @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
-
-  }
 
   private RuntimeException noMatchingProvider(ExtensionContext context) {
     return new IllegalArgumentException(
@@ -113,16 +123,55 @@ public class VaadinExtension
   }
 
   private TestFrame createFrame(ExtensionContext context) {
-    val loader =
-        ServiceLoader.load(
-            RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader());
-    val frame = loader.stream()
-        .map(Provider::get)
-        .filter(t -> t.appliesTo(context, this))
-        .findFirst()
-        .map(t -> new TestFrame(t.create(context, this)))
-        .orElseThrow(() -> noMatchingProvider(context));
+    val frame =
+        routesCreatorFactories()
+            .filter(t -> t.appliesTo(context, this))
+            .findFirst()
+            .map(t -> new TestFrame(t.create(context, this)))
+            .orElseThrow(() -> noMatchingProvider(context));
     frame.activate();
     return frame;
+  }
+
+
+  private void deactivateFrame(ExtensionContext context) {
+    val stack = Frames.resolveFrameStack(context);
+    if (stack == null) {
+      throw new IllegalStateException("No current test lifecycle");
+    }
+    val currentFrame = stack.pop();
+    if (currentFrame == null) {
+      throw new IllegalStateException("Unbalanced test lifecycle");
+    }
+    currentFrame.deactivate();
+
+    if(!stack.isEmpty()) {
+      stack.peek().activate();
+    }
+
+    Frames.popContext();
+
+  }
+
+  private Stream<RoutesCreatorFactory> routesCreatorFactories() {
+    return ServiceLoader.load(
+        RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
+        .stream()
+        .map(Provider::get);
+  }
+
+  private void logIsSupported(Class<?> type, boolean supported) {
+    if (log.isLoggable(Level.FINE)) {
+      if (supported) {
+        log.log(Level.FINE, "AireExtension is supported for type {}", type);
+      } else {
+        log.log(Level.FINE, "AireExtension is not supported for type {}", type);
+      }
+    }
+  }
+
+
+  private boolean methodOverridesClass(ExtensionContext context) {
+    return routesCreatorFactories().anyMatch(t -> t.appliesTo(context, this));
   }
 }

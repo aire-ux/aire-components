@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
 
-
   @NotNull
   @Override
   public List<Element> getChildren(@NotNull Element current) {
@@ -25,11 +24,11 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
   }
 
   @Override
-  public Element setChildren(@NotNull Element current,
-      @NotNull Collection<? extends Element> children) {
+  public Element setChildren(
+      @NotNull Element current, @NotNull Collection<? extends Element> children) {
     int i = 0;
     val iter = children.iterator();
-    while(iter.hasNext()) {
+    while (iter.hasNext()) {
       current.setChild(i++, iter.next());
     }
     return current;
@@ -54,12 +53,12 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
 
   @Override
   public Element clone(Element value) {
-    return value;//todo: see what needs to happen here
+    return value; // todo: see what needs to happen here
   }
 
   @Override
   public String getType(Element n) {
-    if(n.getStateProvider() instanceof AbstractNodeStateProvider) {
+    if (n.getStateProvider() instanceof AbstractNodeStateProvider) {
       return n.getTag();
     }
     return "text";
@@ -79,11 +78,11 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
   @Override
   public Element getSucceedingSibling(@NotNull Element element) {
     val parent = element.getParent();
-    if(parent == null) {
+    if (parent == null) {
       return null;
     }
     val idx = parent.indexOfChild(element);
-    if(idx < parent.getChildCount()) {
+    if (idx < parent.getChildCount()) {
       return parent.getChild(idx + 1);
     }
     return null;
@@ -94,7 +93,8 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
     throw new UnsupportedOperationException("Not supported yet");
   }
 }
-final class ChildList extends AbstractList<Element>  {
+
+final class ChildList extends AbstractList<Element> {
   final Element parent;
 
   ChildList(Element parent) {

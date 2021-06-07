@@ -15,12 +15,12 @@ import lombok.extern.java.Log;
 import lombok.val;
 
 @Log
-final class TestFrame implements AutoCloseable {
+public final class TestFrame implements AutoCloseable {
 
-  private String location;
   private final AtomicBoolean alive;
   private final RoutesCreator creator;
   private final AtomicReference<Routes> routes;
+  private String location;
 
   TestFrame(RoutesCreator creator) {
     this.creator = creator;
@@ -29,8 +29,8 @@ final class TestFrame implements AutoCloseable {
   }
 
   static Iterable<ElementResolverFactory> resolverFactories() {
-    return ServiceLoader.load(ElementResolverFactory.class, Thread.currentThread()
-        .getContextClassLoader());
+    return ServiceLoader.load(
+        ElementResolverFactory.class, Thread.currentThread().getContextClassLoader());
   }
 
   void activate() {
@@ -38,6 +38,7 @@ final class TestFrame implements AutoCloseable {
     log.log(Level.INFO, "Activating Stack Frame %s...".formatted(this));
     routes.set(creator.create());
     MockVaadin.setup(routes());
+    restore();
     log.log(Level.INFO, "Activated Stack Frame %s".formatted(this));
   }
 
@@ -89,13 +90,22 @@ final class TestFrame implements AutoCloseable {
   }
 
   public void navigateTo(String navigation) {
+    log.info("%s navigating to %s".formatted(this, navigation));
     this.location = navigation;
     UI.getCurrent().navigate(navigation);
+    log.info("%s navigated to %s".formatted(this, navigation));
   }
 
   public void restore() {
-    if(location != null) {
+    if (location != null) {
+      log.info("Navigating back to %s".formatted(location));
       UI.getCurrent().navigate(location);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "TestFrame[location: %s, routes: %s]"
+        .formatted(location == null ? "none" : location, routes);
   }
 }

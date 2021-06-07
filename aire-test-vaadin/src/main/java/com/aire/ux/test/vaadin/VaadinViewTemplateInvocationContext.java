@@ -20,8 +20,8 @@ public class VaadinViewTemplateInvocationContext
       throws ParameterResolutionException {
     val ext = extensionContext.getRequiredTestClass();
     val parameter = parameterContext.getParameter();
-    val deque = (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
-        .get(ext);
+    val deque =
+        (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE).get(ext);
     val frame = deque.peek();
     return frame != null && frame.hasElementResolver(parameter);
   }
@@ -34,15 +34,10 @@ public class VaadinViewTemplateInvocationContext
 
     val ext = extensionContext.getRequiredTestClass();
     val parameter = parameterContext.getParameter();
-    val deque = (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
-        .get(ext);
+    val deque =
+        (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE).get(ext);
     val frame = deque.peek();
     return frame.getElementResolver(parameter).resolve();
   }
 
-
-  @Override
-  public List<Extension> getAdditionalExtensions() {
-    return List.of(new VaadinNavigationExtension());
-  }
 }
