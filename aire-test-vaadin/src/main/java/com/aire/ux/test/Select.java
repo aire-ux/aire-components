@@ -12,12 +12,8 @@ import java.lang.annotation.Target;
 public @interface Select {
 
   String default_value = "__default__";
-  /**
-   * @return
-   */
+  /** @return */
   String selector() default default_value;
 
   String value() default default_value;
-
-
 }

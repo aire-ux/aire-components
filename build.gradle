@@ -20,7 +20,11 @@ allprojects {
         mavenCentral()
 
         maven {
-            url 'http://artifacts.sunshower.cloud/repository/sunshower-releases'
+            url uri("https://maven.pkg.github.com/sunshower-io/sunshower-arcus")
+            credentials {
+                username "$mavenRepositoryUsername"
+                password "$mavenRepositoryPassword"
+            }
         }
     }
 

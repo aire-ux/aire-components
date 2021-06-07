@@ -2,6 +2,7 @@ package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
 import com.aire.ux.test.AireTest;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.logging.Level;
@@ -15,9 +16,15 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
+/**
+ * lifecycle is:
+ * <p>
+ * 1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides?  Create Frame
+ * b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides?  Get Current Frame b. Overrides?
+ * Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a. Deactivate Current
+ * Frame b. Pop Current Frame
+ */
 @Log
 public class VaadinExtension
     implements AireExtension,
@@ -25,41 +32,10 @@ public class VaadinExtension
     BeforeEachCallback,
     AfterEachCallback,
     BeforeAllCallback,
-    AfterAllCallback,
-    TestTemplateInvocationContextProvider {
+    AfterAllCallback {
 
   static final Namespace ROOT_AIRE_NAMESPACE = Namespace.create("aire:root");
 
-  /**
-   * @param context are we annotated with {@link @AireTest}?
-   * @return true if we are, false otherwise
-   */
-  @Override
-  public boolean supportsTestTemplate(ExtensionContext context) {
-    val type = context.getRequiredTestClass();
-    if (log.isLoggable(Level.FINE)) {
-      log.log(Level.FINE, "Checking AireExtension support for {}", type);
-    }
-    boolean supported = type.isAnnotationPresent(AireTest.class);
-    if (log.isLoggable(Level.FINE)) {
-      if (supported) {
-        log.log(Level.FINE, "AireExtension is supported for type {}", type);
-      } else {
-        log.log(Level.FINE, "AireExtension is not supported for type {}", type);
-      }
-    }
-    return supported;
-  }
-
-  /**
-   * @param context the context to check against
-   * @return the AireVaadin root invocation context if we're applicable
-   */
-  @Override
-  public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-      ExtensionContext context) {
-    return Stream.of(new VaadinViewTemplateInvocationContext());
-  }
 
   /**
    * set up an Aire test context surrounding the entire class
@@ -74,16 +50,18 @@ public class VaadinExtension
   @Override
   @SuppressWarnings("unchecked")
   public void beforeAll(ExtensionContext context) throws Exception {
-    val stack = Frames.resolveFrameStack(context);
-    if (!stack.isEmpty()) {
-      deactivateFrame(stack.peek());
-    }
-    stack.push(createFrame(context));
+    activateFrame(context);
   }
 
 
-  private void deactivateFrame(TestFrame peek) {
-    peek.deactivate();
+  @Override
+  public void beforeEach(ExtensionContext context) throws Exception {
+    activateFrame(context);
+  }
+
+  @Override
+  public void afterEach(ExtensionContext context) throws Exception {
+    deactivateFrame(context);
   }
 
   /**
@@ -94,16 +72,19 @@ public class VaadinExtension
    */
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
+    deactivateFrame(context);
   }
 
-  @Override
-  public void afterEach(ExtensionContext context) throws Exception {
+
+  private void activateFrame(ExtensionContext context) {
+    val stack = Frames.resolveFrameStack(context);
+    Frames.pushContext(context);
+    if (!stack.isEmpty()) {
+      stack.peek().deactivate();
+    }
+    stack.push(createFrame(context));
   }
 
-  @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
-
-  }
 
   private RuntimeException noMatchingProvider(ExtensionContext context) {
     return new IllegalArgumentException(
@@ -111,16 +92,45 @@ public class VaadinExtension
   }
 
   private TestFrame createFrame(ExtensionContext context) {
-    val loader =
-        ServiceLoader.load(
-            RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader());
-    val frame = loader.stream()
-        .map(Provider::get)
-        .filter(t -> t.appliesTo(context, this))
-        .findFirst()
-        .map(t -> new TestFrame(t.create(context, this)))
-        .orElseThrow(() -> noMatchingProvider(context));
+    val frames = Frames.resolveFrameStack(context);
+    val frame =
+        routesCreatorFactories()
+            .filter(t -> t.appliesTo(context, this))
+            .findFirst()
+            .map(t -> new TestFrame(t.create(context, this), context))
+            .or(() -> Optional.ofNullable(frames.peek()))
+            .orElseThrow(() -> noMatchingProvider(context));
     frame.activate();
     return frame;
   }
+
+
+  private void deactivateFrame(ExtensionContext context) {
+    val stack = Frames.resolveFrameStack(context);
+    if (stack == null) {
+      throw new IllegalStateException("No current test lifecycle");
+    }
+    val currentFrame = stack.pop();
+    if (currentFrame == null) {
+      throw new IllegalStateException("Unbalanced test lifecycle");
+    }
+    currentFrame.deactivate();
+
+    if (!stack.isEmpty()) {
+      stack.peek().activate();
+    }
+
+    Frames.popContext();
+
+  }
+
+  private Stream<RoutesCreatorFactory> routesCreatorFactories() {
+    return ServiceLoader.load(
+        RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
+        .stream()
+        .map(Provider::get);
+  }
+
+
+
 }

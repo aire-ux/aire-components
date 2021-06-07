@@ -11,15 +11,20 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 public class Frames {
 
+  private static final Deque<ExtensionContext> contexts;
+
+  static {
+    contexts = new ArrayDeque<>();
+  }
+
   @SuppressWarnings("unchecked")
   public static Deque<TestFrame> resolveFrameStack(ExtensionContext context) {
     val testClass = context.getRequiredTestClass();
-    return
-        (Deque<TestFrame>)
-            context
-                .getStore(ROOT_AIRE_NAMESPACE)
-                .getOrComputeIfAbsent(
-                    testClass, (Function<Class<?>, Deque<TestFrame>>) aClass -> new ArrayDeque<>());
+    return (Deque<TestFrame>)
+        context
+            .getStore(ROOT_AIRE_NAMESPACE)
+            .getOrComputeIfAbsent(
+                testClass, (Function<Class<?>, Deque<TestFrame>>) aClass -> new ArrayDeque<>());
   }
 
   public static TestFrame resolveCurrentFrame(ExtensionContext context) {
@@ -30,4 +35,23 @@ public class Frames {
     return frame;
   }
 
+  public static ExtensionContext currentContext() {
+    val result = contexts.peek();
+    if (result == null) {
+      throw new IllegalStateException("Invalid test state: no test context");
+    }
+    return result;
+  }
+
+  public static void popContext() {
+    contexts.pop();
+  }
+
+  public static void pushContext(ExtensionContext context) {
+    contexts.push(context);
+  }
+
+  public static TestFrame resolveCurrentFrame() {
+    return resolveCurrentFrame(currentContext());
+  }
 }

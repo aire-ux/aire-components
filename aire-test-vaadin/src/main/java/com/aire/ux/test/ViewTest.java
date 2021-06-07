@@ -13,9 +13,7 @@ import org.junit.platform.commons.annotation.Testable;
 @Testable
 @Documented
 @TestTemplate
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(VaadinViewTemplateInvocationContext.class)
-@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
-public @interface ViewTest {
-  String navigateTo() default Select.default_value;
-}
+public @interface ViewTest {}
