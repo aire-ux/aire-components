@@ -7,7 +7,6 @@ import com.github.mvysny.kaributesting.v10.Routes;
 import com.vaadin.flow.component.UI;
 import java.lang.reflect.AnnotatedElement;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,8 +22,7 @@ public final class TestFrame implements AutoCloseable {
   private final AtomicBoolean alive;
   private final RoutesCreator creator;
 
-  @Getter
-  private final ExtensionContext context;
+  @Getter private final ExtensionContext context;
   private final AtomicReference<Routes> routes;
 
   private String location;

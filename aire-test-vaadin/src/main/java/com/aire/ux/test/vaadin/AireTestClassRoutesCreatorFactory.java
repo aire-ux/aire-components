@@ -3,9 +3,6 @@ package com.aire.ux.test.vaadin;
 import com.aire.ux.test.AireExtension;
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
-import com.aire.ux.test.Utilities;
-import io.sunshower.lambda.Option;
-import java.util.Optional;
 import java.util.logging.Level;
 import lombok.extern.java.Log;
 import lombok.val;
@@ -45,9 +42,9 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
     public com.github.mvysny.kaributesting.v10.Routes create() {
       val elementOpt = context.getElement();
       val routes = new com.github.mvysny.kaributesting.v10.Routes();
-      if(elementOpt.isPresent()) {
+      if (elementOpt.isPresent()) {
         val result = getRoutePackage(elementOpt.get().getAnnotation(Routes.class));
-        if(result != null) {
+        if (result != null) {
           routes.autoDiscoverViews(result);
         }
       } else {
@@ -56,12 +53,11 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
       return routes;
     }
 
-
     private String getRoutePackage(Routes routes) {
-      if(!Void.class.equals(routes.scanClassPackage())) {
+      if (!Void.class.equals(routes.scanClassPackage())) {
         return routes.scanClassPackage().getPackageName();
       }
-      if(!routes.scanPackage().equals(Select.default_value)) {
+      if (!routes.scanPackage().equals(Select.default_value)) {
         return routes.scanPackage();
       }
       return null;

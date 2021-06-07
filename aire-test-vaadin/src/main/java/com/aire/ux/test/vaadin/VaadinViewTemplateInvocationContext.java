@@ -61,8 +61,8 @@ public class VaadinViewTemplateInvocationContext
       val ext = extensionContext.getRequiredTestClass();
       val parameter = parameterContext.getParameter();
       val deque =
-          (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
-              .get(ext);
+          (Deque<TestFrame>)
+              extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE).get(ext);
       val frame = deque.peek();
       return frame != null && frame.hasElementResolver(parameter);
     }
@@ -76,21 +76,16 @@ public class VaadinViewTemplateInvocationContext
       val ext = extensionContext.getRequiredTestClass();
       val parameter = parameterContext.getParameter();
       val deque =
-          (Deque<TestFrame>) extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE)
-              .get(ext);
+          (Deque<TestFrame>)
+              extensionContext.getStore(VaadinExtension.ROOT_AIRE_NAMESPACE).get(ext);
       val frame = deque.peek();
       return frame.getElementResolver(parameter).resolve();
     }
   }
 
-  private static class VaadinViewTestTemplateInvocationContext implements
-      TestTemplateInvocationContext {
-
-    private final ExtensionContext extensionContext;
-
-    public VaadinViewTestTemplateInvocationContext(ExtensionContext extensionContext) {
-      this.extensionContext = extensionContext;
-    }
+  private static final record VaadinViewTestTemplateInvocationContext(
+      ExtensionContext extensionContext)
+      implements TestTemplateInvocationContext {
 
     @Override
     public String getDisplayName(int invocationIndex) {

@@ -11,18 +11,17 @@ import lombok.val;
 
 public class Utilities {
 
-  private Utilities() {
-  }
+  private Utilities() {}
 
   /**
    * @param select the annotation to check
    * @return true if the selector is not null and the selector's value or selector expression are
-   * not the default values
+   *     not the default values
    */
   public static boolean isDefault(Select select) {
     return select != null
         && (select.selector().equals(select.value())
-        && select.selector().equals(Select.default_value));
+            && select.selector().equals(Select.default_value));
   }
 
   public static boolean isDefault(Navigate test) {
