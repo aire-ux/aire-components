@@ -24,7 +24,7 @@
     <vaadin-bom.version>19.0.3</vaadin-bom.version>
     <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
     <!--    <vaadin-bom.version>17.0.11</vaadin-bom.version>-->
-    <arcus.version>1.0.15.Final</arcus.version>
+    <arcus.version>1.0.32.Final</arcus.version>
     <smoothie-map.version>2.0.2</smoothie-map.version>
     <junit-pioneer.version>1.3.8</junit-pioneer.version>
     <spring.version>5.3.5</spring.version>
@@ -49,6 +49,14 @@
         <artifactId>karibu-testing-v10</artifactId>
         <version>${karibu-testing.version}</version>
       </dependency>
+
+
+      <dependency>
+        <groupId>com.github.mvysny.kaributesting</groupId>
+        <artifactId>karibu-testing-v10-spring</artifactId>
+        <version>${karibu-testing.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>io.sunshower.arcus</groupId>

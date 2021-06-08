@@ -1,5 +1,6 @@
 include(
   'aire-css-selectors',
   'aire-test-common',
-  'aire-test-vaadin'
+  'aire-test-vaadin',
+  'aire-test-spring'
 )

@@ -1,5 +1,4 @@
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Context;
@@ -22,7 +21,6 @@ public class NavigationTest {
   static {
     Logger.getGlobal().setLevel(Level.ALL);
   }
-
 
   @Order(1)
   @ViewTest

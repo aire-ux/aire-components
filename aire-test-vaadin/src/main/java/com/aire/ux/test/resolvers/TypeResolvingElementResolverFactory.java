@@ -6,6 +6,7 @@ import com.aire.ux.test.Select;
 import com.aire.ux.test.Utilities;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.arcus.reflect.Reflect;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Parameter;
@@ -54,6 +55,7 @@ public class TypeResolvingElementResolverFactory implements ElementResolverFacto
     }
 
     @Override
+    @SuppressFBWarnings
     @SuppressWarnings("unchecked")
     public <T> T resolve() {
       val result = new ArrayDeque<Element>();

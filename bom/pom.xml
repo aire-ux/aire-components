@@ -23,24 +23,20 @@
 
     <distributionManagement>
         <repository>
-            <id>sunshower-releases</id>
-            <url>http://artifacts.sunshower.cloud/repository/sunshower-releases/</url>
+            <id>sunshower-github</id>
+            <name>Aire-UX Components repository</name>
+            <url>https://maven.pkg.github.com/aire-ux/aire-components</url>
         </repository>
-        <snapshotRepository>
-            <id>sunshower-snapshots</id>
-            <url>http://artifacts.sunshower.cloud/repository/sunshower-snapshots</url>
-        </snapshotRepository>
     </distributionManagement>
+
+
     <repositories>
         <repository>
-            <id>sunshower-snapshots</id>
-            <url>http://artifacts.sunshower.cloud/repository/sunshower-snapshots/</url>
-        </repository>
-
-        <repository>
-            <id>sunshower-releases</id>
-            <url>http://artifacts.sunshower.cloud/repository/sunshower-releases/</url>
+            <id>sunshower-github</id>
+            <name>Sunshower-env Github</name>
+            <url>https://maven.pkg.github.com/sunshower-io/*</url>
         </repository>
     </repositories>
+
 
 </project>
