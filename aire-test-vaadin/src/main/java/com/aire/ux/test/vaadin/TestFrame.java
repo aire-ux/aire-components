@@ -55,9 +55,9 @@ public final class TestFrame implements AutoCloseable {
     if (fopt.isPresent()) {
       val factory = fopt.get();
       MockVaadin.setup(() -> factory.getUIFactory().get(),
-          factory.createServlet(routes()).orElseThrow());
+          factory.createServlet(getRoutes()).orElseThrow());
     } else {
-      MockVaadin.setup(routes());
+      MockVaadin.setup(getRoutes());
     }
 
     restore();
@@ -81,7 +81,7 @@ public final class TestFrame implements AutoCloseable {
     deactivate();
   }
 
-  protected final Routes routes() {
+  protected final Routes getRoutes() {
     val result = this.routes.get();
     if (result == null) {
       throw new IllegalStateException(

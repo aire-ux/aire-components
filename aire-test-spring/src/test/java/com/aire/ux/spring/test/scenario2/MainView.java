@@ -1,4 +1,4 @@
-package com.aire.ux.spring.test.scenario1;
+package com.aire.ux.spring.test.scenario2;
 
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.router.Route;
@@ -8,9 +8,12 @@ import lombok.Getter;
 @Route("main")
 public class MainView extends Main {
 
-  @Inject @Getter private TestService service;
+  @Getter
+  private final TestService service;
 
-  public MainView() {
+  @Inject
+  public MainView(final TestService service) {
     addClassName("main");
+    this.service = service;
   }
 }

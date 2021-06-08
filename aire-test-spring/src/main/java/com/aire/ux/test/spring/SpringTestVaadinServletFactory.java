@@ -33,30 +33,26 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
   @Override
   public Optional<VaadinServlet> createServlet(Routes routes) {
     val context = AireSpringVaadinExtension.getApplicationContext();
-    return Optional.of(new MockSpringServlet(
-        routes,
-        context, () -> getUIFactory().get()) {
-
-      @Override
-      protected VaadinServletService createServletService(
-          DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-        val service = new MockSpringServletService(this,
-            deploymentConfiguration, ctx, uiFactory) {
+    return Optional.of(
+        new MockSpringServlet(routes, context, () -> getUIFactory().get()) {
 
           @Override
-          public Instantiator getInstantiator() {
-            return new MockInstantiator(
-                new SpringInstantiator(this, AireSpringVaadinExtension.getApplicationContext()));
+          protected VaadinServletService createServletService(
+              DeploymentConfiguration deploymentConfiguration) throws ServiceException {
+            val service =
+                new MockSpringServletService(this, deploymentConfiguration, ctx, uiFactory) {
+
+                  @Override
+                  public Instantiator getInstantiator() {
+                    return new MockInstantiator(
+                        new SpringInstantiator(
+                            this, AireSpringVaadinExtension.getApplicationContext()));
+                  }
+                };
+            service.init();
+            routes.register(service.getContext());
+            return service;
           }
-        };
-        service.init();
-        routes.register(service.getContext());
-        return service;
-      }
-
-
-    });
+        });
   }
-
-
 }

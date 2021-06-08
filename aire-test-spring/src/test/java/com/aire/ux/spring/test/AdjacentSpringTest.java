@@ -3,9 +3,9 @@ package com.aire.ux.spring.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.aire.ux.spring.test.scenario1.Scenario1Configuration;
-import com.aire.ux.spring.test.scenario1.MainView;
-import com.aire.ux.spring.test.scenario1.TestService;
+import com.aire.ux.spring.test.scenario2.MainView;
+import com.aire.ux.spring.test.scenario2.Scenario2Configuration;
+import com.aire.ux.spring.test.scenario2.TestService;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
@@ -18,13 +18,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+/**
+ * just want to be sure that running tests against different scenarios works
+ */
 @AireTest
 @EnableSpring
-@Routes(scanClassPackage = TestService.class)
-@ContextConfiguration(classes = Scenario1Configuration.class)
-public class ExploratorySpringTest {
+@Routes(scanClassPackage = com.aire.ux.spring.test.scenario2.TestService.class)
+@ContextConfiguration(classes = Scenario2Configuration.class)
+public class AdjacentSpringTest {
 
-  @Inject private TestService service;
+
+  @Inject
+  private TestService service;
 
   @Test
   void ensureServiceIsInjected() {
