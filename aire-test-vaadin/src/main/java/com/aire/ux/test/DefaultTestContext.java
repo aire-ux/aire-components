@@ -19,6 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class DefaultTestContext implements TestContext {
 
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> Optional<T> selectFirst(String selector, Class<T> type) {
+    return selectComponents(selector)
+        .stream().filter(t -> type.isAssignableFrom(t.getClass()))
+        .map(t -> (T) t)
+        .findFirst();
+  }
+
   @NotNull
   @Override
   public List<?> selectComponents(Class<?>... types) {
@@ -106,12 +115,12 @@ public class DefaultTestContext implements TestContext {
   @Override
   public List<?> selectComponents(String selector) {
     return new CssSelectorParser()
-            .parse(selector)
-            .plan(DefaultPlanContext.getInstance())
-            .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter())
-            .stream()
-            .flatMap(t -> t.getComponent().stream())
-            .collect(Collectors.toList());
+        .parse(selector)
+        .plan(DefaultPlanContext.getInstance())
+        .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter())
+        .stream()
+        .flatMap(t -> t.getComponent().stream())
+        .collect(Collectors.toList());
   }
 
   @Override
