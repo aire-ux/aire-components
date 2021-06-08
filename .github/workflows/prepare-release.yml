@@ -72,7 +72,7 @@ jobs:
           echo ::set-output name=result::$CURRENT_MAJOR_VERSION.$CURRENT_MINOR_VERSION.$BUILD_NUMBER.Final
 
 
-      - name: Increment Arcus BOM project version
+      - name: Increment Aire Component BOM project version
         run: >-
           mvn versions:set -f bom
           -DnewVersion=${{ steps.finalVersion.outputs.result }}
@@ -80,17 +80,18 @@ jobs:
           -DnewVersion=${{ steps.finalVersion.outputs.result }}
           -Dmaven-repo.github.username=${{secrets.MAVEN_REPOSITORY_USERNAME}}
           -Dmaven-repo.github.password=${{secrets.MAVEN_REPOSITORY_PASSWORD}}
-      - name: Increment Arcus Property version
+
+      - name: Increment Aire Component Property version
         run: >-
           mvn versions:set-property -f bom
-          -Dproperty=arcus.version -DnewVersion=${{ steps.finalVersion.outputs.result }}
+          -Dproperty=aire-ux.version -DnewVersion=${{ steps.finalVersion.outputs.result }}
           --settings bom/settings/settings.xml
           -DnewVersion=${{ steps.finalVersion.outputs.result }}
           -Dmaven-repo.github.username=${{secrets.MAVEN_REPOSITORY_USERNAME}}
           -Dmaven-repo.github.password=${{secrets.MAVEN_REPOSITORY_PASSWORD}}
 
 
-      - name: Increment Arcus Build Number
+      - name: Increment Aire-UX Build Number
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
@@ -112,7 +113,7 @@ jobs:
 
 
 
-      - name: Build And Deploy Arcus Projects
+      - name: Build And Deploy Aire-UX Projects
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
@@ -144,7 +145,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: arcus-${{ env.final_version }}
-          release_name: Arcus-release-version-${{ env.final_version }}
+          release_name: Aire-UX-release-version-${{ env.final_version }}
 
           body: |
             ** Changes in arcus-${{ env.final_version }} **
@@ -190,7 +191,7 @@ jobs:
           &&
           mvn versions:set-property -f bom
           --settings bom/settings/settings.xml
-          -Dproperty=arcus.version -DnewVersion=${{ steps.snapshotVersion.outputs.result }}
+          -Dproperty=aire-ux.version -DnewVersion=${{ steps.snapshotVersion.outputs.result }}
           -Dmaven-repo.github.username=${{secrets.MAVEN_REPOSITORY_USERNAME}}
           -Dmaven-repo.github.password=${{secrets.MAVEN_REPOSITORY_PASSWORD}}
           &&
@@ -199,7 +200,7 @@ jobs:
           -Dmaven-repo.github.username=${{secrets.MAVEN_REPOSITORY_USERNAME}}
           -Dmaven-repo.github.password=${{secrets.MAVEN_REPOSITORY_PASSWORD}}
 
-      - name: Increment Arcus Build Number to Snapshot
+      - name: Increment Aire-UX Build Number to Snapshot
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
@@ -219,7 +220,7 @@ jobs:
 
 
 
-      - name: Build Arcus Projects
+      - name: Build Aire-UX Projects
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
