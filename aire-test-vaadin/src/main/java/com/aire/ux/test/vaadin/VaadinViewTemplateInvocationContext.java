@@ -84,8 +84,7 @@ public class VaadinViewTemplateInvocationContext
   }
 
   private static final record VaadinViewTestTemplateInvocationContext(
-      ExtensionContext extensionContext)
-      implements TestTemplateInvocationContext {
+      ExtensionContext extensionContext) implements TestTemplateInvocationContext {
 
     @Override
     public String getDisplayName(int invocationIndex) {

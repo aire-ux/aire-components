@@ -14,8 +14,6 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 /**
  * lifecycle is:
@@ -124,5 +122,4 @@ public class VaadinExtension
         .stream()
         .map(Provider::get);
   }
-
 }

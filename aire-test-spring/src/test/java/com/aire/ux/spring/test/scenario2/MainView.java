@@ -8,8 +8,7 @@ import lombok.Getter;
 @Route("main")
 public class MainView extends Main {
 
-  @Getter
-  private final TestService service;
+  @Getter private final TestService service;
 
   @Inject
   public MainView(final TestService service) {

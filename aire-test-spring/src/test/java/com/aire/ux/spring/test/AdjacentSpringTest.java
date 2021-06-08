@@ -18,18 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-/**
- * just want to be sure that running tests against different scenarios works
- */
+/** just want to be sure that running tests against different scenarios works */
 @AireTest
 @EnableSpring
 @Routes(scanClassPackage = com.aire.ux.spring.test.scenario2.TestService.class)
 @ContextConfiguration(classes = Scenario2Configuration.class)
 public class AdjacentSpringTest {
 
-
-  @Inject
-  private TestService service;
+  @Inject private TestService service;
 
   @Test
   void ensureServiceIsInjected() {

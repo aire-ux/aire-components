@@ -10,7 +10,6 @@ public interface TestContext {
 
   <T> Optional<T> selectFirst(String selector, Class<T> type);
 
-
   /**
    * @param types the collection of types to select. If this list is empty or null, return
    *     <i>all</i> matching types

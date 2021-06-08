@@ -24,8 +24,7 @@ public final class TestFrame implements AutoCloseable {
   private final AtomicBoolean alive;
   private final RoutesCreator creator;
 
-  @Getter
-  private final ExtensionContext context;
+  @Getter private final ExtensionContext context;
   private final AtomicReference<Routes> routes;
 
   private String location;
@@ -44,7 +43,8 @@ public final class TestFrame implements AutoCloseable {
 
   static Optional<VaadinServletFactory> servletFactory() {
     return ServiceLoader.load(
-        VaadinServletFactory.class, Thread.currentThread().getContextClassLoader()).findFirst();
+            VaadinServletFactory.class, Thread.currentThread().getContextClassLoader())
+        .findFirst();
   }
 
   void activate() {
@@ -54,8 +54,8 @@ public final class TestFrame implements AutoCloseable {
     val fopt = servletFactory();
     if (fopt.isPresent()) {
       val factory = fopt.get();
-      MockVaadin.setup(() -> factory.getUIFactory().get(),
-          factory.createServlet(getRoutes()).orElseThrow());
+      MockVaadin.setup(
+          () -> factory.getUIFactory().get(), factory.createServlet(getRoutes()).orElseThrow());
     } else {
       MockVaadin.setup(getRoutes());
     }

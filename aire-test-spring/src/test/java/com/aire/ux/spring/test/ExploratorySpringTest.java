@@ -29,8 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = Scenario1Configuration.class)
 public class ExploratorySpringTest {
 
-  @Inject
-  private TestService service;
+  @Inject private TestService service;
 
   @ViewTest
   @Navigate("main")
@@ -40,8 +39,9 @@ public class ExploratorySpringTest {
       @Select(".main > vaadin-button") Button button,
       @Context TestContext context) {
     assertNotNull(applicationContext);
-    assertEquals(0, initialView.getComponent()
-        .map(component -> (MainView) component).orElseThrow().getCount());
+    assertEquals(
+        0,
+        initialView.getComponent().map(component -> (MainView) component).orElseThrow().getCount());
     button.click();
     val view = context.selectFirst(".main", MainView.class).get();
     assertEquals(view.getCount(), 1);
@@ -67,5 +67,4 @@ public class ExploratorySpringTest {
     assertNotNull(mainView);
     assertEquals(mainView.getComponent().get().getClass(), MainView.class);
   }
-
 }

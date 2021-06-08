@@ -15,8 +15,7 @@ public class MainView extends Main {
 
   private final Button button;
   private final AtomicInteger count;
-  @Getter
-  private final TestService service;
+  @Getter private final TestService service;
 
   @Inject
   public MainView(@Nonnull TestService testService) {
@@ -24,14 +23,15 @@ public class MainView extends Main {
     addClassName("main");
     count = new AtomicInteger();
     button = new Button("Waddup");
-    button.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> {
-      count.incrementAndGet();
-    });
+    button.addClickListener(
+        (ComponentEventListener<ClickEvent<Button>>)
+            event -> {
+              count.incrementAndGet();
+            });
     add(button);
   }
 
   public int getCount() {
     return count.get();
   }
-
 }
