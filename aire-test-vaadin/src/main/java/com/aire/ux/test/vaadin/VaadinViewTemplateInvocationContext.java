@@ -1,6 +1,7 @@
 package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireTest;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.reflect.Method;
 import java.util.Deque;
 import java.util.List;
@@ -83,6 +84,7 @@ public class VaadinViewTemplateInvocationContext
     }
   }
 
+  @SuppressFBWarnings
   private static final record VaadinViewTestTemplateInvocationContext(
       ExtensionContext extensionContext) implements TestTemplateInvocationContext {
 
