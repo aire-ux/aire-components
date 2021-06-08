@@ -1,0 +1,20 @@
+
+dependencies {
+
+    /**
+     * project api dependencies
+     */
+    api project(':aire-test-vaadin')
+
+
+    /**
+     *
+     */
+    api 'com.vaadin:vaadin-spring'
+    api 'org.springframework:spring-test'
+    api 'org.springframework:spring-context'
+
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'com.github.mvysny.kaributesting:karibu-testing-v10-spring'
+
+}
