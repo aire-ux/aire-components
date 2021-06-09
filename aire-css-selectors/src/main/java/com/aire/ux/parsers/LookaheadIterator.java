@@ -1,6 +1,5 @@
 package com.aire.ux.parsers;
 
-import com.google.common.collect.Streams;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
@@ -73,7 +72,7 @@ final class DefaultLookaheadIterator<T> implements LookaheadIterator<T> {
 
   @Override
   public Stream<T> toStream() {
-    return Streams.concat(
+    return Stream.concat(
         StreamSupport.stream(lookback.spliterator(), false),
         StreamSupport.stream(
             Spliterators.spliteratorUnknownSize(delegate, Spliterator.ORDERED), false));

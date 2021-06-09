@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -38,8 +40,9 @@ public class AttributeSelectorEvaluatorFactory extends AbstractMemoizingEvaluato
       val children = node.getChildren();
       if (children.isEmpty()) {
         throw new IllegalArgumentException(
-            "Somehow the parser did not catch an empty attribute selector list (node: %s)"
-                .formatted(node));
+            format(
+                "Somehow the parser did not catch an empty attribute selector list (node: %s)",
+                node));
       }
       /** prevent children from narrowing further epochs */
       val results = node.clearChildren();

@@ -40,15 +40,13 @@ class ClassSelectorEvaluatorFactoryTest extends EvaluatorFactoryTestCase {
   void ensureNestedSelectorsAreMatched() {
 
     val expected =
-        """
-
-        <body>
-          <div class="frapepr">
-
-          </div>
-          <porglebee class="frapper">
-          </porglebee>
-        """;
+        "\n"
+            + "<body>\n"
+            + "  <div class=\"frapepr\">\n"
+            + "\n"
+            + "  </div>\n"
+            + "  <porglebee class=\"frapper\">\n"
+            + "  </porglebee>\n";
 
     val node =
         node("body")

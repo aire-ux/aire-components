@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class StateSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -37,7 +37,7 @@ public class StateSelectorEvaluatorFactory implements EvaluatorFactory {
 
     final String state;
 
-    StateSelectorEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+    StateSelectorEvaluator(@Nonnull SyntaxNode<Symbol, Token> node, @Nonnull PlanContext context) {
       super(node, context);
       this.state = node.getSource().getLexeme();
     }

@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -26,7 +28,7 @@ public class IdSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFactor
     val children = node.getChildren();
     if (children.size() != 1) {
       throw new IllegalStateException(
-          "Expected exactly one child <identifier>.  Got: %s".formatted(children));
+          format("Expected exactly one child <identifier>.  Got: %s", children));
     }
 
     /**

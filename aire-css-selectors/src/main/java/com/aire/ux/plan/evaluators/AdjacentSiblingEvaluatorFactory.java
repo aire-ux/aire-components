@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -59,7 +61,7 @@ public class AdjacentSiblingEvaluatorFactory implements EvaluatorFactory {
 
     @Override
     public String toString() {
-      return "+ %s".formatted(delegate.toString());
+      return format("+ %s", delegate.toString());
     }
   }
 }

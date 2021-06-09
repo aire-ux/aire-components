@@ -6,6 +6,7 @@ import static com.aire.ux.select.css.TokenPatterns.STRING_FORM_1;
 import static com.aire.ux.select.css.TokenPatterns.STRING_FORM_2;
 import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
 import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
+import static java.lang.String.format;
 
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -18,13 +19,13 @@ import lombok.val;
 public enum CssSelectorToken implements Type {
 
   /** identifier: an entity name */
-  String("%s|%s".formatted(STRING_FORM_1, STRING_FORM_2)),
+  String(format("%s|%s", STRING_FORM_1, STRING_FORM_2)),
 
   /** Numeric value */
   Numeric(NUMBER),
 
   /** Lex unclosed strings */
-  UnclosedString("%s|%s".formatted(UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
+  UnclosedString(format("%s|%s", UNCLOSED_STRING_FORM_1, UNCLOSED_STRING_FORM_2)),
 
   /** strict equality operator <code>=</code> */
   StrictEqualityOperator("="),
@@ -45,7 +46,7 @@ public enum CssSelectorToken implements Type {
   SubstringOperator("\\*="),
 
   /** */
-  FunctionStart("%s\\(".formatted(IDENTIFIER)),
+  FunctionStart(format("%s\\(", IDENTIFIER)),
 
   /** */
   ApplicationEnd("\\)"),
@@ -60,15 +61,15 @@ public enum CssSelectorToken implements Type {
   IdentifierSelector("\\#"),
 
   /** */
-  AdditionOperator("\s*\\+"),
+  AdditionOperator("\\s*\\+"),
 
   /** greater-than */
-  GreaterThan("\s*>"),
+  GreaterThan("\\s*>"),
 
-  Comma("\s*,"),
+  Comma("\\s*,"),
 
   /** tilde */
-  Tilde("\s*~(?!=)"),
+  Tilde("\\s*~(?!=)"),
 
   /** universal operator */
   Universal("\\*"),
@@ -77,19 +78,19 @@ public enum CssSelectorToken implements Type {
   Not(":not\\("),
 
   /** at keyword such as @import */
-  AtKeyword("@%s".formatted(IDENTIFIER)),
+  AtKeyword(format("@%s", IDENTIFIER)),
 
   /** percentage operator */
   Percentage(NUMBER + "%"),
 
   /** dimension, such as 2em, 1rem, 0.1em */
-  Dimension("%s%s".formatted(NUMBER, IDENTIFIER)),
+  Dimension(format("%s%s", NUMBER, IDENTIFIER)),
 
   /** class operator */
   Class("\\."),
 
   /** whitespace */
-  Whitespace("\s+"),
+  Whitespace("\\s+"),
 
   /** pseudo-class prefix */
   PseudoClass("::"),
@@ -136,7 +137,7 @@ public enum CssSelectorToken implements Type {
   }
 
   private static void bufferTokenPattern(StringBuilder buffer, CssSelectorToken token) {
-    buffer.append("|(?<%s>%s)".formatted(token.name(), token.pattern));
+    buffer.append(format("|(?<%s>%s)", token.name(), token.pattern));
   }
 
   @Nonnull
@@ -147,7 +148,7 @@ public enum CssSelectorToken implements Type {
       synchronized (this) {
         result = cachedPattern;
         if (result == null) {
-          result = cachedPattern = Pattern.compile("(?<%s>%s)".formatted(name(), pattern));
+          result = cachedPattern = Pattern.compile(format("(?<%s>%s)", name(), pattern));
         }
       }
     }

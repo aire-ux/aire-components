@@ -1,5 +1,7 @@
 package com.aire.ux.parsers.ast;
 
+import static java.lang.String.format;
+
 import java.util.List;
 import lombok.Getter;
 import lombok.val;
@@ -31,14 +33,11 @@ public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
   public String toString() {
     val content = getContent();
 
-    return """
-        %s[symbol:%s, name: %s]{%s}
-        """
-        .strip()
-        .formatted(
-            getClass().getSimpleName(),
-            symbol,
-            name,
-            content == null ? null : content.replaceAll("\\n", " "));
+    return format(
+        "%s[symbol:%s, name: %s]{%s}",
+        getClass().getSimpleName(),
+        symbol,
+        name,
+        content == null ? null : content.replaceAll("\\n", " "));
   }
 }

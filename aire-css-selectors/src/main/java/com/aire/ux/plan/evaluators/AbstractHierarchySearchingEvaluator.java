@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -59,6 +61,6 @@ public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
 
   @Override
   public String toString() {
-    return "%s[%s]".formatted(getClass().getSimpleName(), node.getSymbol());
+    return format("%s[%s]", getClass().getSimpleName(), node.getSymbol());
   }
 }

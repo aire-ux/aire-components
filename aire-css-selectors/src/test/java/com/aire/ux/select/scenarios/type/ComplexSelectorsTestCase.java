@@ -1,6 +1,7 @@
 package com.aire.ux.select.scenarios.type;
 
 import static com.aire.ux.test.Nodes.node;
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +35,7 @@ public class ComplexSelectorsTestCase extends ScenarioTestCase {
       result.setState(state);
     }
 
-    val selectors = eval("* :%s".formatted(state.toSymbol().name()), document);
+    val selectors = eval(format("* :%s", state.toSymbol().name()), document);
     val t2 = System.currentTimeMillis();
     System.out.println("Ran: " + (t2 - t1));
     assertEquals(65, selectors.size());

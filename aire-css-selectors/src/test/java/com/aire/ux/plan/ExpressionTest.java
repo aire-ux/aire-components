@@ -1,5 +1,6 @@
 package com.aire.ux.plan;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -71,7 +72,7 @@ class ExpressionTest extends TestCase {
   }
 
   Expression parse(String value) {
-    val result = parser.parse(":nth-child(%s)".formatted(value));
+    val result = parser.parse(format(":nth-child(%s)", value));
     val search = Symbol.symbol("nth-child");
     return result
         .getSyntaxTree()
@@ -88,6 +89,6 @@ class ExpressionTest extends TestCase {
             })
         .fmap(t -> Expression.parse(t.getChildren()))
         .orElseThrow(
-            () -> new IllegalArgumentException("Failed to parse expression '%s'".formatted(value)));
+            () -> new IllegalArgumentException(format("Failed to parse expression '%s'", value)));
   }
 }

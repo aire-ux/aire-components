@@ -34,7 +34,8 @@ public class CssSelectorParserTest {
 
     public static boolean isCombinator(SyntaxNode<Symbol, Token> node) {
       val t = node.getSymbol();
-      if (t instanceof ElementSymbol type) {
+      if (t instanceof ElementSymbol) {
+        val type = (ElementSymbol) t;
         switch (type) {
           case ChildSelector:
           case AdjacentSiblingSelector:

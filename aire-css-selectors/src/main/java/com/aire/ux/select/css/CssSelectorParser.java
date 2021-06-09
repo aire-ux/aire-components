@@ -25,6 +25,7 @@ import static com.aire.ux.select.css.CssSelectorToken.SuffixOperator;
 import static com.aire.ux.select.css.CssSelectorToken.Tilde;
 import static com.aire.ux.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
+import static java.lang.String.format;
 
 import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.NamedSyntaxNode;
@@ -201,12 +202,14 @@ public class CssSelectorParser {
     if (tokens.hasNext()) {
       val next = tokens.next();
       throw new IllegalArgumentException(
-          "Unexpected token '%s' at (%d, %d), lexeme: %s"
-              .formatted(next.getType(), next.getStart(), next.getEnd(), next.getLexeme()));
+          format(
+              "Unexpected token '%s' at (%d, %d), lexeme: %s",
+              next.getType(), next.getStart(), next.getEnd(), next.getLexeme()));
     }
     throw new IllegalStateException(
-        "Bad state.  Remaining tokens: [%s]"
-            .formatted(tokens.toStream().map(t -> t.toString()).collect(Collectors.joining(","))));
+        format(
+            "Bad state.  Remaining tokens: [%s]",
+            tokens.toStream().map(t -> t.toString()).collect(Collectors.joining(","))));
   }
 
   /**
@@ -237,7 +240,7 @@ public class CssSelectorParser {
   private void expectAndDiscard(LookaheadIterator<Token> tokens, CssSelectorToken token) {
     if (!tokens.hasNext()) {
       throw new IllegalArgumentException(
-          "Error: expected %s (%s), got EOF".formatted(token, token.getRegularExpression()));
+          format("Error: expected %s (%s), got EOF", token, token.getRegularExpression()));
     }
 
     val next = tokens.next();
@@ -245,8 +248,9 @@ public class CssSelectorParser {
 
     if (token != type) {
       throw new IllegalArgumentException(
-          "Error: expected %s, got %s at (%d, %d): lexeme: %s"
-              .formatted(token, type, next.getStart(), next.getEnd(), next.getLexeme()));
+          format(
+              "Error: expected %s, got %s at (%d, %d): lexeme: %s",
+              token, type, next.getStart(), next.getEnd(), next.getLexeme()));
     }
   }
 
@@ -476,8 +480,9 @@ public class CssSelectorParser {
         return result;
       default:
         throw new IllegalArgumentException(
-            "Unknown token in combinator position: %s at (%d,%d): %s"
-                .formatted(token.getType(), token.getStart(), token.getEnd(), token.getLexeme()));
+            format(
+                "Unknown token in combinator position: %s at (%d,%d): %s",
+                token.getType(), token.getStart(), token.getEnd(), token.getLexeme()));
     }
   }
 
@@ -493,7 +498,7 @@ public class CssSelectorParser {
     val next = tokens.peek();
     if (next.getType() != CssSelectorToken.Comma) {
       throw new IllegalArgumentException(
-          "Error: expected ',', got %s (%s)".formatted(next.getType(), next.getLexeme()));
+          format("Error: expected ',', got %s (%s)", next.getType(), next.getLexeme()));
     }
     val node = new CssSyntaxNode(ElementSymbol.Union, tokens.next());
     return node;
@@ -528,7 +533,7 @@ public class CssSelectorParser {
       LookaheadIterator<Token> tokens, CssSelectorToken... types) {
     if (!tokens.hasNext()) {
       val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
-      throw new IllegalArgumentException("Expected one of [%s], got EOF".formatted(expected));
+      throw new IllegalArgumentException(format("Expected one of [%s], got EOF", expected));
     }
     val next = tokens.peek();
     val nextType = (CssSelectorToken) next.getType();
@@ -539,7 +544,7 @@ public class CssSelectorParser {
     }
     val expected = Arrays.stream(types).map(t -> t.name()).collect(Collectors.joining(","));
     throw new IllegalArgumentException(
-        "Expected one of [%s], got %s (%s)".formatted(expected, nextType, next));
+        format("Expected one of [%s], got %s (%s)", expected, nextType, next));
   }
 
   /** the set of known CSS selector symbols, along with some that make processing the AST nicer */
@@ -674,11 +679,7 @@ public class CssSelectorParser {
     public String toString() {
       val content = getContent();
 
-      return """
-          css[symbol:%s, name: %s]{%s}
-          """
-          .strip()
-          .formatted(getSymbol(), getName(), getSource());
+      return format("css[symbol:%s, name: %s]{%s}", getSymbol(), getName(), getSource());
     }
   }
 }

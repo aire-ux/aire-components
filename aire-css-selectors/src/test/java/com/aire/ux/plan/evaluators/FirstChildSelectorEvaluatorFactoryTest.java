@@ -11,14 +11,7 @@ class FirstChildSelectorEvaluatorFactoryTest extends ScenarioTestCase {
   @Test
   void ensureFirstChildWorks() {
     val node =
-        parseString(
-            """
-        <html>
-          <head></head>
-          <body>
-          </body>
-        </html>
-        """);
+        parseString("<html>\n" + "  <head></head>\n" + "  <body>\n" + "  </body>\n" + "</html>\n");
 
     val result = eval(":first-child", node);
     assertEquals(1, result.size());

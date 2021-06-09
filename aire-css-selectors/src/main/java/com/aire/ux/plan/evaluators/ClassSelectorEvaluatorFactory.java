@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -50,7 +52,7 @@ public class ClassSelectorEvaluatorFactory extends AbstractMemoizingEvaluatorFac
 
     @Override
     public String toString() {
-      return ".%s".formatted(classValue);
+      return format(".%s", classValue);
     }
   }
 }

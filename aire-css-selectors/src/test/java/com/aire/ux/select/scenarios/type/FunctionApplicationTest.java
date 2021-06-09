@@ -54,5 +54,14 @@ public class FunctionApplicationTest extends TestCase {
     return Set.of(descriptor.methods).containsAll(Set.of(methods));
   }
 
-  static record MethodDescriptor(String expression, String... methods) {}
+  static class MethodDescriptor {
+
+    private final String[] methods;
+    private final String expression;
+
+    MethodDescriptor(String expression, String... methods) {
+      this.methods = methods;
+      this.expression = expression;
+    }
+  }
 }

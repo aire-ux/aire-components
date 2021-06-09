@@ -1,5 +1,7 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.plan.Evaluator;
@@ -36,7 +38,7 @@ public class TypeSelectorEvaluatorFactory implements EvaluatorFactory {
     }
 
     public String toString() {
-      return "<type: selecting %s.  Cost: N>".formatted(node.getSource().getLexeme());
+      return format("<type: selecting %s.  Cost: N>", node.getSource().getLexeme());
     }
   }
 }

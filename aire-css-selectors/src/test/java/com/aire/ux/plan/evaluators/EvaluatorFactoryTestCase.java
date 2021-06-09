@@ -1,5 +1,6 @@
 package com.aire.ux.plan.evaluators;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.aire.ux.plan.DefaultPlanContext;
@@ -34,7 +35,7 @@ public abstract class EvaluatorFactoryTestCase extends TestCase {
     val ts = nodes.stream().map(t -> t.getType()).collect(Collectors.toSet());
     for (val t : types) {
       if (!ts.contains(t)) {
-        fail("Expected type: '%s' out of %s".formatted(t, ts));
+        fail(format("Expected type: '%s' out of %s", t, ts));
       }
     }
   }

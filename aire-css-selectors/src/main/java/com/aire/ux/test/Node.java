@@ -1,6 +1,7 @@
 package com.aire.ux.test;
 
 import static com.aire.ux.test.Nodes.node;
+import static java.lang.String.format;
 
 import com.aire.ux.parsers.ast.Symbol;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -14,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Node {
 
@@ -188,7 +189,7 @@ public class Node {
     for (val child : node.children) {
       writeNode(child, result, depth + 1);
     }
-    result.append(indent).append("</%s>".formatted(node.type)).append("\n");
+    result.append(indent).append(format("</%s>", node.type)).append("\n");
   }
 
   public String getAttribute(String key) {
@@ -277,7 +278,7 @@ public class Node {
 
     @Nullable
     @Override
-    public Node getParent(@NotNull Node current) {
+    public Node getParent(@Nonnull Node current) {
       return current.parent;
     }
 
@@ -314,18 +315,18 @@ public class Node {
     }
 
     @Override
-    public void setState(@NotNull Node element, @NotNull State state) {
+    public void setState(@Nonnull Node element, @Nonnull State state) {
       element.setState(state);
     }
 
     @Override
-    public boolean hasState(@NotNull Node element, @NotNull State state) {
+    public boolean hasState(@Nonnull Node element, @Nonnull State state) {
       return element.hasState(state);
     }
 
     @Nullable
     @Override
-    public Node getSucceedingSibling(@NotNull Node element) {
+    public Node getSucceedingSibling(@Nonnull Node element) {
       val parent = element.parent;
       if (parent != null) {
         val children = parent.children;

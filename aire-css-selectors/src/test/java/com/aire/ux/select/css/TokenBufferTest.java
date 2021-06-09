@@ -34,7 +34,7 @@ class TokenBufferTest {
   @Test
   void ensureWhitespaceIsChompedCorrectlyForSelectorGroup() {
     val expr = "hello, \t world";
-    expectTokens(expr, Identifier, Comma, Whitespace, Whitespace, Identifier);
+    expectTokens(expr, Identifier, Comma, Whitespace, Identifier);
   }
 
   @Test

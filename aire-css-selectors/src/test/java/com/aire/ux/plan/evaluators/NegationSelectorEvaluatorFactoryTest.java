@@ -11,11 +11,7 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
   @Test
   void ensureSimpleTypeNegationSelectsCorrectNodes() {
-    val node = parseString("""
-        <html>
-          <body></body>
-        </html>
-        """);
+    val node = parseString("<html>\n" + "  <body></body>\n" + "</html>\n");
 
     val result = eval(":not(body)", node);
     assertEquals(1, result.size());
@@ -24,11 +20,7 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
   @Test
   void ensureSimpleTypeNegationSelectsCorrectNodes2() {
-    val node = parseString("""
-        <html>
-          <body></body>
-        </html>
-        """);
+    val node = parseString("<html>\n" + "  <body></body>\n" + "</html>\n");
 
     val result = eval(":not(html)", node);
     assertEquals(1, result.size());
@@ -38,13 +30,7 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
   @Test
   void ensureSelectingNegationOnClassWorks() {
 
-    val node =
-        parseString(
-            """
-        <html>
-          <body class="coolbeans"></body>
-        </html>
-        """);
+    val node = parseString("<html>\n" + "  <body class=\"coolbeans\"></body>\n" + "</html>\n");
 
     val result = eval(":not(.coolbeans)", node);
     assertEquals(1, result.size());
@@ -54,13 +40,7 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
   @Test
   void ensureSelectingNegationOnClassWorks2() {
 
-    val node =
-        parseString(
-            """
-        <html class="coolbeans">
-          <body></body>
-        </html>
-        """);
+    val node = parseString("<html class=\"coolbeans\">\n" + "  <body></body>\n" + "</html>\n");
 
     val result = eval(":not(.coolbeans)", node);
     assertEquals(1, result.size());
@@ -72,22 +52,20 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
     val node =
         parseString(
-            """
-        <html class="coolbeans">
-          <body>
-            <ul>
-              <li class="first">
-              </li>
-              <li class="second">
-                <a>one</a>
-              </li>
-              <li class="third">
-                <a>two</a>
-              </li>
-            </ul>
-          </body>
-        </html>
-        """);
+            "<html class=\"coolbeans\">\n"
+                + "  <body>\n"
+                + "    <ul>\n"
+                + "      <li class=\"first\">\n"
+                + "      </li>\n"
+                + "      <li class=\"second\">\n"
+                + "        <a>one</a>\n"
+                + "      </li>\n"
+                + "      <li class=\"third\">\n"
+                + "        <a>two</a>\n"
+                + "      </li>\n"
+                + "    </ul>\n"
+                + "  </body>\n"
+                + "</html>\n");
 
     val result = eval("li:not(.first):not(li.third)", node);
     assertEquals(1, result.size());
@@ -99,22 +77,20 @@ class NegationSelectorEvaluatorFactoryTest extends ScenarioTestCase {
 
     val node =
         parseString(
-            """
-        <html class="coolbeans">
-          <body>
-            <ul>
-              <li class="first">
-              </li>
-              <li class="second">
-                <a>one</a>
-              </li>
-              <li class="third">
-                <a>two</a>
-              </li>
-            </ul>
-          </body>
-        </html>
-        """);
+            "<html class=\"coolbeans\">\n"
+                + "  <body>\n"
+                + "    <ul>\n"
+                + "      <li class=\"first\">\n"
+                + "      </li>\n"
+                + "      <li class=\"second\">\n"
+                + "        <a>one</a>\n"
+                + "      </li>\n"
+                + "      <li class=\"third\">\n"
+                + "        <a>two</a>\n"
+                + "      </li>\n"
+                + "    </ul>\n"
+                + "  </body>\n"
+                + "</html>\n");
 
     val result = eval("li:not(.first)", node);
     assertEquals(2, result.size());

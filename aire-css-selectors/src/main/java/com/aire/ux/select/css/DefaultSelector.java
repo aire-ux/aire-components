@@ -1,5 +1,7 @@
 package com.aire.ux.select.css;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.AbstractSyntaxTree;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
@@ -163,12 +165,12 @@ public final class DefaultSelector implements Selector {
           head,
           null,
           (node, list) -> {
-            if (node.evaluator instanceof AutoCloseable closeable) {
+            if (node.evaluator instanceof AutoCloseable) {
               try {
-                closeable.close();
+                ((AutoCloseable) node.evaluator).close();
               } catch (Exception ex) {
                 throw new IllegalStateException(
-                    "Unexpected exception: %s".formatted(ex.getMessage()), ex);
+                    format("Unexpected exception: %s", ex.getMessage()), ex);
               }
             }
             return null;

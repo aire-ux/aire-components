@@ -5,6 +5,7 @@ import static com.aire.ux.select.css.CssSelectorToken.Identifier;
 import static com.aire.ux.select.css.CssSelectorToken.Minus;
 import static com.aire.ux.select.css.CssSelectorToken.Numeric;
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 
 import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.Symbol;
@@ -29,7 +30,7 @@ public interface Expression extends Function<Integer, Integer> {
    * @param tokens the elements to evaluate this against
    * @return a possibly empty, never null list of elements
    */
-  public static Expression parse(List<SyntaxNode<Symbol, Token>> tokens) {
+  static Expression parse(List<SyntaxNode<Symbol, Token>> tokens) {
     val ts = LookaheadIterator.wrap(tokens.iterator());
     return parse(ts);
   }
@@ -133,13 +134,14 @@ public interface Expression extends Function<Integer, Integer> {
       LookaheadIterator<SyntaxNode<Symbol, Token>> toks, Type... types) {
     if (!toks.hasNext()) {
       throw new IllegalArgumentException(
-          "Error: expected one of %s, got EOF".formatted(Arrays.toString(types)));
+          format("Error: expected one of %s, got EOF", Arrays.toString(types)));
     }
 
     if (!is(toks, types)) {
       throw new IllegalArgumentException(
-          "Expected one of %s, got '%s'"
-              .formatted(Arrays.toString(types), toks.peek().getSource().getType()));
+          format(
+              "Expected one of %s, got '%s'",
+              Arrays.toString(types), toks.peek().getSource().getType()));
     }
     return toks.next();
   }
@@ -157,7 +159,7 @@ public interface Expression extends Function<Integer, Integer> {
     return false;
   }
 
-  static final class AlgebraicExpression implements Expression {
+  final class AlgebraicExpression implements Expression {
 
     final Expression constant;
     final Expression variable;
@@ -172,7 +174,7 @@ public interface Expression extends Function<Integer, Integer> {
     }
 
     public String toString() {
-      return "Expr(alg: [const: %s], [alg: %s])".formatted(constant, variable);
+      return format("Expr(alg: [const: %s], [alg: %s])", constant, variable);
     }
 
     @Override
@@ -181,11 +183,17 @@ public interface Expression extends Function<Integer, Integer> {
     }
   }
 
-  static record Constant(int value) implements Expression {
+  class Constant implements Expression {
+
+    final int value;
+
+    Constant(int value) {
+      this.value = value;
+    }
 
     @Override
     public String toString() {
-      return "Expr(const: %d)".formatted(value);
+      return format("Expr(const: %d)", value);
     }
 
     @Override
@@ -194,11 +202,17 @@ public interface Expression extends Function<Integer, Integer> {
     }
   }
 
-  static record Variable(String name) implements Expression {
+  class Variable implements Expression {
+
+    final String name;
+
+    Variable(String name) {
+      this.name = name;
+    }
 
     @Override
     public String toString() {
-      return "Expr(variable: %s)".formatted(name);
+      return format("Expr(variable: %s)", name);
     }
 
     @Override
@@ -208,11 +222,17 @@ public interface Expression extends Function<Integer, Integer> {
   }
 
   @SuppressFBWarnings
-  static record Negation(Expression expression) implements Expression {
+  final class Negation implements Expression {
+
+    private final Expression expression;
+
+    Negation(Expression expression) {
+      this.expression = expression;
+    }
 
     @Override
     public String toString() {
-      return "-%s".formatted(expression);
+      return format("-%s", expression);
     }
 
     @Override
@@ -222,11 +242,18 @@ public interface Expression extends Function<Integer, Integer> {
   }
 
   @SuppressFBWarnings
-  static record AdditionExpression(Expression lhs, Expression rhs) implements Expression {
+  final class AdditionExpression implements Expression {
+    final Expression lhs;
+    final Expression rhs;
+
+    AdditionExpression(Expression lhs, Expression rhs) {
+      this.lhs = lhs;
+      this.rhs = rhs;
+    }
 
     @Override
     public String toString() {
-      return "%s + %s".formatted(lhs, rhs);
+      return format("%s + %s", lhs, rhs);
     }
 
     @Override
@@ -236,11 +263,18 @@ public interface Expression extends Function<Integer, Integer> {
   }
 
   @SuppressFBWarnings
-  static record SubtractionExpression(Expression lhs, Expression rhs) implements Expression {
+  final class SubtractionExpression implements Expression {
+    final Expression lhs;
+    final Expression rhs;
+
+    public SubtractionExpression(Expression lhs, Expression rhs) {
+      this.lhs = lhs;
+      this.rhs = rhs;
+    }
 
     @Override
     public String toString() {
-      return "%s - %s".formatted(lhs, rhs);
+      return format("%s - %s", lhs, rhs);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.aire.ux.plan;
 
+import static java.lang.String.format;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * some operations are "widening" such as :nth-child, which means that they can "select" items that
@@ -19,17 +21,17 @@ import org.jetbrains.annotations.NotNull;
 public interface WorkingSet<T> extends Iterable<T> {
 
   @Nonnull
-  public static <T> WorkingSet<T> create() {
+  static <T> WorkingSet<T> create() {
     return new LinkedWorkingSet<>();
   }
 
   @Nonnull
-  public static <T> WorkingSet<T> create(@Nonnull Collection<? extends T> items) {
+  static <T> WorkingSet<T> create(@Nonnull Collection<? extends T> items) {
     return new LinkedWorkingSet<>(new LinkedHashSet<>(items), new LinkedHashSet<>());
   }
 
   @Nonnull
-  public static <T> WorkingSet<T> backedBy(@Nonnull Set<T> items) {
+  static <T> WorkingSet<T> backedBy(@Nonnull Set<T> items) {
     return new LinkedWorkingSet<T>(items, new LinkedHashSet<>());
   }
 
@@ -41,11 +43,11 @@ public interface WorkingSet<T> extends Iterable<T> {
     return sized(inclusions, inclusions);
   }
 
-  public static <T> WorkingSet<T> sized(int inclusions, int exclusions) {
+  static <T> WorkingSet<T> sized(int inclusions, int exclusions) {
     return new LinkedWorkingSet<>(new LinkedHashSet<>(inclusions), new LinkedHashSet<>(exclusions));
   }
 
-  public static <T> WorkingSet<T> of(T... values) {
+  static <T> WorkingSet<T> of(T... values) {
     return backedBy(new LinkedHashSet<>(Set.of(values)));
   }
 
@@ -135,7 +137,7 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   }
 
   @Override
-  public boolean contains(@NotNull T value) {
+  public boolean contains(@Nonnull T value) {
     return inclusions.contains(value);
   }
 
@@ -145,8 +147,9 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   }
 
   @Override
-  public boolean addAll(@NotNull WorkingSet<T> values) {
-    if (values instanceof LinkedWorkingSet vs) {
+  public boolean addAll(@Nonnull WorkingSet<T> values) {
+    if (values instanceof LinkedWorkingSet) {
+      val vs = (LinkedWorkingSet) values;
       var result = inclusions.addAll(vs.inclusions);
       result &= exclusions.addAll(vs.exclusions);
       return result;
@@ -163,17 +166,17 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   }
 
   @Override
-  public boolean addAll(@NotNull Collection<T> values) {
+  public boolean addAll(@Nonnull Collection<T> values) {
     return inclusions.addAll(values);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public @Nonnull Collection<T> exclusions() {
+  public Collection<T> exclusions() {
     return exclusions;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Stream<T> stream() {
     return inclusions.stream();
@@ -186,8 +189,8 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
 
   @Override
   public void excludeAll(WorkingSet<T> workingSet) {
-    if (workingSet instanceof LinkedWorkingSet ws) {
-      exclusions.addAll(ws.exclusions);
+    if (workingSet instanceof LinkedWorkingSet) {
+      exclusions.addAll(((LinkedWorkingSet) workingSet).exclusions);
     }
   }
 
@@ -218,8 +221,8 @@ class LinkedWorkingSet<T> implements WorkingSet<T> {
   }
 
   @Override
+  @SuppressFBWarnings
   public String toString() {
-    return "WorkingSet[inclusions: \n %s \n, exclusions: \n %s \n]"
-        .formatted(inclusions, exclusions);
+    return format("WorkingSet[inclusions: \n %s \n, exclusions: \n %s \n]", inclusions, exclusions);
   }
 }

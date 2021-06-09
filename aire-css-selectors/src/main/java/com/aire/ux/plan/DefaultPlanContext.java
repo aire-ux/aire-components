@@ -1,5 +1,7 @@
 package com.aire.ux.plan;
 
+import static java.lang.String.format;
+
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
 import com.aire.ux.select.css.Token;
@@ -39,7 +41,7 @@ public class DefaultPlanContext implements PlanContext {
     val result = factories.get(node.getSymbol());
     if (result == null) {
       throw new NoSuchElementException(
-          "Error: no evaluator factory for symbol '%s'".formatted(node.getSymbol()));
+          format("Error: no evaluator factory for symbol '%s'", node.getSymbol()));
     }
     return result;
   }

@@ -3,16 +3,29 @@ dependencies {
     implementation 'io.sunshower.arcus:arcus-lang'
     implementation 'io.sunshower.arcus:arcus-lambda'
     implementation 'io.sunshower.arcus:arcus-reflect'
-
-    implementation 'com.vaadin:vaadin'
-    implementation 'com.vaadin:flow-server'
-    implementation 'com.vaadin:flow-html-components'
-    implementation 'com.github.mvysny.kaributesting:karibu-testing-v10'
+    implementation 'io.sunshower.arcus.annotations:arcus-jsr-305'
 
 
     [
-            'vaadin-button-flow'
+
+            'com.vaadin:vaadin',
+            'com.vaadin:flow-server',
+            'com.vaadin:flow-html-components',
+            'com.vaadin:vaadin-button-flow',
+            'com.github.mvysny.kaributesting:karibu-testing-v10',
     ].each {
-        testImplementation 'com.vaadin:vaadin-button-flow'
+        testImplementation(it) {
+            [
+                    "com.vaadin.webjar",
+                    "org.webjars.bowergithub.insites",
+                    "org.webjars.bowergithub.polymer",
+                    "org.webjars.bowergithub.polymerelements",
+                    "org.webjars.bowergithub.vaadin",
+                    "org.webjars.bowergithub.webcomponents"
+            ].each { dep ->
+                exclude(group: "org.webjars.bowergithub.polymer")
+            }
+
+        }
     }
 }

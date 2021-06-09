@@ -32,17 +32,15 @@ public class AuxiliaryStateTest extends ScenarioTestCase {
 
     val root =
         parseString(
-            """
-        <html>
-          <body>
-            <ul>
-              <li>one</li>
-              <li>two</li>
-              <li>three</li>
-            </ul>
-          </body>
-        </html>
-        """);
+            "<html>\n"
+                + "  <body>\n"
+                + "    <ul>\n"
+                + "      <li>one</li>\n"
+                + "      <li>two</li>\n"
+                + "      <li>three</li>\n"
+                + "    </ul>\n"
+                + "  </body>\n"
+                + "</html>\n");
 
     val li = at(eval("ul > li:nth-child(3)", root), 0);
     val state = (((DomStates) Node.getAdapter().stateFor(value)).getValue());

@@ -10,8 +10,8 @@ import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import java.util.Collections;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 public class LastChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -29,7 +29,7 @@ public class LastChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
   static final class LastChildEvaluator extends AbstractHierarchySearchingEvaluator {
 
-    LastChildEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+    LastChildEvaluator(@Nonnull SyntaxNode<Symbol, Token> node, @Nonnull PlanContext context) {
       super(node, context);
     }
 

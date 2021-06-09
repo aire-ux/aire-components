@@ -13,8 +13,8 @@ import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
 
@@ -157,7 +157,7 @@ public class NthChildSelectorEvaluatorFactory implements EvaluatorFactory {
    */
   static final class EvenEvaluator extends NthChildEvaluator {
 
-    EvenEvaluator(@NotNull SyntaxNode<Symbol, Token> node, @NotNull PlanContext context) {
+    EvenEvaluator(@Nonnull SyntaxNode<Symbol, Token> node, @Nonnull PlanContext context) {
       node.removeChild(0);
     }
 

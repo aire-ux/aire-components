@@ -9,7 +9,6 @@ import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
@@ -98,7 +97,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     val struct = new IterationStructure<T, U>(order);
     struct.add(root);
     return new Iterable<SyntaxNode<T, U>>() {
-      @NotNull
+      @Nonnull
       @Override
       public Iterator<SyntaxNode<T, U>> iterator() {
         return new Iterator<SyntaxNode<T, U>>() {
@@ -118,7 +117,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<SyntaxNode<T, U>> iterator() {
     return iterate(Order.Pre).iterator();
@@ -191,7 +190,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<SyntaxNode<T, U>> iterator() {
       return listIterator();
