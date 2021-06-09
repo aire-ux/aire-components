@@ -23,9 +23,8 @@ dependencies {
                     "org.webjars.bowergithub.vaadin",
                     "org.webjars.bowergithub.webcomponents"
             ].each { dep ->
-                exclude(group: "org.webjars.bowergithub.polymer")
+                exclude(group: dep)
             }
-
         }
     }
 }

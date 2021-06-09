@@ -1,5 +1,7 @@
 package com.aire.ux.test;
 
+import static java.lang.String.format;
+
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.select.css.CssSelectorParser;
 import com.vaadin.flow.component.Component;
@@ -84,8 +86,9 @@ public class DefaultTestContext implements TestContext {
                     .orElseThrow(
                         () ->
                             new NoSuchElementException(
-                                "Element '%s' matched, but did not reference a component of type '%s'"
-                                    .formatted(element, type))));
+                                format(
+                                    "Element '%s' matched, but did not reference a component of type '%s'",
+                                    element, type))));
       }
       for (int i = 0; i < element.getChildCount(); i++) {
         elements.add(element.getChild(i));

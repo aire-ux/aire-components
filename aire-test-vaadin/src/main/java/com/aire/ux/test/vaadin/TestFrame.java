@@ -1,5 +1,7 @@
 package com.aire.ux.test.vaadin;
 
+import static java.lang.String.format;
+
 import com.aire.ux.test.ElementResolver;
 import com.aire.ux.test.ElementResolverFactory;
 import com.aire.ux.test.VaadinServletFactory;
@@ -49,7 +51,7 @@ public final class TestFrame implements AutoCloseable {
 
   void activate() {
     checkLiveness();
-    log.log(Level.INFO, "Activating Stack Frame %s...".formatted(this));
+    log.log(Level.INFO, "Activating Stack Frame {0}...", this);
     routes.set(creator.create());
     val fopt = servletFactory();
     if (fopt.isPresent()) {
@@ -61,7 +63,7 @@ public final class TestFrame implements AutoCloseable {
     }
 
     restore();
-    log.log(Level.INFO, "Activated Stack Frame %s".formatted(this));
+    log.log(Level.INFO, "Activated Stack Frame {0}", this);
   }
 
   private UI resolveService(Object t, Object u) {
@@ -70,10 +72,10 @@ public final class TestFrame implements AutoCloseable {
 
   void deactivate() {
     checkLiveness();
-    log.log(Level.INFO, "Deactivating Stack Frame %s...".formatted(this));
+    log.log(Level.INFO, "Deactivating test frame {0}...", this);
     MockVaadin.tearDown();
     routes.set(null);
-    log.log(Level.INFO, "Deactivated Stack Frame %s".formatted(this));
+    log.log(Level.INFO, "Deactivated tet frame {0}", this);
   }
 
   @Override
@@ -92,7 +94,7 @@ public final class TestFrame implements AutoCloseable {
 
   private void checkLiveness() {
     if (!alive.get()) {
-      throw new IllegalStateException("Error: Test Frame %s is not alive".formatted(this));
+      throw new IllegalStateException(format("Error: Test Frame %s is not alive", this));
     }
   }
 
@@ -112,26 +114,26 @@ public final class TestFrame implements AutoCloseable {
       }
     }
     throw new NoSuchElementException(
-        "No ElementResolverFactory applicable to type: %s".formatted(element));
+        format("No ElementResolverFactory applicable to type: %s", element));
   }
 
   public void navigateTo(String navigation) {
-    log.info("%s navigating to %s".formatted(this, navigation));
+    log.log(Level.INFO, "{0} navigating to {1}", new Object[] {this, navigation});
     this.location = navigation;
     UI.getCurrent().navigate(navigation);
-    log.info("%s navigated to %s".formatted(this, navigation));
+    log.log(Level.INFO, "{0} navigated to {1}", new Object[] {this, navigation});
   }
 
   public void restore() {
     if (location != null) {
-      log.info("Navigating back to %s".formatted(location));
+      log.log(Level.INFO, "Navigating back to {0}", location);
       UI.getCurrent().navigate(location);
     }
   }
 
   @Override
   public String toString() {
-    return "TestFrame[location: %s, routes: %s]"
-        .formatted(location == null ? "none" : location, routes);
+    return format(
+        "TestFrame[location: %s, routes: %s]", location == null ? "none" : location, routes);
   }
 }

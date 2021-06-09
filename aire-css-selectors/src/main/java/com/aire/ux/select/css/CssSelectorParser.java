@@ -623,7 +623,7 @@ public class CssSelectorParser {
     /** select by class (.red) */
     ClassSelector(".<identifier>", CssSelectorToken.Class),
 
-    /** select children (parent > child) */
+    /** select children (parent {@code > } child) */
     ChildSelector(">", CssSelectorToken.GreaterThan),
 
     /** select by identity (#my-distinguished-node) */

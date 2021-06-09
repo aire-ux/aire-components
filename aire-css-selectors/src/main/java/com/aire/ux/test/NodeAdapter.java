@@ -32,7 +32,7 @@ public interface NodeAdapter<T> {
    *
    * @param root the root of the first tree
    * @param hom the hom functor used to perform the mapping
-   * @param f the morphism T -> U
+   * @param f the morphism {@code T -> U}
    * @param <U> the type of the second structure
    * @return a "hierarchy" encoded by <code>hom</code>
    */

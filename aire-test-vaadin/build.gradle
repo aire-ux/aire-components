@@ -1,10 +1,25 @@
 dependencies {
 
-    api 'com.vaadin:vaadin'
-    api 'com.vaadin:flow-server'
-    api 'com.vaadin:flow-html-components'
-    api 'com.github.mvysny.kaributesting:karibu-testing-v10'
+    [
+            'com.vaadin:vaadin',
+            'com.vaadin:flow-server',
+            'com.vaadin:flow-html-components',
+            'com.github.mvysny.kaributesting:karibu-testing-v10'
+    ].each {
 
+        api(it) {
+            [
+                    "com.vaadin.webjar",
+                    "org.webjars.bowergithub.insites",
+                    "org.webjars.bowergithub.polymer",
+                    "org.webjars.bowergithub.polymerelements",
+                    "org.webjars.bowergithub.vaadin",
+                    "org.webjars.bowergithub.webcomponents"
+            ].each { dep ->
+                exclude(group: dep)
+            }
+        }
+    }
 
 
     api project(':aire-css-selectors')

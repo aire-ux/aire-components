@@ -1,5 +1,7 @@
 package com.aire.ux.test;
 
+import static java.lang.String.format;
+
 import io.sunshower.lambda.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,7 @@ public class Utilities {
       }
     }
     throw new IllegalArgumentException(
-        "No non-default value out of %s".formatted(Arrays.asList(values)));
+        format("No non-default value out of %s", Arrays.asList(values)));
   }
 
   public static Collection<?> resolveCollection(Class<?> type) {
@@ -47,8 +49,7 @@ public class Utilities {
     if (Set.class.isAssignableFrom(type)) {
       return new LinkedHashSet<>();
     }
-    throw new UnsupportedOperationException(
-        "Can't resolve a collection of type: %s".formatted(type));
+    throw new UnsupportedOperationException(format("Can't resolve a collection of type: %s", type));
   }
 
   @SuppressWarnings("unchecked")
@@ -59,8 +60,7 @@ public class Utilities {
     if (Set.class.isAssignableFrom(type)) {
       return LinkedHashSet.class;
     }
-    throw new UnsupportedOperationException(
-        "Can't resolve a collection of type: %s".formatted(type));
+    throw new UnsupportedOperationException(format("Can't resolve a collection of type: %s", type));
   }
 
   public static Option<String> notBlank(String s) {

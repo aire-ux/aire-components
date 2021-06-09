@@ -124,7 +124,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
   }
 
   private void toString(SyntaxNode<T, U> node, StringBuilder out, String indent, boolean last) {
-    if (node == root) {
+    if (node.equals(root)) {
       out.append(node).append("\n");
     } else {
       out.append(indent).append(last ? "└╴" : "├╴").append(node.toString()).append("\n");
