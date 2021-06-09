@@ -85,8 +85,14 @@ public class VaadinViewTemplateInvocationContext
   }
 
   @SuppressFBWarnings
-  private static final record VaadinViewTestTemplateInvocationContext(
-      ExtensionContext extensionContext) implements TestTemplateInvocationContext {
+  private static final class VaadinViewTestTemplateInvocationContext
+      implements TestTemplateInvocationContext {
+
+    private final ExtensionContext extensionContext;
+
+    VaadinViewTestTemplateInvocationContext(ExtensionContext extensionContext) {
+      this.extensionContext = extensionContext;
+    }
 
     @Override
     public String getDisplayName(int invocationIndex) {

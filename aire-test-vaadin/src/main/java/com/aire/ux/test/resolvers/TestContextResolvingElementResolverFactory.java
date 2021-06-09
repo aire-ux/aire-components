@@ -19,8 +19,8 @@ public class TestContextResolvingElementResolverFactory implements ElementResolv
 
   @Override
   public boolean appliesTo(AnnotatedElement element) {
-    if (element.isAnnotationPresent(Context.class) && element instanceof Parameter parameter) {
-      return Reflect.isCompatible(TestContext.class, parameter.getType());
+    if (element.isAnnotationPresent(Context.class) && element instanceof Parameter) {
+      return Reflect.isCompatible(TestContext.class, ((Parameter) element).getType());
     }
     return false;
   }
