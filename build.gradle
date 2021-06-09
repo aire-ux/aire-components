@@ -125,7 +125,7 @@ subprojects {
 
 
         publications {
-            mavenJava(MavenPublication) {
+            pluginMaven(MavenPublication) {
                 /**
                  * components source
                  */
