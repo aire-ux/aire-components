@@ -2,6 +2,7 @@ package com.aire.ux.parsers.ast;
 
 import static java.lang.String.format;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -161,6 +162,8 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   /** @return a shallow copy of this node (i.e. discards hierarchical structure) */
   @Override
+  @SuppressFBWarnings
+  @SuppressWarnings("PMD")
   public SyntaxNode<T, U> clone() {
     return new AbstractSyntaxNode<T, U>(
         symbol, source, content, value, new ArrayList<>(), new LinkedHashMap<>(properties));

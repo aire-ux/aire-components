@@ -2,7 +2,6 @@ package com.aire.ux.parsers.ast;
 
 import com.aire.ux.parsers.ast.AbstractSyntaxTree.Order;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,28 +52,28 @@ class AbstractSyntaxTreeTest extends TestCase {
 
   @Test
   void ensureRewritingSiblingsWorks() {
-    val nodes = List.of(
-        node("component"),
-        node("value"));
+    val nodes = List.of(node("component"), node("value"));
 
     val tree = new AbstractSyntaxTree<>(nodes);
-    AbstractSyntaxTree rewritten = tree.rewrite(node -> {
-      val result = node.clone();
-      val children = node.getChildren();
-      for(int i = 0; i < children.size(); i++) {
-        val component = children.get(i);
-        if(component.getValue().equals("component") && i + 1 < children.size()) {
-          val next = children.get(i + 1) ;
-          if(next.getValue().equals("value")) {
-            node.removeChild(i);
-            node.removeChild(i);
-            component.addChild(next);
-            result.addChild(component);
-          }
-        }
-      }
-      return result;
-    });
+    AbstractSyntaxTree rewritten =
+        tree.rewrite(
+            node -> {
+              val result = node.clone();
+              val children = node.getChildren();
+              for (int i = 0; i < children.size(); i++) {
+                val component = children.get(i);
+                if (component.getValue().equals("component") && i + 1 < children.size()) {
+                  val next = children.get(i + 1);
+                  if (next.getValue().equals("value")) {
+                    node.removeChild(i);
+                    node.removeChild(i);
+                    component.addChild(next);
+                    result.addChild(component);
+                  }
+                }
+              }
+              return result;
+            });
 
     System.out.println(rewritten);
   }

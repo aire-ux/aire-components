@@ -2,6 +2,7 @@ package com.aire.ux.parsers.ast;
 
 import static java.lang.String.format;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
   }
 
   @Override
+  @SuppressFBWarnings
+  @SuppressWarnings("PMD")
   public SyntaxNode<T, U> clone() {
     return new NamedSyntaxNode<>(
         name, symbol, source, value, getContent(), new ArrayList<>(), properties);
