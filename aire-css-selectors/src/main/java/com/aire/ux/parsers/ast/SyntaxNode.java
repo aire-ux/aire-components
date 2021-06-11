@@ -1,7 +1,9 @@
 package com.aire.ux.parsers.ast;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 /**
  * Base class for a generic, homogeneous AST
@@ -9,7 +11,7 @@ import java.util.Map;
  * @param <T> the value contained (usually a symbol-like structure)
  * @param <U> the relevant source object (such as an element)
  */
-public interface SyntaxNode<T, U> {
+public interface SyntaxNode<T, U> extends Cloneable{
 
   Symbol getSymbol();
 
@@ -37,7 +39,15 @@ public interface SyntaxNode<T, U> {
 
   String clearProperty(String key);
 
-  void addChildren(List<SyntaxNode<T, U>> children);
+  void addChildren(Collection<SyntaxNode<T, U>> children);
+
+  /**
+   *
+   * @param children the new children
+   * @return the old children, if any
+   */
+  @Nonnull
+  Collection<SyntaxNode<T, U>> setChildren(@Nonnull Collection<SyntaxNode<T, U>> children);
 
   SyntaxNode<T, U> getChild(int i);
 
@@ -46,4 +56,11 @@ public interface SyntaxNode<T, U> {
   SyntaxNode<T, U> removeChild(SyntaxNode<T, U> i);
 
   List<SyntaxNode<T, U>> clearChildren();
+
+  /**
+   * perform a shallow-clone (i.e. don't clone children or parent nodes)
+   * @return the structural copy of this node, sans its original parents or
+   * children
+   */
+  SyntaxNode<T, U> clone();
 }

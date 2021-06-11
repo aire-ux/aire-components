@@ -1,5 +1,6 @@
 package com.aire.ux.parsers.ast;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -85,6 +86,31 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
       }
     }
     return result;
+  }
+
+
+  /**
+   *
+   * apply a tree-rewriting rule to this tree and return the rewritten tree, leaving this
+   * tree unmodified
+   * @param rewriteRule the rewrite rule to apply
+   * @return a new syntax tree with the rewrite rule applies
+   */
+  public AbstractSyntaxTree<T, U> rewrite(@Nonnull RewriteRule<T, U> rewriteRule) {
+    val newRoot = new RootSyntaxNode<T, U>();
+    rewrite(newRoot, root, rewriteRule);
+    return new AbstractSyntaxTree<>(newRoot);
+  }
+
+  private void rewrite(SyntaxNode<T, U> newRoot, SyntaxNode<T, U> root,
+      RewriteRule<T, U> rewriteRule) {
+    for(val child : root.getChildren()) {
+      val rewrittenChildren = rewriteRule.apply(child);
+      for(val rewrittenChild : rewrittenChildren) {
+        rewrite(rewrittenChild, child, rewriteRule);
+      }
+      newRoot.setChildren(rewrittenChildren);
+    }
   }
 
   /**
