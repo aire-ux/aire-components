@@ -4,7 +4,7 @@
 
     <groupId>com.aire-ux.components</groupId>
     <artifactId>bom-parent</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.0.15.Final</version>
     <packaging>pom</packaging>
 
 
@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <aire-ux.version>1.0.11-SNAPSHOT</aire-ux.version>
+        <aire-ux.version>1.0.15.Final</aire-ux.version>
     </properties>
 
     <distributionManagement>
