@@ -13,9 +13,7 @@ import lombok.val;
 
 public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   final Symbol symbol;
 
   final U source;
@@ -23,9 +21,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   final Map<String, String> properties;
   final List<SyntaxNode<T, U>> children;
 
-  /**
-   * private state
-   */
+  /** private state */
   private String content;
 
   public AbstractSyntaxNode(Symbol symbol, U source, T value) {
@@ -33,15 +29,14 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   }
 
   /**
-   * @param symbol  the associated symbol (element type)
-   * @param source  the language element this was retrieved from
+   * @param symbol the associated symbol (element type)
+   * @param source the language element this was retrieved from
    * @param content the String content (if any)
-   * @param value   the actual value node (if any)
+   * @param value the actual value node (if any)
    */
   public AbstractSyntaxNode(Symbol symbol, U source, String content, T value) {
     this(symbol, source, content, value, new ArrayList<>());
   }
-
 
   public AbstractSyntaxNode(
       Symbol symbol, U source, String content, T value, List<SyntaxNode<T, U>> children) {
@@ -49,7 +44,11 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   }
 
   public AbstractSyntaxNode(
-      Symbol symbol, U source, String content, T value, List<SyntaxNode<T, U>> children,
+      Symbol symbol,
+      U source,
+      String content,
+      T value,
+      List<SyntaxNode<T, U>> children,
       Map<String, String> properties) {
     this.symbol = symbol;
     this.source = source;
@@ -58,7 +57,6 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
     this.children = children;
     this.properties = properties;
   }
-
 
   @Override
   public Symbol getSymbol() {
@@ -146,7 +144,6 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
     return results;
   }
 
-
   @Override
   public List<SyntaxNode<T, U>> getChildren() {
     return Collections.unmodifiableList(children);
@@ -162,24 +159,15 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
     return children.add(child);
   }
 
-  /**
-   * @return a shallow copy of this node (i.e. discards hierarchical structure)
-   */
+  /** @return a shallow copy of this node (i.e. discards hierarchical structure) */
   @Override
   public SyntaxNode<T, U> clone() {
     return new AbstractSyntaxNode<T, U>(
-        symbol,
-        source,
-        content,
-        value,
-        new ArrayList<>(),
-        new LinkedHashMap<>(properties)
-    );
+        symbol, source, content, value, new ArrayList<>(), new LinkedHashMap<>(properties));
   }
 
   @Override
   public String toString() {
     return format("Node[value: %s]", value);
   }
-
 }
