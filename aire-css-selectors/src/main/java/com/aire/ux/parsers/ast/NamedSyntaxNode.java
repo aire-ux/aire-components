@@ -45,7 +45,6 @@ public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
         content == null ? null : content.replaceAll("\\n", " "));
   }
 
-
   @Override
   @SuppressFBWarnings
   @SuppressWarnings("PMD")
