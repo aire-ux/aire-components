@@ -1,6 +1,6 @@
 package com.aire.ux.parsers.ast;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,7 +42,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
   public AbstractSyntaxTree(List<SyntaxNode<T, U>> children) {
     this();
-    root.addChildren(children);
+    root.setChildren(children);
   }
 
   @Override
@@ -88,29 +88,31 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     return result;
   }
 
-
   /**
+   * apply a tree-rewriting rule to this tree and return the rewritten tree, leaving this tree
+   * unmodified
    *
-   * apply a tree-rewriting rule to this tree and return the rewritten tree, leaving this
-   * tree unmodified
    * @param rewriteRule the rewrite rule to apply
    * @return a new syntax tree with the rewrite rule applies
    */
   public AbstractSyntaxTree<T, U> rewrite(@Nonnull RewriteRule<T, U> rewriteRule) {
-    val newRoot = new RootSyntaxNode<T, U>();
-    rewrite(newRoot, root, rewriteRule);
-    return new AbstractSyntaxTree<>(newRoot);
-  }
+    val result = new ArrayDeque<SyntaxNode<T, U>>();
+    result.push(root);
 
-  private void rewrite(SyntaxNode<T, U> newRoot, SyntaxNode<T, U> root,
-      RewriteRule<T, U> rewriteRule) {
-    for(val child : root.getChildren()) {
-      val rewrittenChildren = rewriteRule.apply(child);
-      for(val rewrittenChild : rewrittenChildren) {
-        rewrite(rewrittenChild, child, rewriteRule);
+    val rewrittenRoot = rewriteRule.apply(root.clone());
+    val rewritten = new ArrayDeque<SyntaxNode<T, U>>();
+    rewritten.push(rewrittenRoot);
+    while (!result.isEmpty()) {
+      val next = result.pop();
+      val rewrittenNext = rewritten.pop();
+      for (val child : next.getChildren()) {
+        val rewrittenChild = rewriteRule.apply(child.clone());
+        rewritten.push(rewrittenChild);
+        rewrittenNext.addChild(rewrittenChild);
+        result.add(child);
       }
-      newRoot.setChildren(rewrittenChildren);
     }
+    return new AbstractSyntaxTree<>(rewrittenRoot);
   }
 
   /**
@@ -175,6 +177,12 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
       super(ROOT_SYMBOL, null, null, null);
     }
 
+    @Override
+    public RootSyntaxNode<T, U> clone() {
+      return new RootSyntaxNode<>();
+    }
+
+    @Override
     public String toString() {
       return "RootNode";
     }

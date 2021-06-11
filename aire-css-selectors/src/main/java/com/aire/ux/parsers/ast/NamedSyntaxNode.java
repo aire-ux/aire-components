@@ -10,8 +10,7 @@ import lombok.val;
 
 public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
 
-  @Getter
-  final String name;
+  @Getter final String name;
 
   public NamedSyntaxNode(
       String name,
@@ -20,8 +19,7 @@ public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
       T value,
       String content,
       List<SyntaxNode<T, U>> children,
-      Map<String, String> properties
-  ) {
+      Map<String, String> properties) {
     super(symbol, source, content, value, children, properties);
     this.name = name;
   }
@@ -48,7 +46,7 @@ public class NamedSyntaxNode<T, U> extends AbstractSyntaxNode<T, U> {
 
   @Override
   public SyntaxNode<T, U> clone() {
-    return new NamedSyntaxNode<>(name, symbol, source, value, getContent(), new ArrayList<>(),
-        properties);
+    return new NamedSyntaxNode<>(
+        name, symbol, source, value, getContent(), new ArrayList<>(), properties);
   }
 }

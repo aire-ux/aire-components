@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * @param <T> the value contained (usually a symbol-like structure)
  * @param <U> the relevant source object (such as an element)
  */
-public interface SyntaxNode<T, U> extends Cloneable{
+public interface SyntaxNode<T, U> extends Cloneable {
 
   Symbol getSymbol();
 
@@ -42,7 +42,6 @@ public interface SyntaxNode<T, U> extends Cloneable{
   void addChildren(Collection<SyntaxNode<T, U>> children);
 
   /**
-   *
    * @param children the new children
    * @return the old children, if any
    */
@@ -59,8 +58,8 @@ public interface SyntaxNode<T, U> extends Cloneable{
 
   /**
    * perform a shallow-clone (i.e. don't clone children or parent nodes)
-   * @return the structural copy of this node, sans its original parents or
-   * children
+   *
+   * @return the structural copy of this node, sans its original parents or children
    */
   SyntaxNode<T, U> clone();
 }
