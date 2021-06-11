@@ -99,14 +99,14 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     val result = new ArrayDeque<SyntaxNode<T, U>>();
     result.push(root);
 
-    val rewrittenRoot = rewriteRule.apply(root.clone());
+    val rewrittenRoot = rewriteRule.apply(root);
     val rewritten = new ArrayDeque<SyntaxNode<T, U>>();
     rewritten.push(rewrittenRoot);
     while (!result.isEmpty()) {
       val next = result.pop();
       val rewrittenNext = rewritten.pop();
       for (val child : next.getChildren()) {
-        val rewrittenChild = rewriteRule.apply(child.clone());
+        val rewrittenChild = rewriteRule.apply(child);
         rewritten.push(rewrittenChild);
         rewrittenNext.addChild(rewrittenChild);
         result.add(child);
