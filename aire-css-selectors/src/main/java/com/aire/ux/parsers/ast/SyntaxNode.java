@@ -61,5 +61,6 @@ public interface SyntaxNode<T, U> extends Cloneable {
    *
    * @return the structural copy of this node, sans its original parents or children
    */
+  @SuppressWarnings("PMD")
   SyntaxNode<T, U> clone();
 }
