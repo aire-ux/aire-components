@@ -7,7 +7,7 @@ import {
 
 
 // @ts-ignore
-import style from "./aire-button.scss"
+import style from "../styles/aire-button.scss"
 
 @customElement('aire-button')
 export class AireButton extends LitElement {
@@ -17,8 +17,9 @@ export class AireButton extends LitElement {
 
   render() {
     return html`
-      <h1 class="aire-button">Hello</h1>
-      <h2>Sup</h2>
+      <button type="button" class="btn btn-outline-primary">
+        <slot></slot>
+      </button>
     `;
   }
 }
