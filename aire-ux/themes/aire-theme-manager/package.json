@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-theme-manager",
-  "version": "0.0.2",
+  "version": "0.0.10",
   "description": "Aire Theme Manager",
   "author": "Aire-UX",
   "license": "MIT",
@@ -96,5 +96,6 @@
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "gitHead": "ab7cf80b98210e64595cd854fccafd83e0578975"
 }
