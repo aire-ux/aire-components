@@ -5,37 +5,43 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.theme.context.ThemeContextHolder.Strategy;
 import lombok.val;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 class ThemeContextHolderTest {
 
+  @AfterEach
+  void reset() {
+    ThemeContextHolder.setStrategy(Strategy.ThreadLocal);
+  }
+
   @Test
   void ensureDefaultContextHolderIsThreadLocal() {
-    assertEquals(ThemeContextHolder.getStrategy().getClass(),
-        ThreadLocalContextHolderStrategy.class);
+    assertEquals(
+        ThemeContextHolder.getStrategy().getClass(), ThreadLocalContextHolderStrategy.class);
   }
 
   @Test
   void ensureGlobalStrategyCanBeSet() {
     ThemeContextHolder.setStrategy(Strategy.Global);
-    assertEquals(ThemeContextHolder.getStrategy().getClass(),
-        GlobalThemeContextHolderStrategy.class);
+    assertEquals(
+        ThemeContextHolder.getStrategy().getClass(), GlobalThemeContextHolderStrategy.class);
   }
 
   @Test
   void ensureInheritableThreadLocalStrategyCanBeSet() {
     ThemeContextHolder.setStrategy(Strategy.InheritableThreadLocal);
-    assertEquals(ThemeContextHolder.getStrategy().getClass(),
+    assertEquals(
+        ThemeContextHolder.getStrategy().getClass(),
         InheritableThreadLocalContextHolderStrategy.class);
   }
 
   @Test
   void ensureNameCanBeSetToClass() {
     ThemeContextHolder.setStrategyName(TestThemeContextHolderStrategy.class.getName());
-    assertEquals(ThemeContextHolder.getStrategy().getClass(),
-        TestThemeContextHolderStrategy.class);
+    assertEquals(ThemeContextHolder.getStrategy().getClass(), TestThemeContextHolderStrategy.class);
     assertEquals(ThemeContextHolder.getStrategyType(), Strategy.ClassName);
   }
 
@@ -49,7 +55,7 @@ class ThemeContextHolderTest {
   @ParameterizedTest
   @EnumSource(Strategy.class)
   void ensureThemeContextIsRetrievable(Strategy strategy) {
-    if(strategy != Strategy.ClassName) {
+    if (strategy != Strategy.ClassName) {
       ThemeContextHolder.setStrategy(strategy);
       assertNotNull(ThemeContextHolder.getContext());
     }
@@ -58,6 +64,7 @@ class ThemeContextHolderTest {
   public static class TestThemeContextHolderStrategy implements ThemeContextHolderStrategy {
 
     ThemeContext context;
+
     @Override
     public void clearContext() {
       context = null;
@@ -70,11 +77,10 @@ class ThemeContextHolderTest {
 
     @Override
     public ThemeContext getContext() {
-      if(context == null) {
+      if (context == null) {
         context = createThemeContext();
       }
       return context;
-
     }
 
     @Override
@@ -82,5 +88,4 @@ class ThemeContextHolderTest {
       this.context = context;
     }
   }
-
 }

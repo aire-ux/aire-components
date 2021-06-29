@@ -17,6 +17,5 @@ final class DefaultThemeContext implements ThemeContext {
   public void setTheme(@Nonnull Theme theme) {
     Objects.requireNonNull(theme);
     this.theme = theme;
-
   }
 }

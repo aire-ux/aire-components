@@ -9,45 +9,36 @@ class AbstractThreadLocalContextHolderStrategy implements ThemeContextHolderStra
 
   final ThreadLocal<ThemeContext> contextHolder;
 
-  protected AbstractThreadLocalContextHolderStrategy(@Nonnull ThreadLocal<ThemeContext> contextHolder) {
+  protected AbstractThreadLocalContextHolderStrategy(
+      @Nonnull ThreadLocal<ThemeContext> contextHolder) {
     Objects.requireNonNull(contextHolder);
     this.contextHolder = contextHolder;
   }
 
-  /**
-   * clear the current context
-   */
+  /** clear the current context */
   @Override
   public void clearContext() {
     contextHolder.remove();
   }
 
-  /**
-   * @return a new theme context
-   */
+  /** @return a new theme context */
   @Override
   public ThemeContext createThemeContext() {
     return new DefaultThemeContext();
   }
 
-  /**
-   * @return the current themecontext, creating a new
-   * instance if none exists
-   */
+  /** @return the current themecontext, creating a new instance if none exists */
   @Override
   public ThemeContext getContext() {
     var result = contextHolder.get();
-    if(result == null) {
+    if (result == null) {
       result = createThemeContext();
       setContext(result);
     }
     return result;
   }
 
-  /**
-   *
-   * @param context the non-null theme context to set
-   */
+  /** @param context the non-null theme context to set */
   @Override
   public void setContext(@Nonnull ThemeContext context) {
     Objects.requireNonNull(context);

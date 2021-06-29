@@ -2,7 +2,6 @@ package com.aire.ux.theme.context;
 
 public interface ThemeContextHolderStrategy {
 
-
   void clearContext();
 
   ThemeContext createThemeContext();
@@ -10,5 +9,4 @@ public interface ThemeContextHolderStrategy {
   ThemeContext getContext();
 
   void setContext(ThemeContext context);
-
 }
