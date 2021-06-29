@@ -3,6 +3,14 @@ include(
         /**
          * core items
          */
+
+        'aire-ux-core',
+        'aire-ux-spring',
+        'aire-ux-zephyr',
+
+        /**
+         * test items
+         */
         'aire-css-selectors',
         'aire-test-common',
         'aire-test-vaadin',

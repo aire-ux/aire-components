@@ -62,13 +62,21 @@ public class ThemeContextHolder {
     return strategy.getContext();
   }
 
-
   /**
    * @param context to make current
    */
   public static void setContext(@Nonnull ThemeContext context) {
     Objects.requireNonNull(context);
     strategy.setContext(context);
+  }
+
+  public static Strategy getStrategyType() {
+    for (val strategyType : Strategy.values()) {
+      if (strategyType.name().equals(strategyName)) {
+        return strategyType;
+      }
+    }
+    return Strategy.ClassName;
   }
 
   /**
@@ -88,14 +96,6 @@ public class ThemeContextHolder {
       strategy = new ThreadLocalContextHolderStrategy();
     } else if (is(strategyName, Strategy.InheritableThreadLocal)) {
       strategy = new InheritableThreadLocalContextHolderStrategy();
-    } else if (is(strategyName, Strategy.ClassName)) {
-      try {
-        strategy = (ThemeContextHolderStrategy) Reflect
-            .instantiate(
-                Class.forName(strategyName, true, Thread.currentThread().getContextClassLoader()));
-      } catch (ClassNotFoundException e) {
-        throw new IllegalStateException("Error: no class named '%s'", e);
-      }
     } else if (is(strategyName, Strategy.Global)) {
       strategy = new GlobalThemeContextHolderStrategy();
     } else if (is(strategyName, Strategy.ServiceLoader)) {
@@ -117,6 +117,14 @@ public class ThemeContextHolder {
             "If this is not the desired behavior, you may set the class-name explicitly via setStrategyName()");
       }
       strategy = result;
+    } else {
+      try {
+        strategy = (ThemeContextHolderStrategy) Reflect
+            .instantiate(
+                Class.forName(strategyName, true, Thread.currentThread().getContextClassLoader()));
+      } catch (ClassNotFoundException e) {
+        throw new IllegalStateException("Error: no class named '%s'", e);
+      }
     }
   }
 
