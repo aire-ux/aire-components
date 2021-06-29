@@ -9,9 +9,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/**
- * preliminary theme extension
- */
+/** preliminary theme extension */
 @Order(10)
 public class AireThemeExtension implements Extension, BeforeAllCallback, AfterAllCallback {
 

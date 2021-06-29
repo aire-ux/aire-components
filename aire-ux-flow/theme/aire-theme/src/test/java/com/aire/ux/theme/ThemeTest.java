@@ -10,9 +10,9 @@ import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
 import com.aire.ux.theme.ThemeTest.Cfg;
+import com.aire.ux.theme.decorators.AireTestTheme;
 import com.aire.ux.theme.decorators.EnableThemes;
 import com.aire.ux.theme.decorators.TestTheme;
-import com.aire.ux.theme.decorators.AireTestTheme;
 import com.aire.ux.theme.decorators.scenario1.MainView;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
 import lombok.val;
@@ -33,9 +33,6 @@ public class ThemeTest {
     assertTrue(result.isPresent());
   }
 
-
   @ContextConfiguration
-  static class Cfg {
-
-  }
+  static class Cfg {}
 }

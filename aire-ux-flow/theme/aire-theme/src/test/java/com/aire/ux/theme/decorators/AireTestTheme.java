@@ -1,6 +1,5 @@
 package com.aire.ux.theme.decorators;
 
-
 import com.aire.ux.theme.BaseTheme;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
 

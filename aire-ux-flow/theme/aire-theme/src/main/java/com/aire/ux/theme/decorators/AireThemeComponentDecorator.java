@@ -7,8 +7,7 @@ import javax.annotation.Nonnull;
 
 public class AireThemeComponentDecorator implements ComponentDecorator {
 
-  public AireThemeComponentDecorator() {
-  }
+  public AireThemeComponentDecorator() {}
 
   @Override
   public void decorate(@Nonnull HasElement component) {

@@ -22,7 +22,6 @@ import lombok.val;
 
 public abstract class BaseTheme implements Theme {
 
-
   static final int MAX_CACHE_SIZE = 50;
 
   private final String id;
@@ -30,28 +29,23 @@ public abstract class BaseTheme implements Theme {
   private final List<ThemeResource> themeResources;
   private final WeakReference<ClassLoader> classloader;
   private final Map<Class<?>, Decorator<?>> decorators;
-  private final Map<Object, Decorator> decoratorCache = new LinkedHashMap<>() {
+  private final Map<Object, Decorator> decoratorCache =
+      new LinkedHashMap<>() {
 
-    @Override
-    protected boolean removeEldestEntry(Entry<Object, Decorator> eldest) {
-      return this.size() >= MAX_CACHE_SIZE;
-    }
+        @Override
+        protected boolean removeEldestEntry(Entry<Object, Decorator> eldest) {
+          return this.size() >= MAX_CACHE_SIZE;
+        }
+      };
 
-  };
-
-
-  protected BaseTheme(
-      @Nonnull final String id,
-      @Nonnull final ClassLoader classloader
-  ) {
+  protected BaseTheme(@Nonnull final String id, @Nonnull final ClassLoader classloader) {
     this(id, classloader, Collections.emptyList());
   }
 
   protected BaseTheme(
       @Nonnull final String id,
       @Nonnull final ClassLoader classloader,
-      @Nonnull final Collection<ThemeResource> resources
-  ) {
+      @Nonnull final Collection<ThemeResource> resources) {
     this.id = requireNonNull(id);
     this.decorators = new HashMap<>();
     this.themeResources = new ArrayList<>(resources);
@@ -107,7 +101,6 @@ public abstract class BaseTheme implements Theme {
         registerDecorator(t.getAnnotation(Decorate.class), t);
       }
     }
-
   }
 
   private void registerDecorator(Decorate decorationDefinition, Class<?> t) {

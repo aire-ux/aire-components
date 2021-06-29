@@ -13,5 +13,4 @@ import java.lang.annotation.Target;
 public @interface TestTheme {
 
   Class<? extends Theme> value() default Theme.class;
-
 }

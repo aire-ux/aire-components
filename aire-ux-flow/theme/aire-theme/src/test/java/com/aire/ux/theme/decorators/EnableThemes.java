@@ -1,6 +1,5 @@
 package com.aire.ux.theme.decorators;
 
-import com.aire.ux.theme.context.ThemeContextHolderStrategy;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,6 +11,4 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Target(ElementType.TYPE)
 @ExtendWith({AireThemeExtension.class})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnableThemes {
-
-}
+public @interface EnableThemes {}

@@ -16,17 +16,16 @@ public class CompositeComponentDecorator implements ComponentDecorator {
     this.delegates = new ArrayList<>(delegates);
   }
 
-
   @Override
   public void onComponentEntered(@Nonnull HasElement component) {
-    for(val delegate : delegates) {
+    for (val delegate : delegates) {
       delegate.onComponentEntered(component);
     }
   }
 
   @Override
   public void onComponentExited(@Nonnull HasElement component) {
-    for(val delegate : delegates) {
+    for (val delegate : delegates) {
       delegate.onComponentExited(component);
     }
   }

@@ -14,9 +14,7 @@ import com.aire.ux.theme.decorators.scenario1.TestButton;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
-/**
- * this needs to come first, unfortunately
- */
+/** this needs to come first, unfortunately */
 @EnableThemes
 @AireTest
 @EnableSpring
@@ -33,5 +31,4 @@ class AireThemeComponentDecoratorTest {
 
   @Configuration
   public static class Cfg {}
-
 }

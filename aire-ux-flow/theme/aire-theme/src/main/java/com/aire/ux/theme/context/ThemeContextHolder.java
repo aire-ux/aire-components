@@ -130,6 +130,7 @@ public class ThemeContextHolder {
     return strategy.name().equals(strategyName);
   }
 
+  @SuppressWarnings("PMD.NullAssignment")
   public static void restoreDefaults() {
     strategyName = null;
     initialize();
