@@ -1,6 +1,7 @@
 package com.aire.ux.theme.decorators;
 
 import com.aire.ux.theme.context.ThemeContextHolder;
+import io.sunshower.arcus.reflect.Reflect;
 import lombok.val;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -21,7 +22,7 @@ public class AireThemeExtension implements Extension, BeforeAllCallback, AfterAl
         .ifPresent(
             type -> {
               val themeDef = type.getAnnotation(TestTheme.class);
-              ThemeContextHolder.setStrategyName(themeDef.value().getName());
+              ThemeContextHolder.getContext().setTheme(Reflect.instantiate(themeDef.value()));
             });
   }
 

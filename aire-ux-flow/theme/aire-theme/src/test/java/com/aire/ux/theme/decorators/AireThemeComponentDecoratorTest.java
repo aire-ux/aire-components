@@ -22,7 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = MainView.class)
-@TestTheme(TestThemeStrategy.class)
+@TestTheme(AireTestTheme.class)
 class AireThemeComponentDecoratorTest {
 
   @ViewTest

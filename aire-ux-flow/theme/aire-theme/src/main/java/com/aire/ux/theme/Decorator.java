@@ -1,8 +1,10 @@
 package com.aire.ux.theme;
 
-import com.vaadin.flow.component.HasElement;
 
-public interface Decorator {
+public interface Decorator<T> {
 
-  <T extends HasElement> T decorate(T value);
+  Class<T> getTarget();
+
+  void decorate(T value);
+
 }

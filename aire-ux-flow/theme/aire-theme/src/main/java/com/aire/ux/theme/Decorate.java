@@ -18,5 +18,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Decorate {
-  Class<?> value() default Void.class;
+  Class<? extends Decorator> value() default Decorator.class;
 }

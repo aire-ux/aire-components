@@ -1,6 +1,6 @@
 package com.aire.ux.theme.decorators;
 
-import com.aire.ux.theme.context.ThemeContextHolderStrategy;
+import com.aire.ux.Theme;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TestTheme {
 
-  Class<? extends ThemeContextHolderStrategy> value();
+  Class<? extends Theme> value() default Theme.class;
 
 }
