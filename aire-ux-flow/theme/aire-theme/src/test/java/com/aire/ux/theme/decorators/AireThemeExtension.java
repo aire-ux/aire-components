@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * preliminary theme extension
+ */
 @Order(10)
 public class AireThemeExtension implements Extension, BeforeAllCallback, AfterAllCallback {
 
@@ -17,11 +20,13 @@ public class AireThemeExtension implements Extension, BeforeAllCallback, AfterAl
         .getTestClass()
         .ifPresent(
             type -> {
-              val themeDef = type.getAnnotation(WithTheme.class);
-              ThemeContextHolder.setStrategyName(themeDef.strategyClass().getName());
+              val themeDef = type.getAnnotation(TestTheme.class);
+              ThemeContextHolder.setStrategyName(themeDef.value().getName());
             });
   }
 
   @Override
-  public void afterAll(ExtensionContext context) throws Exception {}
+  public void afterAll(ExtensionContext context) throws Exception {
+    ThemeContextHolder.restoreDefaults();
+  }
 }

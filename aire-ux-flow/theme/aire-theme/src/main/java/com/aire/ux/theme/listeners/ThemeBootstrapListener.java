@@ -15,6 +15,7 @@ public class ThemeBootstrapListener implements BootstrapListener {
   }
 
   private void includeScriptManagerTag(BootstrapPageResponse response) {
+    System.out.println("GOT ONE");
     val document = response.getDocument();
     val scriptTag = document.createElement("script");
     scriptTag.attr("type", "application/javascript");

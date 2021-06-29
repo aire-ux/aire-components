@@ -130,6 +130,11 @@ public class ThemeContextHolder {
     return strategy.name().equals(strategyName);
   }
 
+  public static void restoreDefaults() {
+    strategyName = null;
+    initialize();
+  }
+
   public enum Strategy {
     /** apply this theme context strategy to the entire system */
     Global,

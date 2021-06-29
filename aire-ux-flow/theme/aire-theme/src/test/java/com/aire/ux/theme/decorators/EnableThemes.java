@@ -10,10 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @Order(10)
 @Target(ElementType.TYPE)
-@ExtendWith(AireThemeExtension.class)
+@ExtendWith({AireThemeExtension.class})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface WithTheme {
+public @interface EnableThemes {
 
-  Class<? extends ThemeContextHolderStrategy> strategyClass() default
-      ThemeContextHolderStrategy.class;
 }

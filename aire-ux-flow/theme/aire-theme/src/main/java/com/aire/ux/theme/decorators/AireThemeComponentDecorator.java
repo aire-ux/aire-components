@@ -6,8 +6,8 @@ import com.vaadin.flow.component.HasElement;
 import javax.annotation.Nonnull;
 
 public class AireThemeComponentDecorator implements ComponentDecorator {
+
   public AireThemeComponentDecorator() {
-    System.out.println("sup");
   }
 
   @Override
