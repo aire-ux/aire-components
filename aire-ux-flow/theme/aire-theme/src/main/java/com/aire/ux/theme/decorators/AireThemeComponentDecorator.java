@@ -12,8 +12,6 @@ public class AireThemeComponentDecorator implements ComponentDecorator {
 
   @Override
   public void decorate(@Nonnull HasElement component) {
-    if (ThemeContextHolder.getContext() != null) {
-      ThemeContextHolder.getContext().getTheme().apply(component);
-    }
+    ThemeContextHolder.getContext().getTheme().apply(component);
   }
 }

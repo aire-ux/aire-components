@@ -16,6 +16,21 @@ public class CompositeComponentDecorator implements ComponentDecorator {
     this.delegates = new ArrayList<>(delegates);
   }
 
+
+  @Override
+  public void onComponentEntered(@Nonnull HasElement component) {
+    for(val delegate : delegates) {
+      delegate.onComponentEntered(component);
+    }
+  }
+
+  @Override
+  public void onComponentExited(@Nonnull HasElement component) {
+    for(val delegate : delegates) {
+      delegate.onComponentExited(component);
+    }
+  }
+
   /** @param component the component to apply these decorators to */
   @Override
   public void decorate(@Nonnull HasElement component) {
