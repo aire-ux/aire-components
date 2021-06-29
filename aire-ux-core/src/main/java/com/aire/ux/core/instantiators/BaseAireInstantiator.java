@@ -80,8 +80,8 @@ public class BaseAireInstantiator implements Instantiator {
   }
 
   @Override
-  public <T extends HasElement> T createRouteTarget(Class<T> routeTargetType,
-      NavigationEvent event) {
+  public <T extends HasElement> T createRouteTarget(
+      Class<T> routeTargetType, NavigationEvent event) {
     val result = delegate.createRouteTarget(routeTargetType, event);
     decorate(result);
     return result;
@@ -114,7 +114,7 @@ public class BaseAireInstantiator implements Instantiator {
             current.stage = 1;
             stack.push(current);
             val el = c.getElement();
-            for(int i = 0; i < el.getChildCount(); i++) {
+            for (int i = 0; i < el.getChildCount(); i++) {
               val childOpt = el.getChild(i).getComponent();
               childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
             }

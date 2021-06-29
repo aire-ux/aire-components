@@ -1,16 +1,16 @@
-package com.aire.ux.test.spring;
+package com.aire.ux.theme;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@Order(100)
+/**
+ * decorate is inherited by default--this breaks the hierarchy chain, allowing for either no
+ * decoration or swapping the decoration chain.
+ */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith({AireSpringVaadinExtension.class})
-public @interface EnableSpring {}
+public @interface NoDecorate {}

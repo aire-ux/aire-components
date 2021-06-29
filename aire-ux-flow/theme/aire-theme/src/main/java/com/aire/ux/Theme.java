@@ -1,6 +1,6 @@
 package com.aire.ux;
 
-import com.aire.ux.core.decorators.ComponentDecorator;
+import com.vaadin.flow.component.HasElement;
 import java.io.InputStream;
 import java.util.List;
 
@@ -19,6 +19,11 @@ public interface Theme {
   /** @return a list of theme resources exported by this theme */
   List<ThemeResource> getThemeResources();
 
-  /** @return the component-decorator for this theme */
-  ComponentDecorator getComponentDecorator();
+  /**
+   * apply this theme to the component. This method may do nothing for some components (or many)
+   *
+   * @param value the value to apply this theme to
+   * @param <T> the type of the component
+   */
+  <T extends HasElement> void apply(T value);
 }

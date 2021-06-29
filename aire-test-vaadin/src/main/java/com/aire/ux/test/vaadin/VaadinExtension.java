@@ -9,6 +9,7 @@ import java.util.ServiceLoader.Provider;
 import java.util.stream.Stream;
 import lombok.extern.java.Log;
 import lombok.val;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
  * Frame b. Pop Current Frame
  */
 @Log
+@Order(50)
 public class VaadinExtension
     implements AireExtension,
         Extension,

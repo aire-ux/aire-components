@@ -1,6 +1,5 @@
 package com.aire.ux.core.decorators;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,18 +14,6 @@ public class CompositeComponentDecorator implements ComponentDecorator {
   public CompositeComponentDecorator(
       @Nonnull final Collection<? extends ComponentDecorator> delegates) {
     this.delegates = new ArrayList<>(delegates);
-  }
-
-  /**
-   * apply all delegates to this component
-   *
-   * @param component the component to decorate with all available delegates
-   */
-  @Override
-  public void decorate(@Nonnull Component component) {
-    for (val delegate : delegates) {
-      delegate.decorate(component);
-    }
   }
 
   /** @param component the component to apply these decorators to */

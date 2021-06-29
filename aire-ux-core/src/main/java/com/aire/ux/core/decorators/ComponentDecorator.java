@@ -1,6 +1,5 @@
 package com.aire.ux.core.decorators;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import javax.annotation.Nonnull;
 
@@ -12,23 +11,11 @@ import javax.annotation.Nonnull;
  */
 public interface ComponentDecorator extends AutoCloseable {
 
-  /**
-   * called before this decorator is applied to descendants
-   *
-   * @param component the current component
-   */
-  default void onComponentEntered(@Nonnull Component component) {}
-
   /** @param component the current component */
   default void onComponentEntered(@Nonnull HasElement component) {}
 
-  default void onComponentExited(@Nonnull Component component) {}
-
   /** @param component the current component */
   default void onComponentExited(@Nonnull HasElement component) {}
-
-  /** @param component the component to decorate */
-  default void decorate(@Nonnull Component component) {}
 
   /** @param component the component to decorate */
   default void decorate(@Nonnull HasElement component) {}

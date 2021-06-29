@@ -1,8 +1,8 @@
 package com.aire.ux.core.test;
 
-import org.jetbrains.annotations.NotNull;
-import com.vaadin.flow.component.HasElement;
 import com.aire.ux.core.decorators.ComponentDecorator;
+import com.vaadin.flow.component.HasElement;
+import org.jetbrains.annotations.NotNull;
 
 public class TestComponentDecorator implements ComponentDecorator {
 
