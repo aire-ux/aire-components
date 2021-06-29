@@ -14,6 +14,7 @@ import com.vaadin.flow.server.VaadinServlet;
 import com.vaadin.flow.server.VaadinServletService;
 import com.vaadin.flow.spring.SpringInstantiator;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.function.Supplier;
 import lombok.val;
 
@@ -44,9 +45,17 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
 
                   @Override
                   public Instantiator getInstantiator() {
-                    return new MockInstantiator(
-                        new SpringInstantiator(
-                            this, AireSpringVaadinExtension.getApplicationContext()));
+                    val factories =
+                        ServiceLoader.load(
+                                InstantiatorFactory.class,
+                                Thread.currentThread().getContextClassLoader())
+                            .iterator();
+                    Instantiator current =
+                        new MockInstantiator(new SpringInstantiator(this, context));
+                    while (factories.hasNext()) {
+                      current = factories.next().create(current);
+                    }
+                    return current;
                   }
                 };
             service.init();

@@ -15,11 +15,11 @@ public class AireThemeResourceServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    response.setContentType("application/javascript");
-    writeScript(response);
+    writeScriptManager(response);
   }
 
-  private void writeScript(HttpServletResponse response) throws IOException {
+  private void writeScriptManager(HttpServletResponse response) throws IOException {
+    response.setContentType("application/javascript");
     try (val stream = Theme.class.getResourceAsStream("/META-INF/aire-scripts/index.js")) {
       Objects.requireNonNull(stream).transferTo(response.getOutputStream());
     }

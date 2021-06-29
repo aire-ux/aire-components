@@ -21,6 +21,10 @@ include(
          * themes
          */
         'aire-ux-flow:theme:aire-theme',
+        'aire-ux-flow:theme:aire-theme-uikit',
+        'aire-ux-flow:theme:aire-theme-spectrum',
+        'aire-ux-flow:theme:aire-theme-material',
+        'aire-ux-flow:theme:aire-theme-bootstrap',
 
         /**
          * controls
