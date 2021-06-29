@@ -1,0 +1,21 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.1.0"
+}
+
+
+dependencies {
+    api 'com.vaadin:flow-server'
+    implementation 'io.sunshower.arcus:arcus-reflect'
+}
+
+jar {
+    from("${project.projectDir}/node_modules/@aire-ux/aire-theme-manager/dist") {
+        include "index.js"
+        into "META-INF/aire-scripts/"
+    }
+}
+
+
+
+assemble.dependsOn npmInstall
+

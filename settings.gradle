@@ -1,6 +1,21 @@
 include(
-  'aire-css-selectors',
-  'aire-test-common',
-  'aire-test-vaadin',
-  'aire-test-spring',
+
+        /**
+         * core items
+         */
+        'aire-css-selectors',
+        'aire-test-common',
+        'aire-test-vaadin',
+        'aire-test-spring',
+
+
+        /**
+         * themes
+         */
+        'aire-ux-flow:theme:aire-theme',
+
+        /**
+         * controls
+         */
+        'aire-ux-flow:controls:aire-button',
 )
