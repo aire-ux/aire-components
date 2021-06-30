@@ -44,8 +44,8 @@ public class AireThemeManager {
     return themeResources.stream()
         .map(
             resource -> {
-              val id = String.format("%s%s", themeId, resource.getLocation());
-              val location = String.format("%s/%s", resource.getLocation());
+              val id = String.format("%s%s", themeId, resource.getName());
+              val location = String.format("current/%s", resource.getName());
               return JsonSerializer.toJson(new StyleDefinition(id, location));
             })
         .toArray(elemental.json.JsonValue[]::new);

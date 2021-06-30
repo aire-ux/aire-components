@@ -86,6 +86,17 @@ class AireThemeResourceServletTest {
     assertEquals(readResource("test-theme/resource.js"), readContent(response));
   }
 
+  @Test
+  void ensureLoadingStylesheetResourceWorks() {
+    AireThemeManager.setTheme(TestTheme.class);
+    val request = get("/aire/theme/current/test.css");
+    val response = invoke(request);
+    assertEquals("text/css", response.getContentType());
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertEquals(readResource("test-theme/styles/test.css"), readContent(response));
+
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {"/", "", "nothere.js"})
   void ensureLoadingResourceWithNoPathReturnsNotFound(String suffix) {

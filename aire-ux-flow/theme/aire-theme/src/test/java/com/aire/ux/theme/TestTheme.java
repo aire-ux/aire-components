@@ -6,6 +6,7 @@ public class TestTheme extends BaseTheme {
 
   public TestTheme() {
     super(id, TestTheme.class.getClassLoader());
-    addResource(new JavascriptResource("test-theme/resource.js", "resource.js"));
+    addResource(new JavascriptResource("resource.js", "test-theme/resource.js"));
+    addResource(new StylesheetResource("test.css", "test-theme/styles/test.css"));
   }
 }
