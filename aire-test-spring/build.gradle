@@ -4,7 +4,9 @@ dependencies {
     /**
      * project api dependencies
      */
+
     api project(':aire-test-vaadin')
+
 
 
     /**

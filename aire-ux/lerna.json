@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "themes/*",
+    "layouts/*",
+    "controls/*"
+  ],
+  "version": "0.0.10"
+}

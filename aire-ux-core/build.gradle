@@ -1,0 +1,5 @@
+dependencies {
+    api 'com.vaadin:flow-server'
+
+    testImplementation project(':aire-test-spring')
+}
