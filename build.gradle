@@ -17,7 +17,6 @@ allprojects {
 
 
     repositories {
-        jcenter()
         mavenLocal()
         mavenCentral()
 
@@ -161,6 +160,8 @@ subprojects {
     dependencies {
 
 
+        testImplementation 'org.mockito:mockito-core'
+        testImplementation 'org.mockito:mockito-junit-jupiter'
         testImplementation 'org.junit-pioneer:junit-pioneer'
         testImplementation 'org.junit.jupiter:junit-jupiter-params'
 

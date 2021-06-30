@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import lombok.val;
 
@@ -50,6 +49,10 @@ public abstract class BaseTheme implements Theme {
     this.decorators = new HashMap<>();
     this.themeResources = new ArrayList<>(resources);
     this.classloader = new WeakReference<>(requireNonNull(classloader));
+  }
+
+  public void addResource(ThemeResource resource) {
+    themeResources.add(resource);
   }
 
   @Override
@@ -88,25 +91,7 @@ public abstract class BaseTheme implements Theme {
     }
   }
 
-  protected <T> void register(Class<T> type) {
-    for (Class<?> t = type; t != null; t = t.getSuperclass()) {
-      if (t.isAnnotationPresent(NoDecorate.class)) {
-        if (t.isAnnotationPresent(Decorate.class)) {
-          registerDecorator(t.getAnnotation(Decorate.class), t);
-        } else {
-          break;
-        }
-      }
-      if (t.isAnnotationPresent(Decorate.class)) {
-        registerDecorator(t.getAnnotation(Decorate.class), t);
-      }
-    }
-  }
-
-  private void registerDecorator(Decorate decorationDefinition, Class<?> t) {
-    val definition = decorationDefinition.value();
-    if (!Objects.equals(definition, Decorator.class)) {
-      decorators.computeIfAbsent(t, (k) -> Reflect.instantiate(definition));
-    }
+  protected <T, U extends Decorator<T>> void register(Class<T> type, Class<U> decorator) {
+    decorators.computeIfAbsent(type, key -> Reflect.instantiate(decorator));
   }
 }

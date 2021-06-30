@@ -8,6 +8,15 @@ public interface ThemeResource {
     Javascript,
   }
 
+  Type getType();
+
+  String getName();
+  /** @return the theme-relative location of this resource, accessible via openResource() */
+  String getLocation();
+
+  /** @return the mimetype of this resource */
+  String getMimeType();
+
   /**
    * attempt to load this resource asynchronously
    *
