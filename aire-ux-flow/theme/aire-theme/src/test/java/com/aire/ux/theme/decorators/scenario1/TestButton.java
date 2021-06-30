@@ -7,6 +7,5 @@ import com.vaadin.flow.component.Tag;
 @Tag("aire-button")
 public class TestButton extends Component implements HasStyle {
 
-  public TestButton() {
-  }
+  public TestButton() {}
 }

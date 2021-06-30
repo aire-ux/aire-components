@@ -7,6 +7,4 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 
 @Tag("aire-button")
 @NpmPackage(value = "@aire-ux/aire-button", version = "0.0.0")
-public class Button extends Component implements HasStyle {
-
-}
+public class Button extends Component implements HasStyle {}

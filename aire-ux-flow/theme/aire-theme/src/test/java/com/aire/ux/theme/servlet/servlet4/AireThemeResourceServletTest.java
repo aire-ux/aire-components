@@ -47,14 +47,11 @@ class AireThemeResourceServletTest {
 
   private HttpServletResponse response;
 
-  @Inject
-  private WebApplicationContext context;
+  @Inject private WebApplicationContext context;
 
-  @Inject
-  private ServletContext servletContext;
+  @Inject private ServletContext servletContext;
 
-  @Inject
-  private AireThemeResourceServlet servlet;
+  @Inject private AireThemeResourceServlet servlet;
 
   @BeforeEach
   void setUp() {
