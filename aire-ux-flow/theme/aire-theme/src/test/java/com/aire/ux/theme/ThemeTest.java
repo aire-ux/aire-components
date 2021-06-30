@@ -29,7 +29,7 @@ public class ThemeTest {
   @ViewTest
   @Navigate("main")
   void ensureThemeDecoratesButton(@Context TestContext context) {
-    val result = context.selectFirst("vaadin-button.test-theme", TestButton.class);
+    val result = context.selectFirst("aire-button.test-theme", TestButton.class);
     assertTrue(result.isPresent());
   }
 

@@ -25,7 +25,7 @@ class AireThemeComponentDecoratorTest {
 
   @ViewTest
   @Navigate("main")
-  void ensureTestButtonIsDecorated(@Select("vaadin-button.test-theme") TestButton button) {
+  void ensureTestButtonIsDecorated(@Select("aire-button.test-theme") TestButton button) {
     assertNotNull(button);
   }
 

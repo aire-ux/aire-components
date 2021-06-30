@@ -5,11 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.Theme;
 import com.aire.ux.test.AireTest;
+import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
+import com.aire.ux.test.Select;
+import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
 import com.aire.ux.theme.TestTheme;
 import com.aire.ux.theme.context.AireThemeManager;
 import com.aire.ux.theme.decorators.scenario1.MainView;
+import com.aire.ux.theme.decorators.scenario1.TestButton;
 import com.aire.ux.theme.servlet.servlet4.AireThemeResourceServletTest.Config;
 import java.io.ByteArrayOutputStream;
 import javax.inject.Inject;
@@ -94,7 +98,12 @@ class AireThemeResourceServletTest {
     assertEquals("text/css", response.getContentType());
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertEquals(readResource("test-theme/styles/test.css"), readContent(response));
+  }
 
+  @ViewTest
+  @Navigate("main")
+  void ensureComponentIsStyled(@Select("aire-button.test-theme") TestButton button) {
+    assertNotNull(button);
   }
 
   @ParameterizedTest
