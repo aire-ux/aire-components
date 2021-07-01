@@ -36,7 +36,7 @@ public class AireThemeManager {
 
   private static void installStyle(Page page, Theme theme, List<ThemeResource> themeResources) {
     val definitions = JsonUtils.createArray(toDefinitions(theme, themeResources));
-    page.executeJs("AireThemeManager.installStyles($0)", definitions);
+    page.executeJs("Aire.ThemeManager.installStyles($0)", definitions);
   }
 
   private static JsonValue[] toDefinitions(Theme theme, List<ThemeResource> themeResources) {
@@ -45,7 +45,7 @@ public class AireThemeManager {
         .map(
             resource -> {
               val id = String.format("%s%s", themeId, resource.getName());
-              val location = String.format("current/%s", resource.getName());
+              val location = String.format("/aire/theme/current/%s", resource.getName());
               return JsonSerializer.toJson(new StyleDefinition(id, location));
             })
         .toArray(elemental.json.JsonValue[]::new);

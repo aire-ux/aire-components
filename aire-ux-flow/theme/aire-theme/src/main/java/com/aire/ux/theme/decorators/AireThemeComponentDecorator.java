@@ -4,6 +4,7 @@ import com.aire.ux.core.decorators.ComponentDecorator;
 import com.aire.ux.theme.context.ThemeContextHolder;
 import com.vaadin.flow.component.HasElement;
 import javax.annotation.Nonnull;
+import lombok.val;
 
 public class AireThemeComponentDecorator implements ComponentDecorator {
 
@@ -11,6 +12,9 @@ public class AireThemeComponentDecorator implements ComponentDecorator {
 
   @Override
   public void decorate(@Nonnull HasElement component) {
-    ThemeContextHolder.getContext().getTheme().apply(component);
+    val theme = ThemeContextHolder.getContext().getTheme();
+    if (theme != null) {
+      theme.apply(component);
+    }
   }
 }

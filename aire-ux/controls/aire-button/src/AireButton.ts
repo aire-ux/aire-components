@@ -2,7 +2,7 @@ import {
   css,
   customElement,
   html,
-  LitElement
+  LitElement, property
 } from 'lit-element';
 
 
@@ -12,12 +12,29 @@ import style from "../styles/aire-button.scss"
 @customElement('aire-button')
 export class AireButton extends LitElement {
 
-  static styles = style;
+  @property({
+    reflect: true,
+    attribute: true
+  })
+  classes: String;
+
+
+  @property({
+    reflect:true,
+    attribute:true
+  })
+  type: String;
+
+
+  // static styles = style;
 
 
   render() {
     return html`
-      <button type="button" class="btn btn-outline-primary">
+      <button 
+        class="btn btn-primary"
+          type="${this.type}"
+      >
         <slot></slot>
       </button>
     `;

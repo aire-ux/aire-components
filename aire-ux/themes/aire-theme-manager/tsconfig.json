@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es5",
     "module": "esnext",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -9,7 +9,6 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
     "importHelpers": true,
     "outDir": "dist",
     "sourceMap": true,

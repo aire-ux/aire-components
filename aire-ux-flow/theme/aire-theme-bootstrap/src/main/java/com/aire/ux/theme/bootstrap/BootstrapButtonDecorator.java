@@ -13,7 +13,8 @@ public class BootstrapButtonDecorator implements Decorator<Button> {
   @Override
   public void decorate(Button value) {
     value.getElement().setAttribute("type", "button");
-    value.setClassName("btn");
-    value.setClassName("btn-outline-primary");
+    value.getElement().setAttribute("classes", "btn btn-primary");
+    //    value.setClassName("btn");
+    //    value.setClassName("btn-outline-primary");
   }
 }
