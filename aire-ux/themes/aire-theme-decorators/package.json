@@ -1,7 +1,7 @@
 {
-  "name": "@aire-ux/aire-theme-manager",
+  "name": "@aire-ux/aire-theme-decorators",
   "version": "0.0.11",
-  "description": "Aire Theme Manager",
+  "description": "Aire Theme Decorators",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",

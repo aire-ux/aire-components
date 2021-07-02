@@ -21,6 +21,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
+    "@aire-ux/aire-theme-decorators": "^0.0.11",
     "@spectrum-css/button": "^3.0.3",
     "@spectrum-css/icon": "^3.0.3",
     "@spectrum-css/page": "^3.0.2",
