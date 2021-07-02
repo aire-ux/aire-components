@@ -1,7 +1,5 @@
 package com.aire.ux.test.vaadin;
 
-import static java.lang.String.format;
-
 import com.aire.ux.test.AireExtension;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -84,11 +82,6 @@ public class VaadinExtension
     stack.push(createFrame(context));
   }
 
-  private RuntimeException noMatchingProvider(ExtensionContext context) {
-    return new IllegalArgumentException(
-        format("No RoutesCreatorFactory for context: %s, extension: %s", context, this));
-  }
-
   private TestFrame createFrame(ExtensionContext context) {
     val frames = Frames.resolveFrameStack(context);
     val frame =
@@ -97,7 +90,10 @@ public class VaadinExtension
             .findFirst()
             .map(t -> new TestFrame(t.create(context, this), context))
             .or(() -> Optional.ofNullable(frames.peek()))
-            .orElseThrow(() -> noMatchingProvider(context));
+            .orElseGet(
+                () ->
+                    new TestFrame(
+                        new DefaultRoutesCreatorFactory().create(context, this), context));
     frame.activate();
     return frame;
   }

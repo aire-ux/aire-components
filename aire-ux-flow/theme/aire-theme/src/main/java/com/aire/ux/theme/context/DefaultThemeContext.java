@@ -7,9 +7,17 @@ import javax.annotation.Nonnull;
 final class DefaultThemeContext implements ThemeContext {
 
   private Theme theme;
+  private final ThemeContextHolderStrategy strategy;
+
+  DefaultThemeContext(final ThemeContextHolderStrategy strategy) {
+    this.strategy = strategy;
+  }
 
   @Override
   public Theme getTheme() {
+    if (theme == null) {
+      return strategy.getDefault();
+    }
     return theme;
   }
 

@@ -1,4 +1,4 @@
-package com.aire.ux.test.spring;
+package com.aire.ux.test;
 
 import com.vaadin.flow.di.Instantiator;
 

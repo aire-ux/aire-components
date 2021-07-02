@@ -1,7 +1,7 @@
 package com.aire.ux.theme.test;
 
 import com.aire.ux.core.instantiators.BaseAireInstantiator;
-import com.aire.ux.test.spring.InstantiatorFactory;
+import com.aire.ux.test.InstantiatorFactory;
 import com.vaadin.flow.di.Instantiator;
 
 public class ComponentDecoratingInstantiatorFactory implements InstantiatorFactory {

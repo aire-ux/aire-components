@@ -12,6 +12,8 @@ import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
 import com.aire.ux.theme.TestTheme;
 import com.aire.ux.theme.context.AireThemeManager;
+import com.aire.ux.theme.decorators.AireTestTheme;
+import com.aire.ux.theme.decorators.EnableThemes;
 import com.aire.ux.theme.decorators.scenario1.MainView;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
 import com.aire.ux.theme.servlet.servlet4.AireThemeResourceServletTest.Config;
@@ -40,9 +42,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 @AireTest
 @EnableSpring
+@EnableThemes
 @ExtendWith(MockitoExtension.class)
 @Routes(scanClassPackage = MainView.class)
 @SpringJUnitWebConfig(classes = Config.class)
+@com.aire.ux.theme.decorators.TestTheme(AireTestTheme.class)
 class AireThemeResourceServletTest {
 
   private HttpServletResponse response;
@@ -74,7 +78,7 @@ class AireThemeResourceServletTest {
   void ensureGettingThemeManagerWorks() {
     val request = get("/aire/theme/theme-manager");
     val response = invoke(request);
-    assertEquals(readResource("META-INF/aire-scripts/index.js"), readContent(response));
+    assertEquals(readResource("META-INF/aire-scripts/aire.iife.js"), readContent(response));
   }
 
   @Test

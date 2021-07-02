@@ -1,0 +1,31 @@
+{
+  "name": "@aire-ux/aire-theme-material",
+  "version": "0.0.0",
+  "description": "Material theme for Aire UX",
+  "main": "index.js",
+  "scripts": {
+    "test": "gradle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aire-ux/aire-components"
+  },
+  "keywords": [
+    "Aire-UX",
+    "Vaadin",
+    "Material",
+    "themes",
+    "SPA",
+    "PWA"
+  ],
+  "author": "Aire-UX",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aire-ux/aire-components/issues"
+  },
+  "homepage": "https://github.com/aire-ux/aire-components#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "mdb-ui-kit": "^3.8.1"
+  }
+}

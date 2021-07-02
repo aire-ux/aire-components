@@ -1,0 +1,11 @@
+
+dependencies {
+    api project(':aire-test-vaadin')
+    api project(':aire-ux-flow:theme:aire-theme')
+    testImplementation project(':aire-test-vaadin')
+
+
+    implementation 'io.sunshower.arcus:arcus-lang'
+    implementation 'io.sunshower.arcus:arcus-lambda'
+    implementation 'io.sunshower.arcus:arcus-reflect'
+}

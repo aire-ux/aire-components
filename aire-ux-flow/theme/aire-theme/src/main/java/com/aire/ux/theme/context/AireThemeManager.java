@@ -12,6 +12,7 @@ import io.sunshower.arcus.reflect.Reflect;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.val;
 
 public class AireThemeManager {
@@ -46,16 +47,18 @@ public class AireThemeManager {
             resource -> {
               val id = String.format("%s%s", themeId, resource.getName());
               val location = String.format("/aire/theme/current/%s", resource.getName());
-              return JsonSerializer.toJson(new StyleDefinition(id, location));
+              return JsonSerializer.toJson(new StyleDefinition(id, location, "Constructable"));
             })
         .toArray(elemental.json.JsonValue[]::new);
   }
 
   @Data
+  @NoArgsConstructor
   @AllArgsConstructor
   public static class StyleDefinition {
 
     private String id;
     private String url;
+    private String mode = "Constructable";
   }
 }

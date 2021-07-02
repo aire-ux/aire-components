@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aire-ux/aire-theme-bootstrap.git"
+    "url": "git+https://github.com/aire-ux/aire-components.git"
   },
   "keywords": [
     "Aire-UX",
@@ -21,9 +21,9 @@
   "author": "Aire-UX",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aire-ux/aire-theme-bootstrap/issues"
+    "url": "https://github.com/aire-ux/aire-components/issues"
   },
-  "homepage": "https://github.com/aire-ux/aire-theme-bootstrap#readme",
+  "homepage": "https://github.com/aire-ux/aire-components#readme",
   "devDependencies": {
     "bootstrap": "^5.0.2"
   }
