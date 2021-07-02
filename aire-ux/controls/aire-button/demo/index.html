@@ -1,37 +1,55 @@
 <!doctype html>
-<html lang="en-GB"  class="spectrum spectrum--medium spectrum--light" >
+<html lang="en-GB" class="spectrum spectrum--medium spectrum--light">
 <head>
   <meta charset="utf-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
 
 </head>
 <body>
-  <div id="demo"></div>
+<div id="demo" style="padding:40px"></div>
 
-  <script type="module">
-    import { html, render } from 'lit-html';
+<script type="module">
+  import {html, render} from 'lit-html';
 
-    import '../dist/index.js';
-    import {Aire} from '../node_modules/@aire-ux/aire-theme-manager/dist/src/AireThemeManager.js'
-    console.log(Aire);
+  import '../dist/index.js';
+  import {Aire} from '../node_modules/@aire-ux/aire-theme-manager/dist/src/AireThemeManager.js'
 
-
-
-    const title = 'Hello owc World!';
-    render(
-      html`
-        <aire-button classes="btn btn-primary" type="button">
-          some more light-dom
-        </aire-button>
-      `,
-      document.querySelector('#demo')
-    );
-
+  function setBootstrap() {
+    Aire.uninstallStyles();
     Aire.installStyles([{
       id: 'bootstrap',
       url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
       mode: Aire.Mode.Constructable
     }])
-  </script>
+  }
+
+
+  function setMaterial() {
+    Aire.uninstallStyles();
+    Aire.installStyles([{
+      id: 'mdb',
+      url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+      mode: Aire.Mode.Constructable
+    }])
+  }
+
+  render(
+      html`
+        <div margin="40px">
+          <aire-button classes="btn btn-primary" type="button" @click="${setMaterial}">
+            material
+          </aire-button>
+          <aire-button classes="btn btn-dark" type="button" @click="${setBootstrap}">
+            bootstrap
+          </aire-button>
+        </div>
+      `,
+      document.querySelector('#demo')
+  );
+
+</script>
 </body>
 </html>
