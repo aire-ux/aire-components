@@ -5,8 +5,6 @@ import {adoptStyles} from 'lit';
 import {Aire} from "./AireThemeManager";
 import StyleEvent = Aire.StyleEvent;
 import EventType = Aire.EventType;
-import {Themable} from "../dist/src/themable";
-import {LitElement} from "lit-element";
 
 export interface ThemeEventAware {
   /**

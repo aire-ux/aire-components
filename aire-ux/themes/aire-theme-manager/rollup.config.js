@@ -2,9 +2,6 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import postcss from 'rollup-plugin-postcss'
 import typescript from '@rollup/plugin-typescript'
 import postcssLit from 'rollup-plugin-postcss-lit';
-// import {postcss as postCssImport} from "postcss-import"
-// import {postcss as postCssVarFallback} from "postcss-varfallback"
-import cssNano from "cssnano"
 
 export default {
 
@@ -35,7 +32,7 @@ export default {
     postcssLit(),
 
     typescript({
-      tsconfig: './tsconfig.json'
+      tsconfig: './tsconfig.prod.json'
     }),
 
   ]

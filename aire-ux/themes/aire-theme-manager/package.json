@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-theme-manager",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Aire Theme Manager",
   "author": "Aire-UX",
   "license": "MIT",
@@ -9,10 +9,10 @@
   "scripts": {
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
-    "rollup": "rollup -c tsconfig.prod.json",
+    "rollup": "rollup -c",
     "start": "concurrently --kill-others --names rollup,web-dev-server \"npm run rollup:watch\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
     "build": "tsc",
-    "prepublish": "rollup -c tsconfig.prod.json",
+    "prepublish": "rollup -c",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "test": "tsc && wtr --coverage",
