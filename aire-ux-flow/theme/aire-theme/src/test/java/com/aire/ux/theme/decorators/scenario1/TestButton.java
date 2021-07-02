@@ -1,12 +1,11 @@
 package com.aire.ux.theme.decorators.scenario1;
 
-import com.aire.ux.theme.Decorate;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.Tag;
 
-@Decorate(TestButtonDecorator.class)
-public class TestButton extends Button {
+@Tag("aire-button")
+public class TestButton extends Component implements HasStyle {
 
-  public TestButton() {
-    //    this.setClassName();
-  }
+  public TestButton() {}
 }

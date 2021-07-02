@@ -1,8 +1,13 @@
 package com.aire.ux;
 
+import com.aire.ux.ThemeResource.Type;
 import com.vaadin.flow.component.HasElement;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface Theme {
 
@@ -26,4 +31,22 @@ public interface Theme {
    * @param <T> the type of the component
    */
   <T extends HasElement> void apply(T value);
+
+  default List<ThemeResource> getThemeResources(Type type) {
+    return getThemeResources().stream()
+        .filter(t -> Objects.equals(type, t.getType()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * @param resource the resource to lookup
+   * @return the resource, or null if no resource with the name is found
+   */
+  @Nullable
+  default ThemeResource getThemeResource(@Nonnull String resource) {
+    return getThemeResources().stream()
+        .filter(t -> t.getName().equals(resource))
+        .findAny()
+        .orElse(null);
+  }
 }
