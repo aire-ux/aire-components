@@ -4,6 +4,6 @@ final class InheritableThreadLocalContextHolderStrategy
     extends AbstractThreadLocalContextHolderStrategy {
 
   InheritableThreadLocalContextHolderStrategy() {
-    super(new InheritableThreadLocal<>());
+    super(new InheritableThreadLocal<>(), new InheritableThreadLocal<>());
   }
 }

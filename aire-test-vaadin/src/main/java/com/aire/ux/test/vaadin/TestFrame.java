@@ -66,9 +66,6 @@ public final class TestFrame implements AutoCloseable {
     log.log(Level.INFO, "Activated Stack Frame {0}", this);
   }
 
-  private UI resolveService(Object t, Object u) {
-    return null;
-  }
 
   void deactivate() {
     checkLiveness();

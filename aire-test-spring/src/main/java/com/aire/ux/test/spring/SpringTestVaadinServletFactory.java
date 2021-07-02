@@ -1,5 +1,6 @@
 package com.aire.ux.test.spring;
 
+import com.aire.ux.test.InstantiatorFactory;
 import com.aire.ux.test.VaadinServletFactory;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.github.mvysny.kaributesting.v10.mock.MockInstantiator;
@@ -42,13 +43,12 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
               DeploymentConfiguration deploymentConfiguration) throws ServiceException {
             val service =
                 new MockSpringServletService(this, deploymentConfiguration, ctx, uiFactory) {
-
                   @Override
                   public Instantiator getInstantiator() {
                     val factories =
                         ServiceLoader.load(
-                                InstantiatorFactory.class,
-                                Thread.currentThread().getContextClassLoader())
+                            InstantiatorFactory.class,
+                            Thread.currentThread().getContextClassLoader())
                             .iterator();
                     Instantiator current =
                         new MockInstantiator(new SpringInstantiator(this, context));
