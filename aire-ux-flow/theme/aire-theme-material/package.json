@@ -1,19 +1,19 @@
 {
-  "name": "@aire-ux/aire-theme-bootstrap",
+  "name": "@aire-ux/aire-theme-material",
   "version": "0.0.0",
-  "description": "Bootstrap theme for Aire UX",
+  "description": "Material theme for Aire UX",
   "main": "index.js",
   "scripts": {
     "test": "gradle test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aire-ux/aire-components.git"
+    "url": "git+https://github.com/aire-ux/aire-components"
   },
   "keywords": [
     "Aire-UX",
     "Vaadin",
-    "Bootstrap",
+    "Material",
     "themes",
     "SPA",
     "PWA"
@@ -24,7 +24,8 @@
     "url": "https://github.com/aire-ux/aire-components/issues"
   },
   "homepage": "https://github.com/aire-ux/aire-components#readme",
-  "devDependencies": {
-    "bootstrap": "^5.0.2"
+  "devDependencies": {},
+  "dependencies": {
+    "mdb-ui-kit": "^3.8.1"
   }
 }

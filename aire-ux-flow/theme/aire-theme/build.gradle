@@ -23,7 +23,7 @@ dependencies {
 
 jar {
     from("${project.projectDir}/node_modules/@aire-ux/aire-theme-manager/dist") {
-        include "index.js"
+        include "aire.iife.js"
         into "META-INF/aire-scripts/"
     }
 }

@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/aire-ux/aire-components#readme",
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.2"
+    "@aire-ux/aire-theme-manager": "^0.0.14"
   }
 }

@@ -95,7 +95,7 @@ public class AireThemeResourceServlet extends HttpServlet {
   private void writeScriptManager(HttpServletResponse response) throws IOException {
     response.setContentType("application/javascript");
     response.setStatus(HttpServletResponse.SC_OK);
-    try (val stream = Theme.class.getResourceAsStream("/META-INF/aire-scripts/index.js")) {
+    try (val stream = Theme.class.getResourceAsStream("/META-INF/aire-scripts/aire.iife.js")) {
       Objects.requireNonNull(stream).transferTo(response.getOutputStream());
     }
   }
