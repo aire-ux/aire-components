@@ -3,7 +3,6 @@
  */
 import {adoptStyles} from 'lit';
 import {Aire} from '@aire-ux/aire-theme-manager';
-// import {Aire} from "@aire";
 import StyleEvent = Aire.StyleEvent;
 import EventType = Aire.EventType;
 
@@ -60,7 +59,6 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
           && shadowRoot
           && stylesheet instanceof CSSStyleSheet
       ) {
-        console.log("Successfully adopted styles!");
         adoptStyles(shadowRoot, [stylesheet]);
       }
     }
@@ -81,7 +79,6 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
 
 
     disconnectedCallback(): void {
-      console.log("Disconnected");
       Aire.removeStyleChangeListener(
           EventType.CustomStyleAdded,
           this.stylesheetAddedListener

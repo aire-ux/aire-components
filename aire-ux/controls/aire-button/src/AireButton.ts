@@ -1,8 +1,15 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {
+  customElement,
+  html,
+  LitElement,
+  property
+} from 'lit-element';
 
 // @ts-ignore
 import style from "../styles/aire-button.scss"
-import {dynamicallyThemeable} from "@aire-ux/aire-theme-decorators";
+import {
+  dynamicallyThemeable
+} from "@aire-ux/aire-theme-decorators";
 
 @customElement('aire-button')
 @dynamicallyThemeable
