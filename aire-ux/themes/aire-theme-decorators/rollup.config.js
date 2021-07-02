@@ -32,7 +32,7 @@ export default {
     postcssLit(),
 
     typescript({
-      tsconfig: './tsconfig.prod.json'
+      tsconfig: './tsconfig.json'
     }),
 
   ]

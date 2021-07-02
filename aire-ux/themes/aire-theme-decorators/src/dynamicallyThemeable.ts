@@ -54,10 +54,6 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
           stylesheet = detail.styleDefinition,
           shadowRoot = this.shadowRoot as any;
 
-      console.log("ADDING STYLES");
-      console.log("adopted? " + !!shadowRoot.adoptedStyleSheets);
-      console.log("stylesheet? " + !!stylesheet);
-      console.log("shadow root? " + !!shadowRoot);
       if (
           shadowRoot.adoptedStyleSheets
           && stylesheet
