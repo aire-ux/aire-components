@@ -24,5 +24,4 @@ class AireThemeInstantiatorTest {
   void ensureDefaultThemeIsApplied(@Select(".sup") TestButton button) {
     assertNotNull(button);
   }
-
 }

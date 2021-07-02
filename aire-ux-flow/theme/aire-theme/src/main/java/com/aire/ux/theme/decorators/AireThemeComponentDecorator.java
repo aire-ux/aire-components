@@ -8,8 +8,7 @@ import lombok.val;
 
 public class AireThemeComponentDecorator implements ComponentDecorator {
 
-  public AireThemeComponentDecorator() {
-  }
+  public AireThemeComponentDecorator() {}
 
   @Override
   public void decorate(@Nonnull HasElement component) {

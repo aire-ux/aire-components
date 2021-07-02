@@ -20,7 +20,6 @@ public class ScenarioTheme extends BaseTheme {
     @Override
     public void decorate(TestButton value) {
       value.addClassNames("sup");
-
     }
   }
 }

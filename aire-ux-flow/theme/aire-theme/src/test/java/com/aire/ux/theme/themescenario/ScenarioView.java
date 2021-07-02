@@ -8,9 +8,7 @@ import com.vaadin.flow.router.Route;
 @DefaultTheme(ScenarioTheme.class)
 public class ScenarioView extends VerticalLayout {
 
-
   public ScenarioView() {
     add(new TestButton());
   }
-
 }

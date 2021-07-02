@@ -14,8 +14,8 @@ import lombok.val;
 
 public class AireThemeInstantiator extends BaseAireInstantiator {
 
-  public AireThemeInstantiator(@Nonnull Instantiator delegate,
-      @Nonnull ComponentDecorator decorator) {
+  public AireThemeInstantiator(
+      @Nonnull Instantiator delegate, @Nonnull ComponentDecorator decorator) {
     super(delegate, decorator);
   }
 
@@ -36,5 +36,4 @@ public class AireThemeInstantiator extends BaseAireInstantiator {
       }
     }
   }
-
 }
