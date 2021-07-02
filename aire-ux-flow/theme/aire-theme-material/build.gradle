@@ -20,7 +20,7 @@ dependencies {
 jar {
     from("${project.projectDir}/node_modules/mdb-ui-kit/css") {
         include "*.min.css"
-        into "META-INF/aire-theme/aire-bootstrap/"
+        into "META-INF/aire-theme/aire-material/"
     }
 }
 

@@ -74,7 +74,7 @@ class AireThemeResourceServletTest {
   void ensureGettingThemeManagerWorks() {
     val request = get("/aire/theme/theme-manager");
     val response = invoke(request);
-    assertEquals(readResource("META-INF/aire-scripts/index.js"), readContent(response));
+    assertEquals(readResource("META-INF/aire-scripts/aire.iife.js"), readContent(response));
   }
 
   @Test
