@@ -2,7 +2,7 @@
  * we can't re-export litelement due to its private members
  */
 import {adoptStyles} from 'lit';
-import {Aire} from "./AireThemeManager";
+import {Aire} from '@aire-ux/aire-theme-manager';
 import StyleEvent = Aire.StyleEvent;
 import EventType = Aire.EventType;
 
@@ -53,17 +53,12 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
           stylesheet = detail.styleDefinition,
           shadowRoot = this.shadowRoot as any;
 
-      console.log("ADDING STYLES");
-      console.log("adopted? " + !!shadowRoot.adoptedStyleSheets);
-      console.log("stylesheet? " + !!stylesheet);
-      console.log("shadow root? " + !!shadowRoot);
       if (
           shadowRoot.adoptedStyleSheets
           && stylesheet
           && shadowRoot
           && stylesheet instanceof CSSStyleSheet
       ) {
-        console.log("Successfully adopted styles!");
         adoptStyles(shadowRoot, [stylesheet]);
       }
     }
@@ -84,7 +79,6 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
 
 
     disconnectedCallback(): void {
-      console.log("Disconnected");
       Aire.removeStyleChangeListener(
           EventType.CustomStyleAdded,
           this.stylesheetAddedListener

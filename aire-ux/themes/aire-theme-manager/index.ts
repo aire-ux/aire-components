@@ -1,1 +1,1 @@
-export * from './src/AireThemeManager.js';
+export { Aire } from './src/AireThemeManager.js';

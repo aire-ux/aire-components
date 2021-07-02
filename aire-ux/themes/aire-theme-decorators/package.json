@@ -1,8 +1,8 @@
 {
-  "name": "@aire-ux/aire-button",
+  "name": "@aire-ux/aire-theme-decorators",
   "version": "0.0.14",
-  "description": "Webcomponent aire-button following open-wc recommendations",
-  "author": "aire-button",
+  "description": "Aire Theme Decorators",
+  "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -10,10 +10,9 @@
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
     "rollup": "rollup -c",
-    "start": "concurrently --kill-others --names build,web-dev-server \"npm run build:watch\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
+    "start": "concurrently --kill-others --names rollup,web-dev-server \"npm run rollup:watch\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
     "build": "tsc",
-    "build:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
-    "prepublish": "rollup -c",
+    "prepublish": "rimraf dist && tsc",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "test": "tsc && wtr --coverage",
@@ -21,18 +20,7 @@
     "storybook": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds -c .storybook/server.mjs\"",
     "storybook:build": "tsc && build-storybook"
   },
-  "dependencies": {
-    "@aire-ux/aire-theme-decorators": "^0.0.14",
-    "@spectrum-css/button": "^3.0.3",
-    "@spectrum-css/icon": "^3.0.3",
-    "@spectrum-css/page": "^3.0.2",
-    "@spectrum-css/typography": "^3.0.2",
-    "@spectrum-css/vars": "^3.0.2",
-    "lit-element": "^2.5.1",
-    "lit-html": "^1.4.1"
-  },
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.14",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",
@@ -45,7 +33,6 @@
     "@web/dev-server-rollup": "^0.3.4",
     "@web/dev-server-storybook": "^0.3.5",
     "@web/test-runner": "^0.12.20",
-    "bootstrap": "^5.0.2",
     "concurrently": "^5.3.0",
     "cssnano": "^5.0.6",
     "deepmerge": "^4.2.2",
@@ -55,6 +42,7 @@
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
     "lit": "^2.0.0-rc.2",
+    "lit-element": "^2.5.1",
     "node-sass": "^6.0.1",
     "postcss-dropunusedvars": "^1.2.0",
     "postcss-import": "^14.0.2",
@@ -67,8 +55,10 @@
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-postcss-lit": "^1.1.0",
     "rollup-plugin-typescript2": "^0.30.0",
+    "sinon": "^11.1.1",
     "tslib": "^2.3.0",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "typescript-node": "^0.1.3"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
@@ -109,5 +99,8 @@
       "prettier --write"
     ]
   },
-  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0"
+  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0",
+  "dependencies": {
+    "@aire-ux/aire-theme-manager": "^0.0.14"
+  }
 }

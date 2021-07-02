@@ -1,20 +1,80 @@
-# \<aire-button>
+# Aire Theme Manager 
 
-This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
+This component is intended to be used by the Aire UX Theme Manager component.  Nonetheless, it
+can be a useful way to alter styles within the DOM and respond to them
+
 
 ## Installation
 ```bash
-npm i aire-button
+npm i @aire-ux/aire-theme-manager
 ```
 
 ## Usage
-```html
-<script type="module">
-  import 'aire-button/aire-button.js';
-</script>
+Aire ThemeManager supports two types of styling changes out of the box:
 
-<aire-button></aire-button>
+### Dynamic Page Inclusions
+This is the simplest type of theming: the theme manager dynamically adds
+and removes `<link>` tags to the page for your components' consumption.
+For better or worse, the CSS isolation of shadow-dom prevents this
+styling from propagating to web-component based components.
+
+
+```typescript
+  import {Aire} from '@aire-ux/aire-theme-manager'
+
+  function setBootstrap() {
+    Aire.uninstallStyles();
+    Aire.installStyles([{
+      id: 'bootstrap',
+      url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
+      mode: Aire.Mode.Global
+    }])
+  }
+
+  function setMaterial() {
+    Aire.uninstallStyles();
+    Aire.installStyles([{
+      id: 'mdb',
+      url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+      mode: Aire.Mode.Global
+    }])
+  }
+
 ```
+
+### Adopted Stylesheets (Shadow DOM)
+This mode is the default for Aire components. Changes are propagated via
+events to all listening components (
+    registered via the 
+    `@dynamicallyThemeable` decorator exported by `@aire-ux/aire-theme-decorators`)
+
+
+```typescript
+
+function setBootstrap() {
+  Aire.uninstallStyles();
+  Aire.installStyles([{
+    id: 'bootstrap',
+    url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
+    mode: Aire.Mode.Constructable
+  }])
+}
+
+
+function setMaterial() {
+  Aire.uninstallStyles();
+  Aire.installStyles([{
+    id: 'mdb',
+    url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+    mode: Aire.Mode.Constructable
+  }])
+}
+```
+
+
+
+
+
 
 ## Linting with ESLint, Prettier, and Types
 To scan the project for linting errors, run

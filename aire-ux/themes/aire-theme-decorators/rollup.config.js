@@ -3,13 +3,13 @@ import postcss from 'rollup-plugin-postcss'
 import typescript from '@rollup/plugin-typescript'
 import postcssLit from 'rollup-plugin-postcss-lit';
 
+export default {
 
-const IIFEBuild = {
+  external: ['lit-html'],
   input: "./index.ts",
   output: {
-    file: "dist/aire.iife.js",
-    // dir: 'dist',
-    format: 'iife',
+    dir: 'dist',
+    format: 'iife'
   },
   plugins: [
 
@@ -32,10 +32,8 @@ const IIFEBuild = {
     postcssLit(),
 
     typescript({
-      tsconfig: './tsconfig.prod.json'
+      tsconfig: './tsconfig.json'
     }),
 
   ]
 }
-
-export default [IIFEBuild]
