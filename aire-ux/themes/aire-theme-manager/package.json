@@ -43,7 +43,7 @@
     "lint-staged": "^10.5.4",
     "lit": "^2.0.0-rc.2",
     "lit-element": "^2.5.1",
-    "node-sass": "^6.0.1",
+    "lit-html": "^1.4.1",
     "postcss-dropunusedvars": "^1.2.0",
     "postcss-import": "^14.0.2",
     "postcss-scss": "^4.0.0",
@@ -70,6 +70,8 @@
       "@typescript-eslint"
     ],
     "rules": {
+      "no-undef": "off",
+      "wc/guard-super-call": "off",
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "error"
