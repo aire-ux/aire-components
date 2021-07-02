@@ -12,6 +12,15 @@
     import { html, render } from 'lit-html';
     import '../dist/index.js';
 
+    const style = new CSSStyleSheet();
+    style.replace(`
+    button {
+      color: red;
+    }
+    `);
+    window.style = style;
+
+
     const title = 'Hello owc World!';
     render(
       html`

@@ -4,30 +4,75 @@
 
 export module Aire {
 
-  interface ReplaceAware {
+  /**
+   * handle stylesheets
+   */
+  export type CustomEventHandler = (e: StyleEvent) => void;
+  /**
+   * type doesn't seem to be available in ES6 type definitions
+   */
+  export type ReplaceAware = CSSStyleSheet & {
     replace(definition: string): Promise<ReplaceAware>;
   }
 
 
+  export enum EventType {
+    CustomStyleAdded = 'aire-custom-style-added',
+    CustomStyleRemoved = 'aire-custom-style-removed',
+  }
+
+
+  /**
+   * determine if the theme manager should walk the dom and
+   * force-remove adoptedStyles.
+   */
+  export const forceRemove = false;
+  /**
+   * the event detail for a custom event
+   */
+  export type EventDetail = {
+    eventType: EventType;
+    styleDefinition: StyleDefinition;
+  }
+
+  export type StyleValue = HTMLStyleElement | CSSStyleSheet;
+  /**
+   * style event type
+   */
+  export type StyleEvent = {
+    detail: EventDetail;
+  } & CustomEvent;
+
+  /**
+   * determine which region to install a style into
+   */
   export enum Mode {
     Global = 'Global',
     Constructable = 'constructable'
   }
 
+  /**
+   * while unusued right now, it may be usedful
+   * to store adopted styles in different regions
+   */
   export type StyleMode = Mode | string;
 
+  /**
+   * the definition of a style to be managed
+   * by the theme manager
+   */
   export type StyleDefinition = {
-    id: string,
-    url: string,
-    mode: StyleMode
+    id: string
+    url: string
+    mode?: StyleMode
 
     /**
      * once we're in the DOM (somehow), what are we?
      */
-    result: any
+    result?: StyleValue
   }
 
-  console.log("Theme manager loaded!");
+  console.info("Aire Theme manager loaded!");
 
 
   const styles: Map<StyleMode, Array<StyleDefinition>> = new Map();
@@ -36,14 +81,6 @@ export module Aire {
    */
   styles.set(Mode.Global, []);
   styles.set(Mode.Constructable, []);
-
-  /**
-   * a list of styles that have been installed
-   */
-  // const installedGlobalStyles: Array<StyleDefinition> = [];
-
-
-  // const installedConstructableStyles
 
 
   /**
@@ -54,68 +91,22 @@ export module Aire {
   export function installStyles(newStyles: Array<StyleDefinition>): void {
     // installedGlobalStyles = styles;
     for (const style of newStyles) {
-
-
+      if (!style.mode) {
+        style.mode = Mode.Global;
+      }
       let definition = styles.get(style.mode);
-      if (!definition) {
-        styles.set(style.mode, definition = []);
+      if (!definition && style.mode) {
+        styles.set(style.mode, definition = [style]);
+      } else if (definition) {
+        definition.push(style);
       }
 
       enqueueStyleInstallation(style).then(link => {
-        console.log("installed " + link);
+        console.info("installed " + link);
       });
     }
   }
 
-
-  export function enqueueGlobalStyleDefinition(style: StyleDefinition): Promise<HTMLLinkElement> {
-    console.info(`Enqueuing style for addition with id: ${style.id}, url: ${style.url}`);
-    return new Promise<HTMLLinkElement>((resolve, reject) => {
-      let link = document.createElement('link');
-      link.id = style.id;
-      link.href = style.url;
-      link.rel = 'stylesheet';
-      style.result = link;
-      document.head.appendChild(link);
-      link.onload = (e: Event) => {
-        console.info(`Successfully added style at ${style.url}`);
-        resolve(link);
-      }
-      link.onerror = (e: string | Event) => {
-        console.warn(`Failed to add style at ${style.url}.  Reason: ${e}`)
-        reject(link);
-      }
-    });
-  }
-
-  export function enqueueConstructableStyleDefinition(
-      definition: StyleDefinition
-  ): Promise<any> {
-    const stylesheet = new CSSStyleSheet() as
-        unknown as
-        ReplaceAware & CSSStyleSheet;
-
-    definition.result = stylesheet;
-    if (definition.mode === Mode.Global) {
-      const doc = document as unknown as {
-        adoptedStyleSheets: Array<CSSStyleSheet>
-      }
-      doc.adoptedStyleSheets.push(stylesheet);
-    }
-
-
-    return stylesheet.replace(`@import url('${definition.url}')`)
-        .then((success => {
-              console.info("Successfully loaded stylesheet");
-              // @ts-ignore
-              styles.get(definition.mode).push(definition);
-              return success;
-            }),
-            error => {
-              console.warn(`Failed to load stylesheet.  Reason: ${error}`);
-              return Promise.reject(error);
-            })
-  }
 
   /**
    * enqueue a stylesheet addition
@@ -141,53 +132,121 @@ export module Aire {
   }
 
 
+  /**
+   * attempt to remove constructed stylesheets from the dom
+   * and shadow-dom elements.  Test this
+   * @param definition
+   * @private
+   */
   function uninstallConstructedStylesheet(
       definition: StyleDefinition
   ): void {
-
-    let stack = [document.documentElement];
-    while (stack.length) {
-      let el = stack.pop();
-      if (el) {
-        const styleaware = el as unknown as {
-          adoptedStyleSheets: Array<CSSStyleSheet>;
-        }
-        if (
-            styleaware.adoptedStyleSheets &&
-            styleaware
-                .adoptedStyleSheets
-                .indexOf(definition.result) != -1) {
-          styleaware.adoptedStyleSheets =
+    if (forceRemove) {
+      let stack = [document.documentElement];
+      while (stack.length) {
+        let el = stack.pop();
+        if (el) {
+          const styleaware = el as unknown as {
+            adoptedStyleSheets: Array<StyleValue>;
+          }
+          if (
+              styleaware.adoptedStyleSheets &&
               styleaware
                   .adoptedStyleSheets
-                  .filter(style => style !== definition.result);
-        }
-        let children = el.children;
-        for (let i = 0; i < children.length; i++) {
-          let child = children.item(i);
-          if (child) {
-            stack.push(child as HTMLElement);
+                  .indexOf(definition.result as StyleValue) != -1) {
+            styleaware.adoptedStyleSheets =
+                styleaware
+                    .adoptedStyleSheets
+                    .filter(style => style !== definition.result);
+          }
+          let children = el.children;
+          for (let i = 0; i < children.length; i++) {
+            let child = children.item(i);
+            if (child) {
+              stack.push(child as HTMLElement);
+            }
           }
         }
       }
+    } else {
+      const styleaware = document as unknown as {
+        adoptedStyleSheets: Array<StyleValue>;
+      }
+      styleaware.adoptedStyleSheets =
+          styleaware
+              .adoptedStyleSheets
+              .filter(s => definition.result !== s);
     }
-
   }
+
 
   export function uninstallStyle(style: StyleDefinition) {
     switch (style.mode) {
       case Mode.Global:
         uninstallGlobalStyle(style);
+        break;
       default: {
         uninstallConstructedStylesheet(style);
       }
     }
+
+    let event = new CustomEvent(
+        EventType.CustomStyleRemoved, {
+          detail: {
+            eventType: EventType.CustomStyleRemoved,
+            styleDefinition: style
+          }
+        });
+    document.documentElement.dispatchEvent(event);
+  }
+
+
+  const registeredListeners: Array<{
+    type: EventType,
+    handler: CustomEventHandler
+  }> = [];
+
+  export function addStyleChangeListener(type: EventType, handler: CustomEventHandler) {
+    registeredListeners.push({
+      type: type,
+      handler: handler
+    });
+    document
+        .documentElement
+        .addEventListener(type, handler as any);
   }
 
   /**
-   * @param toRemove the styles to remove from the page
+   *
+   * @param type the type of the listener to remove
+   * @param handler the handler
    */
-  export function uninstallStyles(toRemove: Array<StyleDefinition> | undefined = styles.get(Mode.Global)): void {
+  export function removeStyleChangeListener(
+      type: EventType,
+      handler: CustomEventHandler
+  ) {
+    document
+        .documentElement
+        .removeEventListener(type, handler as any);
+  }
+
+  /**
+   * clean up listeners
+   */
+  export function clearListeners() {
+    for (const listener of registeredListeners) {
+      removeStyleChangeListener(listener.type, listener.handler);
+    }
+  }
+
+
+  /**
+   * @param toRemove the styles to remove from the page.
+   * Defaults to the global styles
+   */
+  export function uninstallStyles(
+      toRemove: Array<StyleDefinition> =
+      styles.get(Mode.Global) || []): void {
     if (toRemove) {
       for (const style of toRemove) {
         let idx = toRemove.indexOf(style);
@@ -198,6 +257,88 @@ export module Aire {
         }
       }
     }
+  }
+
+
+  /**
+   *
+   * @param definition the definition to add
+   * @private shouldn't be called directly
+   */
+  function enqueueConstructableStyleDefinition(
+      definition: StyleDefinition
+  ): Promise<any> {
+    const stylesheet = new CSSStyleSheet() as ReplaceAware;
+    return stylesheet
+        .replace(`@import url('${definition.url}')`)
+        .then((success => {
+              definition.result = stylesheet;
+              if (definition.mode === Mode.Constructable) {
+                const doc = document as unknown as {
+                  adoptedStyleSheets: Array<CSSStyleSheet>
+                }
+                doc.adoptedStyleSheets = [...doc.adoptedStyleSheets].concat(stylesheet);
+              }
+              let event = new CustomEvent(
+                  EventType.CustomStyleAdded,
+                  {
+                    detail: {
+                      eventType: EventType.CustomStyleAdded,
+                      styleDefinition: stylesheet
+                    }
+                  });
+
+              document
+                  .documentElement
+                  .dispatchEvent(event);
+              console.info("Successfully loaded stylesheet");
+              // @ts-ignore
+              styles.get(definition.mode).push(definition);
+              return success;
+            }),
+            error => {
+              console.warn(`Failed to load stylesheet.  Reason: ${error}`);
+              return Promise.reject(error);
+            });
+  }
+
+  /**
+   * @param style the style to install
+   * @private should not be called externally
+   */
+  function enqueueGlobalStyleDefinition(
+      style: StyleDefinition
+  ): Promise<HTMLLinkElement> {
+    console.info(`Enqueuing style for addition with id: ${style.id}, url: ${style.url}`);
+    return new Promise<HTMLLinkElement>((
+        resolve, reject) => {
+      let link = document.createElement('link');
+      link.id = style.id;
+      link.href = style.url;
+      link.rel = 'stylesheet';
+      style.result = link;
+      document.head.appendChild(link);
+
+      let event = new CustomEvent(
+          EventType.CustomStyleAdded, {
+            detail: {
+              eventType: EventType.CustomStyleAdded,
+              styleDefinition: link
+            }
+          });
+      document
+          .documentElement
+          .dispatchEvent(event);
+
+      link.onload = (e: Event) => {
+        console.info(`Successfully added style at ${style.url}`);
+        resolve(link);
+      }
+      link.onerror = (e: string | Event) => {
+        console.warn(`Failed to add style at ${style.url}.  Reason: ${e}`)
+        reject(link);
+      }
+    });
   }
 
 }

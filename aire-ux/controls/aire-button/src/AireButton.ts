@@ -2,9 +2,10 @@ import {
   css,
   customElement,
   html,
-  LitElement, property
+  LitElement, property, PropertyValues
 } from 'lit-element';
 
+import {adoptStyles} from 'lit';
 
 // @ts-ignore
 import style from "../styles/aire-button.scss"
@@ -26,12 +27,14 @@ export class AireButton extends LitElement {
   type: String;
 
 
-  // static styles = style;
-
+  updateStyles() : void {
+    adoptStyles(this.shadowRoot as ShadowRoot, [(window as any).style])
+  }
 
   render() {
     return html`
       <button 
+          @click="${this.updateStyles}"
         class="btn btn-primary"
           type="${this.type}"
       >
