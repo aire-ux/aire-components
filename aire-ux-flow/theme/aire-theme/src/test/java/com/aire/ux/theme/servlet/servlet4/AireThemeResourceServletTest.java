@@ -3,7 +3,6 @@ package com.aire.ux.theme.servlet.servlet4;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.aire.ux.DefaultTheme;
 import com.aire.ux.Theme;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
