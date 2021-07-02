@@ -7,13 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * set the default theme.  Since themes can
- * be swapped out dynamically, this is intended to
- * be the default before any theme management is applied
+ * set the default theme.  Since themes can be swapped out dynamically, this is intended to be the
+ * default before any theme management is applied
  */
 @Documented
-@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface DefaultTheme {
 
   /**
