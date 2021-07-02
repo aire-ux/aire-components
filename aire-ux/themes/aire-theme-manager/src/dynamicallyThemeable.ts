@@ -50,22 +50,27 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
 
     stylesheetAddedListener = (e: StyleEvent) => {
       let detail = e.detail,
-          definition = detail.styleDefinition,
-          shadowRoot = this.shadowRoot,
-          stylesheet = definition.result;
+          stylesheet = detail.styleDefinition,
+          shadowRoot = this.shadowRoot as any;
 
+      console.log("ADDING STYLES");
+      console.log("adopted? " + !!shadowRoot.adoptedStyleSheets);
+      console.log("stylesheet? " + !!stylesheet);
+      console.log("shadow root? " + !!shadowRoot);
       if (
-          this.adoptedStyleSheets
+          shadowRoot.adoptedStyleSheets
           && stylesheet
           && shadowRoot
           && stylesheet instanceof CSSStyleSheet
       ) {
+        console.log("Successfully adopted styles!");
         adoptStyles(shadowRoot, [stylesheet]);
       }
     }
 
 
     connectedCallback(): void {
+      console.log("Connected");
       Aire.addStyleChangeListener(
           EventType.CustomStyleAdded,
           this.stylesheetAddedListener,
@@ -79,6 +84,7 @@ export function dynamicallyThemeable<T extends { new(...args: any[]): {} }>(ctor
 
 
     disconnectedCallback(): void {
+      console.log("Disconnected");
       Aire.removeStyleChangeListener(
           EventType.CustomStyleAdded,
           this.stylesheetAddedListener

@@ -30,6 +30,7 @@
     "lit-html": "^1.4.1"
   },
   "devDependencies": {
+    "@aire-ux/aire-theme-manager": "^0.0.11",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",

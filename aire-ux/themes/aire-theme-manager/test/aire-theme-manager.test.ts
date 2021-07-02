@@ -12,7 +12,7 @@ import * as AireThemeManager from '../src/AireThemeManager.js';
 
 
 import Mode = Aire.Mode;
-import {dynamicallyThemeable, ThemeEventAware} from "../src/dynamicallyThemeable";
+import {dynamicallyThemeable} from "../src/dynamicallyThemeable";
 
 @customElement('test-element')
 @dynamicallyThemeable

@@ -48,7 +48,7 @@ export module Aire {
    */
   export enum Mode {
     Global = 'Global',
-    Constructable = 'constructable'
+    Constructable = 'Constructable'
   }
 
   /**
@@ -269,37 +269,40 @@ export module Aire {
       definition: StyleDefinition
   ): Promise<any> {
     const stylesheet = new CSSStyleSheet() as ReplaceAware;
-    return stylesheet
-        .replace(`@import url('${definition.url}')`)
-        .then((success => {
-              definition.result = stylesheet;
-              if (definition.mode === Mode.Constructable) {
-                const doc = document as unknown as {
-                  adoptedStyleSheets: Array<CSSStyleSheet>
+    return requestStylesheet(definition.url).then(styleDefinition => {
+      return stylesheet
+          .replace(styleDefinition)
+          .then((success => {
+                definition.result = stylesheet;
+                if (definition.mode === Mode.Constructable) {
+                  const doc = document as unknown as {
+                    adoptedStyleSheets: Array<CSSStyleSheet>
+                  }
+                  doc.adoptedStyleSheets = [...doc.adoptedStyleSheets].concat(stylesheet);
                 }
-                doc.adoptedStyleSheets = [...doc.adoptedStyleSheets].concat(stylesheet);
-              }
-              let event = new CustomEvent(
-                  EventType.CustomStyleAdded,
-                  {
-                    detail: {
-                      eventType: EventType.CustomStyleAdded,
-                      styleDefinition: stylesheet
-                    }
-                  });
+                let event = new CustomEvent(
+                    EventType.CustomStyleAdded,
+                    {
+                      detail: {
+                        eventType: EventType.CustomStyleAdded,
+                        styleDefinition: stylesheet
+                      }
+                    });
 
-              document
-                  .documentElement
-                  .dispatchEvent(event);
-              console.info("Successfully loaded stylesheet");
-              // @ts-ignore
-              styles.get(definition.mode).push(definition);
-              return success;
-            }),
-            error => {
-              console.warn(`Failed to load stylesheet.  Reason: ${error}`);
-              return Promise.reject(error);
-            });
+                document
+                    .documentElement
+                    .dispatchEvent(event);
+                console.info("Successfully loaded stylesheet");
+                // @ts-ignore
+                styles.get(definition.mode).push(definition);
+                return success;
+              }),
+              error => {
+                console.warn(`Failed to load stylesheet.  Reason: ${error}`);
+                return Promise.reject(error);
+              });
+    });
+
   }
 
   /**
@@ -341,6 +344,29 @@ export module Aire {
     });
   }
 
+  function requestStylesheet(url: string, method: string = 'GET'): Promise<string> {
+    return new Promise(function (resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+          resolve(xhr.responseText);
+        } else {
+          reject({
+            status: this.status,
+            statusText: xhr.statusText
+          });
+        }
+      };
+      xhr.onerror = function () {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      };
+      xhr.send();
+    });
+  }
 }
 (window as any).Aire = {
   ThemeManager: Aire

@@ -9,8 +9,12 @@ import {adoptStyles} from 'lit';
 
 // @ts-ignore
 import style from "../styles/aire-button.scss"
+import {
+  dynamicallyThemeable
+} from "../node_modules/@aire-ux/aire-theme-manager/dist/src/dynamicallyThemeable.js";
 
 @customElement('aire-button')
+@dynamicallyThemeable
 export class AireButton extends LitElement {
 
   @property({
@@ -28,7 +32,6 @@ export class AireButton extends LitElement {
 
 
   updateStyles() : void {
-    adoptStyles(this.shadowRoot as ShadowRoot, [(window as any).style])
   }
 
   render() {
