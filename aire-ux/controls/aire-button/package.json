@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-button",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Webcomponent aire-button following open-wc recommendations",
   "author": "aire-button",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/aire-theme-decorators": "^0.0.13",
+    "@aire-ux/aire-theme-decorators": "^0.0.14",
     "@spectrum-css/button": "^3.0.3",
     "@spectrum-css/icon": "^3.0.3",
     "@spectrum-css/page": "^3.0.2",
@@ -32,7 +32,7 @@
     "lit-html": "^1.4.1"
   },
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.13",
+    "@aire-ux/aire-theme-manager": "^0.0.14",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",
@@ -109,5 +109,5 @@
       "prettier --write"
     ]
   },
-  "gitHead": "ab7cf80b98210e64595cd854fccafd83e0578975"
+  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0"
 }

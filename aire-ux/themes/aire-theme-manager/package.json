@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-theme-manager",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Aire Theme Manager",
   "author": "Aire-UX",
   "license": "MIT",
@@ -101,5 +101,5 @@
       "prettier --write"
     ]
   },
-  "gitHead": "ab7cf80b98210e64595cd854fccafd83e0578975"
+  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0"
 }
