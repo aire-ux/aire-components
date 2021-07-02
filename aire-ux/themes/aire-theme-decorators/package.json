@@ -1,7 +1,7 @@
 {
-  "name": "@aire-ux/aire-theme-decorators",
+  "name": "@aire-ux/aire-theme-manager",
   "version": "0.0.11",
-  "description": "Aire Theme Decorators",
+  "description": "Aire Theme Manager",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
@@ -99,5 +99,8 @@
       "prettier --write"
     ]
   },
-  "gitHead": "ab7cf80b98210e64595cd854fccafd83e0578975"
+  "gitHead": "ab7cf80b98210e64595cd854fccafd83e0578975",
+  "dependencies": {
+    "@aire-ux/aire-theme-manager": "^0.0.11"
+  }
 }
