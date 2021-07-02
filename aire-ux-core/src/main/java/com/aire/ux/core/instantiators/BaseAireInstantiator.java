@@ -29,7 +29,7 @@ public class BaseAireInstantiator implements Instantiator {
   /**
    * Creates a new instantiator for the given service.
    *
-   * @param delegate the base instantiator to use
+   * @param delegate  the base instantiator to use
    * @param decorator the decorator to use
    */
   public BaseAireInstantiator(
@@ -38,7 +38,9 @@ public class BaseAireInstantiator implements Instantiator {
     this.decorator = Objects.requireNonNull(decorator);
   }
 
-  /** @param delegate */
+  /**
+   * @param delegate
+   */
   public BaseAireInstantiator(@Nonnull Instantiator delegate) {
     this(
         delegate,
@@ -57,13 +59,17 @@ public class BaseAireInstantiator implements Instantiator {
 
   @Override
   public <T> T getOrCreate(Class<T> type) {
-    return delegate.getOrCreate(type);
+    val result = delegate.getOrCreate(type);
+    preDecorateResult(type, result);
+    return result;
   }
 
   @Override
   public <T extends Component> T createComponent(Class<T> componentClass) {
     val result = delegate.createComponent(componentClass);
+    preDecorateResult(componentClass, result);
     decorate(result);
+    postDecorateResult(componentClass, result);
     return result;
   }
 
@@ -83,9 +89,11 @@ public class BaseAireInstantiator implements Instantiator {
   public <T extends HasElement> T createRouteTarget(
       Class<T> routeTargetType, NavigationEvent event) {
     val result = delegate.createRouteTarget(routeTargetType, event);
+    decorateRouteTarget(routeTargetType);
     decorate(result);
     return result;
   }
+
 
   @Override
   public I18NProvider getI18NProvider() {
@@ -95,6 +103,32 @@ public class BaseAireInstantiator implements Instantiator {
   @Override
   public TemplateParser getTemplateParser() {
     return delegate.getTemplateParser();
+  }
+
+  /**
+   * extension point
+   *
+   * @param componentClass the type of the current component
+   * @param result         the result
+   * @param <T>            the type parameter
+   */
+  protected <T> void preDecorateResult(Class<T> componentClass, T result) {
+
+  }
+
+  /**
+   * extension point
+   *
+   * @param componentClass the type of the current component
+   * @param result         the result
+   * @param <T>            the type parameter
+   */
+  protected <T> void postDecorateResult(Class<T> componentClass, T result) {
+
+  }
+
+  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {
+
   }
 
   @SuppressFBWarnings
@@ -107,24 +141,22 @@ public class BaseAireInstantiator implements Instantiator {
       current = stack.pop();
       val c = current.current;
       switch (current.stage) {
-        case 0:
-          {
-            decorator.onComponentEntered(c);
-            decorator.decorate(c);
-            current.stage = 1;
-            stack.push(current);
-            val el = c.getElement();
-            for (int i = 0; i < el.getChildCount(); i++) {
-              val childOpt = el.getChild(i).getComponent();
-              childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
-            }
-            continue;
+        case 0: {
+          decorator.onComponentEntered(c);
+          decorator.decorate(c);
+          current.stage = 1;
+          stack.push(current);
+          val el = c.getElement();
+          for (int i = 0; i < el.getChildCount(); i++) {
+            val childOpt = el.getChild(i).getComponent();
+            childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
           }
-        case 1:
-          {
-            decorator.onComponentExited(c);
-            break;
-          }
+          continue;
+        }
+        case 1: {
+          decorator.onComponentExited(c);
+          break;
+        }
       }
     }
   }
