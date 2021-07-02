@@ -1,7 +1,5 @@
 package com.aire.ux.test.vaadin;
 
-import static java.lang.String.format;
-
 import com.aire.ux.test.AireExtension;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -21,29 +19,29 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 /**
  * lifecycle is:
  *
- * <p>1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides? Create
- * Frame b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides? Get Current Frame b.
- * Overrides? Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a.
- * Deactivate Current Frame b. Pop Current Frame
+ * <p>1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides? Create Frame
+ * b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides? Get Current Frame b. Overrides?
+ * Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a. Deactivate Current
+ * Frame b. Pop Current Frame
  */
 @Log
 @Order(50)
 public class VaadinExtension
     implements AireExtension,
-    Extension,
-    BeforeEachCallback,
-    AfterEachCallback,
-    BeforeAllCallback,
-    AfterAllCallback {
+        Extension,
+        BeforeEachCallback,
+        AfterEachCallback,
+        BeforeAllCallback,
+        AfterAllCallback {
 
   static final Namespace ROOT_AIRE_NAMESPACE = Namespace.create("aire:root");
 
   /**
    * set up an Aire test context surrounding the entire class
    *
-   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate
-   * it (but don't close it) 3. Create a new test context for the executing class and push it onto
-   * the stack
+   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate it
+   * (but don't close it) 3. Create a new test context for the executing class and push it onto the
+   * stack
    *
    * @param context the context
    * @throws Exception TODO
@@ -93,8 +91,9 @@ public class VaadinExtension
             .map(t -> new TestFrame(t.create(context, this), context))
             .or(() -> Optional.ofNullable(frames.peek()))
             .orElseGet(
-                () -> new TestFrame(new DefaultRoutesCreatorFactory().create(context, this),
-                    context));
+                () ->
+                    new TestFrame(
+                        new DefaultRoutesCreatorFactory().create(context, this), context));
     frame.activate();
     return frame;
   }
@@ -119,7 +118,7 @@ public class VaadinExtension
 
   private Stream<RoutesCreatorFactory> routesCreatorFactories() {
     return ServiceLoader.load(
-        RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
+            RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
         .stream()
         .map(Provider::get);
   }

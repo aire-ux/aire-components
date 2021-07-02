@@ -15,7 +15,7 @@ final class DefaultThemeContext implements ThemeContext {
 
   @Override
   public Theme getTheme() {
-    if(theme == null) {
+    if (theme == null) {
       return strategy.getDefault();
     }
     return theme;

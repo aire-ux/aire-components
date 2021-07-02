@@ -1,7 +1,6 @@
 package com.aire.ux.theme.context;
 
 import com.aire.ux.Theme;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ThemeContextHolderStrategy {
@@ -14,7 +13,7 @@ public interface ThemeContextHolderStrategy {
 
   void setContext(ThemeContext context);
 
-
   Theme getDefault();
+
   void setDefault(@Nullable Theme theme);
 }

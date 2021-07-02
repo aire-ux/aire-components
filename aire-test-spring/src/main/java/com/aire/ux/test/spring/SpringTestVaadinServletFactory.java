@@ -47,8 +47,8 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
                   public Instantiator getInstantiator() {
                     val factories =
                         ServiceLoader.load(
-                            InstantiatorFactory.class,
-                            Thread.currentThread().getContextClassLoader())
+                                InstantiatorFactory.class,
+                                Thread.currentThread().getContextClassLoader())
                             .iterator();
                     Instantiator current =
                         new MockInstantiator(new SpringInstantiator(this, context));

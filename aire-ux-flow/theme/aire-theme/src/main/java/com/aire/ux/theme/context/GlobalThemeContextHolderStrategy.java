@@ -10,7 +10,6 @@ public class GlobalThemeContextHolderStrategy implements ThemeContextHolderStrat
   private static Theme defaultTheme;
   private static ThemeContext context;
 
-
   @Override
   @SuppressWarnings("PMD.NullAssignment")
   public void clearContext() {

@@ -3,8 +3,10 @@ package com.aire.ux.theme.context;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.aire.ux.Theme;
 import com.aire.ux.theme.context.ThemeContextHolder.Strategy;
 import lombok.val;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -64,6 +66,7 @@ class ThemeContextHolderTest {
   public static class TestThemeContextHolderStrategy implements ThemeContextHolderStrategy {
 
     ThemeContext context;
+    private Theme defaultTheme;
 
     @Override
     public void clearContext() {
@@ -72,7 +75,7 @@ class ThemeContextHolderTest {
 
     @Override
     public ThemeContext createThemeContext() {
-      return context = new DefaultThemeContext();
+      return context = new DefaultThemeContext(this);
     }
 
     @Override
@@ -86,6 +89,16 @@ class ThemeContextHolderTest {
     @Override
     public void setContext(ThemeContext context) {
       this.context = context;
+    }
+
+    @Override
+    public Theme getDefault() {
+      return defaultTheme != null ? defaultTheme : EmptyTheme.getInstance();
+    }
+
+    @Override
+    public void setDefault(@Nullable Theme theme) {
+      this.defaultTheme = theme != null ? theme : EmptyTheme.getInstance();
     }
   }
 }

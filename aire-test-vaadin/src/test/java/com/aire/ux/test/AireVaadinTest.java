@@ -22,5 +22,4 @@ public class AireVaadinTest {
   void ensureParametersWork(@Context TestContext ctx) {
     assertNotNull(ctx);
   }
-
 }

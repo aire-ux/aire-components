@@ -55,7 +55,7 @@ class AbstractThreadLocalContextHolderStrategy implements ThemeContextHolderStra
   @Override
   public Theme getDefault() {
     val result = defaultThemeContextHolder.get();
-    if(result == null) {
+    if (result == null) {
       return EmptyTheme.getInstance();
     }
     return result;
@@ -63,7 +63,7 @@ class AbstractThreadLocalContextHolderStrategy implements ThemeContextHolderStra
 
   @Override
   public void setDefault(@Nullable Theme theme) {
-    if(theme == null) {
+    if (theme == null) {
       defaultThemeContextHolder.set(EmptyTheme.getInstance());
     } else {
       defaultThemeContextHolder.set(theme);

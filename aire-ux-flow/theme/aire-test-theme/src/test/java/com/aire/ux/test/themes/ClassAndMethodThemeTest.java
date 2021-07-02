@@ -19,7 +19,6 @@ public class ClassAndMethodThemeTest {
     assertEquals(TestTheme3.class, theme.getClass());
   }
 
-
   @ViewTest
   @DefaultTheme(TestTheme1.class)
   void ensureThemeIsInjectable(@Context Theme theme) {

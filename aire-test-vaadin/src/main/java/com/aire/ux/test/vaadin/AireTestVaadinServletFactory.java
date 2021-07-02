@@ -26,32 +26,35 @@ public class AireTestVaadinServletFactory implements VaadinServletFactory {
 
   @Override
   public Optional<VaadinServlet> createServlet(Routes routes) {
-    return Optional.of(new MockVaadinServlet(routes) {
-      @NotNull
-      @Override
-      protected VaadinServletService createServletService(
-          @NotNull DeploymentConfiguration deploymentConfiguration) {
-        val result = new MockService(this, deploymentConfiguration, this.getUiFactory()) {
+    return Optional.of(
+        new MockVaadinServlet(routes) {
           @NotNull
           @Override
-          public Instantiator getInstantiator() {
-            var instantiator = super.getInstantiator();
-            for (val instantiatorFactory : ServiceLoader
-                .load(InstantiatorFactory.class, Thread.currentThread()
-                    .getContextClassLoader())) {
-              instantiator = instantiatorFactory.create(instantiator);
+          protected VaadinServletService createServletService(
+              @NotNull DeploymentConfiguration deploymentConfiguration) {
+            val result =
+                new MockService(this, deploymentConfiguration, this.getUiFactory()) {
+                  @NotNull
+                  @Override
+                  public Instantiator getInstantiator() {
+                    var instantiator = super.getInstantiator();
+                    for (val instantiatorFactory :
+                        ServiceLoader.load(
+                            InstantiatorFactory.class,
+                            Thread.currentThread().getContextClassLoader())) {
+                      instantiator = instantiatorFactory.create(instantiator);
+                    }
+                    return instantiator;
+                  }
+                };
+            try {
+              result.init();
+              routes.register(result.getContext());
+            } catch (Exception ex) {
+              throw new IllegalStateException(ex);
             }
-            return instantiator;
+            return result;
           }
-        };
-        try {
-          result.init();
-          routes.register(result.getContext());
-        } catch (Exception ex) {
-          throw new IllegalStateException(ex);
-        }
-        return result;
-      }
-    });
+        });
   }
 }

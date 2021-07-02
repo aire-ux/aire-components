@@ -17,12 +17,12 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class AireThemeExtension implements
-    Extension,
-    BeforeEachCallback,
-    BeforeAllCallback,
-    AfterEachCallback,
-    AfterAllCallback {
+public class AireThemeExtension
+    implements Extension,
+        BeforeEachCallback,
+        BeforeAllCallback,
+        AfterEachCallback,
+        AfterAllCallback {
 
   private final Deque<Theme> themes;
 
@@ -40,7 +40,6 @@ public class AireThemeExtension implements
   public void afterEach(ExtensionContext context) throws Exception {
     context.getTestMethod().ifPresent(this::popTheme);
   }
-
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
