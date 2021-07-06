@@ -3,11 +3,9 @@ package com.aire.ux.control.scenario1;
 import com.aire.ux.control.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import lombok.val;
 
 @Route("main")
 public class MainView extends VerticalLayout {
-
 
   public MainView() {
     var button = new Button();
@@ -19,5 +17,4 @@ public class MainView extends VerticalLayout {
     button.setClassName("ctor");
     add(button);
   }
-
 }

@@ -25,9 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @Routes(scanClassPackage = MainView.class)
 class ButtonTest {
 
-  @Mock
-  ComponentEventListener<ClickEvent<Button>> listener;
-
+  @Mock ComponentEventListener<ClickEvent<Button>> listener;
 
   @ViewTest
   void ensureSettingTextWorks(@Select(".setter") Button button) {
@@ -46,5 +44,4 @@ class ButtonTest {
     button.click();
     verify(listener, times(1)).onComponentEvent(any());
   }
-
 }

@@ -15,23 +15,14 @@ import lombok.val;
 
 @Tag("aire-button")
 @JsModule("@aire-ux/aire-button")
-@NpmPackage(value = "@aire-ux/aire-button", version = "0.0.14")
+@NpmPackage(value = "@aire-ux/aire-button", version = "0.0.16")
 public class Button extends Component
-    implements
-    HasStyle,
-    HasText,
-    ClickNotifier<Button>,
-    Focusable<Button> {
+    implements HasStyle, HasText, ClickNotifier<Button>, Focusable<Button> {
 
-  /**
-   * create an empty button
-   */
-  public Button() {
-  }
+  /** create an empty button */
+  public Button() {}
 
-  /**
-   * @param text the text to instantiate this button with
-   */
+  /** @param text the text to instantiate this button with */
   public Button(String text) {
     setText(text);
   }
@@ -40,7 +31,6 @@ public class Button extends Component
    * @param text
    * @param clickListener
    */
-
   public Button(String text, ComponentEventListener<ClickEvent<Button>> clickListener) {
     this(text);
     addClickListener(clickListener);
@@ -59,10 +49,7 @@ public class Button extends Component
     }
   }
 
-
-  /**
-   * @param components the components to remove
-   */
+  /** @param components the components to remove */
   public void removeAll(Component... components) {
     for (val component : components) {
       val child = component.getElement();
@@ -71,9 +58,7 @@ public class Button extends Component
     }
   }
 
-  /**
-   * @param components the components to add
-   */
+  /** @param components the components to add */
   public void addAll(Component... components) {
     for (val component : components) {
       val child = component.getElement();
@@ -82,10 +67,7 @@ public class Button extends Component
     }
   }
 
-
-  /**
-   * remove all the text nodes from this button
-   */
+  /** remove all the text nodes from this button */
   private void removeTextNodes() {
     for (int i = 0; i < getElement().getChildCount(); i++) {
       val child = getElement().getChild(i);
@@ -96,17 +78,12 @@ public class Button extends Component
     }
   }
 
-  /**
-   * click this button--don't fire it in the client
-   */
+  /** click this button--don't fire it in the client */
   public void click() {
-    fireEvent(new ClickEvent<>(this, false, 0, 0, 0, 0, 0, 0, false, false,
-        false, false));
+    fireEvent(new ClickEvent<>(this, false, 0, 0, 0, 0, 0, 0, false, false, false, false));
   }
 
-  /**
-   * click the element in the client
-   */
+  /** click the element in the client */
   public void clickInClient() {
     getElement().callJsFunction("click");
   }
