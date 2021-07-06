@@ -72,7 +72,6 @@ public class Button extends Component
     for (int i = 0; i < getElement().getChildCount(); i++) {
       val child = getElement().getChild(i);
       if (child.isTextNode()) {
-        //        child.removeAttribute("slot");
         getElement().removeChild(i);
       }
     }

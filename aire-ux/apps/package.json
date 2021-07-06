@@ -1,0 +1,11 @@
+{
+  "name": "@aire-ux/component-demos",
+  "version": "0.0.16",
+  "description": "Demo application for Aire UX Components",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "Aire-UX",
+  "license": "MIT"
+}
