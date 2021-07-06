@@ -1,20 +1,16 @@
-import {
-  customElement,
-  html,
-  LitElement,
-  property
-} from 'lit-element';
+import {customElement, html, LitElement, property} from 'lit-element';
 
 // @ts-ignore
 import style from "../styles/aire-button.scss"
-import {
-  dynamicallyThemeable
-} from "@aire-ux/aire-theme-decorators";
+import {dynamicallyThemeable} from "@aire-ux/aire-theme-decorators";
 
 @customElement('aire-button')
 @dynamicallyThemeable
 export class AireButton extends LitElement {
 
+  /**
+   * set the style classes for this element
+   */
   @property({
     reflect: true,
     attribute: true
@@ -22,6 +18,9 @@ export class AireButton extends LitElement {
   classes: String;
 
 
+  /**
+   * set the type of this button
+   */
   @property({
     reflect: true,
     attribute: true
@@ -29,17 +28,12 @@ export class AireButton extends LitElement {
   type: String;
 
 
-  private dispatchClick(): void {
-    this.dispatchEvent(
-        new CustomEvent('click', {}));
-  }
-
   render() {
     return html`
       <button
-          @click="${this.dispatchClick}"
-          class="${this.classes}"
           type="${this.type}"
+          @click="${this.click}"
+          class="${this.classes}"
       >
         <slot></slot>
       </button>
