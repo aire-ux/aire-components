@@ -14,6 +14,7 @@ import io.sunshower.lang.events.EventType;
 import java.util.List;
 import java.util.logging.Level;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.val;
@@ -101,6 +102,7 @@ public class ThemeChangeListener implements EventListener<Theme> {
     }
   }
 
+  @Data
   @NoArgsConstructor
   @AllArgsConstructor
   public static class StyleDefinition {
