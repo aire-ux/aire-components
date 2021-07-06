@@ -1,6 +1,7 @@
 package com.aire.ux.theme.context;
 
 import com.aire.ux.Theme;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public interface ThemeContext {
@@ -15,4 +16,6 @@ public interface ThemeContext {
    * @param theme the theme to use
    */
   void setTheme(@Nonnull Theme theme);
+
+  Optional<Theme> clearTheme();
 }

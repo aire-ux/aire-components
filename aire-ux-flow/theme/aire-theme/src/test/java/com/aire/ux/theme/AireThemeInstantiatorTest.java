@@ -9,6 +9,8 @@ import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
 import com.aire.ux.theme.ThemeTest.Cfg;
+import com.aire.ux.theme.context.ThemeChangeListener;
+import com.aire.ux.theme.decorators.EnableThemes;
 import com.aire.ux.theme.themescenario.ScenarioView;
 import com.aire.ux.theme.themescenario.TestButton;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = ScenarioView.class)
+@EnableThemes(listeners = ThemeChangeListener.class)
 class AireThemeInstantiatorTest {
 
   @ViewTest

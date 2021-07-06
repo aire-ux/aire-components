@@ -29,8 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ExtendWith(MockitoExtension.class)
 class AireThemeManagerTest {
 
-  @Spy
-  private ThemeChangeListener listener;
+  @Spy private ThemeChangeListener listener;
 
   @AfterEach
   void verifyState() {
@@ -39,17 +38,18 @@ class AireThemeManagerTest {
 
   @Test
   void ensureThemeIsDispatchedCorrectly() throws Exception {
-    try (val registration = AireThemeManager
-        .addEventListener(listener, ThemeChangeEventType.ThemeChanged)) {
+    try (val registration =
+        AireThemeManager.addEventListener(listener, ThemeChangeEventType.ThemeChanged)) {
       AireThemeManager.setTheme(TestTheme.class);
       verify(listener).onEvent(any(), any());
+      AireThemeManager.clearTheme();
     }
   }
 
   @Test
   void ensureDisposingRegistrationWorks() {
-    val registration = AireThemeManager
-        .addEventListener(listener, ThemeChangeEventType.ThemeChanged);
+    val registration =
+        AireThemeManager.addEventListener(listener, ThemeChangeEventType.ThemeChanged);
     assertEquals(1, AireThemeManager.getListenerCount());
     registration.remove();
     assertEquals(0, AireThemeManager.getListenerCount());
@@ -62,16 +62,13 @@ class AireThemeManagerTest {
     try (val uiStatic = Mockito.mockStatic(UI.class)) {
       uiStatic.when(UI::getCurrent).thenReturn(currentUI);
       when(currentUI.getPage()).thenReturn(page);
-      try (val registration = AireThemeManager
-          .addEventListener(listener, ThemeChangeEventType.ThemeChanged)) {
+      try (val registration =
+          AireThemeManager.addEventListener(listener, ThemeChangeEventType.ThemeChanged)) {
         AireThemeManager.setTheme(TestTheme.class);
-//      verify(page.executeJs(any(), any()), times(1));
         verify(page, times(1)).executeJs(eq("Aire.ThemeManager.uninstallStyles()"), any());
         verify(page, times(1)).executeJs(eq("Aire.ThemeManager.installStyles($0)"), any());
+        AireThemeManager.clearTheme();
       }
     }
-
-
   }
-
 }
