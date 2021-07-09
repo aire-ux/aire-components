@@ -74,6 +74,11 @@ export module Aire {
   export type ThemeResource = {
 
     /**
+     * the order in which a theme-resource should be installed--lower = higher precedence
+     * default is 0 (no precedence)
+     */
+    order: number;
+    /**
      * the ID of this resource.  Will be used for the actual ID of
      * the tag
      */
@@ -116,19 +121,25 @@ export module Aire {
   export type Theme = {
 
     /**
-     * the scripts to install with this theme
-     */
-    scripts: Array<ScriptDefinition>;
-    /**
      * the style definitions for this theme
      */
     styleDefinitions: Array<StyleDefinition>;
 
+    /**
+     * the scripts to install with this theme
+     */
+    scriptDefinitions: Array<ScriptDefinition>;
 
   }
 
   console.info("Aire Theme manager loaded!");
 
+
+  /**
+   *
+   * @private the scripts currently loaded
+   */
+  const scripts: Array<ScriptDefinition> = [];
 
   const styles: Map<StyleMode, Array<StyleDefinition>> = new Map();
 
@@ -137,6 +148,40 @@ export module Aire {
   styles.set(Mode.Global, []);
   styles.set(Mode.Constructable, []);
 
+
+  let currentTheme : Theme;
+
+  export function installTheme(theme: Theme): void {
+    installScripts(theme.scriptDefinitions);
+    installStyles(theme.styleDefinitions);
+    currentTheme = theme;
+  }
+
+
+  export function removeTheme() {
+    uninstallStyles();
+    uninstallScripts();
+  }
+
+  function uninstallScripts() {
+    for(let script of scripts) {
+      if(script.id) {
+        let scriptTag = document.getElementById(script.id);
+        if(scriptTag) {
+          scriptTag.remove();
+        }
+      }
+    }
+  }
+
+
+  function installScripts(scriptDefinitions: Array<ScriptDefinition>): void {
+    for (let script of scriptDefinitions) {
+      enqueueGlobalScriptDefinition(script).then(scriptElement => {
+        scripts.push(script);
+      });
+    }
+  }
 
   /**
    * install the list of styles into the DOM.

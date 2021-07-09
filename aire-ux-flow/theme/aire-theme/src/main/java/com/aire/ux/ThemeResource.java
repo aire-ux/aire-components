@@ -17,10 +17,4 @@ public interface ThemeResource {
   /** @return the mimetype of this resource */
   String getMimeType();
 
-  /**
-   * attempt to load this resource asynchronously
-   *
-   * @return whether this theme resource should be loaded asynchronously
-   */
-  boolean loadAsynchronously();
 }
