@@ -27,11 +27,55 @@ export class AppComponent {
 
   setMaterial() {
     Aire.uninstallStyles();
-    Aire.installStyles([{
-      id: 'mdb',
-      url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
-      mode: Aire.Mode.Constructable
-    }])
+    Aire.installStyles([
+
+      {
+
+        id: 'fontawesome',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css',
+        mode: Aire.Mode.Constructable
+      },
+
+      {
+        id: 'mdb',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+        mode: Aire.Mode.Constructable
+      },
+
+      {
+        id: 'ripples',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.10/css/ripples.min.css',
+        mode: Aire.Mode.Constructable
+      },
+      ])
+  }
+
+  setMaterialDark() {
+
+    Aire.uninstallStyles();
+    Aire.installStyles([
+      {
+
+        id: 'fontawesome',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css',
+        mode: Aire.Mode.Constructable
+      },
+
+
+      {
+        id: 'mdb',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.dark.min.css',
+        mode: Aire.Mode.Constructable
+      },
+
+      {
+        id: 'ripples',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.10/css/ripples.min.css',
+        mode: Aire.Mode.Constructable
+      },
+
+
+      ])
   }
 
   setBootstrap() {

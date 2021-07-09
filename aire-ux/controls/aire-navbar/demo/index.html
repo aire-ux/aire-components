@@ -8,10 +8,6 @@
         crossorigin="anonymous">
 
 </head>
-<script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"
-></script>
 <body>
 <div id="demo" style="padding:40px"></div>
 
@@ -44,12 +40,12 @@
   render(
       html`
         <div margin="40px">
-          <aire-button classes="btn btn-primary" type="button" @click="${setMaterial}">
+          <aire-navbar classes="btn btn-primary" type="navbar" @click="${setMaterial}">
             material
-          </aire-button>
-          <aire-button classes="btn btn-dark" type="button" @click="${setBootstrap}">
+          </aire-navbar>
+          <aire-navbar classes="btn btn-dark" type="navbar" @click="${setBootstrap}">
             bootstrap
-          </aire-button>
+          </aire-navbar>
         </div>
       `,
       document.querySelector('#demo')

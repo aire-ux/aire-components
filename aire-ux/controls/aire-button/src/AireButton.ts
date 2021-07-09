@@ -1,8 +1,9 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 
 // @ts-ignore
 import style from "../styles/aire-button.scss"
 import {dynamicallyThemeable} from "@aire-ux/aire-theme-decorators";
+import {isOutsideRootDir} from "@web/dev-server-rollup/dist/utils";
 
 @customElement('aire-button')
 @dynamicallyThemeable
@@ -27,6 +28,14 @@ export class AireButton extends LitElement {
   })
   type: String;
 
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    let nodes = document.querySelectorAll('aire-button');
+    nodes.forEach(node => {
+      console.log(node.querySelector('button'));
+    });
+  }
+
 
   render() {
     return html`
@@ -34,7 +43,9 @@ export class AireButton extends LitElement {
           type="${this.type}"
           @click="${this.click}"
           class="${this.classes}"
+          mdbRipple
       >
+
         <slot></slot>
       </button>
     `;

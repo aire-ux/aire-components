@@ -17,7 +17,21 @@ export module Aire {
 
 
   export enum EventType {
+    /**
+     *
+     */
+    ScriptAdded = 'aire-script-added',
+
+    ScriptRemoved = 'aire-script-removed',
+
+    /**
+     *
+     */
     CustomStyleAdded = 'aire-custom-style-added',
+
+    /**
+     *
+     */
     CustomStyleRemoved = 'aire-custom-style-removed',
   }
 
@@ -26,7 +40,7 @@ export module Aire {
    * determine if the theme manager should walk the dom and
    * force-remove adoptedStyles.
    */
-  export const forceRemove = false;
+  export let forceRemove = false;
   /**
    * the event detail for a custom event
    */
@@ -57,19 +71,60 @@ export module Aire {
    */
   export type StyleMode = Mode | string;
 
+  export type ThemeResource = {
+
+    /**
+     * the ID of this resource.  Will be used for the actual ID of
+     * the tag
+     */
+    id?: string;
+    /**
+     * the URL to load this resource from
+     */
+    url?: string;
+
+    /**
+     * load this resource inline
+     */
+    content?: string
+
+    /**
+     * specify the integrity of this resource
+     */
+    integrity?: string
+  }
   /**
    * the definition of a style to be managed
    * by the theme manager
    */
   export type StyleDefinition = {
-    id: string
-    url: string
     mode?: StyleMode
 
     /**
      * once we're in the DOM (somehow), what are we?
      */
     result?: StyleValue
+  } & ThemeResource;
+
+
+  export type ScriptDefinition = {
+    async: boolean;
+    defer: boolean;
+    contents?: string
+  } & ThemeResource
+
+  export type Theme = {
+
+    /**
+     * the scripts to install with this theme
+     */
+    scripts: Array<ScriptDefinition>;
+    /**
+     * the style definitions for this theme
+     */
+    styleDefinitions: Array<StyleDefinition>;
+
+
   }
 
   console.info("Aire Theme manager loaded!");
@@ -125,9 +180,11 @@ export module Aire {
   function uninstallGlobalStyle(style: StyleDefinition): void {
 
     console.info(`Removing global style definition: ${style.url}`);
-    let linkElement = document.getElementById(style.id);
-    if (linkElement) {
-      linkElement.remove();
+    if (style.id) {
+      let linkElement = document.getElementById(style.id);
+      if (linkElement) {
+        linkElement.remove();
+      }
     }
   }
 
@@ -269,6 +326,9 @@ export module Aire {
       definition: StyleDefinition
   ): Promise<any> {
     const stylesheet = new CSSStyleSheet() as ReplaceAware;
+    if (!definition.url) {
+      return Promise.resolve();
+    }
     return requestStylesheet(definition.url).then(styleDefinition => {
       return stylesheet
           .replace(styleDefinition)
@@ -305,6 +365,42 @@ export module Aire {
 
   }
 
+  function enqueueGlobalScriptDefinition(definition: ScriptDefinition): Promise<HTMLScriptElement> {
+    console.info(`Enqueing script for addition with if: ${definition.id}, url: ${definition.url}`);
+
+    return new Promise<HTMLScriptElement>(
+        (resolve, reject) => {
+          let script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.id = definition.id as string;
+          script.src = definition.url as string;
+          script.async = definition.async;
+          script.defer = definition.defer;
+          document.head.appendChild(script);
+
+          let event = new CustomEvent(
+              EventType.ScriptAdded, {
+                detail: {
+                  eventType: EventType.CustomStyleAdded,
+                  scriptDefinition: definition
+                }
+              });
+          document
+              .documentElement
+              .dispatchEvent(event);
+
+          script.onload = (e: Event) => {
+            console.info(`Successfully added script at ${definition.url}`);
+            resolve(script);
+          }
+          script.onerror = (e: string | Event) => {
+            console.warn(`Failed to add style at ${definition.url}.  Reason: ${e}`)
+            reject(script);
+          }
+
+        });
+  }
+
   /**
    * @param style the style to install
    * @private should not be called externally
@@ -316,8 +412,8 @@ export module Aire {
     return new Promise<HTMLLinkElement>((
         resolve, reject) => {
       let link = document.createElement('link');
-      link.id = style.id;
-      link.href = style.url;
+      link.id = style.id as string;
+      link.href = style.url as string;
       link.rel = 'stylesheet';
       style.result = link;
       document.head.appendChild(link);
@@ -343,6 +439,7 @@ export module Aire {
       }
     });
   }
+
 
   function requestStylesheet(url: string, method: string = 'GET'): Promise<string> {
     return new Promise(function (resolve, reject) {
