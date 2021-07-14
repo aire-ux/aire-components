@@ -10,7 +10,7 @@
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
     "rollup": "rollup -c",
-    "start": "concurrently --kill-others --names build,web-dev-server \"npm run build:watch\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
+    "start": "concurrently --kill-others --names build,web-dev-server \"tsc --watch --preserveWatchOutput\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
     "build": "tsc",
     "build:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
     "prepublish": "rollup -c",

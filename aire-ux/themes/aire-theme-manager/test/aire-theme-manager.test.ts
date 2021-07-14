@@ -36,6 +36,7 @@ describe('AireThemeManager', () => {
 
   it('installs a link correctly', async () => {
     const style = {
+      order: 0,
       id: 'styleid',
       url: 'data:text/css;base64,ZGl2LnJlZCB7CmNvbG9yOiByZWQ7Cn0=',
     };
@@ -47,6 +48,7 @@ describe('AireThemeManager', () => {
 
   it('removes its links correctly', async () => {
     const style = {
+      order: 0,
       id: 'styleid',
       mode: Mode.Global,
       url: 'data:text/css;base64,ZGl2LnJlZCB7CmNvbG9yOiByZWQ7Cn0=',
@@ -62,6 +64,7 @@ describe('AireThemeManager', () => {
   it('installs constructable styles correctly', async () => {
     await fixture<TestElement>(html` <test-element></test-element>`);
     const style = {
+      order: 0,
       id: 'styleid',
       mode: Mode.Constructable,
       url: 'data:text/css;base64,ZGl2IHsKICAgIGNvbG9yOiByZWQ7CiAgICBkaXNwbGF5OiBmbGV4OwogICAgeDonMjAwcHgnOwp9==',

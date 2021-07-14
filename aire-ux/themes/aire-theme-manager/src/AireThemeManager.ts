@@ -149,12 +149,19 @@ export module Aire {
   styles.set(Mode.Constructable, []);
 
 
-  let currentTheme : Theme;
+  let currentTheme: Theme;
 
-  export function installTheme(theme: Theme): void {
-    installScripts(theme.scriptDefinitions);
-    installStyles(theme.styleDefinitions);
-    currentTheme = theme;
+  export function installTheme(theme: Theme): Promise<any> {
+    return Promise.all([
+      installScripts(theme.scriptDefinitions),
+      installStyles(theme.styleDefinitions)
+    ]).then(_ => {
+      currentTheme = theme;
+    })
+    // installScripts(theme.scriptDefinitions).then(result => {
+    //   installStyles(theme.styleDefinitions);
+    // });
+    // currentTheme = theme;
   }
 
 
@@ -164,10 +171,10 @@ export module Aire {
   }
 
   function uninstallScripts() {
-    for(let script of scripts) {
-      if(script.id) {
+    for (let script of scripts) {
+      if (script.id) {
         let scriptTag = document.getElementById(script.id);
-        if(scriptTag) {
+        if (scriptTag) {
           scriptTag.remove();
         }
       }
@@ -175,12 +182,12 @@ export module Aire {
   }
 
 
-  function installScripts(scriptDefinitions: Array<ScriptDefinition>): void {
+  function installScripts(scriptDefinitions: Array<ScriptDefinition>): Promise<any[]> {
+    const promises: Array<Promise<any>> = [];
     for (let script of scriptDefinitions) {
-      enqueueGlobalScriptDefinition(script).then(scriptElement => {
-        scripts.push(script);
-      });
+      promises.push(enqueueGlobalScriptDefinition(script).then(_ => scripts.push(script)));
     }
+    return Promise.all(promises);
   }
 
   /**
@@ -188,8 +195,9 @@ export module Aire {
    * Each style is installed asynchronously
    * @param newStyles the styles to install
    */
-  export function installStyles(newStyles: Array<StyleDefinition>): void {
+  export function installStyles(newStyles: Array<StyleDefinition>): Promise<any[]> {
     // installedGlobalStyles = styles;
+    const promises: Array<Promise<any>> = []
     for (const style of newStyles) {
       if (!style.mode) {
         style.mode = Mode.Global;
@@ -200,11 +208,11 @@ export module Aire {
       } else if (definition) {
         definition.push(style);
       }
-
-      enqueueStyleInstallation(style).then(link => {
+      promises.push(enqueueStyleInstallation(style).then(link => {
         console.info("installed " + link);
-      });
+      }));
     }
+    return Promise.all(promises);
   }
 
 
@@ -234,6 +242,30 @@ export module Aire {
   }
 
 
+  export type StyleAware = {
+    adoptedStyleSheets: Array<StyleValue>
+  } & HTMLElement;
+
+  export function walkDom(f: (el: StyleAware) => void) {
+
+    let stack = [document.documentElement];
+    while (stack.length) {
+      let el = stack.pop();
+      if (el) {
+        const styleAware = el as StyleAware;
+        f(styleAware);
+        let children = el.children;
+        for (let i = 0; i < children.length; i++) {
+          let child = children.item(i);
+          if (child) {
+            stack.push(child as HTMLElement);
+          }
+        }
+      }
+
+    }
+  }
+
   /**
    * attempt to remove constructed stylesheets from the dom
    * and shadow-dom elements.  Test this
@@ -243,39 +275,24 @@ export module Aire {
   function uninstallConstructedStylesheet(
       definition: StyleDefinition
   ): void {
+
     if (forceRemove) {
-      let stack = [document.documentElement];
-      while (stack.length) {
-        let el = stack.pop();
-        if (el) {
-          const styleaware = el as unknown as {
-            adoptedStyleSheets: Array<StyleValue>;
-          }
-          if (
-              styleaware.adoptedStyleSheets &&
+      walkDom((styleaware: StyleAware): void => {
+        if (
+            styleaware.adoptedStyleSheets &&
+            styleaware
+                .adoptedStyleSheets
+                .indexOf(definition.result as StyleValue) != -1) {
+          styleaware.adoptedStyleSheets =
               styleaware
                   .adoptedStyleSheets
-                  .indexOf(definition.result as StyleValue) != -1) {
-            styleaware.adoptedStyleSheets =
-                styleaware
-                    .adoptedStyleSheets
-                    .filter(style => style !== definition.result);
-          }
-          let children = el.children;
-          for (let i = 0; i < children.length; i++) {
-            let child = children.item(i);
-            if (child) {
-              stack.push(child as HTMLElement);
-            }
-          }
+                  .filter(style => style !== definition.result);
         }
-      }
+      });
     } else {
-      const styleaware = document as unknown as {
-        adoptedStyleSheets: Array<StyleValue>;
-      }
-      styleaware.adoptedStyleSheets =
-          styleaware
+      const styleAware = document as unknown as StyleAware;
+      styleAware.adoptedStyleSheets =
+          styleAware
               .adoptedStyleSheets
               .filter(s => definition.result !== s);
     }
@@ -299,7 +316,9 @@ export module Aire {
             styleDefinition: style
           }
         });
-    document.documentElement.dispatchEvent(event);
+    document
+        .documentElement
+        .dispatchEvent(event);
   }
 
 
