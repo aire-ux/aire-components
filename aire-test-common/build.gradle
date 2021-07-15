@@ -1,6 +1,8 @@
 
 dependencies {
     api 'javax.servlet:javax.servlet-api'
+    api project(':aire-test-vaadin')
     implementation 'io.sunshower.arcus:arcus-lang'
+    implementation 'io.sunshower.arcus:arcus-reflect'
     implementation 'io.sunshower.arcus.annotations:arcus-jsr-305'
 }

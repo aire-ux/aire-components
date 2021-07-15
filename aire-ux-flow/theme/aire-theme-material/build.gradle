@@ -7,7 +7,12 @@ dependencies {
     implementation 'io.sunshower.arcus:arcus-lang'
     implementation 'io.sunshower.arcus:arcus-reflect'
     implementation 'javax.servlet:javax.servlet-api'
+
     testImplementation project(':aire-test-spring')
+    testImplementation project(':aire-ux-flow:theme:aire-test-theme')
+
+
+
 
     [
             'aire-button'

@@ -31,6 +31,7 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public ElementResolver create(AnnotatedElement element) {
     val param = (Parameter) element;
     val selector = element.getAnnotation(Select.class);
