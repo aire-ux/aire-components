@@ -22,6 +22,11 @@ jar {
         include "*.min.css"
         into "META-INF/aire-theme/aire-material/"
     }
+
+    from("${project.projectDir}/node_modules/mdb-ui-kit/js") {
+        include ("*.min.js")
+        into "META-INF/aire-theme/aire-material/"
+    }
 }
 
 assemble.dependsOn npmInstall
