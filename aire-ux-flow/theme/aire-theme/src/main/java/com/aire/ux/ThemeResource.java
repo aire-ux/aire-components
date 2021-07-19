@@ -16,5 +16,4 @@ public interface ThemeResource {
 
   /** @return the mimetype of this resource */
   String getMimeType();
-
 }

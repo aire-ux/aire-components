@@ -19,8 +19,5 @@ class UIResolvingElementResolverFactoryTest {
   }
 
   @ViewTest
-  void ensureUiCanBeSpied(@Context UI ui) {
-
-  }
-
+  void ensureUiCanBeSpied(@Context UI ui) {}
 }

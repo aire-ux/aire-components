@@ -25,7 +25,6 @@ public class Frames {
     executingMethods.push(method);
   }
 
-
   public static Method exit() {
     return executingMethods.pop();
   }
@@ -33,7 +32,6 @@ public class Frames {
   public static Optional<Method> getCurrentTestMethod() {
     return Optional.ofNullable(executingMethods.peek());
   }
-
 
   @SuppressWarnings("unchecked")
   public static Deque<TestFrame> resolveFrameStack(ExtensionContext context) {

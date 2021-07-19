@@ -22,10 +22,7 @@ public class TopLevelVaadinTestCaseTest {
 
   @ViewTest
   @Navigate("main")
-  void ensureRoutesAreNavigable() {
-
-  }
-
+  void ensureRoutesAreNavigable() {}
 
   @ViewTest
   @Navigate("main")
@@ -54,8 +51,10 @@ public class TopLevelVaadinTestCaseTest {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();
     assertTrue(method.isPresent());
     val m = method.get();
-    assertEquals(m, TopLevelVaadinTestCaseTest.class
-        .getDeclaredMethod("ensureTestMethodGeneratesFrameWithCurrentMethod"));
+    assertEquals(
+        m,
+        TopLevelVaadinTestCaseTest.class.getDeclaredMethod(
+            "ensureTestMethodGeneratesFrameWithCurrentMethod"));
   }
 
   @ViewTest
@@ -66,8 +65,9 @@ public class TopLevelVaadinTestCaseTest {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();
     assertTrue(method.isPresent());
     val m = method.get();
-    assertEquals(m, TopLevelVaadinTestCaseTest.class
-        .getDeclaredMethod("ensureTestMethodGeneratesFrameWithCurrentMethod2",
-            ClassScenarioRouteLayout.class));
+    assertEquals(
+        m,
+        TopLevelVaadinTestCaseTest.class.getDeclaredMethod(
+            "ensureTestMethodGeneratesFrameWithCurrentMethod2", ClassScenarioRouteLayout.class));
   }
 }

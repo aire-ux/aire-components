@@ -11,23 +11,14 @@ import java.util.List;
 import lombok.Getter;
 import lombok.val;
 
-/**
- * DTO for theme resources
- */
+/** DTO for theme resources */
 public class ThemeDefinition {
 
-  /**
-   * the style definitions to load
-   */
-  @Getter
-  private final List<StyleDefinition> styleDefinitions;
+  /** the style definitions to load */
+  @Getter private final List<StyleDefinition> styleDefinitions;
 
-  /**
-   * the script definitions to load
-   */
-  @Getter
-  private final List<ScriptDefinition> scriptDefinitions;
-
+  /** the script definitions to load */
+  @Getter private final List<ScriptDefinition> scriptDefinitions;
 
   public ThemeDefinition() {
     this(new ArrayList<>(), new ArrayList<>());
@@ -42,8 +33,8 @@ public class ThemeDefinition {
 
   public ThemeDefinition(Theme target) {
     this(Collections.emptyList(), Collections.emptyList());
-    for(val definition : target.getThemeResources()) {
-      switch(definition.getType()) {
+    for (val definition : target.getThemeResources()) {
+      switch (definition.getType()) {
         case Javascript:
           addScriptDefinition(toScriptDefinition(definition));
           break;
@@ -54,7 +45,6 @@ public class ThemeDefinition {
     }
   }
 
-
   public void addStyleDefinition(StyleDefinition definition) {
     styleDefinitions.add(definition);
   }
@@ -62,5 +52,4 @@ public class ThemeDefinition {
   public void addScriptDefinition(ScriptDefinition definition) {
     scriptDefinitions.add(definition);
   }
-
 }

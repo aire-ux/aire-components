@@ -41,8 +41,7 @@ public final class TestFrame implements AutoCloseable {
 
   private final Set<Object> mocks;
   private final Set<Object> spies;
-  @Getter
-  private final ExtensionContext context;
+  @Getter private final ExtensionContext context;
   private final AtomicReference<Routes> routes;
   private final Map<Class<?>, Object> values;
   private final List<DecoratingElementResolver> resolvers;
@@ -66,7 +65,7 @@ public final class TestFrame implements AutoCloseable {
 
   static Optional<VaadinServletFactory> servletFactory() {
     return ServiceLoader.load(
-        VaadinServletFactory.class, Thread.currentThread().getContextClassLoader())
+            VaadinServletFactory.class, Thread.currentThread().getContextClassLoader())
         .findFirst();
   }
 
@@ -88,8 +87,7 @@ public final class TestFrame implements AutoCloseable {
       val factory = fopt.get();
       val currentUI = decorateUI(factory.getUIFactory().get());
       put(UI.class, currentUI);
-      MockVaadin.setup(
-          () -> currentUI, factory.createServlet(getRoutes()).orElseThrow());
+      MockVaadin.setup(() -> currentUI, factory.createServlet(getRoutes()).orElseThrow());
     } else {
       MockVaadin.setup(getRoutes());
     }
@@ -97,7 +95,6 @@ public final class TestFrame implements AutoCloseable {
     restore();
     log.log(Level.INFO, "Activated Stack Frame {0}", this);
   }
-
 
   void deactivate() {
     checkLiveness();
@@ -112,14 +109,12 @@ public final class TestFrame implements AutoCloseable {
     log.log(Level.INFO, "Deactivated tet frame {0}", this);
   }
 
-
   @Override
   public void close() {
     deactivate();
     resetUI();
     resolvers.clear();
   }
-
 
   public boolean hasElementResolver(AnnotatedElement element) {
     for (val resolverFactory : resolverFactories()) {
@@ -147,10 +142,10 @@ public final class TestFrame implements AutoCloseable {
   }
 
   public void navigateTo(String navigation) {
-    log.log(Level.INFO, "{0} navigating to {1}", new Object[]{this, navigation});
+    log.log(Level.INFO, "{0} navigating to {1}", new Object[] {this, navigation});
     this.location = navigation;
     UI.getCurrent().navigate(navigation);
-    log.log(Level.INFO, "{0} navigated to {1}", new Object[]{this, navigation});
+    log.log(Level.INFO, "{0} navigated to {1}", new Object[] {this, navigation});
   }
 
   public void restore() {
@@ -165,7 +160,6 @@ public final class TestFrame implements AutoCloseable {
     return format(
         "TestFrame[location: %s, routes: %s]", location == null ? "none" : location, routes);
   }
-
 
   protected final Routes getRoutes() {
     val result = this.routes.get();
@@ -194,7 +188,6 @@ public final class TestFrame implements AutoCloseable {
     }
   }
 
-
   private UI decorateUI(UI ui) {
     return Frames.getCurrentTestMethod()
         .map(this::getUIContextParameter)
@@ -202,25 +195,26 @@ public final class TestFrame implements AutoCloseable {
         .orElse(ui);
   }
 
-
   private UI mockOrDecorate(Optional<Context> context, UI ui) {
-    return context.flatMap(ctx -> {
-      if (Utilities.isMode(ctx, Mode.Mock)) {
-        return Optional.of(mockUI(ui));
-      }
-      if (Utilities.isMode(ctx, Mode.Spy)) {
-        return Optional.of(spyUI(ui));
-      }
-      return Optional.<UI>empty();
-
-    }).orElse(ui);
+    return context
+        .flatMap(
+            ctx -> {
+              if (Utilities.isMode(ctx, Mode.Mock)) {
+                return Optional.of(mockUI(ui));
+              }
+              if (Utilities.isMode(ctx, Mode.Spy)) {
+                return Optional.of(spyUI(ui));
+              }
+              return Optional.<UI>empty();
+            })
+        .orElse(ui);
   }
 
-
+  @SuppressWarnings("PMD.AvoidBranchingStatementAsLastInLoop")
   private UI spyUI(UI ui) {
 
-    val services = ServiceLoader
-        .load(SpyService.class, Thread.currentThread().getContextClassLoader());
+    val services =
+        ServiceLoader.load(SpyService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
       val result = service.apply(ui);
       spies.add(result);
@@ -236,17 +230,15 @@ public final class TestFrame implements AutoCloseable {
   private Optional<Context> getUIContextParameter(Method method) {
     val params = method.getParameters();
     for (val param : params) {
-      if (Reflect.isCompatible(UI.class, param.getType()) && param
-          .isAnnotationPresent(Context.class)) {
+      if (Reflect.isCompatible(UI.class, param.getType())
+          && param.isAnnotationPresent(Context.class)) {
         return Optional.ofNullable(param.getAnnotation(Context.class));
       }
     }
     return Optional.empty();
   }
 
-  private void resetUI() {
-
-  }
+  private void resetUI() {}
 
   public <T> boolean hasSpy(T value) {
     return spies.contains(value);
@@ -321,30 +313,30 @@ public final class TestFrame implements AutoCloseable {
     return (T) result;
   }
 
-
+  @SuppressWarnings("PMD.AvoidBranchingStatementAsLastInLoop")
   private Object mock(Object result) {
-    val services = ServiceLoader
-        .load(MockService.class, Thread.currentThread().getContextClassLoader());
+    val services =
+        ServiceLoader.load(MockService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
       return service.apply(result);
     }
     return result;
   }
 
+  @SuppressWarnings("PMD.AvoidBranchingStatementAsLastInLoop")
   private Object spy(Object result) {
-    val services = ServiceLoader
-        .load(SpyService.class, Thread.currentThread().getContextClassLoader());
+    val services =
+        ServiceLoader.load(SpyService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
       return service.apply(result);
     }
     return result;
   }
-
 
   private void resetSpies() {
 
-    val services = ServiceLoader
-        .load(SpyService.class, Thread.currentThread().getContextClassLoader());
+    val services =
+        ServiceLoader.load(SpyService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
       for (val spy : spies) {
         service.deactivate(spy);
@@ -353,8 +345,8 @@ public final class TestFrame implements AutoCloseable {
   }
 
   private void resetMocks() {
-    val services = ServiceLoader
-        .load(MockService.class, Thread.currentThread().getContextClassLoader());
+    val services =
+        ServiceLoader.load(MockService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
       for (val mock : mocks) {
         service.deactivate(mock);

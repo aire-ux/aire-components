@@ -2,7 +2,6 @@ package com.aire.ux.test;
 
 import com.aire.ux.test.Context.Mode;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
 import java.util.List;
 import java.util.Optional;
@@ -52,14 +51,12 @@ public interface TestContext {
   void navigate(String route);
 
   /**
-   *
    * @param contextClass the context-class to resolve
-   * @param mode the mode (mock, spy, none) to apply to the context
-   *             variable
+   * @param mode the mode (mock, spy, none) to apply to the context variable
    * @param <T> the type-parameter of the context class
    * @return the context class
-   * @throws java.util.NoSuchElementException if the context class
-   * is not available from any provider
+   * @throws java.util.NoSuchElementException if the context class is not available from any
+   *     provider
    */
   <T> T resolve(Class<T> contextClass, Mode mode);
 

@@ -13,11 +13,10 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
 public class VaadinNavigationExtension
     implements AfterAllCallback,
-    AfterEachCallback,
-    BeforeAllCallback,
-    BeforeEachCallback,
-    TestTemplateInvocationContext {
-
+        AfterEachCallback,
+        BeforeAllCallback,
+        BeforeEachCallback,
+        TestTemplateInvocationContext {
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
@@ -56,9 +55,13 @@ public class VaadinNavigationExtension
   }
 
   private Optional<Navigate> resolveNavigationTarget(ExtensionContext context) {
-    return context.getTestMethod()
+    return context
+        .getTestMethod()
         .flatMap(method -> Optional.ofNullable(method.getAnnotation(Navigate.class)))
-        .or(() -> context.getTestClass()
-            .flatMap(t -> Optional.ofNullable(t.getAnnotation(Navigate.class))));
+        .or(
+            () ->
+                context
+                    .getTestClass()
+                    .flatMap(t -> Optional.ofNullable(t.getAnnotation(Navigate.class))));
   }
 }

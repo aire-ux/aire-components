@@ -8,6 +8,5 @@ public interface ElementResolver {
     return Mode.None;
   }
 
-
   <T> T resolve();
 }

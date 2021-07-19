@@ -69,7 +69,7 @@ public class Utilities {
   }
 
   public static boolean isMode(Context context, Mode mode) {
-    if(context == null) {
+    if (context == null) {
       return mode == Mode.None;
     }
     return context.mode() == mode;

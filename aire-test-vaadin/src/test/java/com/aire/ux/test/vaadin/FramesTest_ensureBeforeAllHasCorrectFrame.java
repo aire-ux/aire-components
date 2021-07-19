@@ -19,5 +19,4 @@ class FramesTest_ensureBeforeAllHasCorrectFrame {
   void ensureFrameClassIsNotEmpty() {
     assertFalse(Frames.resolveCurrentFrame().getContext().getTestClass().isEmpty());
   }
-
 }

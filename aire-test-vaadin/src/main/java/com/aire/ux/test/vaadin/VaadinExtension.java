@@ -20,29 +20,29 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 /**
  * lifecycle is:
  *
- * <p>1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides? Create
- * Frame b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides? Get Current Frame b.
- * Overrides? Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a.
- * Deactivate Current Frame b. Pop Current Frame
+ * <p>1. TestClass: a. Create Frame b. Activate Frame 2. TestMethodBegin: a. Overrides? Create Frame
+ * b. Overrides? Activate Frame 3. TestMethodEnd: a. Overrides? Get Current Frame b. Overrides?
+ * Deactivate Current Frame c. Overrides? Pop Current Frame 4. TestClassEnd: a. Deactivate Current
+ * Frame b. Pop Current Frame
  */
 @Log
 @Order(50)
 public class VaadinExtension
     implements AireExtension,
-    Extension,
-    BeforeEachCallback,
-    AfterEachCallback,
-    BeforeAllCallback,
-    AfterAllCallback {
+        Extension,
+        BeforeEachCallback,
+        AfterEachCallback,
+        BeforeAllCallback,
+        AfterAllCallback {
 
   static final Namespace ROOT_AIRE_NAMESPACE = Namespace.create("aire:root");
 
   /**
    * set up an Aire test context surrounding the entire class
    *
-   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate
-   * it (but don't close it) 3. Create a new test context for the executing class and push it onto
-   * the stack
+   * <p>1. Determine which Routes to include 2. If there's a surrounding test-context, deactivate it
+   * (but don't close it) 3. Create a new test context for the executing class and push it onto the
+   * stack
    *
    * @param context the context
    * @throws Exception TODO
@@ -55,27 +55,33 @@ public class VaadinExtension
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    context.getTestMethod().ifPresent(method -> {
-      Frames.enter(method);
-      if (method.isAnnotationPresent(ViewTest.class)) {
-        activateFrame(context);
-      }
-    });
-
+    context
+        .getTestMethod()
+        .ifPresent(
+            method -> {
+              Frames.enter(method);
+              if (method.isAnnotationPresent(ViewTest.class)) {
+                activateFrame(context);
+              }
+            });
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    context.getTestMethod().ifPresent(method -> {
-      if (method.isAnnotationPresent(ViewTest.class)) {
-        deactivateFrame(context);
-      }
-      val exited = Frames.exit();
-      if (!Objects.equals(exited, method)) {
-        throw new IllegalStateException(
-            String.format("Expected current test method to be %s, but was %s", exited, method));
-      }
-    });
+    context
+        .getTestMethod()
+        .ifPresent(
+            method -> {
+              if (method.isAnnotationPresent(ViewTest.class)) {
+                deactivateFrame(context);
+              }
+              val exited = Frames.exit();
+              if (!Objects.equals(exited, method)) {
+                throw new IllegalStateException(
+                    String.format(
+                        "Expected current test method to be %s, but was %s", exited, method));
+              }
+            });
   }
 
   /**
@@ -132,7 +138,7 @@ public class VaadinExtension
 
   private Stream<RoutesCreatorFactory> routesCreatorFactories() {
     return ServiceLoader.load(
-        RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
+            RoutesCreatorFactory.class, Thread.currentThread().getContextClassLoader())
         .stream()
         .map(Provider::get);
   }

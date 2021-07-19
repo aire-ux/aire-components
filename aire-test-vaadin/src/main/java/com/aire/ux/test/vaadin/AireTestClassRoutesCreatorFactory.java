@@ -22,9 +22,10 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
       return false;
     }
     val element = opt.get();
-    return
-        element.isAnnotationPresent(Routes.class) ||
-        context.getTestClass().map(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
+    return element.isAnnotationPresent(Routes.class)
+        || context
+            .getTestClass()
+            .map(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
             .isPresent();
   }
 
@@ -45,11 +46,14 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
 
     @Override
     public com.github.mvysny.kaributesting.v10.Routes create() {
-      val elementOpt = context
-          .getTestMethod()
-          .flatMap(t -> Optional
-              .ofNullable((AnnotatedElement) (t.isAnnotationPresent(Routes.class) ? t : null)))
-          .or(context::getTestClass);
+      val elementOpt =
+          context
+              .getTestMethod()
+              .flatMap(
+                  t ->
+                      Optional.ofNullable(
+                          (AnnotatedElement) (t.isAnnotationPresent(Routes.class) ? t : null)))
+              .or(context::getTestClass);
       val routes = new com.github.mvysny.kaributesting.v10.Routes();
       if (elementOpt.isPresent()) {
         val result = getRoutePackage(elementOpt.get().getAnnotation(Routes.class));
