@@ -40,6 +40,7 @@ public class TopLevelVaadinTestCaseTest {
   }
 
   @ViewTest
+  @Navigate("test")
   @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
   void ensureTestMethodWithViewTestGeneratesFrameEntryWithMethod() {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();
@@ -47,6 +48,7 @@ public class TopLevelVaadinTestCaseTest {
   }
 
   @ViewTest
+  @Navigate("test")
   @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
   void ensureTestMethodGeneratesFrameWithCurrentMethod() throws NoSuchMethodException {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();

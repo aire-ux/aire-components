@@ -20,8 +20,4 @@ class FramesTest_ensureBeforeAllHasCorrectFrame {
     assertFalse(Frames.resolveCurrentFrame().getContext().getTestClass().isEmpty());
   }
 
-  @ViewTest
-  void ensureFrameMethodIsNotEmptyForViewTest() {
-    assertTrue(Frames.resolveCurrentFrame().getContext().getTestMethod().isEmpty());
-  }
 }

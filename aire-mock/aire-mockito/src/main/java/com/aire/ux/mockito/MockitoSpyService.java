@@ -8,7 +8,7 @@ public class MockitoSpyService implements SpyService {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T apply(T value) {
-    return (T) Mockito.mock(value.getClass());
+    return (T) Mockito.spy(value);
   }
 
   @Override

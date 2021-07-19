@@ -1,9 +1,8 @@
 package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
-import com.aire.ux.test.Routes;
 import com.aire.ux.test.ViewTest;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.stream.Stream;
@@ -57,21 +56,24 @@ public class VaadinExtension
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
     context.getTestMethod().ifPresent(method -> {
-      if(
-          method.isAnnotationPresent(ViewTest.class) &&
-          method.isAnnotationPresent(Routes.class)) {
+      Frames.enter(method);
+      if (method.isAnnotationPresent(ViewTest.class)) {
         activateFrame(context);
       }
     });
+
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
     context.getTestMethod().ifPresent(method -> {
-      if(
-          method.isAnnotationPresent(ViewTest.class) &&
-          method.isAnnotationPresent(Routes.class)) {
+      if (method.isAnnotationPresent(ViewTest.class)) {
         deactivateFrame(context);
+      }
+      val exited = Frames.exit();
+      if (!Objects.equals(exited, method)) {
+        throw new IllegalStateException(
+            String.format("Expected current test method to be %s, but was %s", exited, method));
       }
     });
   }

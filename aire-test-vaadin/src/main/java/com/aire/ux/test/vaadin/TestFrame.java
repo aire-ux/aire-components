@@ -196,12 +196,12 @@ public final class TestFrame implements AutoCloseable {
 
 
   private UI decorateUI(UI ui) {
-    return context
-        .getTestMethod()
+    return Frames.getCurrentTestMethod()
         .map(this::getUIContextParameter)
         .map(ctx -> mockOrDecorate(ctx, ui))
         .orElse(ui);
   }
+
 
   private UI mockOrDecorate(Optional<Context> context, UI ui) {
     return context.flatMap(ctx -> {
@@ -280,7 +280,7 @@ public final class TestFrame implements AutoCloseable {
   @SuppressWarnings("unchecked")
   public <T> T resolveContextVariable(Class<T> contextClass, Mode mode) {
     if (mode == Mode.Mock) {
-      if(Reflect.isCompatible(UI.class, contextClass)) {
+      if (Reflect.isCompatible(UI.class, contextClass)) {
         return (T) mockUI(null);
       }
       for (val mock : mocks) {
@@ -346,7 +346,7 @@ public final class TestFrame implements AutoCloseable {
     val services = ServiceLoader
         .load(SpyService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
-      for(val spy : spies) {
+      for (val spy : spies) {
         service.deactivate(spy);
       }
     }
@@ -356,7 +356,7 @@ public final class TestFrame implements AutoCloseable {
     val services = ServiceLoader
         .load(MockService.class, Thread.currentThread().getContextClassLoader());
     for (val service : services) {
-      for(val mock : mocks) {
+      for (val mock : mocks) {
         service.deactivate(mock);
       }
     }
