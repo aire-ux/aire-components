@@ -11,8 +11,6 @@ public class AbstractResource implements ThemeResource {
   /** the name within the theme of this resource */
   private final String name;
 
-  /** attempt to load this resource asynchronously. Defaults to false */
-  private final boolean async;
 
   /** the location within the theme of this resource. Usually relative to the classloader */
   private final String location;
@@ -23,23 +21,14 @@ public class AbstractResource implements ThemeResource {
   protected AbstractResource(
       @Nonnull final Type type,
       @Nonnull final String name,
-      @Nonnull final boolean async,
       @Nonnull final String location,
       @Nonnull final String mimeType) {
     this.type = type;
     this.name = name;
-    this.async = async;
     this.location = location;
     this.mimeType = mimeType;
   }
 
-  protected AbstractResource(
-      @Nonnull final Type type,
-      @Nonnull final String name,
-      @Nonnull final String location,
-      @Nonnull final String mimeType) {
-    this(type, name, false, location, mimeType);
-  }
 
   @Override
   public Type getType() {
@@ -61,8 +50,4 @@ public class AbstractResource implements ThemeResource {
     return mimeType;
   }
 
-  @Override
-  public boolean loadAsynchronously() {
-    return async;
-  }
 }

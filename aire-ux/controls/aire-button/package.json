@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-button",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "description": "Webcomponent aire-button following open-wc recommendations",
   "author": "aire-button",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
     "rollup": "rollup -c",
-    "start": "concurrently --kill-others --names build,web-dev-server \"npm run build:watch\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
+    "start": "concurrently --kill-others --names build,web-dev-server \"tsc --watch --preserveWatchOutput\" \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
     "build": "tsc",
     "build:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
     "prepublish": "rollup -c",
@@ -22,7 +22,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/aire-theme-decorators": "^0.0.14",
+    "@aire-ux/aire-theme-decorators": "^0.0.16",
     "@spectrum-css/button": "^3.0.3",
     "@spectrum-css/icon": "^3.0.3",
     "@spectrum-css/page": "^3.0.2",
@@ -32,7 +32,7 @@
     "lit-html": "^1.4.1"
   },
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.14",
+    "@aire-ux/aire-theme-manager": "^0.0.16",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",

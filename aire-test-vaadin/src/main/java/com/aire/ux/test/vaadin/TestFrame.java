@@ -9,9 +9,12 @@ import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.vaadin.flow.component.UI;
 import java.lang.reflect.AnnotatedElement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -28,6 +31,7 @@ public final class TestFrame implements AutoCloseable {
 
   @Getter private final ExtensionContext context;
   private final AtomicReference<Routes> routes;
+  private final Map<Class<?>, Object> values;
 
   private String location;
 
@@ -35,6 +39,7 @@ public final class TestFrame implements AutoCloseable {
     this.creator = creator;
     this.context = context;
     this.routes = new AtomicReference<>();
+    this.values = new ConcurrentHashMap<>();
     this.alive = new AtomicBoolean(true);
   }
 
@@ -49,6 +54,15 @@ public final class TestFrame implements AutoCloseable {
         .findFirst();
   }
 
+  public <T> void put(Class<T> type, T element) {
+    values.put(type, element);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T get(Class<T> type) {
+    return (T) values.get(type);
+  }
+
   void activate() {
     checkLiveness();
     log.log(Level.INFO, "Activating Stack Frame {0}...", this);
@@ -56,8 +70,10 @@ public final class TestFrame implements AutoCloseable {
     val fopt = servletFactory();
     if (fopt.isPresent()) {
       val factory = fopt.get();
+      val currentUI = factory.getUIFactory().get();
+      put(UI.class, currentUI);
       MockVaadin.setup(
-          () -> factory.getUIFactory().get(), factory.createServlet(getRoutes()).orElseThrow());
+          () -> currentUI, factory.createServlet(getRoutes()).orElseThrow());
     } else {
       MockVaadin.setup(getRoutes());
     }
@@ -70,6 +86,7 @@ public final class TestFrame implements AutoCloseable {
     checkLiveness();
     log.log(Level.INFO, "Deactivating test frame {0}...", this);
     MockVaadin.tearDown();
+    values.clear();
     routes.set(null);
     log.log(Level.INFO, "Deactivated tet frame {0}", this);
   }

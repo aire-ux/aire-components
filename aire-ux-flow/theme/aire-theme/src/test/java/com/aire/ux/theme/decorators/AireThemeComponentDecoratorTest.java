@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = MainView.class)
 @TestTheme(AireTestTheme.class)
-class AireThemeComponentDecoratorTest {
+public class AireThemeComponentDecoratorTest {
 
   @ViewTest
   @Navigate("main")

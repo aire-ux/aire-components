@@ -8,6 +8,10 @@
         crossorigin="anonymous">
 
 </head>
+<script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"
+></script>
 <body>
 <div id="demo" style="padding:40px"></div>
 
@@ -27,24 +31,52 @@
     }])
   }
 
-
   function setMaterial() {
     Aire.uninstallStyles();
     Aire.installStyles([{
       id: 'mdb',
       url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
       mode: Aire.Mode.Constructable
-    }])
+    }
+    ]);
+
+    Aire.installTheme({
+      styleDefinitions: [{
+        id: 'mdb',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+        mode: Aire.Mode.Constructable
+      }],
+      scriptDefinitions: [{
+        id: 'mdb-js',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js'
+      }]
+    }).then(
+        Aire.walkDom(el => {
+          if(el.hasAttribute('ripple')) {
+            new mdb.Ripple(el);
+          }
+        })
+
+    );
+
   }
 
   render(
       html`
         <div margin="40px">
-          <aire-button classes="btn btn-primary" type="button" @click="${setMaterial}">
+          <aire-button ripple  id="whatever" classes="btn btn-primary" type="button"
+                       @click="${setMaterial}">
             material
           </aire-button>
           <aire-button classes="btn btn-dark" type="button" @click="${setBootstrap}">
             bootstrap
+          </aire-button>
+
+
+          <aire-button
+              ripple
+              data-mdb-ripple-color="light"  data-mdb-ripple-radius="100" classes="btn btn-light-outline btn-primary" type="button">
+            Button
           </aire-button>
         </div>
       `,

@@ -57,13 +57,17 @@ public class BaseAireInstantiator implements Instantiator {
 
   @Override
   public <T> T getOrCreate(Class<T> type) {
-    return delegate.getOrCreate(type);
+    val result = delegate.getOrCreate(type);
+    preDecorateResult(type, result);
+    return result;
   }
 
   @Override
   public <T extends Component> T createComponent(Class<T> componentClass) {
     val result = delegate.createComponent(componentClass);
+    preDecorateResult(componentClass, result);
     decorate(result);
+    postDecorateResult(componentClass, result);
     return result;
   }
 
@@ -83,6 +87,7 @@ public class BaseAireInstantiator implements Instantiator {
   public <T extends HasElement> T createRouteTarget(
       Class<T> routeTargetType, NavigationEvent event) {
     val result = delegate.createRouteTarget(routeTargetType, event);
+    decorateRouteTarget(routeTargetType);
     decorate(result);
     return result;
   }
@@ -96,6 +101,26 @@ public class BaseAireInstantiator implements Instantiator {
   public TemplateParser getTemplateParser() {
     return delegate.getTemplateParser();
   }
+
+  /**
+   * extension point
+   *
+   * @param componentClass the type of the current component
+   * @param result the result
+   * @param <T> the type parameter
+   */
+  protected <T> void preDecorateResult(Class<T> componentClass, T result) {}
+
+  /**
+   * extension point
+   *
+   * @param componentClass the type of the current component
+   * @param result the result
+   * @param <T> the type parameter
+   */
+  protected <T> void postDecorateResult(Class<T> componentClass, T result) {}
+
+  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {}
 
   @SuppressFBWarnings
   private <T extends HasElement> void decorate(T result) {

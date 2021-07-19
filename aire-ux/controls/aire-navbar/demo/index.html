@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en-GB" class="spectrum spectrum--medium spectrum--light">
+<head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+
+</head>
+<body>
+<div id="demo" style="padding:40px"></div>
+
+<script type="module">
+  import {html, render} from 'lit-html';
+
+  import '../dist/index.js';
+  // import {Aire} from '../node_modules/@aire-ux/aire-theme-manager/dist/src/AireThemeManager.js'
+  import {Aire} from '@aire-ux/aire-theme-manager'
+
+  function setBootstrap() {
+    Aire.uninstallStyles();
+    Aire.installStyles([{
+      id: 'bootstrap',
+      url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
+      mode: Aire.Mode.Constructable
+    }])
+  }
+
+
+  function setMaterial() {
+    Aire.uninstallStyles();
+    Aire.installStyles([{
+      id: 'mdb',
+      url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
+      mode: Aire.Mode.Constructable
+    }])
+  }
+
+  render(
+      html`
+        <div margin="40px">
+          <aire-navbar classes="btn btn-primary" type="navbar" @click="${setMaterial}">
+            material
+          </aire-navbar>
+          <aire-navbar classes="btn btn-dark" type="navbar" @click="${setBootstrap}">
+            bootstrap
+          </aire-navbar>
+        </div>
+      `,
+      document.querySelector('#demo')
+  );
+
+</script>
+</body>
+</html>

@@ -13,8 +13,6 @@ public class AireThemeComponentDecorator implements ComponentDecorator {
   @Override
   public void decorate(@Nonnull HasElement component) {
     val theme = ThemeContextHolder.getContext().getTheme();
-    if (theme != null) {
-      theme.apply(component);
-    }
+    theme.apply(component);
   }
 }

@@ -1,5 +1,7 @@
 package com.aire.ux.theme.decorators;
 
+import com.aire.ux.Theme;
+import io.sunshower.lang.events.EventListener;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @Order(10)
 @Target(ElementType.TYPE)
-@ExtendWith({AireThemeExtension.class})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnableThemes {}
+@ExtendWith({AireThemeExtension.class})
+public @interface EnableThemes {
+
+  Class<? extends EventListener<Theme>>[] listeners() default {};
+}

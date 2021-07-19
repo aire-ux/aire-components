@@ -17,7 +17,21 @@ export module Aire {
 
 
   export enum EventType {
+    /**
+     *
+     */
+    ScriptAdded = 'aire-script-added',
+
+    ScriptRemoved = 'aire-script-removed',
+
+    /**
+     *
+     */
     CustomStyleAdded = 'aire-custom-style-added',
+
+    /**
+     *
+     */
     CustomStyleRemoved = 'aire-custom-style-removed',
   }
 
@@ -26,7 +40,7 @@ export module Aire {
    * determine if the theme manager should walk the dom and
    * force-remove adoptedStyles.
    */
-  export const forceRemove = false;
+  export let forceRemove = false;
   /**
    * the event detail for a custom event
    */
@@ -57,23 +71,75 @@ export module Aire {
    */
   export type StyleMode = Mode | string;
 
+  export type ThemeResource = {
+
+    /**
+     * the order in which a theme-resource should be installed--lower = higher precedence
+     * default is 0 (no precedence)
+     */
+    order: number;
+    /**
+     * the ID of this resource.  Will be used for the actual ID of
+     * the tag
+     */
+    id?: string;
+    /**
+     * the URL to load this resource from
+     */
+    url?: string;
+
+    /**
+     * load this resource inline
+     */
+    content?: string
+
+    /**
+     * specify the integrity of this resource
+     */
+    integrity?: string
+  }
   /**
    * the definition of a style to be managed
    * by the theme manager
    */
   export type StyleDefinition = {
-    id: string
-    url: string
     mode?: StyleMode
 
     /**
      * once we're in the DOM (somehow), what are we?
      */
     result?: StyleValue
+  } & ThemeResource;
+
+
+  export type ScriptDefinition = {
+    async: boolean;
+    defer: boolean;
+    contents?: string
+  } & ThemeResource
+
+  export type Theme = {
+
+    /**
+     * the style definitions for this theme
+     */
+    styleDefinitions: Array<StyleDefinition>;
+
+    /**
+     * the scripts to install with this theme
+     */
+    scriptDefinitions: Array<ScriptDefinition>;
+
   }
 
   console.info("Aire Theme manager loaded!");
 
+
+  /**
+   *
+   * @private the scripts currently loaded
+   */
+  const scripts: Array<ScriptDefinition> = [];
 
   const styles: Map<StyleMode, Array<StyleDefinition>> = new Map();
 
@@ -83,13 +149,55 @@ export module Aire {
   styles.set(Mode.Constructable, []);
 
 
+  let currentTheme: Theme;
+
+  export function installTheme(theme: Theme): Promise<any> {
+    return Promise.all([
+      installScripts(theme.scriptDefinitions),
+      installStyles(theme.styleDefinitions)
+    ]).then(_ => {
+      currentTheme = theme;
+    })
+    // installScripts(theme.scriptDefinitions).then(result => {
+    //   installStyles(theme.styleDefinitions);
+    // });
+    // currentTheme = theme;
+  }
+
+
+  export function removeTheme() {
+    uninstallStyles();
+    uninstallScripts();
+  }
+
+  function uninstallScripts() {
+    for (let script of scripts) {
+      if (script.id) {
+        let scriptTag = document.getElementById(script.id);
+        if (scriptTag) {
+          scriptTag.remove();
+        }
+      }
+    }
+  }
+
+
+  function installScripts(scriptDefinitions: Array<ScriptDefinition>): Promise<any[]> {
+    const promises: Array<Promise<any>> = [];
+    for (let script of scriptDefinitions) {
+      promises.push(enqueueGlobalScriptDefinition(script).then(_ => scripts.push(script)));
+    }
+    return Promise.all(promises);
+  }
+
   /**
    * install the list of styles into the DOM.
    * Each style is installed asynchronously
    * @param newStyles the styles to install
    */
-  export function installStyles(newStyles: Array<StyleDefinition>): void {
+  export function installStyles(newStyles: Array<StyleDefinition>): Promise<any[]> {
     // installedGlobalStyles = styles;
+    const promises: Array<Promise<any>> = []
     for (const style of newStyles) {
       if (!style.mode) {
         style.mode = Mode.Global;
@@ -100,11 +208,11 @@ export module Aire {
       } else if (definition) {
         definition.push(style);
       }
-
-      enqueueStyleInstallation(style).then(link => {
+      promises.push(enqueueStyleInstallation(style).then(link => {
         console.info("installed " + link);
-      });
+      }));
     }
+    return Promise.all(promises);
   }
 
 
@@ -125,12 +233,38 @@ export module Aire {
   function uninstallGlobalStyle(style: StyleDefinition): void {
 
     console.info(`Removing global style definition: ${style.url}`);
-    let linkElement = document.getElementById(style.id);
-    if (linkElement) {
-      linkElement.remove();
+    if (style.id) {
+      let linkElement = document.getElementById(style.id);
+      if (linkElement) {
+        linkElement.remove();
+      }
     }
   }
 
+
+  export type StyleAware = {
+    adoptedStyleSheets: Array<StyleValue>
+  } & HTMLElement;
+
+  export function walkDom(f: (el: StyleAware) => void) {
+
+    let stack = [document.documentElement];
+    while (stack.length) {
+      let el = stack.pop();
+      if (el) {
+        const styleAware = el as StyleAware;
+        f(styleAware);
+        let children = el.children;
+        for (let i = 0; i < children.length; i++) {
+          let child = children.item(i);
+          if (child) {
+            stack.push(child as HTMLElement);
+          }
+        }
+      }
+
+    }
+  }
 
   /**
    * attempt to remove constructed stylesheets from the dom
@@ -141,39 +275,24 @@ export module Aire {
   function uninstallConstructedStylesheet(
       definition: StyleDefinition
   ): void {
+
     if (forceRemove) {
-      let stack = [document.documentElement];
-      while (stack.length) {
-        let el = stack.pop();
-        if (el) {
-          const styleaware = el as unknown as {
-            adoptedStyleSheets: Array<StyleValue>;
-          }
-          if (
-              styleaware.adoptedStyleSheets &&
+      walkDom((styleaware: StyleAware): void => {
+        if (
+            styleaware.adoptedStyleSheets &&
+            styleaware
+                .adoptedStyleSheets
+                .indexOf(definition.result as StyleValue) != -1) {
+          styleaware.adoptedStyleSheets =
               styleaware
                   .adoptedStyleSheets
-                  .indexOf(definition.result as StyleValue) != -1) {
-            styleaware.adoptedStyleSheets =
-                styleaware
-                    .adoptedStyleSheets
-                    .filter(style => style !== definition.result);
-          }
-          let children = el.children;
-          for (let i = 0; i < children.length; i++) {
-            let child = children.item(i);
-            if (child) {
-              stack.push(child as HTMLElement);
-            }
-          }
+                  .filter(style => style !== definition.result);
         }
-      }
+      });
     } else {
-      const styleaware = document as unknown as {
-        adoptedStyleSheets: Array<StyleValue>;
-      }
-      styleaware.adoptedStyleSheets =
-          styleaware
+      const styleAware = document as unknown as StyleAware;
+      styleAware.adoptedStyleSheets =
+          styleAware
               .adoptedStyleSheets
               .filter(s => definition.result !== s);
     }
@@ -197,7 +316,9 @@ export module Aire {
             styleDefinition: style
           }
         });
-    document.documentElement.dispatchEvent(event);
+    document
+        .documentElement
+        .dispatchEvent(event);
   }
 
 
@@ -269,6 +390,9 @@ export module Aire {
       definition: StyleDefinition
   ): Promise<any> {
     const stylesheet = new CSSStyleSheet() as ReplaceAware;
+    if (!definition.url) {
+      return Promise.resolve();
+    }
     return requestStylesheet(definition.url).then(styleDefinition => {
       return stylesheet
           .replace(styleDefinition)
@@ -305,6 +429,42 @@ export module Aire {
 
   }
 
+  function enqueueGlobalScriptDefinition(definition: ScriptDefinition): Promise<HTMLScriptElement> {
+    console.info(`Enqueing script for addition with if: ${definition.id}, url: ${definition.url}`);
+
+    return new Promise<HTMLScriptElement>(
+        (resolve, reject) => {
+          let script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.id = definition.id as string;
+          script.src = definition.url as string;
+          script.async = definition.async;
+          script.defer = definition.defer;
+          document.head.appendChild(script);
+
+          let event = new CustomEvent(
+              EventType.ScriptAdded, {
+                detail: {
+                  eventType: EventType.CustomStyleAdded,
+                  scriptDefinition: definition
+                }
+              });
+          document
+              .documentElement
+              .dispatchEvent(event);
+
+          script.onload = (e: Event) => {
+            console.info(`Successfully added script at ${definition.url}`);
+            resolve(script);
+          }
+          script.onerror = (e: string | Event) => {
+            console.warn(`Failed to add style at ${definition.url}.  Reason: ${e}`)
+            reject(script);
+          }
+
+        });
+  }
+
   /**
    * @param style the style to install
    * @private should not be called externally
@@ -316,8 +476,8 @@ export module Aire {
     return new Promise<HTMLLinkElement>((
         resolve, reject) => {
       let link = document.createElement('link');
-      link.id = style.id;
-      link.href = style.url;
+      link.id = style.id as string;
+      link.href = style.url as string;
       link.rel = 'stylesheet';
       style.result = link;
       document.head.appendChild(link);
@@ -343,6 +503,7 @@ export module Aire {
       }
     });
   }
+
 
   function requestStylesheet(url: string, method: string = 'GET'): Promise<string> {
     return new Promise(function (resolve, reject) {

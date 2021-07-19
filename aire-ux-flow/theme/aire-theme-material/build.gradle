@@ -7,7 +7,12 @@ dependencies {
     implementation 'io.sunshower.arcus:arcus-lang'
     implementation 'io.sunshower.arcus:arcus-reflect'
     implementation 'javax.servlet:javax.servlet-api'
+
     testImplementation project(':aire-test-spring')
+    testImplementation project(':aire-ux-flow:theme:aire-test-theme')
+
+
+
 
     [
             'aire-button'
@@ -20,6 +25,11 @@ dependencies {
 jar {
     from("${project.projectDir}/node_modules/mdb-ui-kit/css") {
         include "*.min.css"
+        into "META-INF/aire-theme/aire-material/"
+    }
+
+    from("${project.projectDir}/node_modules/mdb-ui-kit/js") {
+        include ("*.min.js")
         into "META-INF/aire-theme/aire-material/"
     }
 }
