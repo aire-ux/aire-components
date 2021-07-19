@@ -2,6 +2,7 @@ package com.aire.ux.test;
 
 import static java.lang.String.format;
 
+import com.aire.ux.test.Context.Mode;
 import io.sunshower.lambda.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,5 +66,12 @@ public class Utilities {
 
   public static Option<String> notBlank(String s) {
     return (s == null || s.isBlank() ? Option.none() : Option.some(s));
+  }
+
+  public static boolean isMode(Context context, Mode mode) {
+    if(context == null) {
+      return mode == Mode.None;
+    }
+    return context.mode() == mode;
   }
 }

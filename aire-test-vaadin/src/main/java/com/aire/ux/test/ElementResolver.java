@@ -4,15 +4,10 @@ import com.aire.ux.test.Context.Mode;
 
 public interface ElementResolver {
 
-  Mode getMode();
-
-  default <T> T mock(T value) {
-    return value;
+  default Mode getMode() {
+    return Mode.None;
   }
 
-  default <T> T spy(T value) {
-    return value;
-  }
 
   <T> T resolve();
 }

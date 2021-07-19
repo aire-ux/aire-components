@@ -4,6 +4,9 @@ import static java.lang.String.format;
 
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.select.css.CssSelectorParser;
+import com.aire.ux.test.Context.Mode;
+import com.aire.ux.test.vaadin.Frames;
+import com.aire.ux.test.vaadin.TestFrame;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
@@ -18,6 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 public class DefaultTestContext implements TestContext {
 
@@ -129,6 +133,11 @@ public class DefaultTestContext implements TestContext {
   @Override
   public void navigate(String route) {
     UI.getCurrent().navigate(route);
+  }
+
+  @Override
+  public <T> T resolve(Class<T> contextClass, Mode mode) {
+    return Frames.resolveCurrentFrame().resolveContextVariable(contextClass, mode);
   }
 
   private Predicate<Element> elementTypePredicate(Class<?>... types) {
