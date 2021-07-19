@@ -8,6 +8,11 @@ dependencies {
     implementation 'io.sunshower.arcus:arcus-reflect'
     implementation 'javax.servlet:javax.servlet-api'
 
+    api project(':aire-mock:aire-mockito')
+    api project(':aire-mock:aire-mock-core')
+
+
+    testImplementation project(':aire-test-vaadin')
     testImplementation project(':aire-test-spring')
     testImplementation project(':aire-ux-flow:theme:aire-test-theme')
 
