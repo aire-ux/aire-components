@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-theme-decorators",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Aire Theme Decorators",
   "author": "Aire-UX",
   "license": "MIT",
@@ -101,6 +101,6 @@
   },
   "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0",
   "dependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.17"
+    "@aire-ux/aire-theme-manager": "^0.0.18"
   }
 }
