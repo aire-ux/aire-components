@@ -1,7 +1,8 @@
 package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
-import java.util.Optional;
+import com.aire.ux.test.ViewTest;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.stream.Stream;
@@ -54,12 +55,33 @@ public class VaadinExtension
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    activateFrame(context);
+    context
+        .getTestMethod()
+        .ifPresent(
+            method -> {
+              Frames.enter(method);
+              if (method.isAnnotationPresent(ViewTest.class)) {
+                activateFrame(context);
+              }
+            });
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    deactivateFrame(context);
+    context
+        .getTestMethod()
+        .ifPresent(
+            method -> {
+              if (method.isAnnotationPresent(ViewTest.class)) {
+                deactivateFrame(context);
+              }
+              val exited = Frames.exit();
+              if (!Objects.equals(exited, method)) {
+                throw new IllegalStateException(
+                    String.format(
+                        "Expected current test method to be %s, but was %s", exited, method));
+              }
+            });
   }
 
   /**
@@ -83,13 +105,11 @@ public class VaadinExtension
   }
 
   private TestFrame createFrame(ExtensionContext context) {
-    val frames = Frames.resolveFrameStack(context);
     val frame =
         routesCreatorFactories()
             .filter(t -> t.appliesTo(context, this))
             .findFirst()
             .map(t -> new TestFrame(t.create(context, this), context))
-            .or(() -> Optional.ofNullable(frames.peek()))
             .orElseGet(
                 () ->
                     new TestFrame(

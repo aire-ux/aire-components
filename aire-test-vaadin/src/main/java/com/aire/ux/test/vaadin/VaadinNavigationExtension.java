@@ -2,7 +2,7 @@ package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Utilities;
-import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -20,47 +20,48 @@ public class VaadinNavigationExtension
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
-    val type = context.getRequiredTestClass();
-    navigate(type, context);
+    resolveNavigationTarget(context).ifPresent(annotation -> navigate(annotation, context));
   }
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    val method = context.getRequiredTestMethod();
-    navigate(method, context);
+    resolveNavigationTarget(context).ifPresent(annotation -> navigate(annotation, context));
   }
 
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
-    val type = context.getRequiredTestClass();
-    restore(type, context);
+    resolveNavigationTarget(context).ifPresent(annotation -> restore(annotation, context));
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    val method = context.getRequiredTestMethod();
-    restore(method, context);
+    resolveNavigationTarget(context).ifPresent(annotation -> restore(annotation, context));
   }
 
-  private void restore(AnnotatedElement element, ExtensionContext context) {
-    if (element.isAnnotationPresent(Navigate.class)) {
-      val viewTestAnnotation = element.getAnnotation(Navigate.class);
-      if (!Utilities.isDefault(viewTestAnnotation)) {
-        val previous = Frames.resolveFrameStack(context).peek();
-        if (previous != null) {
-          previous.restore();
-        }
+  private void restore(Navigate viewTestAnnotation, ExtensionContext context) {
+    if (!Utilities.isDefault(viewTestAnnotation)) {
+      val previous = Frames.resolveFrameStack(context).peek();
+      if (previous != null) {
+        previous.restore();
       }
     }
   }
 
-  private void navigate(AnnotatedElement element, ExtensionContext context) {
-    if (element.isAnnotationPresent(Navigate.class)) {
-      val viewTestAnnotation = element.getAnnotation(Navigate.class);
-      if (!Utilities.isDefault(viewTestAnnotation)) {
-        val value = Utilities.firstNonDefault(viewTestAnnotation.value(), viewTestAnnotation.to());
-        Frames.resolveCurrentFrame(context).navigateTo(value);
-      }
+  private void navigate(Navigate viewTestAnnotation, ExtensionContext context) {
+    if (!Utilities.isDefault(viewTestAnnotation)) {
+      val value = Utilities.firstNonDefault(viewTestAnnotation.value(), viewTestAnnotation.to());
+      Frames.resolveCurrentFrame(context).navigateTo(value);
     }
+  }
+
+  private Optional<Navigate> resolveNavigationTarget(ExtensionContext context) {
+    return context
+        .getTestMethod()
+        .flatMap(method -> Optional.ofNullable(method.getAnnotation(Navigate.class)))
+        .or(
+            () ->
+                context
+                    .getTestClass()
+                    .flatMap(t -> Optional.ofNullable(t.getAnnotation(Navigate.class))));
   }
 }

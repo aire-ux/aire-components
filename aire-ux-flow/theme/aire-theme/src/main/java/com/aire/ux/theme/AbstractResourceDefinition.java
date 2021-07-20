@@ -22,7 +22,6 @@ public class AbstractResourceDefinition implements ResourceDefinition {
     this.integrity = integrity;
   }
 
-
   @Override
   public int getOrder() {
     return order;

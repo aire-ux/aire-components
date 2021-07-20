@@ -2,19 +2,35 @@ package com.aire.ux.test.vaadin;
 
 import static com.aire.ux.test.vaadin.VaadinExtension.ROOT_AIRE_NAMESPACE;
 
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.val;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 public class Frames {
 
+  private static final Deque<Method> executingMethods;
   private static final Deque<ExtensionContext> contexts;
 
   static {
     contexts = new ArrayDeque<>();
+    executingMethods = new ArrayDeque<>();
+  }
+
+  public static void enter(Method method) {
+    executingMethods.push(method);
+  }
+
+  public static Method exit() {
+    return executingMethods.pop();
+  }
+
+  public static Optional<Method> getCurrentTestMethod() {
+    return Optional.ofNullable(executingMethods.peek());
   }
 
   @SuppressWarnings("unchecked")

@@ -25,6 +25,10 @@ dependencies {
     api project(':aire-css-selectors')
 
 
+    api project(':aire-mock:aire-mockito')
+    api project(':aire-mock:aire-mock-core')
+
+
     api 'org.junit-pioneer:junit-pioneer'
     api 'org.junit.jupiter:junit-jupiter-params'
 

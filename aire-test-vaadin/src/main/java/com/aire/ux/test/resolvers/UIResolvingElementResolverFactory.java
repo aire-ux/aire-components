@@ -11,7 +11,6 @@ import java.lang.reflect.Parameter;
 
 public class UIResolvingElementResolverFactory implements ElementResolverFactory {
 
-
   @Override
   public boolean appliesTo(AnnotatedElement element) {
     if (element.isAnnotationPresent(Context.class) && element instanceof Parameter) {
@@ -19,7 +18,6 @@ public class UIResolvingElementResolverFactory implements ElementResolverFactory
     }
     return false;
   }
-
 
   @Override
   public ElementResolver create(AnnotatedElement element) {

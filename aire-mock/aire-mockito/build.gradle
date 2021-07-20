@@ -1,0 +1,6 @@
+dependencies {
+
+    api project(':aire-mock:aire-mock-core')
+    implementation 'org.mockito:mockito-inline'
+    implementation 'org.mockito:mockito-junit-jupiter'
+}

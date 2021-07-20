@@ -11,7 +11,6 @@ public class AbstractResource implements ThemeResource {
   /** the name within the theme of this resource */
   private final String name;
 
-
   /** the location within the theme of this resource. Usually relative to the classloader */
   private final String location;
 
@@ -28,7 +27,6 @@ public class AbstractResource implements ThemeResource {
     this.location = location;
     this.mimeType = mimeType;
   }
-
 
   @Override
   public Type getType() {
@@ -49,5 +47,4 @@ public class AbstractResource implements ThemeResource {
   public String getMimeType() {
     return mimeType;
   }
-
 }

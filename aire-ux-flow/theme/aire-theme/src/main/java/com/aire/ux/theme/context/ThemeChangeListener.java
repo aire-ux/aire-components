@@ -24,7 +24,6 @@ import lombok.val;
 @Log
 public class ThemeChangeListener implements EventListener<Theme> {
 
-
   private final Supplier<UI> uiSupplier;
 
   public ThemeChangeListener() {
@@ -35,11 +34,9 @@ public class ThemeChangeListener implements EventListener<Theme> {
     this.uiSupplier = Objects.requireNonNull(uiSupplier, "UI Supplier must not be null");
   }
 
-
   public static Theme getCurrent() {
     return ThemeContextHolder.getContext().getTheme();
   }
-
 
   @Override
   public void onEvent(EventType eventType, Event<Theme> event) {
@@ -52,7 +49,7 @@ public class ThemeChangeListener implements EventListener<Theme> {
       log.log(
           Level.WARNING,
           "Error: UI was null.  Application is probably not initialized yet, "
-          + "but the theme should be applied correctly when it is");
+              + "but the theme should be applied correctly when it is");
       ThemeContextHolder.getContext().setTheme(theme);
       return;
     }
@@ -61,7 +58,7 @@ public class ThemeChangeListener implements EventListener<Theme> {
       log.log(
           Level.WARNING,
           "Error: Page was null.  Application is probably not initialized yet, "
-          + "but the theme should be applied correctly when it is");
+              + "but the theme should be applied correctly when it is");
       ThemeContextHolder.getContext().setTheme(theme);
       return;
     }

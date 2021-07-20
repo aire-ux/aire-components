@@ -6,6 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.annotation.Testable;
@@ -15,5 +16,5 @@ import org.junit.platform.commons.annotation.Testable;
 @TestTemplate
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(VaadinViewTemplateInvocationContext.class)
+@ExtendWith({VaadinViewTemplateInvocationContext.class})
 public @interface ViewTest {}

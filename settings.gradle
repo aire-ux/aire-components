@@ -7,6 +7,8 @@ include(
         'aire-ux-core',
         'aire-ux-spring',
         'aire-ux-zephyr',
+        'aire-mock:aire-mockito',
+        'aire-mock:aire-mock-core',
 
         /**
          * test items

@@ -14,11 +14,7 @@ public class BaseMaterialTheme extends BaseTheme {
         new StylesheetResource(
             "bootstrap.css", "META-INF/aire-theme/aire-material/" + baseStyleSheet));
 
-    addResource(new JavascriptResource(
-        "mdb.js",
-        "META-INF/aire-theme/aire-material/mdb.min.js"
-    ));
+    addResource(new JavascriptResource("mdb.js", "META-INF/aire-theme/aire-material/mdb.min.js"));
     register(Button.class, MaterialButtonDecorator.class);
-
   }
 }

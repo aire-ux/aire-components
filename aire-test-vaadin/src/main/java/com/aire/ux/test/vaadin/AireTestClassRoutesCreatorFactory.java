@@ -3,6 +3,8 @@ package com.aire.ux.test.vaadin;
 import com.aire.ux.test.AireExtension;
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
+import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 import java.util.logging.Level;
 import lombok.extern.java.Log;
 import lombok.val;
@@ -20,7 +22,11 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
       return false;
     }
     val element = opt.get();
-    return element.isAnnotationPresent(Routes.class);
+    return element.isAnnotationPresent(Routes.class)
+        || context
+            .getTestClass()
+            .flatMap(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
+            .isPresent();
   }
 
   @Override
@@ -40,7 +46,14 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
 
     @Override
     public com.github.mvysny.kaributesting.v10.Routes create() {
-      val elementOpt = context.getElement();
+      val elementOpt =
+          context
+              .getTestMethod()
+              .flatMap(
+                  t ->
+                      Optional.ofNullable(
+                          (AnnotatedElement) (t.isAnnotationPresent(Routes.class) ? t : null)))
+              .or(context::getTestClass);
       val routes = new com.github.mvysny.kaributesting.v10.Routes();
       if (elementOpt.isPresent()) {
         val result = getRoutePackage(elementOpt.get().getAnnotation(Routes.class));
@@ -54,6 +67,9 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
     }
 
     private String getRoutePackage(Routes routes) {
+      if (routes == null) {
+        return null;
+      }
       if (!Void.class.equals(routes.scanClassPackage())) {
         return routes.scanClassPackage().getPackageName();
       }
