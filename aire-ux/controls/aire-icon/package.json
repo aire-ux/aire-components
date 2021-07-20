@@ -1,8 +1,8 @@
 {
   "name": "@aire-ux/aire-icon",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Webcomponent aire-icon following open-wc recommendations",
-  "author": "aire-icon",
+  "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -108,5 +108,5 @@
       "prettier --write"
     ]
   },
-  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0"
+  "gitHead": "6df640ed158541b71e3c58124dac5ff90ceea15b"
 }
