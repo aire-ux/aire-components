@@ -1,11 +1,14 @@
 {
   "name": "@aire-ux/aire-navbar",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Webcomponent aire-navbar following open-wc recommendations",
   "author": "aire-navbar",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
@@ -22,7 +25,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/aire-theme-decorators": "^0.0.20",
+    "@aire-ux/aire-theme-decorators": "^0.0.21",
     "@spectrum-css/icon": "^3.0.3",
     "@spectrum-css/navbar": "^3.0.3",
     "@spectrum-css/page": "^3.0.2",
@@ -32,7 +35,7 @@
     "lit-html": "^1.4.1"
   },
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.20",
+    "@aire-ux/aire-theme-manager": "^0.0.21",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",
@@ -109,5 +112,5 @@
       "prettier --write"
     ]
   },
-  "gitHead": "6983d05ec9e3ece7aa7afb9046d6baebe5b31daf"
+  "gitHead": "a3b8971e3582ba9ab4b78fa8828b0e0274eceea7"
 }

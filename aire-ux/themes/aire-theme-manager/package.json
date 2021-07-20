@@ -1,11 +1,14 @@
 {
   "name": "@aire-ux/aire-theme-manager",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Aire Theme Manager",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
@@ -101,5 +104,5 @@
       "prettier --write"
     ]
   },
-  "gitHead": "6983d05ec9e3ece7aa7afb9046d6baebe5b31daf"
+  "gitHead": "a3b8971e3582ba9ab4b78fa8828b0e0274eceea7"
 }
