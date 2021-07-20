@@ -1,7 +1,7 @@
 {
-  "name": "@aire-ux/aire-theme-manager",
+  "name": "@aire-ux/aire-theme-material",
   "version": "0.0.16",
-  "description": "Aire Theme Manager",
+  "description": "Aire Material Theme",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",

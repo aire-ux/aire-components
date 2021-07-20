@@ -7,8 +7,9 @@ import postcssLit from 'rollup-plugin-postcss-lit';
 const IIFEBuild = {
   input: "./index.ts",
   output: {
-    file: "dist/aire.iife.js",
+    file: "dist/theme.aire-material.iife.js",
     // dir: 'dist',
+    name: "Aire.Themes.AireMaterial",
     format: 'iife',
   },
   plugins: [
