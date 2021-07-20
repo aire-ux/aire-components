@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-icon",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Webcomponent aire-icon following open-wc recommendations",
   "author": "aire-icon",
   "license": "MIT",
@@ -22,8 +22,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/aire-theme-decorators": "^0.0.16",
-    "@spectrum-css/icon": "^3.0.3",
+    "@aire-ux/aire-theme-decorators": "^0.0.17",
     "@spectrum-css/icon": "^3.0.3",
     "@spectrum-css/page": "^3.0.2",
     "@spectrum-css/typography": "^3.0.2",
@@ -32,7 +31,7 @@
     "lit-html": "^1.4.1"
   },
   "devDependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.16",
+    "@aire-ux/aire-theme-manager": "^0.0.17",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",
