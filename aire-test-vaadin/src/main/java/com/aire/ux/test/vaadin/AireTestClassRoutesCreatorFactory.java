@@ -25,7 +25,7 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
     return element.isAnnotationPresent(Routes.class)
         || context
             .getTestClass()
-            .map(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
+            .flatMap(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
             .isPresent();
   }
 
