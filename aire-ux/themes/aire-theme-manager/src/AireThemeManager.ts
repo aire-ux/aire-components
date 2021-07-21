@@ -458,7 +458,7 @@ export default class AireThemeManager {
 //     if (!definition.url) {
 //       return Promise.resolve();
 //     }
-//     return requestStylesheet(definition.url).then(styleDefinition => {
+//     return requestStylesheet(definition.url).then(styleDefinition => {implements StyleInstaller
 //       return stylesheet
 //           .replace(styleDefinition)
 //           .then((success => {
