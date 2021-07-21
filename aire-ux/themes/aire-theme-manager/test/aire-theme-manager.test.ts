@@ -38,6 +38,8 @@ describe('AireThemeManager', () => {
       <test-element></test-element>`
     );
     let styleDefinition = new PageStyleDefinition({
+      mode: 'page',
+      source: 'inline',
       content: `
         test-element {
           background-color: red !important;
@@ -70,7 +72,9 @@ describe('AireThemeManager', () => {
       <test-element></test-element>`
     );
     let styleDefinition = new PageStyleDefinition({
-      url: styleUrl(`
+      mode: 'page',
+      source: 'remote',
+      content: styleUrl(`
           test-element {
             background-color: red !important;
           }
