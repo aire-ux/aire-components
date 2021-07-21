@@ -1,19 +1,14 @@
-import { expect, fixture, html } from '@open-wc/testing';
-import { customElement, LitElement } from 'lit-element';
-import { html as litHtml, TemplateResult } from 'lit-html';
-import { adoptStyles } from 'lit';
-import * as AireThemeManager from '../src/AireThemeManager.js';
-import { Aire } from '../src/AireThemeManager.js';
-import Mode = Aire.Mode;
-import EventType = Aire.EventType;
+import {expect, fixture, html} from '@open-wc/testing';
+import {customElement, LitElement} from 'lit-element';
+import {html as litHtml, TemplateResult} from 'lit-html';
+import AireThemeManager, {Registration} from "../src/AireThemeManager";
+import {PageStyleDefinition} from "../src/PageStyleDefinition";
+
 
 @customElement('test-element')
 export class TestElement extends LitElement {
   connectedCallback() {
     super.connectedCallback();
-    Aire.addStyleChangeListener(EventType.CustomStyleAdded, event =>
-      adoptStyles(this.shadowRoot as ShadowRoot, [event.detail.styleDefinition])
-    );
   }
 
   protected render(): TemplateResult {
@@ -25,51 +20,41 @@ export class TestElement extends LitElement {
   }
 }
 
+
 describe('AireThemeManager', () => {
-  afterEach(() => {
-    const selector = 'link:not(link[crossorigin])';
-    const links = document.querySelectorAll(selector);
-    for (let i = 0; i < links.length; i += 1) {
-      links[i].remove();
+  let themeManager: AireThemeManager;
+  beforeEach(() => {
+    themeManager = new AireThemeManager();
+  })
+
+  /**
+   * ensure that a simple stylesheet with text content is installed
+   */
+  it("installs a simple CSS stylesheet correctly", async () => {
+    const element = await fixture<TestElement>(html`
+      <test-element></test-element>`
+    );
+
+    let styleDefinition = new PageStyleDefinition({
+      content: `
+        test-element {
+          background-color: red !important;
+        }
+        `
+    });
+    let registration: Registration | null = null;
+    try {
+      registration = await themeManager.addStyleDefinition(styleDefinition);
+      const el = document.querySelector('test-element') as Element,
+          style = window.getComputedStyle(el, 'background-color');
+      expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
+    } finally {
+      if(registration) {
+        registration.remove();
+        const el = document.querySelector('test-element') as Element,
+            style = window.getComputedStyle(el, 'background-color');
+        expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
+      }
     }
   });
-
-  it('installs a link correctly', async () => {
-    const style = {
-      order: 0,
-      id: 'styleid',
-      url: 'data:text/css;base64,ZGl2LnJlZCB7CmNvbG9yOiByZWQ7Cn0=',
-    };
-    const selector = 'link:not(link[crossorigin])';
-    expect(document.querySelectorAll(selector).length).to.eq(0);
-    AireThemeManager.Aire.installStyles([style]);
-    expect(document.querySelectorAll(selector).length).to.eq(1);
-  });
-
-  it('removes its links correctly', async () => {
-    const style = {
-      order: 0,
-      id: 'styleid',
-      mode: Mode.Global,
-      url: 'data:text/css;base64,ZGl2LnJlZCB7CmNvbG9yOiByZWQ7Cn0=',
-    };
-    const selector = 'link:not(link[crossorigin])';
-    expect(document.querySelectorAll(selector).length).to.eq(0);
-    AireThemeManager.Aire.installStyles([style]);
-    expect(document.querySelectorAll(selector).length).to.eq(1);
-    AireThemeManager.Aire.uninstallStyles();
-    expect(document.querySelectorAll(selector).length).to.eq(0);
-  });
-
-  it('installs constructable styles correctly', async () => {
-    await fixture<TestElement>(html` <test-element></test-element>`);
-    const style = {
-      order: 0,
-      id: 'styleid',
-      mode: Mode.Constructable,
-      url: 'data:text/css;base64,ZGl2IHsKICAgIGNvbG9yOiByZWQ7CiAgICBkaXNwbGF5OiBmbGV4OwogICAgeDonMjAwcHgnOwp9==',
-    };
-    AireThemeManager.Aire.installStyles([style]);
-    AireThemeManager.Aire.uninstallStyles([style]);
-  });
-});
+})
