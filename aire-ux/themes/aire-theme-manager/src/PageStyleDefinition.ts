@@ -34,7 +34,7 @@ export class PageStyleDefinition {
     if (props.content) {
       return this.installStyleWithContent(manager);
     } else if (props.url) {
-      // return this.installGlobalStyleSheet(manager);
+      return this.installGlobalStyleSheet(manager);
     }
     return Promise.reject(new ErrorStyleRegistration("Unknown style type"))
   }
@@ -57,6 +57,27 @@ export class PageStyleDefinition {
     });
   }
 
+  private installGlobalStyleSheet(manager: AireThemeManager):
+      Promise<StyleRegistration> {
+    const
+        props = this.properties,
+        styleElement = document.createElement('link');
+    styleElement.rel = 'stylesheet';
+    styleElement.type = 'text/css';
+    styleElement.href = props.url as string;
+
+
+    return new Promise((resolve, reject) => {
+      document.head.append(styleElement);
+      styleElement.onload = (event: Event) => {
+        resolve(new LinkStyleRegistration(styleElement));
+      }
+      styleElement.onerror = (event: Event | string) => {
+        reject(new ErrorStyleRegistration(event, styleElement));
+      }
+    });
+
+  }
 }
 
 /**
@@ -79,10 +100,12 @@ class LinkStyleRegistration implements StyleRegistration {
 
 
 class ErrorStyleRegistration implements StyleRegistration {
-  constructor(readonly message: string) {
+  constructor(readonly message: string | Event, readonly element?: StyleElement) {
   }
 
   remove(): void {
-
+    if (this.element) {
+      this.element.remove();
+    }
   }
 }
