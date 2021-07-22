@@ -1,9 +1,11 @@
 import AireThemeManager, {Registration} from "./AireThemeManager";
 import {
+  ConstructableStyleSheetAware,
   GlobalPageStyleInstaller,
   InlinePageStyleInstaller,
   RemoteConstructableStyleInstaller
 } from "./StyleInstallers";
+import {constructStyleSheetFrom} from "./Utilities";
 
 /**
  * 1. Remote content must be loaded from the provided URL
@@ -41,7 +43,7 @@ export type PageStyleDefinitionProperties = {
    * @param url the url to fetch
    * @param method the HTTP method to use
    */
-  urlLoader ?: (url: string, method: string) => Promise<string>
+  urlLoader?: (url: string, method: string) => Promise<string>
 
 }
 
@@ -49,6 +51,7 @@ export type PageStyleDefinitionProperties = {
 export interface StyleRegistration extends Registration {
 
 }
+
 
 export interface StyleInstaller {
 
@@ -64,7 +67,6 @@ export interface StyleInstaller {
 export interface StyleInstallerConstructor {
   new(manager: AireThemeManager): StyleInstaller
 }
-
 
 
 export class PageStyleDefinition {
@@ -119,6 +121,48 @@ export class PageStyleDefinition {
         new ErrorStyleRegistration('no available installer registered')
     );
   }
+
+
+  /**
+   * apply this page style definition to an element. If this is a global
+   * style definition.  This takes the content (local or remote) and constructs
+   * a constructable stylesheet with it, then applies that stylesheet to this element
+   * @param themeManager the manager to use
+   * @param element the element to apply this to
+   *
+   */
+  public applyToElement(themeManager: AireThemeManager, element: Element): Promise<CSSStyleSheet | void> {
+    if (!element) {
+      throw new Error("Error: element must not be null or undefined");
+    }
+    if (!element.shadowRoot) {
+      throw new Error("Error: element must have a shadowroot");
+    }
+
+    const shadowRoot = element.shadowRoot as ConstructableStyleSheetAware;
+    if (shadowRoot.adoptedStyleSheets) {
+      return this.createStyleSheet().then(styleSheet => {
+        shadowRoot.adoptedStyleSheets = [
+          ...shadowRoot.adoptedStyleSheets as CSSStyleSheet[],
+          styleSheet
+        ];
+      })
+    }
+    throw new Error("Could not apply stylesheet");
+  }
+
+
+  private createStyleSheet(): Promise<CSSStyleSheet> {
+    const properties = this.properties,
+        mode = properties.mode;
+
+    if (mode !== 'constructable') {
+      throw new Error("Error: cannot construct a stylesheet in 'page' mode");
+    }
+    return constructStyleSheetFrom(properties);
+  }
+
+
 }
 
 PageStyleDefinition.initialize();

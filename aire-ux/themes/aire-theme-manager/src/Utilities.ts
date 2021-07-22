@@ -1,3 +1,5 @@
+import {PageStyleDefinitionProperties} from "./PageStyleDefinition";
+
 /**
  *
  * @param url the url to load text from
@@ -40,9 +42,29 @@ export function walkDom<T>(
   while (stack.length) {
     const el = stack.pop() as Element,
         e = t(el);
-    if(e) {
+    if (e) {
       f(e);
     }
     stack.push(...Array.from(el.children));
   }
+}
+
+
+/**
+ *
+ * @param properties the properties to load a stylesheet from
+ */
+export function constructStyleSheetFrom(properties: PageStyleDefinitionProperties): Promise<CSSStyleSheet> {
+  const textLoader = properties.urlLoader ?? loadText;
+  return new Promise((resolve, reject) => {
+    textLoader(properties.content, 'GET').then(
+        styleDefinition => {
+          const stylesheet = new CSSStyleSheet() as CSSStyleSheet & {
+            replace(definition: string): Promise<StyleSheet>
+          };
+          stylesheet.replace(styleDefinition).then(_ => {
+            resolve(stylesheet)
+          })
+        });
+  });
 }

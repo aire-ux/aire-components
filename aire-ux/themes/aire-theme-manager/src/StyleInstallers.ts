@@ -6,7 +6,6 @@ import {
   StyleInstaller,
   StyleRegistration
 } from "./PageStyleDefinition";
-import {loadText, walkDom} from "./Utilities";
 
 
 /**
@@ -34,7 +33,7 @@ export class InlinePageStyleInstaller implements StyleInstaller {
   }
 }
 
-type ConstructableStyleSheetAware = {
+export type ConstructableStyleSheetAware = {
   adoptedStyleSheets?: Array<CSSStyleSheet>
 }
 
@@ -62,50 +61,21 @@ class ConstructableStyleRegistration implements StyleRegistration {
  */
 export class RemoteConstructableStyleInstaller implements StyleInstaller {
 
+
   constructor(
       readonly manager: AireThemeManager
   ) {
   }
 
+
+
+
   install(properties: PageStyleDefinitionProperties): Promise<StyleRegistration> {
-    const textLoader = properties.urlLoader ?? loadText;
-    return new Promise((resolve, reject) => {
-      textLoader(properties.content, 'GET').then(
-          styleDefinition => {
-            const stylesheet = new CSSStyleSheet() as CSSStyleSheet & {
-                  replace(definition: string): Promise<StyleSheet>
-                },
-                w = document as any as ConstructableStyleSheetAware;
-            stylesheet.replace(styleDefinition).then(success => {
-              resolve(new ConstructableStyleRegistration(w, stylesheet))
-            })
-            if (w.adoptedStyleSheets) {
-              w.adoptedStyleSheets = [
-                ...w.adoptedStyleSheets,
-                stylesheet as any as CSSStyleSheet
-              ]
-            }
-
-            if(properties.forceAdopt) {
-              walkDom(
-                  document.documentElement,
-                  e => {
-                    if(e.adoptedStyleSheets) {
-                      adoptS
-
-                    }
-                  },
-                  e => {
-                    return e as ConstructableStyleSheetAware
-                  }
-              )
-
-            }
-
-          });
-    });
+    return null as any;
   }
+
 }
+
 
 
 /**
