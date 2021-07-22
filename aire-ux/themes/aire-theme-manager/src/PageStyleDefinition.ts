@@ -26,6 +26,9 @@ export type PageStyleDefinitionProperties = {
 
   mode: Mode;
 
+  /**
+   * walk the tree and apply the styles to webcomponents
+   */
   forceAdopt?: boolean
   /**
    * url or actual textual CSS, depending on the source

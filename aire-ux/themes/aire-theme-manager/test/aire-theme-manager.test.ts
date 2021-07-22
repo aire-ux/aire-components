@@ -51,13 +51,26 @@ describe('AireThemeManager', () => {
       registration = await themeManager.addStyleDefinition(styleDefinition);
       const el = document.querySelector('test-element') as Element,
           style = window.getComputedStyle(el, 'background-color');
-      expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
+      expect(
+          style
+              .backgroundColor
+              .replace(/\s/g, ""))
+          .to
+          .equal("rgb(255,0,0)"
+          )
     } finally {
       if (registration) {
         registration.remove();
-        const el = document.querySelector('test-element') as Element,
-            style = window.getComputedStyle(el, 'background-color');
-        expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
+        const el = document
+                .querySelector('test-element') as Element,
+            style = window
+                .getComputedStyle(el, 'background-color');
+
+        expect(style
+            .backgroundColor
+            .replace(/\s/g, ""))
+            .to
+            .equal("rgba(0,0,0,0)")
       }
     }
   });
@@ -85,6 +98,57 @@ describe('AireThemeManager', () => {
       registration = await themeManager.addStyleDefinition(styleDefinition);
       const el = document.querySelector('test-element') as Element,
           style = window.getComputedStyle(el, 'background-color');
+      expect(
+          style
+              .backgroundColor
+              .replace(/\s/g, ""))
+          .to
+          .equal("rgb(255,0,0)")
+    } finally {
+      if (registration) {
+        registration.remove();
+
+        const el = document
+                .querySelector('test-element') as Element,
+
+            style = window
+                .getComputedStyle(el, 'background-color');
+
+        expect(style
+            .backgroundColor
+            .replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
+      }
+    }
+  });
+
+
+  /**
+   * verify that a constructable style can be added and removed via URL
+   */
+  it('installs a constructable stylesheet correctly', async () => {
+    await fixture<TestElement>(html`
+      <test-element></test-element>`
+    );
+    let styleDefinition = new PageStyleDefinition({
+      source: 'remote',
+      mode: 'constructable',
+      content: styleUrl(`
+          test-element {
+            background-color: red !important;
+          }
+      `),
+      forceAdopt: true,
+      urlLoader: (url, method) => {
+        return new Promise((resolve, reject) => {
+          resolve(url);
+        });
+      }
+    });
+    let registration: Registration | null = null;
+    try {
+      registration = await themeManager.addStyleDefinition(styleDefinition);
+      const el = document.querySelector('test-element') as Element,
+          style = window.getComputedStyle(el, 'background-color');
       expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
     } finally {
       if (registration) {
@@ -95,46 +159,6 @@ describe('AireThemeManager', () => {
       }
     }
   });
-
-
-  // /**
-  //  * verify that a constructable style can be added and removed via URL
-  //  */
-  // it('installs a constructable stylesheet correctly', async () => {
-  //
-  //   await fixture<TestElement>(html`
-  //     <test-element></test-element>`
-  //   );
-  //   let styleDefinition = new PageStyleDefinition({
-  //     source: 'remote',
-  //     mode: 'constructable',
-  //     content: styleUrl(`
-  //         test-element {
-  //           background-color: red !important;
-  //         }
-  //     `),
-  //     forceAdopt: true,
-  //     urlLoader: (url, method) => {
-  //       return new Promise((resolve, reject) => {
-  //         resolve(url);
-  //       });
-  //     }
-  //   });
-  //   let registration: Registration | null = null;
-  //   try {
-  //     registration = await themeManager.addStyleDefinition(styleDefinition);
-  //     const el = document.querySelector('test-element') as Element,
-  //         style = window.getComputedStyle(el, 'background-color');
-  //     expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
-  //   } finally {
-  //     if (registration) {
-  //       registration.remove();
-  //       const el = document.querySelector('test-element') as Element,
-  //           style = window.getComputedStyle(el, 'background-color');
-  //       expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
-  //     }
-  //   }
-  // });
 
 
   it('should install a stylesheet into the shadow dom correctly', async () => {
@@ -149,12 +173,16 @@ describe('AireThemeManager', () => {
       source: 'inline',
       mode: 'constructable',
       content: styleUrl(`
-          test-element {
+          div {
             background-color: red !important;
           }
       `),
     });
     await styleDefinition.applyToElement(themeManager, element as Element);
-
+    const el = document.querySelector('test-element') as Element,
+        sr = el.shadowRoot as ShadowRoot,
+        child = sr.querySelector('div'),
+        style = window.getComputedStyle(child as HTMLDivElement);
+    expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
   });
 })
