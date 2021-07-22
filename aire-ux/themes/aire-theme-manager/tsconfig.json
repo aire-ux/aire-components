@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
+    "strictPropertyInitialization": false,
     "moduleResolution": "node",
     "noEmitOnError": true,
     "lib": ["es2017", "dom"],
@@ -15,7 +16,7 @@
     "inlineSources": true,
     "rootDir": "./",
     "declaration": true,
-    "incremental": true,
+    "incremental": true
   },
   "include": ["**/*.ts"]
 }

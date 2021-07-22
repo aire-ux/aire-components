@@ -1,10 +1,10 @@
-import {PageStyleDefinitionProperties} from "./PageStyleDefinition";
-
 /**
  *
  * @param url the url to load text from
  * @param method the method
  */
+import {StyleDefinition} from "./Theme";
+
 export function loadText(url: string, method: string = 'GET'): Promise<string> {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
@@ -54,7 +54,7 @@ export function walkDom<T>(
  *
  * @param properties the properties to load a stylesheet from
  */
-export function constructStyleSheetFrom(properties: PageStyleDefinitionProperties): Promise<CSSStyleSheet> {
+export function constructStyleSheetFrom(properties: StyleDefinition): Promise<CSSStyleSheet> {
   const textLoader = properties.urlLoader ?? loadText;
   return new Promise((resolve, reject) => {
     textLoader(properties.content, 'GET').then(

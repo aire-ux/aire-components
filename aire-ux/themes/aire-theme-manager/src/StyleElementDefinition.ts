@@ -6,49 +6,7 @@ import {
   RemoteConstructableStyleInstaller
 } from "./StyleInstallers";
 import {constructStyleSheetFrom} from "./Utilities";
-
-/**
- * 1. Remote content must be loaded from the provided URL
- * 2. Inline content may be used
- */
-export type Source = 'remote' | 'inline';
-
-
-export type Mode = 'page' | 'constructable';
-
-/**
- * definition for a page style definition
- *
- * 1. inline & constructable -> CSSStyleSheet must be constructed with the text rather than the URL
- * 2. global & constructable ->
- */
-export type PageStyleDefinitionProperties = {
-
-  mode: Mode;
-
-  /**
-   * walk the tree and apply the styles to webcomponents
-   */
-  forceAdopt?: boolean
-  /**
-   * url or actual textual CSS, depending on the source
-   */
-  content: string;
-
-  /**
-   * the source (remote or inline)
-   */
-  source: Source;
-
-  /**
-   *
-   * an optional function used for requesting remote data
-   * @param url the url to fetch
-   * @param method the HTTP method to use
-   */
-  urlLoader?: (url: string, method: string) => Promise<string>
-
-}
+import {Mode, Source, StyleDefinition} from "./Theme";
 
 
 export interface StyleRegistration extends Registration {
@@ -64,7 +22,7 @@ export interface StyleInstaller {
   readonly manager: AireThemeManager;
 
 
-  install(properties: PageStyleDefinitionProperties): Promise<StyleRegistration>
+  install(properties: StyleDefinition): Promise<StyleRegistration>
 }
 
 export interface StyleInstallerConstructor {
@@ -72,7 +30,7 @@ export interface StyleInstallerConstructor {
 }
 
 
-export class PageStyleDefinition {
+export class StyleElementDefinition {
 
   static installers: Map</**
    * the source a stylesheet is coming from
@@ -94,7 +52,7 @@ export class PageStyleDefinition {
     bySource.get('inline').set('page', InlinePageStyleInstaller);
     bySource.get('remote').set('page', GlobalPageStyleInstaller);
     bySource.get('remote').set('constructable', RemoteConstructableStyleInstaller)
-    PageStyleDefinition.installers = bySource;
+    StyleElementDefinition.installers = bySource;
     // bySource.get('remote').set('constructable', InlinePageStyleInstaller)
     // PageStyleDefinition.installers = new Map();
   }
@@ -105,7 +63,7 @@ export class PageStyleDefinition {
    * page style definition with
    */
   constructor(
-      readonly properties: PageStyleDefinitionProperties
+      readonly properties: StyleDefinition
   ) {
 
   }
@@ -114,9 +72,9 @@ export class PageStyleDefinition {
       manager: AireThemeManager
   ): Promise<StyleRegistration> {
     const properties = this.properties,
-        installers = PageStyleDefinition.installers,
+        installers = StyleElementDefinition.installers,
         sourceMap = installers.get(properties.source),
-        installer = sourceMap && sourceMap.get(properties.mode);
+        installer = sourceMap && sourceMap.get(properties.mode as Mode);
     if (installer) {
       return new installer(manager).install(properties);
     }
@@ -168,7 +126,7 @@ export class PageStyleDefinition {
 
 }
 
-PageStyleDefinition.initialize();
+StyleElementDefinition.initialize();
 
 
 /**

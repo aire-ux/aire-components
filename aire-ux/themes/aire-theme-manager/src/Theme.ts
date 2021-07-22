@@ -1,5 +1,12 @@
-import {Mode, Source} from "./PageStyleDefinition";
 
+/**
+ * 1. Remote content must be loaded from the provided URL
+ * 2. Inline content may be used
+ */
+export type Source = 'remote' | 'inline';
+
+
+export type Mode = 'page' | 'constructable';
 export type ThemeDefinitionElement = {
 
   /**
@@ -9,7 +16,7 @@ export type ThemeDefinitionElement = {
    *
    * or it may be a URL
    */
-  readonly source?: Source;
+  readonly source: Source;
   /**
    * the URL or textual content of the script,
    * depending on the type
@@ -23,6 +30,15 @@ export type ThemeDefinitionElement = {
    *
    */
   readonly integrity?: string
+
+
+  /**
+   *
+   * an optional function used for requesting remote data
+   * @param url the url to fetch
+   * @param method the HTTP method to use
+   */
+  urlLoader?: (url: string, method: string) => Promise<string>
 
 }
 /**

@@ -2,10 +2,11 @@ import AireThemeManager from "./AireThemeManager";
 import {
   ErrorStyleRegistration,
   LinkStyleRegistration,
-  PageStyleDefinitionProperties,
   StyleInstaller,
   StyleRegistration
-} from "./PageStyleDefinition";
+} from "./StyleElementDefinition";
+import {constructStyleSheetFrom} from "./Utilities";
+import {StyleDefinition} from "./Theme";
 
 
 /**
@@ -23,7 +24,7 @@ export class InlinePageStyleInstaller implements StyleInstaller {
   ) {
   }
 
-  install(properties: PageStyleDefinitionProperties): Promise<StyleRegistration> {
+  install(properties: StyleDefinition): Promise<StyleRegistration> {
     const styleElement = document.createElement('style');
     styleElement.textContent = properties.content;
     return new Promise((resolve) => {
@@ -38,24 +39,6 @@ export type ConstructableStyleSheetAware = {
 }
 
 
-class ConstructableStyleRegistration implements StyleRegistration {
-  constructor(
-      readonly w: ConstructableStyleSheetAware,
-      readonly stylesheet: CSSStyleSheet
-  ) {
-
-  }
-
-  remove(): void {
-    if (this.w.adoptedStyleSheets) {
-      this.w.adoptedStyleSheets =
-          this.w.adoptedStyleSheets
-              .filter(sheet => sheet !== this.stylesheet);
-    }
-  }
-
-}
-
 /**
  * creates a constructablestylesheet
  */
@@ -67,16 +50,30 @@ export class RemoteConstructableStyleInstaller implements StyleInstaller {
   ) {
   }
 
+  install(
+      properties: StyleDefinition
+  ): Promise<StyleRegistration> {
 
-
-
-  install(properties: PageStyleDefinitionProperties): Promise<StyleRegistration> {
-    return null as any;
+    return constructStyleSheetFrom(properties)
+        .then(styleSheet => {
+          let manager = this.manager;
+          manager.enqueueConstructableStyleSheet(styleSheet);
+          return new ConstructableStyleRegistration(manager, styleSheet);
+        });
   }
 
 }
 
 
+class ConstructableStyleRegistration implements StyleRegistration {
+  constructor(readonly manager: AireThemeManager, readonly styleSheet: CSSStyleSheet) {
+  }
+
+  remove(): void {
+    this.manager.enqueueConstructableStyleSheetForRemoval(this.styleSheet);
+  }
+
+}
 
 /**
  * installs a global page style to the document's head, e.g.
@@ -89,7 +86,7 @@ export class GlobalPageStyleInstaller implements StyleInstaller {
   ) {
   }
 
-  install(properties: PageStyleDefinitionProperties): Promise<StyleRegistration> {
+  install(properties: StyleDefinition): Promise<StyleRegistration> {
     const styleElement = document.createElement('link');
     styleElement.rel = 'stylesheet';
     styleElement.type = 'text/css';
