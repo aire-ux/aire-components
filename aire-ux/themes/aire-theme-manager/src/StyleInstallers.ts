@@ -6,7 +6,7 @@ import {
   StyleInstaller,
   StyleRegistration
 } from "./PageStyleDefinition";
-import {loadText} from "./Utilities";
+import {loadText, walkDom} from "./Utilities";
 
 
 /**
@@ -89,7 +89,15 @@ export class RemoteConstructableStyleInstaller implements StyleInstaller {
             if(properties.forceAdopt) {
               walkDom(
                   document.documentElement,
-                  ()
+                  e => {
+                    if(e.adoptedStyleSheets) {
+                      adoptS
+
+                    }
+                  },
+                  e => {
+                    return e as ConstructableStyleSheetAware
+                  }
               )
 
             }
