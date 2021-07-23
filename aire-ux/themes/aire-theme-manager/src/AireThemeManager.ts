@@ -21,7 +21,7 @@ export default class AireThemeManager {
   private theme: ThemeDefinition;
 
   private registrations: Registration[];
-  private styleDefinitions: Array<CSSStyleSheet>
+  private readonly styleDefinitions: Array<CSSStyleSheet>
   private styleDefinitionsToRemove: Array<CSSStyleSheet>
 
   constructor() {
@@ -96,12 +96,22 @@ export default class AireThemeManager {
     })
   }
 
+  /**
+   * 
+   * @param styleDefinition
+   */
   async addStyleDefinition(
       styleDefinition: StyleElementDefinition
   ): Promise<Registration> {
     return styleDefinition.install(this);
   }
 
+  /**
+   *
+   * @param promises the set of promises to add this request to
+   * @param scripts the scripts to include
+   * @private
+   */
   private enqueueScriptDefinitions(promises: Array<Promise<Registration>>, scripts: Array<ScriptDefinition>) {
     for (let script of scripts) {
       promises.push(new ScriptElementDefinition(script).install(this));
@@ -109,12 +119,23 @@ export default class AireThemeManager {
   }
 
 
+  /**
+   *
+   * @param promises the set of promises to include this registration in
+   * @param scripts the scripts to add
+   * @private
+   */
   private enqueueStyleInstallations(promises: Array<Promise<Registration>>, scripts: Array<ScriptDefinition>) {
     for (let script of scripts) {
       promises.push(new StyleElementDefinition(script).install(this));
     }
   }
 
+  /**
+   * walk the set of theme-included elements and adopt the included
+   * stylesheets
+   * @private
+   */
   private applyStyles() {
     this.applyToIncludedElements((e, sr, style) => {
       if (sr.adoptedStyleSheets) {
@@ -123,6 +144,10 @@ export default class AireThemeManager {
     });
   }
 
+  /**
+   * remove all the adopted stylesheets that we added
+   * @private
+   */
   private removeInstalledStyles() {
     this.applyToIncludedElements((e, sr, style) => {
       if (sr.adoptedStyleSheets) {
@@ -131,6 +156,11 @@ export default class AireThemeManager {
     });
   }
 
+  /**
+   * walk the included elements and apply the function to any with a shadow dom
+   * @param f the function to apply
+   * @private
+   */
   private applyToIncludedElements(f: (
       e: Element,
       sr: ShadowRoot & {
