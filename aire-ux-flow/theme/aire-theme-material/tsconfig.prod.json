@@ -4,7 +4,10 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmitOnError": true,
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "strict": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -14,7 +17,14 @@
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "./",
-    "declaration": true
+    "declaration": true,
+    "types": ["mdb-ui-kit"],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["src/main/typescript/*.ts"]
+  "include": [
+    "typescript/*.ts"
+  ]
 }

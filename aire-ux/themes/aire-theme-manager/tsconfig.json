@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
+    "strictPropertyInitialization": false,
     "moduleResolution": "node",
     "noEmitOnError": true,
     "lib": ["es2017", "dom"],
     "strict": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
