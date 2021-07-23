@@ -14,7 +14,6 @@ import com.aire.ux.test.Context.Mode;
 import com.vaadin.flow.component.UI;
 import java.util.ArrayList;
 import lombok.val;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

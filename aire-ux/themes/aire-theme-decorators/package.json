@@ -1,11 +1,14 @@
 {
   "name": "@aire-ux/aire-theme-decorators",
-  "version": "0.0.16",
+  "version": "0.0.21",
   "description": "Aire Theme Decorators",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "rollup:watch": "rollup -c -w",
@@ -99,8 +102,8 @@
       "prettier --write"
     ]
   },
-  "gitHead": "6e13c0642324069db71368f860e20d1b2705a7e0",
+  "gitHead": "a3b8971e3582ba9ab4b78fa8828b0e0274eceea7",
   "dependencies": {
-    "@aire-ux/aire-theme-manager": "^0.0.16"
+    "@aire-ux/aire-theme-manager": "^0.0.21"
   }
 }
