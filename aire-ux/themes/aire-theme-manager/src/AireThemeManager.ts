@@ -78,6 +78,8 @@ export default class AireThemeManager {
       }
       this.registrations.length = 0;
     }
+    this.removeInstalledStyles();
+
   }
 
   private async install(definition: ThemeDefinition): Promise<Registration[]> {
@@ -114,6 +116,28 @@ export default class AireThemeManager {
   }
 
   private applyStyles() {
+    this.applyToIncludedElements((e, sr, style) => {
+      if (sr.adoptedStyleSheets) {
+        sr.adoptedStyleSheets = [...sr.adoptedStyleSheets, style]
+      }
+    });
+  }
+
+  private removeInstalledStyles() {
+    this.applyToIncludedElements((e, sr, style) => {
+      if (sr.adoptedStyleSheets) {
+        sr.adoptedStyleSheets = sr.adoptedStyleSheets.filter(s => s !== style)
+      }
+    });
+  }
+
+  private applyToIncludedElements(f: (
+      e: Element,
+      sr: ShadowRoot & {
+        adoptedStyleSheets: Array<CSSStyleSheet> | null | undefined
+      },
+      styleSheet: CSSStyleSheet
+  ) => void) {
     if (this.theme && this.theme.installationInstructions) {
       let elements = collectElements(this.theme.installationInstructions),
           styleDefinitions = this.styleDefinitions;
@@ -130,7 +154,7 @@ export default class AireThemeManager {
             }
             if (sr.adoptedStyleSheets) {
               for (const style of styleDefinitions) {
-                sr.adoptedStyleSheets = [...sr.adoptedStyleSheets, style]
+                f(element, sr, style)
               }
             }
           }

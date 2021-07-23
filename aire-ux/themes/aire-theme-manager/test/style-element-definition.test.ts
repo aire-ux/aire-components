@@ -171,8 +171,7 @@ describe('PageStyleDefinition', () => {
           sr = el.shadowRoot as ShadowRoot,
           child = sr.querySelector('div'),
           style = window.getComputedStyle(child as HTMLDivElement);
-      console.log(child);
-      // expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
+      expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgba(0,0,0,0)")
     }
   });
 
