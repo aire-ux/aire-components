@@ -127,7 +127,7 @@ export type InstallationInstructions = {
    * should be interpreted by scripts loaded
    * by the theme manager
    */
-  readonly themeProperties: Map<string, String>
+  readonly themeProperties?: Map<string, String>
 }
 
 /**
@@ -141,16 +141,16 @@ export type ThemeDefinition = {
   /**
    * the scripts to install
    */
-  readonly scripts: Array<ScriptDefinition>
+  readonly scripts?: Array<ScriptDefinition>
 
   /**
    * the styles to install
    */
-  readonly styles: Array<StyleDefinition>
+  readonly styles?: Array<StyleDefinition>
 
   /**
    * additional installation instructions
    * everything is theme-specific
    */
-  readonly installationInstructions: InstallationInstructions;
+  readonly installationInstructions?: InstallationInstructions;
 }

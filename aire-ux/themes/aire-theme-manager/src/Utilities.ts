@@ -3,7 +3,7 @@
  * @param url the url to load text from
  * @param method the method
  */
-import {StyleDefinition} from "./Theme";
+import {InstallationInstructions, StyleDefinition} from "./Theme";
 
 export function loadText(url: string, method: string = 'GET'): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -67,4 +67,70 @@ export function constructStyleSheetFrom(properties: StyleDefinition): Promise<CS
           })
         });
   });
+}
+
+/**
+ *
+ * @param installationInstructions the installation instructions to collect the elements over
+ */
+export function collectElements(installationInstructions: InstallationInstructions) {
+  const applicableTo = installationInstructions.applicableTo,
+      elements: Element[] = [];
+  if (!applicableTo) {
+    return;
+  }
+  const predicates: Array<(e: Element) => boolean> = [];
+  if (applicableTo.matchingAttributeExistence) {
+    const attrs = applicableTo.matchingAttributeExistence;
+    predicates.push((el: Element) => {
+      for (const attribute of attrs) {
+        if (el.hasAttribute(attribute)) {
+          console.log("Found matching attribute existence element", el)
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  if (applicableTo.matchingAttributeValues) {
+    const attrs = applicableTo.matchingAttributeValues;
+    predicates.push((el: Element) => {
+      for (const [key, value] of attrs) {
+        if (el.getAttribute(key) === value) {
+          console.log("Found matching attribute value element", el)
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  const matches = (element: Element) => {
+    for(const predicate of predicates) {
+      if(predicate(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  walkDom(document.documentElement,
+      (element: Element) => {
+        if (matches(element)) {
+          elements.push(element);
+        }
+      }, (el: Element) => (el))
+
+  if (applicableTo.matchingQuerySelectors) {
+    const joinedSelector = applicableTo.matchingQuerySelectors.join(",")
+    elements.push(...Array.from(document.querySelectorAll(joinedSelector)));
+  }
+
+  if (applicableTo.matchingTagNames) {
+    const joinedSelector = applicableTo.matchingTagNames.join(",")
+    elements.push(...Array.from(document.querySelectorAll(joinedSelector)));
+  }
+  return elements;
 }
