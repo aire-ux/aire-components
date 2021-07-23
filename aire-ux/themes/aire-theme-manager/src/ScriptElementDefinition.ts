@@ -1,6 +1,10 @@
 import {ScriptDefinition, Source} from "./Theme";
 import AireThemeManager, {Registration} from "./AireThemeManager";
-import {LocalInlineScriptInstaller, ScriptInstaller} from "./ScriptInstallers";
+import {
+  LocalInlineScriptInstaller,
+  RemoteInlineScriptInstaller,
+  ScriptInstaller
+} from "./ScriptInstallers";
 
 export class ScriptElementDefinition {
 
@@ -20,6 +24,7 @@ export class ScriptElementDefinition {
   static initialize() {
     const bySource = new Map();
     bySource.set('inline', LocalInlineScriptInstaller);
+    bySource.set('remote', RemoteInlineScriptInstaller);
     ScriptElementDefinition.installers = bySource;
   }
 
@@ -35,9 +40,18 @@ export class ScriptElementDefinition {
 
 
   async install(themeManager: AireThemeManager): Promise<Registration> {
-    return new LocalInlineScriptInstaller(
-        themeManager
-    ).install(this.properties);
+    const props = this.properties,
+        source = props.source,
+        installer = ScriptElementDefinition.installers.get(source);
+    if (installer) {
+      return new installer(themeManager).install(props);
+    }
+    return Promise.reject("No script installer for source: " + source);
+
+    // return new LocalInlineScriptInstaller(
+
+    //     themeManager
+    // ).install(this.properties);
   }
 }
 

@@ -1,14 +1,11 @@
 import {expect, fixture, html} from '@open-wc/testing';
 import AireThemeManager, {Registration} from "../src/AireThemeManager";
 import {StyleElementDefinition} from "../src/StyleElementDefinition";
-import {encode} from 'js-base64';
-// import {TestElement} from "./utilities";
 import {customElement, LitElement} from "lit-element";
 import {html as litHtml, TemplateResult} from "lit-html";
 import {StyleDefinition, ThemeDefinition} from "../src/Theme";
+import {styleUrl} from "./utilities";
 
-const styleUrl = (content: string) =>
-    "data:text/css;base64," + encode(content)
 
 @customElement('test-element')
 export class TestElement extends LitElement {
@@ -224,6 +221,10 @@ describe('PageStyleDefinition', () => {
         sr = el.shadowRoot as ShadowRoot,
         child = sr.querySelector('div'),
         style = window.getComputedStyle(child as HTMLDivElement);
-    expect(style.backgroundColor.replace(/\s/g, "")).to.equal("rgb(255,0,0)")
+    expect(style
+        .backgroundColor
+        .replace(/\s/g, ""))
+        .to
+        .equal("rgb(255,0,0)")
   });
 })
