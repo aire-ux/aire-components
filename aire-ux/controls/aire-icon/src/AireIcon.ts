@@ -1,9 +1,9 @@
 import {css, customElement, html, LitElement, property,} from 'lit-element';
 
 // @ts-ignore
-import {styles} from '../themes/base/aire-button'
+import {styles} from '../themes/base/aire-icon'
 
-@customElement('aire-button')
+@customElement('aire-icon')
 export class AireIcon extends LitElement {
 
 
@@ -33,9 +33,7 @@ export class AireIcon extends LitElement {
 
   render() {
     return html`
-      <button>
-        <slot></slot>
-      </button>
+      <div>aire-icon</div>
     `;
 
   }
