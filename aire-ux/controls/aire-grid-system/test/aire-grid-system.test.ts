@@ -1,7 +1,6 @@
 import { html, fixture, expect } from '@open-wc/testing';
 
-import { AireButton } from '../src/AireButton.js';
-// import '../aire-button.js';
+import { AireGridSystem } from '../src/AireGridSystem.js';
 
 describe('AireButton', () => {
   // it('has a default title "Hey there" and counter 5', async () => {
