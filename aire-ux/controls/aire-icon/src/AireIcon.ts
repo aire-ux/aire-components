@@ -1,12 +1,16 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {css, customElement, html, LitElement, property,} from 'lit-element';
 
 // @ts-ignore
-import style from "../styles/aire-icon.scss"
-import {dynamicallyThemeable} from "@aire-ux/aire-theme-decorators";
+import {styles} from '../themes/base/aire-icon'
 
 @customElement('aire-icon')
-@dynamicallyThemeable
 export class AireIcon extends LitElement {
+
+
+  static get styles() {
+    return css`${styles}`;
+  }
+
 
   /**
    * set the style classes for this element
@@ -17,9 +21,8 @@ export class AireIcon extends LitElement {
   })
   classes: String;
 
-
   /**
-   * set the type of this icon
+   * set the type of this button
    */
   @property({
     reflect: true,
@@ -30,13 +33,8 @@ export class AireIcon extends LitElement {
 
   render() {
     return html`
-      <icon
-          type="${this.type}"
-          @click="${this.click}"
-          class="${this.classes}"
-      >
-        <slot></slot>
-      </icon>
+      <div>aire-icon</div>
     `;
+
   }
 }

@@ -1,51 +1,101 @@
 <!doctype html>
-<html lang="en-GB" class="spectrum spectrum--medium spectrum--light">
+<html>
 <head>
   <meta charset="utf-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous">
-
+  <style type="text/css">
+    html {
+      font-size: 100%;
+    }
+  </style>
 </head>
 <body>
 <div id="demo" style="padding:40px"></div>
+<script type="text/javascript" src="../demo/aire.js">
+
+</script>
 
 <script type="module">
   import {html, render} from 'lit-html';
 
   import '../dist/index.js';
-  // import {Aire} from '../node_modules/@aire-ux/aire-theme-manager/dist/src/AireThemeManager.js'
-  import {Aire} from '@aire-ux/aire-theme-manager'
+
+  var themes = {
+    bootstrap: {
+      installationInstructions: {
+        applicableTo: {
+          matchingAttributeExistence: ['aire']
+        }
+      },
+      styles: [{
+        source: 'remote',
+        mode: 'page',
+        content: '../dist/themes/bootstrap/aire-button.css'
+      }]
+    },
+
+    aire: {
+      installationInstructions: {
+        applicableTo: {
+          matchingAttributeExistence: ['aire']
+        }
+      },
+      styles: [{
+        source: 'remote',
+        mode: 'page',
+        content: '../dist/themes/aire/aire-button.css'
+      }]
+    },
+    material: {
+      installationInstructions: {
+        applicableTo: {
+          matchingAttributeExistence: ['aire']
+        }
+      },
+      styles: [{
+        source: 'remote',
+        mode: 'page',
+        content: '../dist/themes/material/aire-button.css'
+      }],
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      Aire.ThemeManager.installTheme(currentTheme());
+    }, 100);
+  });
+
+  function setCurrentTheme(theme) {
+    const urlParms = new URLSearchParams(window.location.search);
+    urlParms.set('theme', theme);
+    window.location.search = urlParms;
+  }
+
+  function currentTheme() {
+    const urlParms = new URLSearchParams(window.location.search);
+    return themes[urlParms.get('theme')];
+  }
 
   function setBootstrap() {
-    Aire.uninstallStyles();
-    Aire.installStyles([{
-      id: 'bootstrap',
-      url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
-      mode: Aire.Mode.Constructable
-    }])
+    setCurrentTheme('bootstrap');
+    Aire.ThemeManager.installTheme(currentTheme());
+  }
+
+  function setMaterial() {
+    setCurrentTheme('material');
+    Aire.ThemeManager.installTheme(currentTheme());
   }
 
 
-  function setMaterial() {
-    Aire.uninstallStyles();
-    Aire.installStyles([{
-      id: 'mdb',
-      url: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css',
-      mode: Aire.Mode.Constructable
-    }])
+  function setAire() {
+    setCurrentTheme('aire');
+    Aire.ThemeManager.installTheme(currentTheme());
   }
 
   render(
       html`
         <div margin="40px">
-          <aire-icon classes="btn btn-primary" type="icon" @click="${setMaterial}">
-            material
-          </aire-icon>
-          <aire-icon classes="btn btn-dark" type="icon" @click="${setBootstrap}">
-            bootstrap
-          </aire-icon>
+          <aire-icon></aire-icon>
         </div>
       `,
       document.querySelector('#demo')

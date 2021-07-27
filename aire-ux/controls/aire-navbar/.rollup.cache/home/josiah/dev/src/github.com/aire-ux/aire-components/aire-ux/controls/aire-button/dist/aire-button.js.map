@@ -1,1 +1,0 @@
-{"version":3,"file":"aire-navbar.js","sourceRoot":"","sources":["../aire-navbar.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,qBAAqB,CAAC;AACjD,MAAM,CAAC,cAAc,CAAC,MAAM,CAAC,aAAa,EAAE,UAAU,CAAC,CAAC","sourcesContent":["import { AireNavbar } from './src/AireNavbar.js';\nwindow.customElements.define('aire-navbar', AireNavbar);\n"]}
