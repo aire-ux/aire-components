@@ -4,7 +4,7 @@ import {css, customElement, html, LitElement, property,} from 'lit-element';
 import {styles} from '../themes/base/aire-button'
 
 @customElement('aire-button')
-export class AireButton extends LitElement {
+export class AireIcon extends LitElement {
 
 
   static get styles() {
