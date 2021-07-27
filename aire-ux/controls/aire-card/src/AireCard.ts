@@ -12,23 +12,6 @@ export class AireCard extends LitElement {
   }
 
 
-  /**
-   * set the style classes for this element
-   */
-  @property({
-    reflect: true,
-    attribute: true
-  })
-  classes: String;
-
-  /**
-   * set the type of this button
-   */
-  @property({
-    reflect: true,
-    attribute: true
-  })
-  type: String;
 
 
   render() {

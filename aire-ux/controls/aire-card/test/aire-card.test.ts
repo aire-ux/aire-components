@@ -3,7 +3,8 @@ import { html, fixture, expect } from '@open-wc/testing';
 import { AireCard } from '../src/AireCard.js';
 // import '../aire-button.js';
 
-describe('AireButton', () => {
+describe('AireCard', () => {
+
   // it('has a default title "Hey there" and counter 5', async () => {
   //   const el = await fixture<AireButton>(html`<aire-button></aire-button>`);
   //

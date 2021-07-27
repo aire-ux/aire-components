@@ -1,10 +1,10 @@
 import {css, customElement, html, LitElement, property,} from 'lit-element';
 
 // @ts-ignore
-import {styles} from '../themes/base/aire-button'
+import {styles} from '../themes/base/aire-checkbox'
 
-@customElement('aire-button')
-export class AireButton extends LitElement {
+@customElement('aire-checkbox')
+export class AireCheckbox extends LitElement {
 
 
   static get styles() {
@@ -33,9 +33,8 @@ export class AireButton extends LitElement {
 
   render() {
     return html`
-      <button>
-        <slot></slot>
-      </button>
+      <input type="checkbox" >
+      <div>checkbox</div>
     `;
 
   }
