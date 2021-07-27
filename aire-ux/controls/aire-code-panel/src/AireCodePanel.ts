@@ -1,10 +1,10 @@
 import {css, customElement, html, LitElement, property,} from 'lit-element';
 
 // @ts-ignore
-import {styles} from '../themes/base/aire-button'
+import {styles} from '../themes/base/aire-code-panel'
 
-@customElement('aire-button')
-export class AireButton extends LitElement {
+@customElement('aire-code-panel')
+export class AireCodePanel extends LitElement {
 
 
   static get styles() {
