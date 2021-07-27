@@ -1,0 +1,20 @@
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
+
+
+@mixin colorize($name, $color, $pshades, $ptints) {
+  --#{$name}: #{$color};
+  --#{$name}-500: #{$color};
+  @each $weight, $percentage in $tints {
+    --#{$name}-#{$weight}: #{tint($color, $percentage)};
+  }
+  @each $weight, $percentage in $shades {
+    --#{$name}-#{$weight}: #{shade($color, $percentage)};
+  }
+}

@@ -1,0 +1,127 @@
+@import "functions";
+
+/**
+  * a lot taken from
+  * https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
+ */
+
+$tints: 100 80%,
+200 60%,
+300 40%,
+400 20%;
+
+$shades: 600 20%,
+700 40%,
+800 60%,
+900 80%;
+
+
+
+/**
+  * blue: primary color
+ */
+$blue: #0d6efd;
+
+/**
+  * indigo
+ */
+$indigo: #6610f2;
+
+/**
+  * purple
+ */
+$purple: #6f42c1 !default;
+
+/**
+  * pink
+ */
+$pink: #d63384 !default;
+
+/**
+  * red
+ */
+$red: #dc3545 !default;
+
+/**
+ * orange
+ */
+$orange: #fd7e14 !default;
+
+/**
+  * yellow
+ */
+$yellow: #ffc107 !default;
+
+/**
+  * green
+ */
+$green: #198754 !default;
+/**
+ * teal
+ */
+$teal: #20c997 !default;
+
+/**
+  * cyan
+ */
+$cyan: #0dcaf0 !default;
+
+
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+
+$_all_colors: 'blue' $blue,
+'indigo' $indigo,
+'purple' $purple,
+'pink' $pink,
+'red' $red,
+'orange' $orange,
+'yellow' $yellow,
+'green' $green,
+'teal' $teal,
+'cyan' $cyan;
+
+$primary:       $blue !default;
+$secondary:     $gray-600 !default;
+$success:       $green !default;
+$info:          $cyan !default;
+$warning:       $yellow !default;
+$danger:        $red !default;
+$light:         $gray-100 !default;
+$dark:          $gray-900 !default;
+
+$theme-colors: (
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+) !default;
+
+
+$body-color: $gray-900;
+$body-background-color: $white;
+
+:root {
+
+  /**
+   * generate all colors from _all_colors list
+   */
+  @each $name, $color in $_all_colors {
+    @include colorize($name, $color, $shades, $tints);
+  }
+
+
+}
