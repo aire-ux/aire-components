@@ -1,4 +1,4 @@
-import AireThemeManager from "./AireThemeManager";
+import {AireThemeManager} from "./AireThemeManager";
 import {
   ErrorStyleRegistration,
   LinkStyleRegistration,

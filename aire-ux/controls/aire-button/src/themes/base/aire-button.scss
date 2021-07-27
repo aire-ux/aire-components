@@ -1,0 +1,14 @@
+
+/**
+  base button styles
+
+  this file contains structural elements
+  without including the actual style elements
+ */
+
+button {
+  color: var(--body-color);
+  background-color: transparent;
+  transition: var(--button-transition);
+  padding: var(--button-padding-y) var(--button-padding-x)
+}

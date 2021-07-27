@@ -1,6 +1,6 @@
 import {ScriptElementDefinition} from "../src/ScriptElementDefinition";
 import {ScriptDefinition} from "../src/Theme";
-import AireThemeManager from "../src/AireThemeManager";
+import {AireThemeManager} from "../src/AireThemeManager";
 import {expect} from "@open-wc/testing";
 import {scriptUrl} from "./utilities";
 

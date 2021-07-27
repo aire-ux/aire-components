@@ -1,4 +1,4 @@
-import AireThemeManager, {Registration} from "./AireThemeManager";
+import {AireThemeManager, Registration} from "./AireThemeManager";
 import {
   ConstructableStyleSheetAware,
   GlobalPageStyleInstaller,

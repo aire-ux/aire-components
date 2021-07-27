@@ -1,5 +1,5 @@
 import {expect, fixture, html} from '@open-wc/testing';
-import AireThemeManager, {Registration} from "../src/AireThemeManager";
+import {AireThemeManager, Registration} from "../src/AireThemeManager";
 import {StyleElementDefinition} from "../src/StyleElementDefinition";
 import {customElement, LitElement} from "lit-element";
 import {html as litHtml, TemplateResult} from "lit-html";

@@ -1,0 +1,26 @@
+@import "colors";
+
+/**
+  * really only define button-specific variables here
+ */
+
+:root {
+
+  /**
+   * padding
+   */
+  --button-padding-y: .375rem;
+  --button-padding-x: .75rem;
+
+  --button-transition:  color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+
+
+  /**
+   * spacing
+   */
+  --body-color: $body-color;
+  --body-background-color: $body-background-color;
+
+
+}

@@ -16,7 +16,7 @@ export interface Registration {
  * this component is responsible for client-side
  * theme-management
  */
-export default class AireThemeManager {
+export class AireThemeManager {
 
   private theme: ThemeDefinition;
 
@@ -97,7 +97,7 @@ export default class AireThemeManager {
   }
 
   /**
-   * 
+   *
    * @param styleDefinition
    */
   async addStyleDefinition(

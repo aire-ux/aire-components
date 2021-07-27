@@ -1,5 +1,5 @@
 import {ScriptDefinition, Source} from "./Theme";
-import AireThemeManager, {Registration} from "./AireThemeManager";
+import {AireThemeManager, Registration} from "./AireThemeManager";
 import {
   LocalInlineScriptInstaller,
   RemoteInlineScriptInstaller,
