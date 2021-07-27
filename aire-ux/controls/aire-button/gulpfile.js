@@ -8,7 +8,8 @@ const themes = [
   'bootstrap',
   'material',
   'spectrum',
-  'uikit'
+  'uikit',
+  'aire'
 ]
 
 

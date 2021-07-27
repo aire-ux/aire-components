@@ -33,6 +33,18 @@
       }]
     },
 
+    aire: {
+      installationInstructions: {
+        applicableTo: {
+          matchingAttributeExistence: ['aire']
+        }
+      },
+      styles: [{
+        source: 'remote',
+        mode: 'page',
+        content: '../dist/themes/aire/aire-button.css'
+      }]
+    },
     material: {
       installationInstructions: {
         applicableTo: {
@@ -71,7 +83,12 @@
 
   function setMaterial() {
     setCurrentTheme('material');
-    console.log("SET");
+    Aire.ThemeManager.installTheme(currentTheme());
+  }
+
+
+  function setAire() {
+    setCurrentTheme('aire');
     Aire.ThemeManager.installTheme(currentTheme());
   }
 
@@ -85,6 +102,8 @@
           >
             material
           </aire-button>
+
+
           <aire-button
               role="button"
               type="button"
@@ -93,6 +112,13 @@
             bootstrap
           </aire-button>
 
+          <aire-button
+              role="button"
+              type="button"
+              @click="${setAire}"
+          >
+            aire
+          </aire-button>
 
           <aire-button
               aire

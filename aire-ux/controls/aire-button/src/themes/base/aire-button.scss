@@ -7,8 +7,43 @@
  */
 
 button {
-  color: var(--body-color);
-  background-color: transparent;
-  transition: var(--button-transition);
-  padding: var(--button-padding-y) var(--button-padding-x)
+
+  /**
+   * padding
+   */
+  padding:
+    var(--aire-button-padding-top)
+    var(--aire-button-padding-right)
+    var(--aire-button-padding-bottom)
+    var(--aire-button-padding-left);
+
+  /**
+   * border
+   */
+  border:
+      var(--aire-button-border);
+
+  /**
+   * font
+   */
+  font:
+      var(--aire-button-font);
+
+
+  /**
+   * font-family
+   */
+  font-family:
+      var(--aire-button-font-family);
+
+  /**
+   * variants
+   */
+  &.large {
+
+  }
+
+
+
+
 }
