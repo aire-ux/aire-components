@@ -33,9 +33,7 @@ export class AireCodeEditor extends LitElement {
 
   render() {
     return html`
-      <button>
-        <slot></slot>
-      </button>
+      <div>Aire-code editor</div>
     `;
 
   }
