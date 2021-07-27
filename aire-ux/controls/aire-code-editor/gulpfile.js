@@ -16,7 +16,7 @@ const themes = [
 const themeTasks = themes.map(theme => {
   const name = `build:theme:${theme}`;
   gulp.task(name, () => {
-    return gulp.src(`src/themes/${theme}/aire-button.scss`)
+    return gulp.src(`src/themes/${theme}/aire-code-editor.scss`)
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(`dist/themes/${theme}/`))
         .pipe(csslit())
