@@ -32,11 +32,19 @@ export function loadText(url: string, method: string = 'GET'): Promise<string> {
 
 }
 
+/**
+ * walk the dom
+ * does not risk a stack overflow error
+ * @param from the element to start the traversal at
+ * @param f the function to apply to each element
+ * @param t a cast/filter function to transform the element to something consumable
+ * if t returns null for an element, traversal to its children is not halted
+ */
 
-export function walkDom<T>(
+export function walkDom<T = Element>(
     from: Element = document.documentElement,
     f: (e: T) => void,
-    t: (e: Element) => T | null
+    t: (e: Element) => T | null = (e: Element) => e as unknown as T
 ) {
   const stack = [from] as Array<Element>;
   while (stack.length) {
@@ -85,7 +93,6 @@ export function collectElements(installationInstructions: InstallationInstructio
     predicates.push((el: Element) => {
       for (const attribute of attrs) {
         if (el.hasAttribute(attribute)) {
-          console.log("Found matching attribute existence element", el)
           return true;
         }
       }
@@ -98,7 +105,6 @@ export function collectElements(installationInstructions: InstallationInstructio
     predicates.push((el: Element) => {
       for (const [key, value] of attrs) {
         if (el.getAttribute(key) === value) {
-          console.log("Found matching attribute value element", el)
           return true;
         }
       }
@@ -107,8 +113,8 @@ export function collectElements(installationInstructions: InstallationInstructio
   }
 
   const matches = (element: Element) => {
-    for(const predicate of predicates) {
-      if(predicate(element)) {
+    for (const predicate of predicates) {
+      if (predicate(element)) {
         return true;
       }
     }
@@ -121,7 +127,7 @@ export function collectElements(installationInstructions: InstallationInstructio
         if (matches(element)) {
           elements.push(element);
         }
-      }, (el: Element) => (el))
+      })
 
   if (applicableTo.matchingQuerySelectors) {
     const joinedSelector = applicableTo.matchingQuerySelectors.join(",")
