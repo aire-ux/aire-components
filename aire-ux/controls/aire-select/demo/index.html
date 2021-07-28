@@ -29,7 +29,7 @@
       styles: [{
         source: 'remote',
         mode: 'page',
-        content: '../dist/themes/bootstrap/aire-button.css'
+        content: '../dist/themes/bootstrap/aire-select.css'
       }]
     },
 
@@ -42,7 +42,7 @@
       styles: [{
         source: 'remote',
         mode: 'page',
-        content: '../dist/themes/aire/aire-button.css'
+        content: '../dist/themes/aire/aire-select.css'
       }]
     },
     material: {
@@ -54,7 +54,7 @@
       styles: [{
         source: 'remote',
         mode: 'page',
-        content: '../dist/themes/material/aire-button.css'
+        content: '../dist/themes/material/aire-select.css'
       }],
     }
   }
@@ -95,39 +95,7 @@
   render(
       html`
         <div margin="40px">
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setMaterial}"
-          >
-            material
-          </aire-button>
-
-
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setBootstrap}"
-          >
-            bootstrap
-          </aire-button>
-
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setAire}"
-          >
-            aire
-          </aire-button>
-
-          <aire-button
-              aire
-              ripple
-              role="button"
-              data-mdb-ripple-color="dark" data-mdb-ripple-radius="10"
-              class="btn btn-light-outline btn-primary" type="button">
-            Button
-          </aire-button>
+          <aire-select></aire-select>
         </div>
       `,
       document.querySelector('#demo')
