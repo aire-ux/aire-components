@@ -1,10 +1,9 @@
-import {css, customElement, html, LitElement, property,} from 'lit-element';
-
 // @ts-ignore
-import {styles} from '../themes/base/aire-button'
+import {styles} from '../themes/base/aire-panel'
+import {css, customElement, html, LitElement, property} from 'lit-element';
 
-@customElement('aire-button')
-export class AireButton extends LitElement {
+@customElement('aire-panel')
+export class AirePanel extends LitElement {
 
 
   static get styles() {
@@ -33,9 +32,7 @@ export class AireButton extends LitElement {
 
   render() {
     return html`
-      <button>
-        <slot></slot>
-      </button>
+      <div>aire-panel</div>
     `;
 
   }

@@ -3,7 +3,7 @@ import {css, customElement, html, LitElement, property,} from 'lit-element';
 // @ts-ignore
 import {styles} from '../themes/base/aire-expansion'
 
-@customElement('aire-expansion')
+@customElement('aire-overlay')
 export class AireOverlay extends LitElement {
 
 
