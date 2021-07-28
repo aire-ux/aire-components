@@ -1,7 +1,7 @@
 {
-  "name": "@aire-ux/aire-typography",
+  "name": "@aire-ux/aire-designer",
   "version": "0.0.21",
-  "description": "Webcomponent aire-typography following open-wc recommendations",
+  "description": "Webcomponent aire-designer following open-wc recommendations",
   "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
