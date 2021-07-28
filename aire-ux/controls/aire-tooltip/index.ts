@@ -1,1 +1,1 @@
-export { AireButton } from './src/AireButton.js';
+export { AireTooltip } from './src/AireTooltip.js';
