@@ -1,6 +1,6 @@
 import { html, fixture, expect } from '@open-wc/testing';
 
-import { AireButton } from '../src/AireButton.js';
+import { AireTable } from '../src/AireTable.js';
 // import '../aire-button.js';
 
 describe('AireButton', () => {
