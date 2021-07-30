@@ -67,6 +67,9 @@ function createElement(definition: ScriptDefinition): HTMLScriptElement {
   if (definition.integrity) {
     element.integrity = definition.integrity;
   }
+  if(definition.type) {
+    element.type = definition.type;
+  }
   return element;
 }
 

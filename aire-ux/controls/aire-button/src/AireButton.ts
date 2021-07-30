@@ -3,6 +3,8 @@ import {css, customElement, html, LitElement, property,} from 'lit-element';
 // @ts-ignore
 import {styles} from '../themes/base/aire-button'
 
+export type Variant = '' | 'small';
+
 @customElement('aire-button')
 export class AireButton extends LitElement {
 
@@ -12,28 +14,18 @@ export class AireButton extends LitElement {
   }
 
 
-  /**
-   * set the style classes for this element
-   */
-  @property({
-    reflect: true,
-    attribute: true
-  })
-  classes: String;
 
-  /**
-   * set the type of this button
-   */
+
   @property({
     reflect: true,
     attribute: true
   })
-  type: String;
+  variants: string;
 
 
   render() {
     return html`
-      <button>
+      <button class="${this.variants || ''}">
         <slot></slot>
       </button>
     `;

@@ -1,14 +1,12 @@
+@import "~@aire-ux/aire-base/material/material";
 :root {
 
-  /**
-   * padding
-   */
-  --aire-button-padding-top: .5rem;
-  --aire-button-padding-right: .5rem;
-  --aire-button-padding-bottom: .5rem;
-  --aire-button-padding-left: .5rem;
-
-
-  --aire-button-border: 1px solid gray;
-
+  --aire-primary-background-color: #FFFFFF;
+  --aire-primary-color: material-color('deep-purple', 'a700');
 }
+
+
+html, body {
+  background-color: var(--aire-primary-background-color);
+}
+

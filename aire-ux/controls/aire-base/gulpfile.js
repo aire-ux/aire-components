@@ -12,24 +12,23 @@ const themes = [
   'aire'
 ]
 
+gulp.task('build:material', () => {
+  return gulp.src(`material/material.scss`)
+      .pipe(sass().on('error', sass.logError))
+      .pipe(gulp.dest(`dist/material/`))
+      .pipe(csslit())
+      .pipe(rename({
+        extname: '.js'
+      }))
+      .pipe(gulp.dest(`themes/material/`));
 
-const themeTasks = themes.map(theme => {
-  const name = `build:theme:${theme}`;
-  gulp.task(name, () => {
-    return gulp.src(`src/themes/${theme}/aire-base.scss`)
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest(`dist/themes/${theme}/`))
-        .pipe(csslit())
-        .pipe(rename({
-          extname: '.js'
-        }))
-        .pipe(gulp.dest(`dist/themes/${theme}/`));
-
-  });
-  return name;
 });
 
-gulp.task('build:themes', gulp.parallel(...themeTasks));
+
+gulp.task(
+    'build:themes',
+    gulp.parallel('build:material')
+);
 
 gulp.task('themes:build:watch', () => {
   gulp.watch('./src/themes/**/*.scss', gulp.series('build:themes'))

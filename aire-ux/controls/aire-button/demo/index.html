@@ -20,18 +20,6 @@
   import '../dist/index.js';
 
   var themes = {
-    bootstrap: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/bootstrap/aire-button.css'
-      }]
-    },
 
     aire: {
       installationInstructions: {
@@ -45,16 +33,11 @@
         content: '../dist/themes/aire/aire-button.css'
       }]
     },
-    material: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
+    aireDark: {
       styles: [{
         source: 'remote',
         mode: 'page',
-        content: '../dist/themes/material/aire-button.css'
+        content: '../dist/themes/aire-dark/aire-button.css'
       }],
     }
   }
@@ -76,13 +59,8 @@
     return themes[urlParms.get('theme')];
   }
 
-  function setBootstrap() {
-    setCurrentTheme('bootstrap');
-    Aire.ThemeManager.installTheme(currentTheme());
-  }
-
-  function setMaterial() {
-    setCurrentTheme('material');
+  function setAireDark() {
+    setCurrentTheme('aireDark');
     Aire.ThemeManager.installTheme(currentTheme());
   }
 
@@ -94,41 +72,53 @@
 
   render(
       html`
-        <div margin="40px">
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setMaterial}"
-          >
-            material
-          </aire-button>
+        <article>
+          <section>
+            <h1>Theme</h1>
+            <aire-button variants="contained" @click="${setAire}">Light</aire-button>
+            <aire-button variants="outlined" @click="${setAireDark}">Dark</aire-button>
+          </section>
+
+          <section>
+            <h1>Styles</h1>
+            <aire-button>Normal</aire-button>
+            <aire-button variants="contained">Contained</aire-button>
+            <aire-button variants="outlined">Outlined</aire-button>
+          </section>
 
 
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setBootstrap}"
-          >
-            bootstrap
-          </aire-button>
+          <section>
+            <h1>Colors</h1>
 
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setAire}"
-          >
-            aire
-          </aire-button>
+            <article>
+              <h2>Primary</h2>
+              <aire-button variants="primary">Primary</aire-button>
+              <aire-button variants="primary contained">Primary, Contained</aire-button>
+              <aire-button variants="primary outlined">Primary, Outlined</aire-button>
+            </article>
 
-          <aire-button
-              aire
-              ripple
-              role="button"
-              data-mdb-ripple-color="dark" data-mdb-ripple-radius="10"
-              class="btn btn-light-outline btn-primary" type="button">
-            Button
-          </aire-button>
-        </div>
+            <article>
+              <h2>Secondary</h2>
+              <aire-button variants="secondary">Secondary</aire-button>
+              <aire-button variants="secondary contained">Secondary, Contained</aire-button>
+              <aire-button variants="secondary outlined">Secondary, Outlined</aire-button>
+            </article>
+
+            <article>
+              <h2>Success</h2>
+              <aire-button variants="success">Success</aire-button>
+              <aire-button variants="success contained">Success, Contained</aire-button>
+              <aire-button variants="success outlined">Success, Outlined</aire-button>
+            </article>
+
+            <article>
+              <h2>Error</h2>
+              <aire-button variants="error">Error</aire-button>
+              <aire-button variants="error contained">Error, Contained</aire-button>
+              <aire-button variants="error outlined">Error, Outlined</aire-button>
+            </article>
+          </section>
+        </article>
       `,
       document.querySelector('#demo')
   );

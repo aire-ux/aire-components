@@ -9,9 +9,9 @@ const themes = [
   'material',
   'spectrum',
   'uikit',
-  'aire'
+  'aire',
+  'aire-dark'
 ]
-
 
 const themeTasks = themes.map(theme => {
   const name = `build:theme:${theme}`;
