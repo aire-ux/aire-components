@@ -4,6 +4,7 @@ const gulp = require('gulp'),
     sass = require('gulp-dart-sass');
 
 const themes = [
+  'structure',
   'base',
   'bootstrap',
   'material',

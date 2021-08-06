@@ -22,7 +22,77 @@ aire-button {
   }
 
   &:active, .active {
-    --background-color: #{material-color('grey', '500')}
+    --background-color: #{material-color('grey', '300')}
+  }
+
+  &[variant="primary"]{
+    --color: #{material-color('deep-purple', 'a700')};
+    &:hover {
+      --background-color: #{material-color('deep-purple', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('deep-purple', '100')};
+    }
+  }
+
+
+  &[variant="secondary"]{
+    --color: #{material-color('pink', '500')};
+    &:hover {
+      --background-color: #{material-color('pink', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('pink', '100')};
+    }
+  }
+
+  &[variant="success"] {
+    --color: #{material-color('green', '500')};
+    &:hover {
+      --background-color: #{material-color('green', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('green', '100')};
+    }
+  }
+
+  &[variant="error"] {
+    --color: #{material-color('red', '500')};
+    &:hover {
+      --background-color: #{material-color('red', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('red', '100')};
+    }
+  }
+
+
+
+  /**
+   * variant warning
+   */
+  &[variant="warning"] {
+    --color: #{material-color('orange', '500')};
+    &:hover {
+      --background-color: #{material-color('orange', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('orange', '100')};
+    }
+  }
+
+
+  /**
+   * variant info
+   */
+  &[variant="info"] {
+    --color: #{material-color('blue', '500')};
+    &:hover {
+      --background-color: #{material-color('blue', '50')}
+    }
+    &:active {
+      --background-color: #{material-color('blue', '100')};
+    }
   }
 
 }

@@ -3,7 +3,45 @@ import {css, customElement, html, LitElement, property,} from 'lit-element';
 // @ts-ignore
 import {styles} from '../themes/base/aire-button'
 
-export type Variant = '' | 'small';
+/**
+ *
+ */
+export type Variant = '';
+
+/**
+ * defaults to text
+ */
+export type Type =
+/**
+ * text: text button.  Normal importance
+ * the default value
+ */
+    'text'
+    /**
+     * outlined:
+     * medium importance
+     */
+    | 'outlined'
+
+    /**
+     * contained: high importance
+     */
+    | 'contained'
+
+    /**
+     * toggle--typically used with other
+     * buttons to indicate state
+     */
+    | 'toggle';
+
+export type Size =
+    'x-small'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'x-large'
+    | 'cta';
+
 
 @customElement('aire-button')
 export class AireButton extends LitElement {
@@ -20,15 +58,19 @@ export class AireButton extends LitElement {
     reflect: true,
     attribute: true
   })
-  variants: string;
+  disabled: boolean;
 
+  @property({
+    reflect: true,
+    attribute: true
+  })
+  variant: Variant;
 
   render() {
     return html`
-      <button class="${this.variants || ''}">
+      <button ?disabled="${this.disabled}">
         <slot></slot>
       </button>
     `;
-
   }
 }

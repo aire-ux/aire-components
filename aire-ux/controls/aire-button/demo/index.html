@@ -27,18 +27,32 @@
           matchingAttributeExistence: ['aire']
         }
       },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/aire/aire-button.css'
-      }]
+      styles: [
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/structure/aire-button.css'
+        },
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/aire/aire-button.css'
+        }]
     },
     aireDark: {
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/aire-dark/aire-button.css'
-      }],
+      styles: [
+
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/structure/aire-button.css'
+        },
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/aire-dark/aire-button.css'
+        },
+      ],
     }
   }
 
@@ -64,7 +78,6 @@
     Aire.ThemeManager.installTheme(currentTheme());
   }
 
-
   function setAire() {
     setCurrentTheme('aire');
     Aire.ThemeManager.installTheme(currentTheme());
@@ -80,44 +93,28 @@
           </section>
 
           <section>
-            <h1>Styles</h1>
-            <aire-button>Normal</aire-button>
-            <aire-button variants="contained">Contained</aire-button>
-            <aire-button variants="outlined">Outlined</aire-button>
+            <h1>Sizes</h1>
+            <aire-button size="x-small">Extra Small</aire-button>
+            <aire-button size="small">Small</aire-button>
+            <aire-button>Regular</aire-button>
+            <aire-button size="large">Large</aire-button>
+            <aire-button size="x-large">Extra-Large</aire-button>
+            <aire-button size="cta">CTA</aire-button>
           </section>
-
 
           <section>
-            <h1>Colors</h1>
-
-            <article>
-              <h2>Primary</h2>
-              <aire-button variants="primary">Primary</aire-button>
-              <aire-button variants="primary contained">Primary, Contained</aire-button>
-              <aire-button variants="primary outlined">Primary, Outlined</aire-button>
-            </article>
-
-            <article>
-              <h2>Secondary</h2>
-              <aire-button variants="secondary">Secondary</aire-button>
-              <aire-button variants="secondary contained">Secondary, Contained</aire-button>
-              <aire-button variants="secondary outlined">Secondary, Outlined</aire-button>
-            </article>
-
-            <article>
-              <h2>Success</h2>
-              <aire-button variants="success">Success</aire-button>
-              <aire-button variants="success contained">Success, Contained</aire-button>
-              <aire-button variants="success outlined">Success, Outlined</aire-button>
-            </article>
-
-            <article>
-              <h2>Error</h2>
-              <aire-button variants="error">Error</aire-button>
-              <aire-button variants="error contained">Error, Contained</aire-button>
-              <aire-button variants="error outlined">Error, Outlined</aire-button>
-            </article>
+            <h1>Variants</h1>
+            <aire-button>Default</aire-button>
+            <aire-button variant="primary">Primary</aire-button>
+            <aire-button variant="secondary">Secondary</aire-button>
+            <aire-button variant="success">Success</aire-button>
+            <aire-button variant="error">Error</aire-button>
+            <aire-button variant="warning">Warning</aire-button>
+            <aire-button variant="info">Info</aire-button>
           </section>
+
+
+
         </article>
       `,
       document.querySelector('#demo')

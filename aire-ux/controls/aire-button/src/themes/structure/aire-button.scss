@@ -1,0 +1,9 @@
+@import "aire-button-sizes";
+@import "aire-button-variants";
+
+
+aire-button {
+  @include aire-button-sizes;
+  @include aire-button-variants;
+}
+
