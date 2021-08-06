@@ -1,4 +1,7 @@
 @import "../../../material/material";
+@import "aire-button-variants";
+
+
 :root {
   --aire-primary-background-color: #{material-color('grey', '900')};
 
@@ -30,77 +33,9 @@ aire-button {
     --background-color: #{material-color('grey', '500')};
   }
 
-  &[variant="primary"]{
-    --color: #{material-color('deep-purple', '100')};
-    &:hover {
-      --background-color: #{material-color('deep-purple', 'a200')}
-    }
-    &:active {
-      --background-color: #{material-color('deep-purple', 'a400')};
-    }
-  }
 
 
-  &[variant="secondary"]{
-    --color: #{material-color('pink', '100')};
-    &:hover {
-      --background-color: #{material-color('pink', 'a100')}
-    }
-    &:active {
-      --background-color: #{material-color('pink', 'a200')};
-    }
-  }
-
-  &[variant="success"] {
-    --color: #{material-color('green', '50')};
-    &:hover {
-      --background-color: #{material-color('green', '200')}
-    }
-    &:active {
-      --background-color: #{material-color('green', '300')};
-    }
-  }
-
-  &[variant="error"] {
-    --color: #{material-color('red', '50')};
-    &:hover {
-      --background-color: #{material-color('red', '200')}
-    }
-    &:active {
-      --background-color: #{material-color('red', '300')};
-    }
-  }
-
-
-
-  /**
-   * variant warning
-   */
-  &[variant="warning"] {
-    --color: #{material-color('orange', '50')};
-    &:hover {
-      --background-color: #{material-color('orange', '200')}
-    }
-    &:active {
-      --background-color: #{material-color('orange', '300')};
-    }
-  }
-
-
-  /**
-   * variant info
-   */
-  &[variant="info"] {
-    --color: #{material-color('blue', '50')};
-    &:hover {
-      --background-color: #{material-color('blue', '200')}
-    }
-    &:active {
-      --background-color: #{material-color('blue', '300')};
-    }
-  }
-
-
+  @include aire-button-variants;
 
 }
 

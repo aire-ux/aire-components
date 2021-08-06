@@ -60,15 +60,16 @@ export class AireButton extends LitElement {
   })
   disabled: boolean;
 
+
   @property({
     reflect: true,
     attribute: true
   })
-  variant: Variant;
+  type: Type;
 
   render() {
     return html`
-      <button ?disabled="${this.disabled}">
+      <button ?disabled="${this.disabled}" type="${this.type || 'default'}">
         <slot></slot>
       </button>
     `;

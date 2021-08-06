@@ -76,5 +76,24 @@ button, .aire-button {
     );
   }
 
+  &[type="outlined"] {
+    box-shadow: var(--box-shadow);
+  }
+
+
+  &[type="contained"] {
+    color: var(--text-color);
+    background-color: var(--color);
+    &:hover {
+      filter: brightness(1.35);
+      --transition-property: filter;
+    }
+    &:active {
+      filter: brightness(.85);
+      --transition-property: filter;
+
+    }
+  }
 
 }
+

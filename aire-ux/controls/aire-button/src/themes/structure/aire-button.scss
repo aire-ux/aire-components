@@ -1,9 +1,13 @@
 @import "aire-button-sizes";
-@import "aire-button-variants";
 
 
 aire-button {
   @include aire-button-sizes;
-  @include aire-button-variants;
+
+
+  &[type="outlined"] {
+    --box-shadow: 0 0 0 1px var(--color);
+  }
+
 }
 
