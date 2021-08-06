@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-button",
-  "version": "0.0.21",
+  "version": "0.0.27",
   "description": "Webcomponent aire-button following open-wc recommendations",
   "author": "aire-button",
   "license": "MIT",
@@ -12,9 +12,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "start": "concurrently --kill-others --names build,build:watch,web-dev-server \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
-    "build": "tsc",
+    "build": "tsc && gulp build:themes",
     "build:watch": "tsc && concurrently -k -r  \"gulp themes:build:watch\" \"tsc --watch --preserveWatchOutput\" \"wtr --watch\" ",
-    "prepublish": "tsc && npm run build:watch",
+    "prepublish": "tsc && npm run build",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "test": "tsc && wtr --coverage",

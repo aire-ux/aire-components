@@ -1,8 +1,8 @@
 {
-  "name": "@aire-ux/aire-button",
+  "name": "@aire-ux/aire-card",
   "version": "0.0.21",
-  "description": "Webcomponent aire-button following open-wc recommendations",
-  "author": "aire-button",
+  "description": "Webcomponent aire-card following open-wc recommendations",
+  "author": "Aire-UX",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",

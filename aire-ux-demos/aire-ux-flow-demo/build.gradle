@@ -1,6 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'io.spring.dependency-management'
 	id 'java'
 	id 'com.vaadin' version '0.14.5.1'
 }
@@ -9,7 +9,7 @@ defaultTasks("clean", "build")
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -23,6 +23,10 @@ configurations {
 }
 
 dependencies {
+
+	implementation project(':aire-ux-flow:controls:aire-button')
+
+
 	implementation('com.vaadin:vaadin-spring-boot-starter') {
 //         Webjars are only needed when running in Vaadin 13 compatibility mode
 		["com.vaadin.webjar", "org.webjars.bowergithub.insites",
