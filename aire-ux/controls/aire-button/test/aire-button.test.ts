@@ -1,11 +1,20 @@
 import { html, fixture, expect } from '@open-wc/testing';
 
+import * as sinon from 'sinon';
+
 import { AireButton } from '../src/AireButton.js';
 // import '../aire-button.js';
 
 describe('AireButton', () => {
+  it('can be clicked', async () => {
+    const f = sinon.fake();
+    const el = await fixture<AireButton>(
+      html`<aire-button @click="${f}"></aire-button>`
+    );
+    el.click();
+    expect(f.calledOnce).to.be.true;
+  });
   // it('has a default title "Hey there" and counter 5', async () => {
-  //   const el = await fixture<AireButton>(html`<aire-button></aire-button>`);
   //
   //   expect(el.title).to.equal('Hey there');
   //   expect(el.counter).to.equal(5);

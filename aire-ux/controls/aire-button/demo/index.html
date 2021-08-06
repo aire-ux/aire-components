@@ -19,7 +19,7 @@
 
   import '../dist/index.js';
 
-  var themes = {
+  const themes = {
 
     aire: {
       installationInstructions: {
@@ -56,8 +56,8 @@
     }
   }
 
-  window.addEventListener('DOMContentLoaded', function () {
-    setTimeout(function () {
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
       Aire.ThemeManager.installTheme(currentTheme());
     }, 100);
   });
