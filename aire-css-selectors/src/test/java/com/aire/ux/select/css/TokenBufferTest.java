@@ -12,6 +12,7 @@ import static com.aire.ux.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.aire.ux.parsing.core.Token;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.val;

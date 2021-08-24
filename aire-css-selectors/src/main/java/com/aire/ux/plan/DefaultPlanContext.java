@@ -4,7 +4,7 @@ import static java.lang.String.format;
 
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
-import com.aire.ux.select.css.Token;
+import com.aire.ux.parsing.core.Token;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;

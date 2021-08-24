@@ -1,4 +1,4 @@
-package com.aire.ux.parsers;
+package com.aire.ux.parsing.core;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

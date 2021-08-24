@@ -1,4 +1,4 @@
-package com.aire.ux.select.css;
+package com.aire.ux.parsing.core;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

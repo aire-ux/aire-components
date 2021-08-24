@@ -7,14 +7,15 @@ include(
         'aire-ux-core',
         'aire-ux-spring',
         'aire-ux-zephyr',
+        'aire-css-selectors',
+        'aire-json-mapper',
+        'aire-parsing-core',
         'aire-mock:aire-mockito',
         'aire-mock:aire-mock-core',
 
         /**
          * test items
          */
-        'aire-css-selectors',
-        'aire-json-mapper',
         'aire-test-common',
         'aire-test-vaadin',
         'aire-test-spring',

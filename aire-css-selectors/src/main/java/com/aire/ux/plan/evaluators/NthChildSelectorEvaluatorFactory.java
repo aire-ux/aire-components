@@ -2,13 +2,13 @@ package com.aire.ux.plan.evaluators;
 
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.core.Token;
 import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.Expression;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.select.css.CssSelectorToken;
-import com.aire.ux.select.css.Token;
 import com.aire.ux.test.NodeAdapter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;

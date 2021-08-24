@@ -1,4 +1,4 @@
-package com.aire.ux.select.css;
+package com.aire.ux.parsing.core;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,8 +11,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 import lombok.val;
 
 @NotThreadSafe
-final class TokenBuffer {
+public final class TokenBuffer {
 
+  private final Type type;
   private final Pattern patternBuffer;
 
   /**
@@ -27,7 +28,8 @@ final class TokenBuffer {
    * @param buffer the buffer to build this from note that the first character is '|' so we'll strip
    *     that
    */
-  public TokenBuffer(StringBuilder buffer) {
+  public TokenBuffer(final Type type, final StringBuilder buffer) {
+    this.type = type;
     this.patternBuffer = Pattern.compile(buffer.substring(1), Pattern.CASE_INSENSITIVE);
   }
 
@@ -54,7 +56,7 @@ final class TokenBuffer {
             }
 
             matchAttempted = false;
-            for (val token : CssSelectorToken.values()) {
+            for (val token : type.enumerate()) {
               val group = matcher.group(token.name());
               if (group != null) {
                 val start = matcher.start(token.name());

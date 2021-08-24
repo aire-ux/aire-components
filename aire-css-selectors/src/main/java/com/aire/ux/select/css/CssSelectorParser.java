@@ -1,6 +1,6 @@
 package com.aire.ux.select.css;
 
-import static com.aire.ux.parsers.LookaheadIterator.wrap;
+import static com.aire.ux.parsing.core.LookaheadIterator.wrap;
 import static com.aire.ux.select.css.CssSelectorToken.AdditionOperator;
 import static com.aire.ux.select.css.CssSelectorToken.ApplicationEnd;
 import static com.aire.ux.select.css.CssSelectorToken.AttributeGroup;
@@ -27,10 +27,12 @@ import static com.aire.ux.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
 import static java.lang.String.format;
 
-import com.aire.ux.parsers.LookaheadIterator;
 import com.aire.ux.parsers.ast.NamedSyntaxNode;
 import com.aire.ux.parsers.ast.Symbol;
 import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.core.LookaheadIterator;
+import com.aire.ux.parsing.core.Token;
+import com.aire.ux.parsing.core.TokenWord;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Arrays;
