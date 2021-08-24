@@ -14,6 +14,7 @@ include(
          * test items
          */
         'aire-css-selectors',
+        'aire-json-mapper',
         'aire-test-common',
         'aire-test-vaadin',
         'aire-test-spring',
