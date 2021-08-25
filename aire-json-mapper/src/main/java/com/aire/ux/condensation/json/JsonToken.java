@@ -2,6 +2,7 @@ package com.aire.ux.condensation.json;
 
 import static java.lang.String.format;
 
+import com.aire.ux.parsing.ast.Symbol;
 import com.aire.ux.parsing.core.TokenBuffer;
 import com.aire.ux.parsing.core.Type;
 import java.util.Arrays;
@@ -9,10 +10,17 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
 
-public enum JsonToken implements Type {
+public enum JsonToken implements Type, Symbol {
 
+  Colon(":"),
+  Comma(","),
+  String("\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\""),
+  Addition("\\+"),
+  Subtraction("-"),
   OpenBrace("\\{"),
   CloseBrace("}"),
+  ArrayOpen("\\["),
+  ArrayClose("\\]"),
   WhiteSpace("[ \n\r\f\b  ]+");
 
   private final String pattern;
@@ -64,4 +72,5 @@ public enum JsonToken implements Type {
     }
     return result;
   }
+
 }

@@ -3,7 +3,7 @@ package com.aire.ux.test;
 import static com.aire.ux.test.Nodes.node;
 import static java.lang.String.format;
 
-import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.parsing.ast.Symbol;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.BitSet;

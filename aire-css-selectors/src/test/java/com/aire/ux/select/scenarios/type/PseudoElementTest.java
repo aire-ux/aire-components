@@ -1,6 +1,6 @@
 package com.aire.ux.select.scenarios.type;
 
-import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.parsing.ast.Symbol;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import lombok.val;

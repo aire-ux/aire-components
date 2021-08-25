@@ -7,8 +7,8 @@ import static com.aire.ux.select.css.CssSelectorToken.Numeric;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 
-import com.aire.ux.parsers.ast.Symbol;
-import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.ast.Symbol;
+import com.aire.ux.parsing.ast.SyntaxNode;
 import com.aire.ux.parsing.core.LookaheadIterator;
 import com.aire.ux.parsing.core.Token;
 import com.aire.ux.parsing.core.TokenWord;

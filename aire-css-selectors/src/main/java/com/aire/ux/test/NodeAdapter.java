@@ -1,6 +1,6 @@
 package com.aire.ux.test;
 
-import com.aire.ux.parsers.ast.Symbol;
+import com.aire.ux.parsing.ast.Symbol;
 import com.aire.ux.plan.WorkingSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;

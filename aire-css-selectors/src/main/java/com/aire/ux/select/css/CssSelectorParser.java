@@ -27,9 +27,9 @@ import static com.aire.ux.select.css.CssSelectorToken.Universal;
 import static com.aire.ux.select.css.CssSelectorToken.Whitespace;
 import static java.lang.String.format;
 
-import com.aire.ux.parsers.ast.NamedSyntaxNode;
-import com.aire.ux.parsers.ast.Symbol;
-import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.ast.NamedSyntaxNode;
+import com.aire.ux.parsing.ast.Symbol;
+import com.aire.ux.parsing.ast.SyntaxNode;
 import com.aire.ux.parsing.core.LookaheadIterator;
 import com.aire.ux.parsing.core.Token;
 import com.aire.ux.parsing.core.TokenWord;
@@ -66,7 +66,7 @@ public class CssSelectorParser {
 
   /** construct the mappings from symbols to tokens */
   static {
-    mappedTokens = new EnumMap<CssSelectorToken, ElementSymbol>(CssSelectorToken.class);
+    mappedTokens = new EnumMap<>(CssSelectorToken.class);
     for (val t : ElementSymbol.values()) {
       if (t.token != null) {
         mappedTokens.put(t.token, t);

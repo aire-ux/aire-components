@@ -1,4 +1,4 @@
-package com.aire.ux.parsers.ast;
+package com.aire.ux.parsing.ast;
 
 import java.util.ArrayDeque;
 import java.util.Collection;

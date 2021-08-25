@@ -1,4 +1,4 @@
-package com.aire.ux.parsers.ast;
+package com.aire.ux.parsing.ast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.HashMap;

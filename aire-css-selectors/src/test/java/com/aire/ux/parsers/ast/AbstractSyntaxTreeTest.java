@@ -1,6 +1,10 @@
 package com.aire.ux.parsers.ast;
 
-import com.aire.ux.parsers.ast.AbstractSyntaxTree.Order;
+import com.aire.ux.parsing.ast.AbstractSyntaxNode;
+import com.aire.ux.parsing.ast.AbstractSyntaxTree;
+import com.aire.ux.parsing.ast.AbstractSyntaxTree.Order;
+import com.aire.ux.parsing.ast.Symbol;
+import com.aire.ux.parsing.ast.SyntaxNode;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
 import java.util.Arrays;
 import java.util.List;
