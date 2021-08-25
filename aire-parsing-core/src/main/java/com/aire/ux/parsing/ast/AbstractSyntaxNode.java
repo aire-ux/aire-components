@@ -14,35 +14,56 @@ import lombok.val;
 
 public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   final Symbol symbol;
 
-  final U source;
   final T value;
+  final U source;
+  final SyntaxNode<T, U> parent;
   final Map<String, String> properties;
   final List<SyntaxNode<T, U>> children;
 
-  /** private state */
+  /**
+   * private state
+   */
   private String content;
 
   public AbstractSyntaxNode(Symbol symbol, U source, T value) {
     this(symbol, source, null, value, new ArrayList<>());
   }
 
+  public AbstractSyntaxNode(SyntaxNode<T, U> parent, Symbol symbol, U source, T value) {
+    this(parent, symbol, source, null, value, new ArrayList<>());
+  }
+
   /**
-   * @param symbol the associated symbol (element type)
-   * @param source the language element this was retrieved from
+   * @param symbol  the associated symbol (element type)
+   * @param source  the language element this was retrieved from
    * @param content the String content (if any)
-   * @param value the actual value node (if any)
+   * @param value   the actual value node (if any)
    */
+  public AbstractSyntaxNode(SyntaxNode<T, U> parent, Symbol symbol, U source, String content,
+      T value) {
+    this(parent, symbol, source, content, value, new ArrayList<>());
+  }
+
   public AbstractSyntaxNode(Symbol symbol, U source, String content, T value) {
-    this(symbol, source, content, value, new ArrayList<>());
+    this(null, symbol, source, content, value, new ArrayList<>());
   }
 
   public AbstractSyntaxNode(
       Symbol symbol, U source, String content, T value, List<SyntaxNode<T, U>> children) {
-    this(symbol, source, content, value, children, new LinkedHashMap<>());
+    this(null, symbol, source, content, value, children, new LinkedHashMap<>());
   }
+
+  public AbstractSyntaxNode(
+      SyntaxNode<T, U> parent, Symbol symbol, U source, String content, T value,
+      List<SyntaxNode<T, U>> children) {
+    this(parent, symbol, source, content, value, children, new LinkedHashMap<>());
+  }
+
 
   public AbstractSyntaxNode(
       Symbol symbol,
@@ -51,6 +72,18 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
       T value,
       List<SyntaxNode<T, U>> children,
       Map<String, String> properties) {
+    this(null, symbol, source, content, value, children, properties);
+  }
+
+  public AbstractSyntaxNode(
+      SyntaxNode<T, U> parent,
+      Symbol symbol,
+      U source,
+      String content,
+      T value,
+      List<SyntaxNode<T, U>> children,
+      Map<String, String> properties) {
+    this.parent = parent;
     this.symbol = symbol;
     this.source = source;
     this.content = content;
@@ -62,6 +95,12 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   @Override
   public Symbol getSymbol() {
     return symbol;
+  }
+
+  @Override
+  public SyntaxNode<T, U> getParent() {
+    return parent;
+
   }
 
   @Override
@@ -160,7 +199,9 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
     return children.add(child);
   }
 
-  /** @return a shallow copy of this node (i.e. discards hierarchical structure) */
+  /**
+   * @return a shallow copy of this node (i.e. discards hierarchical structure)
+   */
   @Override
   @SuppressFBWarnings
   @SuppressWarnings("PMD")

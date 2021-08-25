@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-class JsonParserTest {
+public class JsonParserTest {
 
 
   @Test
@@ -26,7 +26,7 @@ class JsonParserTest {
   }
 
   @SneakyThrows
-  private String read(String s) {
+  public static String read(String s) {
     val resource = ClassLoader.getSystemClassLoader().getResource(s);
     if(resource == null) {
       throw new NoSuchElementException("No resource: " + s);

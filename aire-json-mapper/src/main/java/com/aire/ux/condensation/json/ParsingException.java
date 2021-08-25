@@ -14,6 +14,15 @@ public class ParsingException extends RuntimeException {
     super(messageFor(tokens, actual, expected));
   }
 
+  public ParsingException(Token unexpected) {
+    super(messageForUnexpectedToken(unexpected));
+  }
+
+  private static String messageForUnexpectedToken(Token unexpected) {
+    return String.format("Unexpected token: '%s' (type: %s) at (%d, %d)", unexpected.getLexeme(),
+        unexpected.getType(), unexpected.getStart(), unexpected.getEnd());
+  }
+
   static String messageFor(LookaheadIterator<Token> tokens, Token actual, JsonToken... expected) {
     return String
         .format("Expected '%s' at (%d, %d), got '%s'", actual.getLexeme(), actual.getStart(),

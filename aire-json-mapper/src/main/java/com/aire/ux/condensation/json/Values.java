@@ -90,5 +90,9 @@ public class Values {
     public Value get(String name) {
       return getValue().get(name);
     }
+
+    public boolean has(String key) {
+      return getValue().containsKey(key);
+    }
   }
 }

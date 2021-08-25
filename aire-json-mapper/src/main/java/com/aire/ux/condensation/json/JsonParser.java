@@ -12,16 +12,16 @@ import lombok.val;
 
 public class JsonParser {
 
-  public AbstractSyntaxTree<Value, Token> parse(CharSequence sequence) {
+  public AbstractSyntaxTree<Value<?>, Token> parse(CharSequence sequence) {
     val tokens = tokenize(sequence);
     return new AbstractSyntaxTree<>(json(tokens));
   }
 
-  private SyntaxNode<Value, Token> json(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> json(LookaheadIterator<Token> tokens) {
     return element(tokens);
   }
 
-  private SyntaxNode<Value, Token> element(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> element(LookaheadIterator<Token> tokens) {
     if (!tokens.hasNext()) {
       throw new NoSuchElementException("Nope"); // todo make useful
     }
@@ -31,7 +31,7 @@ public class JsonParser {
     return value;
   }
 
-  private SyntaxNode<Value, Token> value(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> value(LookaheadIterator<Token> tokens) {
     val next = tokens.peek();
     val nextType = (JsonToken) next.getType();
     switch (nextType) {
@@ -61,10 +61,10 @@ public class JsonParser {
         val nullToken = expect(tokens, JsonToken.Null);
         return new JsonSyntaxNode(nullToken, Values.nullValue());
     }
-    throw new IllegalStateException("Nope");
+    throw new ParsingException(next);
   }
 
-  private SyntaxNode<Value, Token> number(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> number(LookaheadIterator<Token> tokens) {
     val numberToken = expect(tokens, JsonToken.Integer);
     val numberValue = Values.integer(numberToken.getLexeme());
     val numberNode = new JsonSyntaxNode(numberToken, numberValue);
@@ -79,7 +79,7 @@ public class JsonParser {
     return numberNode;
   }
 
-  private SyntaxNode<Value, Token> array(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> array(LookaheadIterator<Token> tokens) {
     val value = Values.array();
     val arrayToken = expect(tokens, JsonToken.ArrayOpen);
     val arrayNode = new JsonSyntaxNode(arrayToken, value);
@@ -98,7 +98,7 @@ public class JsonParser {
 
   }
 
-  private SyntaxNode<Value, Token> object(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> object(LookaheadIterator<Token> tokens) {
     val value = Values.object();
     val objectToken = expect(tokens, JsonToken.OpenBrace);
     val objectNode = new JsonSyntaxNode(objectToken, value);
@@ -124,7 +124,7 @@ public class JsonParser {
   }
 
 
-  private SyntaxNode<Value, Token> string(LookaheadIterator<Token> tokens) {
+  private SyntaxNode<Value<?>, Token> string(LookaheadIterator<Token> tokens) {
     val value = expect(tokens, JsonToken.String);
     return new JsonSyntaxNode(value, Values.string(value));
   }
@@ -159,7 +159,7 @@ public class JsonParser {
   }
 
 
-  static final class JsonSyntaxNode extends AbstractSyntaxNode<Value, Token> {
+  static final class JsonSyntaxNode extends AbstractSyntaxNode<Value<?>, Token> {
 
     public JsonSyntaxNode(
         Token source, Value value) {

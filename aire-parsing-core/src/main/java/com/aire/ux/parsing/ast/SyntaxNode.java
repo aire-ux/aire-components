@@ -15,6 +15,9 @@ public interface SyntaxNode<T, U> extends Cloneable {
 
   Symbol getSymbol();
 
+  SyntaxNode<T, U> getParent();
+
+
   T getValue();
 
   U getSource();
