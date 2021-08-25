@@ -2,6 +2,7 @@ package com.aire.ux.condensation.json;
 
 import com.aire.ux.condensation.json.Value.Type;
 import com.aire.ux.parsing.core.Token;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,6 +43,20 @@ public class Values {
 
   public static Value nullValue() {
     return NULL_VALUE;
+  }
+
+  public static Value<Double> number(String lexeme) {
+    return new NumericValue(lexeme);
+  }
+
+  static class NumericValue extends AbstractValue<Double> {
+
+    public NumericValue(String lexeme) {
+      super(Type.Number, new BigDecimal(lexeme).doubleValue());
+    }
+
+
+
   }
 
   static class BooleanValue extends AbstractValue<Boolean> {

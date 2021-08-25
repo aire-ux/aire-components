@@ -100,7 +100,7 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
     val parent = element.getParent();
     if(parent != null) {
       val childIdx= parent.getChildren().indexOf(element);
-      if(childIdx != -1 && childIdx < parent.getChildren().size()) {
+      if(childIdx != -1 && childIdx + 1 < parent.getChildren().size()) {
         return parent.getChild(childIdx + 1);
       }
     }

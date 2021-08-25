@@ -61,13 +61,18 @@ public class AstDocument implements Document {
 
   @SuppressWarnings("unchecked")
   private <T> T valueFor(SyntaxNode<Value<?>, Token> next) {
-    if(next.hasChildren()) {
+    if (next.hasChildren()) {
       val child = next.getChild(0);
-      if(child != null) {
+      if (child != null) {
         val childValue = child.getValue();
-        if(childValue != null) {
+        if (childValue != null) {
           return (T) childValue.getValue();
         }
+      }
+    } else {
+      val childValue = next.getValue();
+      if (childValue != null) {
+        return (T) childValue.getValue();
       }
     }
     return null;

@@ -90,13 +90,6 @@ class JsonTokenTest {
     expect(value, JsonToken.ArrayOpen, JsonToken.ArrayClose);
   }
 
-  @Test
-  void ensureCharactersWork() {
-    expect("+", JsonToken.Addition);
-    expect("-", JsonToken.Subtraction);
-    expect(":", JsonToken.Colon);
-
-  }
 
 
   private void expect(String expr, JsonToken token, String lexeme) {

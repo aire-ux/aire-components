@@ -46,15 +46,8 @@ public class JsonParser {
         val array = array(tokens);
         expect(tokens, JsonToken.ArrayClose);
         return array;
-      case Integer:
-      case Addition:
+      case Number:
         return number(tokens);
-      case Subtraction:
-        val token = expect(tokens, JsonToken.Subtraction);
-        val number = number(tokens);
-        val negatedNumberNode = new JsonSyntaxNode(token, Values.negate(number.getValue()));
-        negatedNumberNode.addChild(number);
-        return negatedNumberNode;
       case Boolean:
         val booleanToken = expect(tokens, JsonToken.Boolean);
         return new JsonSyntaxNode(booleanToken, Values.bool(booleanToken.getLexeme()));
@@ -66,18 +59,8 @@ public class JsonParser {
   }
 
   private SyntaxNode<Value<?>, Token> number(LookaheadIterator<Token> tokens) {
-    val numberToken = expect(tokens, JsonToken.Integer);
-    val numberValue = Values.integer(numberToken.getLexeme());
-    val numberNode = new JsonSyntaxNode(numberToken, numberValue);
-
-    if (peekType(tokens, JsonToken.Fraction)) {
-      val fractionToken = expect(tokens, JsonToken.Fraction);
-      val digits = expect(tokens, JsonToken.Integer);
-      val fractionValue = Values.integer(digits.getLexeme());
-      val fractionNode = new JsonSyntaxNode(fractionToken, fractionValue);
-      numberNode.addChild(fractionNode);
-    }
-    return numberNode;
+    val token = tokens.next();
+    return new JsonSyntaxNode(token, Values.number(token.getLexeme()));
   }
 
   private SyntaxNode<Value<?>, Token> array(LookaheadIterator<Token> tokens) {
