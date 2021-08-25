@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 public interface Value<T> {
 
+
   enum Type {
     String,
     Object,

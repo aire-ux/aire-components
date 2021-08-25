@@ -1,11 +1,16 @@
 package com.aire.ux.condensation.json;
 
+import com.aire.ux.condensation.json.Value.Type;
 import com.aire.ux.parsing.core.Token;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.val;
 
 public class Values {
+
+  public static Value NULL_VALUE = new AbstractValue(Type.Null, null);
 
   public static Value string(Token value) {
     val lexeme = value.getLexeme();
@@ -16,13 +21,64 @@ public class Values {
     return new ObjectValue();
   }
 
+  public static ArrayValue array() {
+    return new ArrayValue();
+  }
+
+  static Value integer(String lexeme) {
+    return new IntegerValue(Integer.parseInt(lexeme));
+  }
+
+  public static Value negate(Value value) {
+    if (!(value instanceof IntegerValue)) {
+      throw new IllegalArgumentException("Expected integral value");
+    }
+    return new IntegerValue(-((IntegerValue) value).getValue());
+  }
+
+  public static Value bool(String lexeme) {
+    return new BooleanValue(Boolean.parseBoolean(lexeme));
+  }
+
+  public static Value nullValue() {
+    return NULL_VALUE;
+  }
+
+  static class BooleanValue extends AbstractValue<Boolean> {
+
+    public BooleanValue(boolean b) {
+      super(Type.Boolean, b);
+    }
+  }
+
+
+  static class IntegerValue extends AbstractValue<Integer> {
+
+    public IntegerValue(final Integer value) {
+      super(Type.Number, value);
+    }
+  }
+
+  public static class ArrayValue extends AbstractValue<List<Value>> {
+
+    public ArrayValue() {
+      super(Type.Array, new ArrayList<>());
+    }
+
+    public void add(Value value) {
+      getValue().add(value);
+    }
+  }
+
   public static class StringValue extends AbstractValue<String> {
+
     public StringValue(String value) {
       super(Type.String, value);
     }
   }
 
   public static class ObjectValue extends AbstractValue<Map<String, Value>> {
+
     public ObjectValue() {
       super(Type.Object, new LinkedHashMap<>());
     }

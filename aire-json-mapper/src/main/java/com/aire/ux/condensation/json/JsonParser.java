@@ -41,8 +41,61 @@ public class JsonParser {
         val object = object(tokens);
         expect(tokens, JsonToken.CloseBrace);
         return object;
+      case ArrayOpen:
+        val array = array(tokens);
+        expect(tokens, JsonToken.ArrayClose);
+        return array;
+      case Integer:
+      case Addition:
+        return number(tokens);
+      case Subtraction:
+        val token = expect(tokens, JsonToken.Subtraction);
+        val number = number(tokens);
+        val negatedNumberNode = new JsonSyntaxNode(token, Values.negate(number.getValue()));
+        negatedNumberNode.addChild(number);
+        return negatedNumberNode;
+      case Boolean:
+        val booleanToken = expect(tokens, JsonToken.Boolean);
+        return new JsonSyntaxNode(booleanToken, Values.bool(booleanToken.getLexeme()));
+      case Null:
+        val nullToken = expect(tokens, JsonToken.Null);
+        return new JsonSyntaxNode(nullToken, Values.nullValue());
     }
     throw new IllegalStateException("Nope");
+  }
+
+  private SyntaxNode<Value, Token> number(LookaheadIterator<Token> tokens) {
+    val numberToken = expect(tokens, JsonToken.Integer);
+    val numberValue = Values.integer(numberToken.getLexeme());
+    val numberNode = new JsonSyntaxNode(numberToken, numberValue);
+
+    if (peekType(tokens, JsonToken.Fraction)) {
+      val fractionToken = expect(tokens, JsonToken.Fraction);
+      val digits = expect(tokens, JsonToken.Integer);
+      val fractionValue = Values.integer(digits.getLexeme());
+      val fractionNode = new JsonSyntaxNode(fractionToken, fractionValue);
+      numberNode.addChild(fractionNode);
+    }
+    return numberNode;
+  }
+
+  private SyntaxNode<Value, Token> array(LookaheadIterator<Token> tokens) {
+    val value = Values.array();
+    val arrayToken = expect(tokens, JsonToken.ArrayOpen);
+    val arrayNode = new JsonSyntaxNode(arrayToken, value);
+
+    for (; ; ) {
+      whitespace(tokens);
+      val arrayElement = element(tokens);
+      arrayNode.addChild(arrayElement);
+      value.add(arrayElement.getValue());
+      whitespace(tokens);
+      if (peekType(tokens, JsonToken.ArrayClose)) {
+        return arrayNode;
+      }
+      expect(tokens, JsonToken.Comma);
+    }
+
   }
 
   private SyntaxNode<Value, Token> object(LookaheadIterator<Token> tokens) {
@@ -59,9 +112,7 @@ public class JsonParser {
       objectNode.addChild(memberName);
       value.set((String) memberName.getValue().getValue(), memberValue.getValue());
       whitespace(tokens);
-
-
-      if(peekType(tokens, JsonToken.CloseBrace)) {
+      if (peekType(tokens, JsonToken.CloseBrace)) {
         return objectNode;
       }
       expect(tokens, JsonToken.Comma);
@@ -71,7 +122,6 @@ public class JsonParser {
   private boolean peekType(LookaheadIterator<Token> tokens, JsonToken type) {
     return tokens.hasNext() && tokens.peek().getType() == type;
   }
-
 
 
   private SyntaxNode<Value, Token> string(LookaheadIterator<Token> tokens) {

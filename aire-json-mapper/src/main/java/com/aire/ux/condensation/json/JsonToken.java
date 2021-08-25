@@ -14,6 +14,9 @@ public enum JsonToken implements Type, Symbol {
 
   Colon(":"),
   Comma(","),
+  Null("null"),
+  Boolean("true|false"),
+  Integer("\\d+"),
   String("\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\""),
   Addition("\\+"),
   Subtraction("-"),
@@ -21,6 +24,8 @@ public enum JsonToken implements Type, Symbol {
   CloseBrace("}"),
   ArrayOpen("\\["),
   ArrayClose("\\]"),
+  Fraction("\\."),
+  Exponent("[eE]{1}"),
   WhiteSpace("[ \n\r\f\b  ]+");
 
   private final String pattern;
@@ -72,5 +77,4 @@ public enum JsonToken implements Type, Symbol {
     }
     return result;
   }
-
 }
