@@ -4,14 +4,15 @@ const gulp = require('gulp'),
     sass = require('gulp-dart-sass');
 
 const themes = [
+  'structure',
   'base',
   'bootstrap',
   'material',
   'spectrum',
   'uikit',
-  'aire'
+  'aire',
+  'aire-dark'
 ]
-
 
 const themeTasks = themes.map(theme => {
   const name = `build:theme:${theme}`;

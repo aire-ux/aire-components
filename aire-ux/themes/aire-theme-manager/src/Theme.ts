@@ -62,6 +62,8 @@ export type ScriptDefinition = ThemeDefinitionElement & {
    */
   readonly asynchronous?: boolean;
 
+  readonly type?: string;
+
 
 };
 

@@ -20,18 +20,6 @@
   import '../dist/index.js';
 
   var themes = {
-    bootstrap: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/bootstrap/aire-button.css'
-      }]
-    },
 
     aire: {
       installationInstructions: {
@@ -39,23 +27,32 @@
           matchingAttributeExistence: ['aire']
         }
       },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/aire/aire-button.css'
-      }]
+      styles: [
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/structure/aire-button.css'
+        },
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/aire/aire-button.css'
+        }]
     },
-    material: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/material/aire-button.css'
-      }],
+    aireDark: {
+      styles: [
+
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/structure/aire-button.css'
+        },
+        {
+          source: 'remote',
+          mode: 'page',
+          content: '../dist/themes/aire-dark/aire-button.css'
+        },
+      ],
     }
   }
 
@@ -76,16 +73,10 @@
     return themes[urlParms.get('theme')];
   }
 
-  function setBootstrap() {
-    setCurrentTheme('bootstrap');
+  function setAireDark() {
+    setCurrentTheme('aireDark');
     Aire.ThemeManager.installTheme(currentTheme());
   }
-
-  function setMaterial() {
-    setCurrentTheme('material');
-    Aire.ThemeManager.installTheme(currentTheme());
-  }
-
 
   function setAire() {
     setCurrentTheme('aire');
@@ -94,41 +85,124 @@
 
   render(
       html`
-        <div margin="40px">
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setMaterial}"
-          >
-            material
-          </aire-button>
+        <article>
+          <section>
+            <h1>Theme</h1>
+            <aire-button variants="outlined" @click="${setAire}">Light</aire-button>
+            <aire-button variants="outlined" @click="${setAireDark}">Dark</aire-button>
+          </section>
+
+          <section>
+            <h1>Sizes</h1>
+            <aire-button size="x-small">Extra Small</aire-button>
+            <aire-button size="small">Small</aire-button>
+            <aire-button>Regular</aire-button>
+            <aire-button size="large">Large</aire-button>
+            <aire-button size="x-large">Extra-Large</aire-button>
+            <aire-button size="cta">CTA</aire-button>
+          </section>
+
+          <section>
+            <h1>Variants</h1>
+            <aire-button>Default</aire-button>
+            <aire-button variant="primary">Primary</aire-button>
+            <aire-button variant="secondary">Secondary</aire-button>
+            <aire-button variant="success">Success</aire-button>
+            <aire-button variant="error">Error</aire-button>
+            <aire-button variant="warning">Warning</aire-button>
+            <aire-button variant="info">Info</aire-button>
+          </section>
 
 
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setBootstrap}"
-          >
-            bootstrap
-          </aire-button>
+          <section>
+            <h1>Outlined Types</h1>
+            <aire-button type="outlined">Default</aire-button>
+            <aire-button type="outlined" variant="primary">Primary</aire-button>
+            <aire-button type="outlined" variant="secondary">Secondary</aire-button>
+            <aire-button type="outlined" variant="success">Success</aire-button>
+            <aire-button type="outlined" variant="error">Error</aire-button>
+            <aire-button type="outlined" variant="warning">Warning</aire-button>
+            <aire-button type="outlined" variant="info">Info</aire-button>
 
-          <aire-button
-              role="button"
-              type="button"
-              @click="${setAire}"
-          >
-            aire
-          </aire-button>
+            <h2>Sizes</h2>
+            <aire-button
+                size="x-small"
+                type="outlined"
+                variant="primary">X-Small</aire-button>
 
-          <aire-button
-              aire
-              ripple
-              role="button"
-              data-mdb-ripple-color="dark" data-mdb-ripple-radius="10"
-              class="btn btn-light-outline btn-primary" type="button">
-            Button
-          </aire-button>
-        </div>
+            <aire-button
+                size="small"
+                type="outlined"
+                variant="primary">Small</aire-button>
+
+            <aire-button
+                type="outlined"
+                variant="primary">Default</aire-button>
+
+
+            <aire-button
+                size="large"
+                type="outlined"
+                variant="primary">Large</aire-button>
+
+
+            <aire-button
+                size="x-large"
+                type="outlined"
+                variant="primary">X-Large</aire-button>
+
+
+            <aire-button
+                size="cta"
+                type="outlined"
+                variant="primary">CTA</aire-button>
+          </section>
+
+          <section>
+            <h1>Contained Types</h1>
+            <aire-button type="contained">Default</aire-button>
+            <aire-button type="contained" variant="primary">Primary</aire-button>
+            <aire-button type="contained" variant="secondary">Secondary</aire-button>
+            <aire-button type="contained" variant="success">Success</aire-button>
+            <aire-button type="contained" variant="error">Error</aire-button>
+            <aire-button type="contained" variant="warning">Warning</aire-button>
+            <aire-button type="contained" variant="info">Info</aire-button>
+
+            <h2>Sizes</h2>
+            <aire-button
+                size="x-small"
+                type="contained"
+                variant="primary">X-Small</aire-button>
+
+            <aire-button
+                size="small"
+                type="contained"
+                variant="primary">Small</aire-button>
+
+            <aire-button
+                type="contained"
+                >Default</aire-button>
+
+
+            <aire-button
+                size="large"
+                type="contained"
+                variant="success">Large</aire-button>
+
+
+            <aire-button
+                size="x-large"
+                type="contained"
+                variant="primary">X-Large</aire-button>
+
+
+            <aire-button
+                size="cta"
+                type="contained"
+                variant="primary">CTA</aire-button>
+          </section>
+
+        </article>
       `,
       document.querySelector('#demo')
   );
