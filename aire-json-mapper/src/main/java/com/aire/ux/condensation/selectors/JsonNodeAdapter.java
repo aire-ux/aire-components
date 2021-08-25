@@ -77,7 +77,7 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   @Override
   public String getType(SyntaxNode<Value<?>, Token> n) {
     val v = n.getValue();
-    if(v != null && v.getType() != null) {
+    if(v != null) {
       return v.getType().name().toLowerCase(Locale.ROOT);
     }
     return null;

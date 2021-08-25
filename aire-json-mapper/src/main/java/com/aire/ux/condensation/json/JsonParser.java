@@ -2,6 +2,7 @@ package com.aire.ux.condensation.json;
 
 import static com.aire.ux.parsing.core.LookaheadIterator.wrap;
 
+import com.aire.ux.condensation.Parser;
 import com.aire.ux.parsing.ast.AbstractSyntaxNode;
 import com.aire.ux.parsing.ast.AbstractSyntaxTree;
 import com.aire.ux.parsing.ast.SyntaxNode;

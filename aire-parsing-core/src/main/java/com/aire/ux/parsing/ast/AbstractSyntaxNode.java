@@ -217,7 +217,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   }
 
   @Override
-  public void setParent(SyntaxNode<T, U> tuAbstractSyntaxNode) {
+  public void setParent(SyntaxNode<T, U> parent) {
     this.parent = parent;
   }
 
