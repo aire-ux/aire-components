@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.aire.ux.condensation.Condensation;
 import com.aire.ux.parsing.core.Token;
 import com.aire.ux.parsing.core.Type;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
@@ -90,6 +93,17 @@ class JsonTokenTest {
     expect(value, JsonToken.ArrayOpen, JsonToken.ArrayClose);
   }
 
+
+  @Test
+  void ensureImmediateSiblingSelectorWorks() {
+    val doc = Condensation.parse("json", "     {\n"
+                                         + "      \"hello\": 1,\n"
+                                         + "        \"world\": 2,\n"
+                                         + "        \"stuff\": 3\n"
+                                         + "    }\n ");
+    val result = new HashSet<>(doc.selectAll(".hello ~ number"));
+    assertEquals(result, Set.of(2.0, 3.0));
+  }
 
 
   private void expect(String expr, JsonToken token, String lexeme) {
