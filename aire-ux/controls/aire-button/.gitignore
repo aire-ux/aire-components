@@ -21,4 +21,5 @@
 dist/
 /out-tsc/
 
+/demo
 storybook-static

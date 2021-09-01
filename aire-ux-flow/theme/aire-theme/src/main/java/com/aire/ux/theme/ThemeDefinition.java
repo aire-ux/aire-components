@@ -15,20 +15,20 @@ import lombok.val;
 public class ThemeDefinition {
 
   /** the style definitions to load */
-  @Getter private final List<StyleDefinition> styleDefinitions;
+  @Getter private final List<StyleDefinition> styles;
 
   /** the script definitions to load */
-  @Getter private final List<ScriptDefinition> scriptDefinitions;
+  @Getter private final List<ScriptDefinition> scripts;
 
   public ThemeDefinition() {
     this(new ArrayList<>(), new ArrayList<>());
   }
 
   public ThemeDefinition(
-      final Collection<StyleDefinition> styleDefinitions,
-      final Collection<ScriptDefinition> scriptDefinitions) {
-    this.styleDefinitions = new ArrayList<>(styleDefinitions);
-    this.scriptDefinitions = new ArrayList<>(scriptDefinitions);
+      final Collection<StyleDefinition> styles,
+      final Collection<ScriptDefinition> scripts) {
+    this.styles = new ArrayList<>(styles);
+    this.scripts = new ArrayList<>(scripts);
   }
 
   public ThemeDefinition(Theme target) {
@@ -46,10 +46,10 @@ public class ThemeDefinition {
   }
 
   public void addStyleDefinition(StyleDefinition definition) {
-    styleDefinitions.add(definition);
+    styles.add(definition);
   }
 
   public void addScriptDefinition(ScriptDefinition definition) {
-    scriptDefinitions.add(definition);
+    scripts.add(definition);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-button",
-  "version": "0.0.21",
+  "version": "0.0.27",
   "description": "Webcomponent aire-button following open-wc recommendations",
   "author": "aire-button",
   "license": "MIT",
@@ -12,10 +12,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "start": "concurrently --kill-others --names build,build:watch,web-dev-server \"web-dev-server --node-resolve --open --watch\" --config web-dev-server.config.mjs",
-
-    "build": "tsc",
+    "build": "tsc && gulp build:themes",
     "build:watch": "tsc && concurrently -k -r  \"gulp themes:build:watch\" \"tsc --watch --preserveWatchOutput\" \"wtr --watch\" ",
-    "prepublish": "tsc && npm run build:watch",
+    "prepublish": "tsc && npm run build",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "test": "tsc && wtr --coverage",
@@ -24,10 +23,6 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@spectrum-css/button": "^3.0.3",
-    "@spectrum-css/page": "^3.0.2",
-    "@spectrum-css/vars": "^3.0.2",
-    "@spectrum-web-components/button": "^0.14.4",
     "lit-element": "^2.5.1",
     "lit-html": "^1.4.1"
   },
@@ -36,7 +31,6 @@
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^2.5.33",
-    "@spectrum-web-components/theme": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "@web/dev-server": "^0.1.17",
@@ -62,6 +56,7 @@
     "node-sass": "^6.0.1",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
+    "sinon": "^11.1.2",
     "tslib": "^2.3.0",
     "typescript": "^4.3.4"
   },

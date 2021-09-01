@@ -8,6 +8,9 @@ import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
 import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
 import static java.lang.String.format;
 
+import com.aire.ux.parsing.core.TokenBuffer;
+import com.aire.ux.parsing.core.Type;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.val;
@@ -133,11 +136,17 @@ public enum CssSelectorToken implements Type {
         bufferTokenPattern(buffer, token);
       }
     }
-    return new TokenBuffer(buffer);
+    return new TokenBuffer(CssSelectorToken.AdditionOperator, buffer);
   }
 
   private static void bufferTokenPattern(StringBuilder buffer, CssSelectorToken token) {
     buffer.append(format("|(?<%s>%s)", token.name(), token.pattern));
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends Type> Iterable<T> enumerate() {
+    return () -> Arrays.stream(CssSelectorToken.values()).map(t -> (T) t).iterator();
   }
 
   @Nonnull

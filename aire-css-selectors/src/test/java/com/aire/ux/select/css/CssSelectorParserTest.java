@@ -2,9 +2,10 @@ package com.aire.ux.select.css;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.parsers.ast.AbstractSyntaxTree;
-import com.aire.ux.parsers.ast.Symbol;
-import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.ast.AbstractSyntaxTree;
+import com.aire.ux.parsing.ast.Symbol;
+import com.aire.ux.parsing.ast.SyntaxNode;
+import com.aire.ux.parsing.core.Token;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import java.util.function.Predicate;
 import lombok.val;

@@ -2,6 +2,7 @@ package com.aire.ux.parsers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.aire.ux.parsing.core.LookaheadIterator;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;

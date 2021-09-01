@@ -1,0 +1,46 @@
+plugins {
+    id 'java-library'
+    id 'java-test-fixtures'
+    id "com.github.node-gradle.node" version "3.1.0"
+}
+
+dependencies {
+    api project(':aire-ux-flow:theme:aire-theme')
+    implementation 'io.sunshower.arcus:arcus-lang'
+    implementation 'io.sunshower.arcus:arcus-reflect'
+    implementation 'javax.servlet:javax.servlet-api'
+
+    [
+            'aire-button'
+    ].each {
+        api project(":aire-ux-flow:controls:$it")
+    }
+
+    testImplementation 'javax.inject:javax.inject:1'
+    testImplementation project(':aire-test-spring')
+    testImplementation 'org.springframework.boot:spring-boot'
+    /**
+     * test-fixtures plugin doesn't work with BOM dependencies (yet)
+     */
+    testImplementation project(':aire-ux-flow:theme:aire-theme').sourceSets.test.output
+}
+
+jar {
+    from("${project.projectDir}/node_modules/@aire-ux/aire-button/dist/themes/aire") {
+        include "aire-button.css"
+        into "META-INF/aire-theme/aire/"
+    }
+
+    from("${project.projectDir}/node_modules/@aire-ux/aire-button/dist/themes/aire-dark") {
+        include "aire-button.css"
+        into "META-INF/aire-theme/aire-dark/"
+    }
+
+
+    from("${project.projectDir}/node_modules/@aire-ux/aire-button/dist/themes/structure") {
+        include "aire-button.css"
+        into "META-INF/aire-theme/structure/"
+    }
+}
+
+assemble.dependsOn npmInstall

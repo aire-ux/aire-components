@@ -15,7 +15,7 @@ import lombok.val;
 
 @Tag("aire-button")
 @JsModule("@aire-ux/aire-button")
-@NpmPackage(value = "@aire-ux/aire-button", version = "0.0.16")
+@NpmPackage(value = "@aire-ux/aire-button", version = "0.0.27")
 public class Button extends Component
     implements HasStyle, HasText, ClickNotifier<Button>, Focusable<Button> {
 

@@ -4,10 +4,10 @@ import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aire.ux.parsers.ast.Symbol;
-import com.aire.ux.parsers.ast.SyntaxNode;
+import com.aire.ux.parsing.ast.Symbol;
+import com.aire.ux.parsing.ast.SyntaxNode;
+import com.aire.ux.parsing.core.Token;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
-import com.aire.ux.select.css.Token;
 import io.sunshower.lambda.Option;
 import lombok.val;
 import org.junit.jupiter.api.Test;
