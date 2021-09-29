@@ -79,7 +79,6 @@ public class JsonParser {
       }
       expect(tokens, JsonToken.Comma);
     }
-
   }
 
   private SyntaxNode<Value<?>, Token> object(LookaheadIterator<Token> tokens) {

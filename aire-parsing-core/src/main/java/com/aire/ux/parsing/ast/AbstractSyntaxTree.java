@@ -128,7 +128,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
       @Nonnull
       @Override
       public Iterator<SyntaxNode<T, U>> iterator() {
-        return new Iterator<SyntaxNode<T, U>>() {
+        return new Iterator<>() {
           @Override
           public boolean hasNext() {
             return !struct.isEmpty();
@@ -155,7 +155,7 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     if (node.equals(root)) {
       out.append(node).append("\n");
     } else {
-      out.append(indent).append(last ? "└╴" : "├╴").append(node.toString()).append("\n");
+      out.append(indent).append(last ? "└╴" : "├╴").append(node).append("\n");
     }
     indent = indent + (last ? "   " : "│  ");
     val iter = node.getChildren().iterator();
