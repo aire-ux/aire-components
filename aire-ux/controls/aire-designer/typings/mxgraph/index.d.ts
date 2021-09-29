@@ -3,10 +3,17 @@
 declare module "mxgraph" {
 
 
-
-
+  /**
+   * mxGraph is a for-real pain to bundle correctly for Vaadin consumption
+   * so the strategy is to supply the client bundle
+   * and export all the correct types
+   */
 
   global {
+
+    export type mxGraph = typeof mxGraph;
+
+
 
     // @ts-ignore
     const mxGraph: typeof mxGraph;
