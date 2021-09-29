@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "lit-element": "^2.5.1",
-    "lit-html": "^1.4.1"
+    "lit-html": "^1.4.1",
+    "mxgraph": "^4.2.2"
   },
   "devDependencies": {
     "@aire-ux/aire-theme-manager": "^0.0.21",

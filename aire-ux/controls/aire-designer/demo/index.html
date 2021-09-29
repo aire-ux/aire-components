@@ -14,83 +14,18 @@
 
 </script>
 
+<script type="text/javascript">
+  mxBasePath = 'node_modules/mxgraph/javascript/src';
+</script>
+
+<script type="text/javascript" src="node_modules/mxgraph/javascript/mxClient.min.js">
+
+</script>
+
+
 <script type="module">
   import {html, render} from 'lit-html';
-
   import '../dist/index.js';
-
-  var themes = {
-    bootstrap: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/bootstrap/aire-designer.css'
-      }]
-    },
-
-    aire: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/aire/aire-designer.css'
-      }]
-    },
-    material: {
-      installationInstructions: {
-        applicableTo: {
-          matchingAttributeExistence: ['aire']
-        }
-      },
-      styles: [{
-        source: 'remote',
-        mode: 'page',
-        content: '../dist/themes/material/aire-designer.css'
-      }],
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    setTimeout(function () {
-      Aire.ThemeManager.installTheme(currentTheme());
-    }, 100);
-  });
-
-  function setCurrentTheme(theme) {
-    const urlParms = new URLSearchParams(window.location.search);
-    urlParms.set('theme', theme);
-    window.location.search = urlParms;
-  }
-
-  function currentTheme() {
-    const urlParms = new URLSearchParams(window.location.search);
-    return themes[urlParms.get('theme')];
-  }
-
-  function setBootstrap() {
-    setCurrentTheme('bootstrap');
-    Aire.ThemeManager.installTheme(currentTheme());
-  }
-
-  function setMaterial() {
-    setCurrentTheme('material');
-    Aire.ThemeManager.installTheme(currentTheme());
-  }
-
-
-  function setAire() {
-    setCurrentTheme('aire');
-    Aire.ThemeManager.installTheme(currentTheme());
-  }
 
   render(
       html`
