@@ -21,7 +21,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   final T value;
   final U source;
-  final SyntaxNode<T, U> parent;
+  private SyntaxNode<T, U> parent;
   final Map<String, String> properties;
   final List<SyntaxNode<T, U>> children;
 
@@ -158,7 +158,9 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   public Collection<SyntaxNode<T, U>> setChildren(@Nonnull Collection<SyntaxNode<T, U>> children) {
     val newChildren = List.copyOf(this.children);
     this.children.clear();
-    this.children.addAll(children);
+    for(val child : children) {
+      addChild(child);
+    }
     return newChildren;
   }
 
@@ -196,7 +198,11 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   @Override
   public boolean addChild(SyntaxNode<T, U> child) {
-    return children.add(child);
+    if(child != null) {
+      child.setParent(this);
+      return children.add(child);
+    }
+    return false;
   }
 
   /**
@@ -208,6 +214,11 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   public SyntaxNode<T, U> clone() {
     return new AbstractSyntaxNode<T, U>(
         symbol, source, content, value, new ArrayList<>(), new LinkedHashMap<>(properties));
+  }
+
+  @Override
+  public void setParent(SyntaxNode<T, U> parent) {
+    this.parent = parent;
   }
 
   @Override

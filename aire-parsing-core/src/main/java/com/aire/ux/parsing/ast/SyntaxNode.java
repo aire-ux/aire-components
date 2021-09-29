@@ -66,4 +66,6 @@ public interface SyntaxNode<T, U> extends Cloneable {
    */
   @SuppressWarnings("PMD")
   SyntaxNode<T, U> clone();
+
+  void setParent(SyntaxNode<T, U> tuAbstractSyntaxNode);
 }

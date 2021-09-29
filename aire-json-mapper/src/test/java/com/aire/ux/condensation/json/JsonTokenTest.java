@@ -1,15 +1,26 @@
 package com.aire.ux.condensation.json;
 
+import static com.aire.ux.condensation.json.JsonParserTest.read;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.aire.ux.condensation.Condensation;
 import com.aire.ux.parsing.core.Token;
 import com.aire.ux.parsing.core.Type;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -90,14 +101,65 @@ class JsonTokenTest {
     expect(value, JsonToken.ArrayOpen, JsonToken.ArrayClose);
   }
 
-  @Test
-  void ensureCharactersWork() {
-    expect("+", JsonToken.Addition);
-    expect("-", JsonToken.Subtraction);
-    expect(":", JsonToken.Colon);
 
+  @Test
+  void ensureGeneralSiblingWorks() {
+    val doc = Condensation.parse("json", "     {\n"
+                                         + "      \"hello\": 1,\n"
+                                         + "        \"world\": 2,\n"
+                                         + "        \"stuff\": 3\n"
+                                         + "    }\n ");
+    val result = new HashSet<>(doc.selectAll(".hello ~ number"));
+    assertEquals(result, Set.of(2.0, 3.0));
   }
 
+  @Test
+  void ensureImmediateSiblingWorks() {
+    val doc = Condensation.parse("json", "     {\n"
+                                         + "      \"hello\": 1,\n"
+                                         + "        \"world\": 2,\n"
+                                         + "        \"stuff\": 3\n"
+                                         + "    }\n ");
+    val result = new HashSet<>(doc.selectAll(".hello + number"));
+    assertEquals(result, Set.of(2.0));
+  }
+
+  @Test
+  void printAll() {
+    System.out.println(new JsonParser().parse(read("test.json")));
+  }
+
+  @Test
+  @SneakyThrows
+  void ensureReadingHugeFileWorks() {
+    val  contents = Files.readString(Path.of("/home/josiah/Downloads/citylots.json"));
+    long l1 = System.currentTimeMillis();
+    try {
+      new JsonParser().parse(contents);
+    } catch(Throwable t) {
+      t.printStackTrace();
+    }
+    long l2 = System.currentTimeMillis();
+    System.out.println("Completed parsing in: " + (l2 - l1)/ 1000 + " seconds");
+  }
+
+  @Test
+  strictfp void ensureNthChildSelectorWorks() {
+    val doc = Condensation.parse("json", "  {\n"
+                                         + "          \"whatever\": [\n"
+                                         + "            1,\n"
+                                         + "            2,\n"
+                                         + "            3,\n"
+                                         + "            4,\n"
+                                         + "            5,\n"
+                                         + "            6,\n"
+                                         + "            -11431345e-142,\n"
+                                         + "            11431345e-142\n"
+                                         + "          ]\n"
+                                         + "        }");
+    val result = new LinkedHashSet<>(doc.selectAll("string > number:nth-child(odd)"));
+    assertEquals(Set.of(1.0, 3.0, 5.0, -1.1431345E-135), result);
+  }
 
   private void expect(String expr, JsonToken token, String lexeme) {
     val matcher = token.getPattern().matcher(expr);

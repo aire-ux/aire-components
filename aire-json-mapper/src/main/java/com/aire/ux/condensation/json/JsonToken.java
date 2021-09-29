@@ -16,16 +16,12 @@ public enum JsonToken implements Type, Symbol {
   Comma(","),
   Null("null"),
   Boolean("true|false"),
-  Integer("\\d+"),
   String("\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\""),
-  Addition("\\+"),
-  Subtraction("-"),
+  Number("([-+]?\\d*\\.?\\d+)(?:[eE]([-+]?\\d+))?"),
   OpenBrace("\\{"),
   CloseBrace("}"),
   ArrayOpen("\\["),
   ArrayClose("\\]"),
-  Fraction("\\."),
-  Exponent("[eE]{1}"),
   WhiteSpace("[ \n\r\f\b  ]+");
 
   private final String pattern;

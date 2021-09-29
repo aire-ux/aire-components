@@ -1,6 +1,5 @@
 package com.aire.ux.condensation.selectors;
 
-import com.aire.ux.condensation.json.JsonToken;
 import com.aire.ux.condensation.json.Value;
 import com.aire.ux.condensation.json.Value.Type;
 import com.aire.ux.condensation.json.Values.ObjectValue;
@@ -10,7 +9,6 @@ import com.aire.ux.test.NodeAdapter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.val;
@@ -73,13 +71,13 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
 
   @Override
   public SyntaxNode<Value<?>, Token> clone(SyntaxNode<Value<?>, Token> value) {
-    return null;
+    return value.clone();
   }
 
   @Override
   public String getType(SyntaxNode<Value<?>, Token> n) {
     val v = n.getValue();
-    if(v != null && v.getType() != null) {
+    if(v != null) {
       return v.getType().name().toLowerCase(Locale.ROOT);
     }
     return null;
@@ -99,6 +97,13 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   @Override
   public SyntaxNode<Value<?>, Token> getSucceedingSibling(
       @Nonnull SyntaxNode<Value<?>, Token> element) {
+    val parent = element.getParent();
+    if(parent != null) {
+      val childIdx= parent.getChildren().indexOf(element);
+      if(childIdx != -1 && childIdx + 1 < parent.getChildren().size()) {
+        return parent.getChild(childIdx + 1);
+      }
+    }
     return null;
   }
 

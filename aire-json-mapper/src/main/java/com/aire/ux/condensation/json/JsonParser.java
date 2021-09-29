@@ -2,6 +2,7 @@ package com.aire.ux.condensation.json;
 
 import static com.aire.ux.parsing.core.LookaheadIterator.wrap;
 
+import com.aire.ux.condensation.Parser;
 import com.aire.ux.parsing.ast.AbstractSyntaxNode;
 import com.aire.ux.parsing.ast.AbstractSyntaxTree;
 import com.aire.ux.parsing.ast.SyntaxNode;
@@ -45,15 +46,8 @@ public class JsonParser {
         val array = array(tokens);
         expect(tokens, JsonToken.ArrayClose);
         return array;
-      case Integer:
-      case Addition:
+      case Number:
         return number(tokens);
-      case Subtraction:
-        val token = expect(tokens, JsonToken.Subtraction);
-        val number = number(tokens);
-        val negatedNumberNode = new JsonSyntaxNode(token, Values.negate(number.getValue()));
-        negatedNumberNode.addChild(number);
-        return negatedNumberNode;
       case Boolean:
         val booleanToken = expect(tokens, JsonToken.Boolean);
         return new JsonSyntaxNode(booleanToken, Values.bool(booleanToken.getLexeme()));
@@ -65,18 +59,8 @@ public class JsonParser {
   }
 
   private SyntaxNode<Value<?>, Token> number(LookaheadIterator<Token> tokens) {
-    val numberToken = expect(tokens, JsonToken.Integer);
-    val numberValue = Values.integer(numberToken.getLexeme());
-    val numberNode = new JsonSyntaxNode(numberToken, numberValue);
-
-    if (peekType(tokens, JsonToken.Fraction)) {
-      val fractionToken = expect(tokens, JsonToken.Fraction);
-      val digits = expect(tokens, JsonToken.Integer);
-      val fractionValue = Values.integer(digits.getLexeme());
-      val fractionNode = new JsonSyntaxNode(fractionToken, fractionValue);
-      numberNode.addChild(fractionNode);
-    }
-    return numberNode;
+    val token = tokens.next();
+    return new JsonSyntaxNode(token, Values.number(token.getLexeme()));
   }
 
   private SyntaxNode<Value<?>, Token> array(LookaheadIterator<Token> tokens) {
@@ -95,7 +79,6 @@ public class JsonParser {
       }
       expect(tokens, JsonToken.Comma);
     }
-
   }
 
   private SyntaxNode<Value<?>, Token> object(LookaheadIterator<Token> tokens) {
