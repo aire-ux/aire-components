@@ -4,7 +4,11 @@ plugins {
 
 dependencies {
     api "com.vaadin:flow-server"
+    api project(':aire-ux-core')
 
+    api 'io.sunshower.arcus:arcus-lang'
+    api 'io.sunshower.arcus:arcus-reflect'
+    api 'javax.servlet:javax.servlet-api'
 
     testImplementation project(':aire-test-vaadin')
 }
