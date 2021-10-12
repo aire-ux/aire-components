@@ -20,7 +20,6 @@ import org.mockito.Mockito;
 @AireTest
 public class AireVaadinTest {
 
-
   @Test
   void ensureResettingWorks() {
     val list = spy(new ArrayList<Integer>());
@@ -28,9 +27,7 @@ public class AireVaadinTest {
     verify(list, times(1)).add(eq(1));
     reset(list);
     verify(list, times(0)).add(any());
-
   }
-
 
   @ViewTest
   void ensureUICantBeMocked(@Context TestContext context) {

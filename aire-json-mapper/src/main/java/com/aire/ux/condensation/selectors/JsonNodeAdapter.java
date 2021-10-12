@@ -30,7 +30,8 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
 
   @Override
   @SuppressWarnings("unchecked")
-  public SyntaxNode<Value<?>, Token> setChildren(@Nonnull SyntaxNode<Value<?>, Token> current,
+  public SyntaxNode<Value<?>, Token> setChildren(
+      @Nonnull SyntaxNode<Value<?>, Token> current,
       @Nonnull Collection<? extends SyntaxNode<Value<?>, Token>> children) {
     current.setChildren((Collection<SyntaxNode<Value<?>, Token>>) children);
     return current;
@@ -39,16 +40,16 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   @Nullable
   @Override
   public String getAttribute(@Nonnull SyntaxNode<Value<?>, Token> c, @Nonnull String key) {
-    if(CLASS.equals(key)) {
+    if (CLASS.equals(key)) {
       val v = c.getValue();
-      if(v != null) {
+      if (v != null) {
         val value = v.getValue();
-        if(value != null) {
+        if (value != null) {
           return value.toString();
         }
       }
     }
-    if(c != null && c.getValue().getType() == Type.Object) {
+    if (c != null && c.getValue().getType() == Type.Object) {
       return (((ObjectValue) c.getValue()).get(key).toString());
     }
 
@@ -56,14 +57,14 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   }
 
   @Override
-  public SyntaxNode<Value<?>, Token> setAttribute(SyntaxNode<Value<?>, Token> node, String key,
-      String value) {
+  public SyntaxNode<Value<?>, Token> setAttribute(
+      SyntaxNode<Value<?>, Token> node, String key, String value) {
     return null;
   }
 
   @Override
   public boolean hasAttribute(SyntaxNode<Value<?>, Token> c, String key) {
-    if(c != null && c.getValue().getType() == Type.Object) {
+    if (c != null && c.getValue().getType() == Type.Object) {
       return (((ObjectValue) c.getValue()).has(key));
     }
     return false;
@@ -77,16 +78,14 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   @Override
   public String getType(SyntaxNode<Value<?>, Token> n) {
     val v = n.getValue();
-    if(v != null) {
+    if (v != null) {
       return v.getType().name().toLowerCase(Locale.ROOT);
     }
     return null;
   }
 
   @Override
-  public void setState(@Nonnull SyntaxNode<Value<?>, Token> element, @Nonnull State state) {
-
-  }
+  public void setState(@Nonnull SyntaxNode<Value<?>, Token> element, @Nonnull State state) {}
 
   @Override
   public boolean hasState(@Nonnull SyntaxNode<Value<?>, Token> element, @Nonnull State state) {
@@ -98,9 +97,9 @@ public class JsonNodeAdapter implements NodeAdapter<SyntaxNode<Value<?>, Token>>
   public SyntaxNode<Value<?>, Token> getSucceedingSibling(
       @Nonnull SyntaxNode<Value<?>, Token> element) {
     val parent = element.getParent();
-    if(parent != null) {
-      val childIdx= parent.getChildren().indexOf(element);
-      if(childIdx != -1 && childIdx + 1 < parent.getChildren().size()) {
+    if (parent != null) {
+      val childIdx = parent.getChildren().indexOf(element);
+      if (childIdx != -1 && childIdx + 1 < parent.getChildren().size()) {
         return parent.getChild(childIdx + 1);
       }
     }

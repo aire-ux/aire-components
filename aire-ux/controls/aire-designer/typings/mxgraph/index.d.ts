@@ -2,7 +2,6 @@
 
 declare module "mxgraph" {
 
-
   /**
    * mxGraph is a for-real pain to bundle correctly for Vaadin consumption
    * so the strategy is to supply the client bundle
@@ -11,11 +10,21 @@ declare module "mxgraph" {
 
   global {
 
+    /**
+     *
+     */
     export type mxGraph = typeof mxGraph;
 
+    /**
+     *
+     */
+    export type mxClient = typeof mxClient;
 
-
-    // @ts-ignore
+    /**
+     * we're just attaching mxGraph on the window object--it works
+     * better this way
+     */
+        // @ts-ignore
     const mxGraph: typeof mxGraph;
     // @ts-ignore
     const mxClient: typeof mxClient;

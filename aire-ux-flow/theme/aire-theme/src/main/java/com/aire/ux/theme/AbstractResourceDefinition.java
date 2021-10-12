@@ -1,5 +1,3 @@
 package com.aire.ux.theme;
 
-public class AbstractResourceDefinition implements ResourceDefinition {
-
-}
+public class AbstractResourceDefinition implements ResourceDefinition {}

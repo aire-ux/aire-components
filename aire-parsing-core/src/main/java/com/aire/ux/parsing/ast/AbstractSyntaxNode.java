@@ -14,9 +14,7 @@ import lombok.val;
 
 public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   final Symbol symbol;
 
   final T value;
@@ -25,9 +23,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   final Map<String, String> properties;
   final List<SyntaxNode<T, U>> children;
 
-  /**
-   * private state
-   */
+  /** private state */
   private String content;
 
   public AbstractSyntaxNode(Symbol symbol, U source, T value) {
@@ -39,13 +35,13 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   }
 
   /**
-   * @param symbol  the associated symbol (element type)
-   * @param source  the language element this was retrieved from
+   * @param symbol the associated symbol (element type)
+   * @param source the language element this was retrieved from
    * @param content the String content (if any)
-   * @param value   the actual value node (if any)
+   * @param value the actual value node (if any)
    */
-  public AbstractSyntaxNode(SyntaxNode<T, U> parent, Symbol symbol, U source, String content,
-      T value) {
+  public AbstractSyntaxNode(
+      SyntaxNode<T, U> parent, Symbol symbol, U source, String content, T value) {
     this(parent, symbol, source, content, value, new ArrayList<>());
   }
 
@@ -59,11 +55,14 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   }
 
   public AbstractSyntaxNode(
-      SyntaxNode<T, U> parent, Symbol symbol, U source, String content, T value,
+      SyntaxNode<T, U> parent,
+      Symbol symbol,
+      U source,
+      String content,
+      T value,
       List<SyntaxNode<T, U>> children) {
     this(parent, symbol, source, content, value, children, new LinkedHashMap<>());
   }
-
 
   public AbstractSyntaxNode(
       Symbol symbol,
@@ -100,7 +99,6 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   @Override
   public SyntaxNode<T, U> getParent() {
     return parent;
-
   }
 
   @Override
@@ -158,7 +156,7 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
   public Collection<SyntaxNode<T, U>> setChildren(@Nonnull Collection<SyntaxNode<T, U>> children) {
     val newChildren = List.copyOf(this.children);
     this.children.clear();
-    for(val child : children) {
+    for (val child : children) {
       addChild(child);
     }
     return newChildren;
@@ -198,16 +196,14 @@ public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   @Override
   public boolean addChild(SyntaxNode<T, U> child) {
-    if(child != null) {
+    if (child != null) {
       child.setParent(this);
       return children.add(child);
     }
     return false;
   }
 
-  /**
-   * @return a shallow copy of this node (i.e. discards hierarchical structure)
-   */
+  /** @return a shallow copy of this node (i.e. discards hierarchical structure) */
   @Override
   @SuppressFBWarnings
   @SuppressWarnings("PMD")

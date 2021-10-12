@@ -40,7 +40,6 @@ class BaseMaterialThemeTest {
     assertEquals(0, AireThemeManager.getListenerCount());
   }
 
-
   @ViewTest
   void ensureThemeServletServesResourcesCorrectlyAndMockIsIdempotent(
       @Context(mode = Mode.Spy) UI ui) {
@@ -53,13 +52,14 @@ class BaseMaterialThemeTest {
 
   @ViewTest
   void ensureThemeServletServesResourcesCorrectly(@Context(mode = Mode.Spy) UI ui) {
-    val listener = new ThemeChangeListener(() -> ui) {
-      @Override
-      public void onEvent(EventType eventType, Event<Theme> event) {
-        super.onEvent(eventType, event);
-        pushThemeToClient(new ThemeDefinition(event.getTarget()));
-      }
-    };
+    val listener =
+        new ThemeChangeListener(() -> ui) {
+          @Override
+          public void onEvent(EventType eventType, Event<Theme> event) {
+            super.onEvent(eventType, event);
+            pushThemeToClient(new ThemeDefinition(event.getTarget()));
+          }
+        };
     val reg = AireThemeManager.addEventListener(listener, ThemeChangeEventType.ThemeChanged);
     AireThemeManager.setTheme(MaterialDarkTheme.class);
     verify(ui, times(1)).getPage();

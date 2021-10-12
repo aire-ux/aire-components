@@ -1,0 +1,18 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.1.0"
+}
+
+dependencies {
+    api "com.vaadin:flow-server"
+
+
+    testImplementation project(':aire-test-vaadin')
+}
+
+build.dependsOn npmInstall
+
+jar {
+    from("${project.projectDir}/node_modules/mxgraph") {
+        into "client/mxgraph"
+    }
+}

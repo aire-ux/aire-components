@@ -1,0 +1,30 @@
+{
+  "name": "@aire-ux/aire-designer-flow",
+  "version": "1.0.0",
+  "description": "Vaadin Bindings for Sunshower.io visual modeler",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/aire-ux/aire-components.git"
+  },
+  "keywords": [
+    "Vaadin",
+    "MX",
+    "Graph",
+    "Sunshower.io",
+    "visual",
+    "modeler"
+  ],
+  "author": "Aire-UX",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aire-ux/aire-components/issues"
+  },
+  "homepage": "https://github.com/aire-ux/aire-components#readme",
+  "devDependencies": {
+    "mxgraph": "^4.2.2"
+  }
+}

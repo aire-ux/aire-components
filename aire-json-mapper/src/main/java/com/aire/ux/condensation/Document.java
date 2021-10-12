@@ -15,5 +15,4 @@ public interface Document {
   <T> T select(String selector);
 
   Collection<?> selectAll(String selector);
-
 }

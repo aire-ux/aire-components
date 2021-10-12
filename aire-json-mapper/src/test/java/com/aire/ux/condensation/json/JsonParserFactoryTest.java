@@ -4,12 +4,10 @@ import static com.aire.ux.condensation.json.JsonParserTest.read;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.aire.ux.condensation.Condensation;
-import java.math.BigDecimal;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 class JsonParserFactoryTest {
-
 
   @Test
   void ensureParsingDocumentWorks() {
@@ -28,16 +26,16 @@ class JsonParserFactoryTest {
   @Test
   void ensureGeneralSiblingSelectorWorks() {
     val document = Condensation.parse("json", read("test.json"));
-    val value = document.selectAll(
-        ".world > .numarray > number:nth-child(1), .world > number:nth-child(odd), number:nth-child(even)");
+    val value =
+        document.selectAll(
+            ".world > .numarray > number:nth-child(1), .world > number:nth-child(odd), number:nth-child(even)");
     System.out.println(value);
   }
 
   @Test
   void ensureStringsWorks() {
     val document = Condensation.parse("json", read("test.json"));
-    val value = document.selectAll(
-        "string");
+    val value = document.selectAll("string");
     System.out.println(value);
   }
 }

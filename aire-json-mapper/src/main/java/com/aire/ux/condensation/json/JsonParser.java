@@ -2,7 +2,6 @@ package com.aire.ux.condensation.json;
 
 import static com.aire.ux.parsing.core.LookaheadIterator.wrap;
 
-import com.aire.ux.condensation.Parser;
 import com.aire.ux.parsing.ast.AbstractSyntaxNode;
 import com.aire.ux.parsing.ast.AbstractSyntaxTree;
 import com.aire.ux.parsing.ast.SyntaxNode;
@@ -106,12 +105,10 @@ public class JsonParser {
     return tokens.hasNext() && tokens.peek().getType() == type;
   }
 
-
   private SyntaxNode<Value<?>, Token> string(LookaheadIterator<Token> tokens) {
     val value = expect(tokens, JsonToken.String);
     return new JsonSyntaxNode(value, Values.string(value));
   }
-
 
   private Token expect(LookaheadIterator<Token> tokens, JsonToken... expected) {
     if (!tokens.hasNext()) {
@@ -141,11 +138,9 @@ public class JsonParser {
     return wrap(JsonToken.createTokenBuffer().tokenize(sequence).iterator());
   }
 
-
   static final class JsonSyntaxNode extends AbstractSyntaxNode<Value<?>, Token> {
 
-    public JsonSyntaxNode(
-        Token source, Value value) {
+    public JsonSyntaxNode(Token source, Value value) {
       super((JsonToken) source.getType(), source, value);
     }
   }
