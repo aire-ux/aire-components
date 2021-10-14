@@ -9,6 +9,8 @@ import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class TypeBinderTest {
 
@@ -52,5 +54,23 @@ class TypeBinderTest {
     instantiator.register(A.class, A::new);
     val result = Condensation.read(A.class, "json", document, binder);
     assertEquals(result.name, "hello");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"1", "-1", "1e1", "-1e-1", "-1e1"})
+  void ensureReadingSimpleDocumentWorksWithInt(String value) {
+
+    @RootElement
+    class A {
+
+      @Attribute
+      private Integer name;
+    }
+
+    val document = String.format("{\n" + "  \"name\": %s\n" + "}", value);
+    System.out.println(document);
+    instantiator.register(A.class, A::new);
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertEquals(Double.valueOf(value).intValue(), result.name);
   }
 }

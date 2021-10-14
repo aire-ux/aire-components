@@ -108,21 +108,24 @@ public class AstDocument implements Document {
     val currentDescriptor = strategy.descriptorFor(type);
     for (val child : node.getChildren()) {
       switch (typeOf(child)) {
+        /**
+         * at this point we're at the identifier
+         */
         case String:
-          readStringInto(result, currentDescriptor, child, child.getValue());
+          readScalar(result, currentDescriptor, child, child.getValue());
       }
     }
 
 
   }
 
-  private <T> void readStringInto(
+  private <T> void readScalar(
       T result, TypeDescriptor<T> currentDescriptor,
       SyntaxNode<Value<?>, Token> node, Value<?> value) {
     val name = (String) value.getValue();
-    val stringValue = this.<String>valueOf(node.getChild(0));
+    val child = node.getChild(0);
     val property = currentDescriptor.propertyNamed(Mode.Read, name);
-    property.set(result, stringValue);
+    property.set(result, property.convert(valueOf(child)));
   }
 
   @SuppressWarnings("unchecked")

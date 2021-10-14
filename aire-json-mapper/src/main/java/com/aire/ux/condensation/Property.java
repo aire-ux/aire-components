@@ -5,11 +5,22 @@ import java.lang.reflect.Type;
 
 public interface Property<T extends AccessibleObject> {
 
+
   enum Mode {
     Read,
     Write,
     Normalized
   }
+
+  /**
+   * if a property has a converter, apply that converter to convert
+   * the property to the desired type
+   * @param value
+   * @param <T> the incoming type
+   * @param <U> the result type
+   * @return the converted value
+   */
+  <T, U> T convert(U value);
 
   /**
    * @param <U> the type that this property belongs to
