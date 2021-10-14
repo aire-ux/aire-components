@@ -5,6 +5,12 @@ import java.lang.reflect.Type;
 
 public interface Property<T extends AccessibleObject> {
 
+  enum Mode {
+    Read,
+    Write,
+    Normalized
+  }
+
   /**
    * @param <U> the type that this property belongs to
    * @return the host of this property

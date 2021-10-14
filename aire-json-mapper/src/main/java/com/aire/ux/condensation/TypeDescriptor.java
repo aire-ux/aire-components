@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface TypeDescriptor<T> {
 
+
   Class<T> getType();
 
   List<Property<?>> getProperties();
@@ -11,4 +12,6 @@ public interface TypeDescriptor<T> {
   default Property<?> getProperty(int i) {
     return getProperties().get(i);
   }
+
+  Property<?> propertyNamed(Property.Mode mode, String name);
 }

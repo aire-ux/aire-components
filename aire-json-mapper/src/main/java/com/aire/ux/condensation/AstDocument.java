@@ -1,6 +1,8 @@
 package com.aire.ux.condensation;
 
+import com.aire.ux.condensation.Property.Mode;
 import com.aire.ux.condensation.json.Value;
+import com.aire.ux.condensation.json.Value.Type;
 import com.aire.ux.condensation.json.Values.ObjectValue;
 import com.aire.ux.condensation.selectors.JsonNodeAdapter;
 import com.aire.ux.parsing.ast.AbstractSyntaxTree;
@@ -11,6 +13,7 @@ import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.NodeAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.BiFunction;
 import lombok.val;
 
 public class AstDocument implements Document {
@@ -91,5 +94,51 @@ public class AstDocument implements Document {
       result.add(valueFor(c));
     }
     return result;
+  }
+
+  @Override
+  public <T> T read(Class<T> type, TypeBinder strategy) {
+    val result = strategy.instantiate(type);
+    bind(type, result, tree.getRoot(), strategy);
+    return result;
+  }
+
+  private <T> void bind(Class<T> type, T result, SyntaxNode<Value<?>, Token> node,
+      TypeBinder strategy) {
+    val currentDescriptor = strategy.descriptorFor(type);
+    for (val child : node.getChildren()) {
+      switch (typeOf(child)) {
+        case String:
+          readStringInto(result, currentDescriptor, child, child.getValue());
+      }
+    }
+
+
+  }
+
+  private <T> void readStringInto(
+      T result, TypeDescriptor<T> currentDescriptor,
+      SyntaxNode<Value<?>, Token> node, Value<?> value) {
+    val name = (String) value.getValue();
+    val stringValue = this.<String>valueOf(node.getChild(0));
+    val property = currentDescriptor.propertyNamed(Mode.Write, name);
+    property.set(result, stringValue);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T valueOf(SyntaxNode<Value<?>, Token> child) {
+    return (T) child.getValue().getValue();
+  }
+
+  private Type typeOf(SyntaxNode<Value<?>, Token> child) {
+    return child.getValue().getType();
+  }
+
+  static final class BinderReduction<R> implements BiFunction<SyntaxNode<Value<?>, Token>, R, R> {
+
+    @Override
+    public R apply(SyntaxNode<Value<?>, Token> valueTokenSyntaxNode, R r) {
+      return null;
+    }
   }
 }
