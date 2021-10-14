@@ -20,9 +20,9 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   static {
     defaultConverters = new HashMap<>();
 
-    val loader = ServiceLoader.load(
-        ConverterProvider.class,
-        Thread.currentThread().getContextClassLoader()).iterator();
+    val loader =
+        ServiceLoader.load(ConverterProvider.class, Thread.currentThread().getContextClassLoader())
+            .iterator();
     while (loader.hasNext()) {
       val next = loader.next();
       defaultConverters.put(next.getTypeMapping(), next.getConverter());
@@ -30,14 +30,11 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   private final T member;
-  /**
-   * the type of the host-class
-   */
+  /** the type of the host-class */
   private final Class<?> host;
-  /**
-   * the read-alias of this property
-   */
+  /** the read-alias of this property */
   private final String readAlias;
+
   private final String writeAlias;
   private final Function<?, T> converter;
 
@@ -48,7 +45,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
       @NonNull final String writeAlias) {
     this(member, host, readAlias, writeAlias, null);
   }
-
 
   protected AbstractProperty(
       @NonNull final T member,
@@ -73,7 +69,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   public T getMember() {
     return member;
   }
-
 
   @Override
   @SuppressWarnings("unchecked")

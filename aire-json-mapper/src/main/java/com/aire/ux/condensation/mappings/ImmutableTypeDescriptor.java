@@ -21,7 +21,6 @@ public class ImmutableTypeDescriptor<T> implements TypeDescriptor<T> {
     this.type = type;
     this.properties = Collections.unmodifiableList(properties);
     this.propertyCache = new EnumMap<>(Mode.class);
-
   }
 
   @Override
@@ -47,16 +46,20 @@ public class ImmutableTypeDescriptor<T> implements TypeDescriptor<T> {
     throw new IllegalStateException("shouldn't have reached here");
   }
 
-  private Property<?> locate(Property.Mode mode, String name,
-      Function<Property<?>, String> nameMapping) {
+  private Property<?> locate(
+      Property.Mode mode, String name, Function<Property<?>, String> nameMapping) {
     return propertyCache
         .computeIfAbsent(mode, key -> new LRUCache<>(15))
-        .computeIfAbsent(name,
-            n -> properties.stream()
-                .filter(property -> n.equals(nameMapping.apply(property)))
-                .findAny().orElseThrow(() -> new NoSuchElementException(
-                    String
-                        .format("No readable property named '%s' on type '%s'", name, type))));
-
+        .computeIfAbsent(
+            name,
+            n ->
+                properties.stream()
+                    .filter(property -> n.equals(nameMapping.apply(property)))
+                    .findAny()
+                    .orElseThrow(
+                        () ->
+                            new NoSuchElementException(
+                                String.format(
+                                    "No readable property named '%s' on type '%s'", name, type))));
   }
 }

@@ -4,8 +4,8 @@ import com.aire.ux.condensation.ConverterProvider;
 import io.sunshower.lang.tuple.Pair;
 import java.util.function.Function;
 
-public class DoubleToInteger implements ConverterProvider<Double, Integer>,
-    Function<Double, Integer> {
+public class DoubleToInteger
+    implements ConverterProvider<Double, Integer>, Function<Double, Integer> {
 
   @Override
   public Function<Double, Integer> getConverter() {

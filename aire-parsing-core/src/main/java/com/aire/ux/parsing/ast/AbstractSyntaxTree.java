@@ -62,7 +62,6 @@ public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
     return reduce(Order.Pre, initial, f);
   }
 
-
   /**
    * @param order reduce in either pre-order or post-order
    * @param initial the initial value

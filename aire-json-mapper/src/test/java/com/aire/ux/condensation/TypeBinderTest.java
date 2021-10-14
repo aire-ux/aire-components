@@ -2,6 +2,7 @@ package com.aire.ux.condensation;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.condensation.mappings.AnnotationDrivenPropertyScanner;
 import com.aire.ux.condensation.mappings.CachingDelegatingTypeInstantiator;
@@ -115,7 +116,6 @@ class TypeBinderTest {
     assertEquals("josiah", result.getName());
   }
 
-
   @Test
   void ensureMutatorsWorkWithAlias() {
 
@@ -142,6 +142,22 @@ class TypeBinderTest {
 
 
   @Test
+  void ensureReadingDoubleArrayIntoDoubleArrayWorks_Doubles_field() {
+    @RootElement
+    class A {
+
+      @Attribute
+      private Double[] doubles;
+    }
+
+    val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
+    instantiator.register(A.class, A::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertArrayEquals(new Double[]{1d, 2d, 3d, 4d, 5d, 1e-17, 1e7, -1E-17}, result.doubles);
+  }
+
+  @Test
   void ensureReadingDoubleArrayIntoDoubleArrayWorks_doubles_field() {
     @RootElement
     class A {
@@ -150,10 +166,7 @@ class TypeBinderTest {
       private double[] doubles;
     }
 
-    val document = "\n"
-                   + "{\n"
-                   + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n"
-                   + "}";
+    val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
@@ -169,15 +182,106 @@ class TypeBinderTest {
       private float[] floats;
     }
 
-    val document = "\n"
-                   + "{\n"
-                   + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n"
-                   + "}";
+    val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new float[]{1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7},
-        result.floats);
+    assertArrayEquals(
+        new float[]{1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7}, result.floats);
   }
 
+
+  @Test
+  void ensureReadingDoubleArrayIntoDoubleArrayWorks_Float_field() {
+    @RootElement
+    class A {
+
+      @Attribute
+      private Float[] floats;
+    }
+
+    val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
+    instantiator.register(A.class, A::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertArrayEquals(
+        new Float[]{1f, 2f, 3f, 4f, 5f, 1e-3f, 1e4f, -1E-7f}, result.floats);
+  }
+
+  @Test
+  void ensureReadingDoubleArrayIntoDoubleArrayWorks_Boolean_field() {
+    @RootElement
+    class A {
+
+      @Attribute
+      private Boolean[] booleans;
+    }
+
+    val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
+    instantiator.register(A.class, A::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertArrayEquals(new Boolean[]{true, false, true, true}, result.booleans);
+  }
+
+  @Test
+  void ensureReadingDoubleArrayIntoDoubleArrayWorks_boolean_field() {
+    @RootElement
+    class A {
+
+      @Attribute
+      private boolean[] booleans;
+    }
+
+    val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
+    instantiator.register(A.class, A::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertArrayEquals(new boolean[]{true, false, true, true}, result.booleans);
+  }
+
+  @Test
+  void ensureReadingStringArrayWorks() {
+    val document = "{\n" + "  \"strings\": [\"one\", \"two\", \"three!\"]\n" + "}";
+
+    @RootElement
+    class A {
+
+      @Attribute
+      private String[] strings;
+    }
+
+    instantiator.register(A.class, A::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertArrayEquals(new String[]{"one", "two", "three!"}, result.strings);
+  }
+
+
+  @Test
+  void ensureReadingNestedObjectWorks() {
+    @RootElement
+    class B {
+      @Attribute
+      String hello;
+    }
+    @RootElement
+    class A {
+      @Element
+      private B b;
+    }
+
+    val document = "{\n"
+                   + "  \"b\": {\n"
+                   + "    \"hello\": \"world\"\n"
+                   + "  }\n"
+                   + "}";
+
+    instantiator.register(A.class, A::new);
+    instantiator.register(B.class, B::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertNotNull(result.b);
+    assertEquals(result.b.hello, "world");
+  }
 }

@@ -32,7 +32,7 @@ class JsonNodeAdapterTest {
       long snd = System.currentTimeMillis();
       val time = (snd - fst);
       System.out.println("Time: " + time);
-      average = (average + (snd - fst)) ;
+      average = (average + (snd - fst));
       System.out.println(average);
     }
     System.out.println("Average: " + average / 100);

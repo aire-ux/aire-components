@@ -42,8 +42,8 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
     return result;
   }
 
-  private Property<?> doScan(Class<?> type, Method readMethod, Method writeMethod,
-      PropertyDescriptor descriptor) {
+  private Property<?> doScan(
+      Class<?> type, Method readMethod, Method writeMethod, PropertyDescriptor descriptor) {
 
     val element = locateOn(Element.class, readMethod, writeMethod);
     if (element != null) {
@@ -57,16 +57,24 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
     return null;
   }
 
-  private Property<?> scanAttribute(Class<?> type, Attribute attribute, Method readMethod,
-      Method writeMethod, PropertyDescriptor descriptor) {
+  private Property<?> scanAttribute(
+      Class<?> type,
+      Attribute attribute,
+      Method readMethod,
+      Method writeMethod,
+      PropertyDescriptor descriptor) {
     val alias = attribute.alias();
     val readAlias = NONE.equals(alias.read()) ? descriptor.getDisplayName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? descriptor.getDisplayName() : alias.write();
     return new MutatorProperty(readMethod, writeMethod, type, readAlias, writeAlias);
   }
 
-  private Property<?> scanElement(Class<?> type, Element element, Method readMethod,
-      Method writeMethod, PropertyDescriptor descriptor) {
+  private Property<?> scanElement(
+      Class<?> type,
+      Element element,
+      Method readMethod,
+      Method writeMethod,
+      PropertyDescriptor descriptor) {
     val alias = element.alias();
     val readAlias = NONE.equals(alias.read()) ? descriptor.getDisplayName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? descriptor.getDisplayName() : alias.write();
@@ -80,18 +88,15 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
       }
     }
     return null;
-
   }
 
-  private void checkForBoth(Method readMethod, Method writeMethod,
-      Class<? extends Annotation> annotation) {
-    if (
-        readMethod.isAnnotationPresent(annotation) &&
-        writeMethod.isAnnotationPresent(annotation)) {
-      throw new IllegalStateException(String.format(
-          "Error: annotation type '%s' is present on both read method (%s) and write method of (%s) of %s",
-          readMethod, writeMethod, readMethod.getDeclaringClass()));
+  private void checkForBoth(
+      Method readMethod, Method writeMethod, Class<? extends Annotation> annotation) {
+    if (readMethod.isAnnotationPresent(annotation) && writeMethod.isAnnotationPresent(annotation)) {
+      throw new IllegalStateException(
+          String.format(
+              "Error: annotation type '%s' is present on both read method (%s) and write method of (%s) of %s",
+              readMethod, writeMethod, readMethod.getDeclaringClass()));
     }
-
   }
 }

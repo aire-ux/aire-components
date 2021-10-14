@@ -24,8 +24,7 @@ public class DelegatingPropertyScanner implements PropertyScanner {
       @NonNull final TypeInstantiator typeInstantiator, PropertyScanningStrategy... delegates) {
     this.typeInstantiator = typeInstantiator;
     this.delegates = new ArrayList<>(List.of(delegates));
-    this.scanClass = t -> this.delegates.stream()
-        .flatMap(delegate -> delegate.scan(t).stream());
+    this.scanClass = t -> this.delegates.stream().flatMap(delegate -> delegate.scan(t).stream());
   }
 
   @Override
@@ -34,15 +33,9 @@ public class DelegatingPropertyScanner implements PropertyScanner {
 
     final List<Property<?>> properties;
     if (traverseHierarchy && includeInterfaces) {
-      properties =
-          Reflect.collectOverHierarchy(
-              type, scanClass)
-              .collect(Collectors.toList());
+      properties = Reflect.collectOverHierarchy(type, scanClass).collect(Collectors.toList());
     } else if (traverseHierarchy) {
-      properties =
-          Reflect.linearSupertypes(type)
-              .flatMap(scanClass)
-              .collect(Collectors.toList());
+      properties = Reflect.linearSupertypes(type).flatMap(scanClass).collect(Collectors.toList());
     } else if (includeInterfaces) {
       properties =
           Stream.concat(Stream.of(type), Stream.of(type.getInterfaces()))
