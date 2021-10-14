@@ -7,4 +7,8 @@ public interface TypeDescriptor<T> {
   Class<T> getType();
 
   List<Property<?>> getProperties();
+
+  default Property<?> getProperty(int i) {
+    return getProperties().get(i);
+  }
 }

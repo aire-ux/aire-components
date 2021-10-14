@@ -9,14 +9,10 @@ import lombok.val;
 public abstract class AbstractProperty<T extends AccessibleObject> implements Property<T> {
 
   private final T member;
-  /**
-   * the type of the host-class
-   */
+  /** the type of the host-class */
   private final Class<?> host;
 
-  /**
-   * the read-alias of this property
-   */
+  /** the read-alias of this property */
   private final String readAlias;
 
   private final String writeAlias;
@@ -25,8 +21,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
       @NonNull final T member,
       @NonNull final Class<?> host,
       @NonNull final String readAlias,
-      @NonNull final String writeAlias
-  ) {
+      @NonNull final String writeAlias) {
     this.host = host;
     this.member = member;
     this.readAlias = readAlias;
@@ -44,7 +39,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
     return member;
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
   public <U> Class<U> getComponentType() {
@@ -61,7 +55,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
     return getType();
   }
 
-
   @Override
   public String getReadAlias() {
     return readAlias;
@@ -71,7 +64,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   public String getWriteAlias() {
     return writeAlias;
   }
-
 
   @Override
   public boolean isArray() {

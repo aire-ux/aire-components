@@ -8,8 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.val;
 
-public class FieldAnnotationPropertyScanningStrategy implements
-    PropertyScanningStrategy {
+public class FieldAnnotationPropertyScanningStrategy implements PropertyScanningStrategy {
+
+  public static final String NONE = "..none..";
 
   @Override
   public <T> Set<Property<?>> scan(Class<T> type) {
@@ -28,18 +29,24 @@ public class FieldAnnotationPropertyScanningStrategy implements
                   "Error: field '%s' on class '%s' has both @Element and @Attribute annotations",
                   type, field));
         }
-        result.add(constructAttributeProperty(type, field, field.getAnnotation(Element.class)));
+        result.add(constructAttributeProperty(type, field, field.getAnnotation(Attribute.class)));
       }
     }
     return result;
   }
 
-  private <T> Property<?> constructAttributeProperty(Class<T> type, Field field,
-      Element annotation) {
-    return new FieldProperty();
+  private <T> Property<?> constructAttributeProperty(
+      Class<T> type, Field field, Attribute annotation) {
+    val alias = annotation.alias();
+    val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
+    val writeAlias = NONE.equals(alias.read()) ? field.getName() : alias.write();
+    return new FieldProperty(field, type, readAlias, writeAlias);
   }
 
   private <T> Property<?> constructElementProperty(Class<T> type, Field field, Element annotation) {
-    return new FieldProperty();
+    val alias = annotation.alias();
+    val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
+    val writeAlias = NONE.equals(alias.read()) ? field.getName() : alias.write();
+    return new FieldProperty(field, type, readAlias, writeAlias);
   }
 }

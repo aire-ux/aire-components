@@ -1,20 +1,23 @@
 package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.regex.Pattern;
 import lombok.NonNull;
+import lombok.val;
 
 public class MutatorProperty extends AbstractProperty<Mutator> {
 
+  static final Pattern pattern = Pattern.compile(Pattern.quote("get|set|is"));
 
   protected MutatorProperty(
       @NonNull Method getter,
       @NonNull Method setter,
       @NonNull Class<?> host,
       @NonNull String readAlias,
-      @NonNull String writeAlias
-  ) {
+      @NonNull String writeAlias) {
     super(new Mutator(getter, setter), host, readAlias, writeAlias);
   }
 
@@ -30,16 +33,52 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
 
   @Override
   public String getMemberReadName() {
-    return null;
+    return getMember().getGetter().getName();
+  }
+
+  @Override
+  public String getMemberWriteName() {
+    return getMember().getSetter().getName();
+  }
+
+  @Override
+  /** this expects that the member setter name */
+  public String getMemberNormalizedName() {
+    val name = getMember().getSetter().getName().substring(3);
+    return Character.toLowerCase(name.charAt(0)) + name.substring(1);
   }
 
   @Override
   public <T, U> void set(U host, T value) {
-
+    final Mutator member = getMutator(host);
+    try {
+      member.getSetter().invoke(host, value);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T, U> T get(U host) {
-    return null;
+    try {
+      return (T) getMutator(host).getGetter().invoke(host);
+    } catch (IllegalAccessException | InvocationTargetException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
+
+  @NonNull
+  private <U> Mutator getMutator(U host) {
+    val member = getMember();
+    if (!member.canAccess(host)) {
+      if (!member.trySetAccessible()) {
+        throw new IllegalStateException(
+            String.format(
+                "Error: mutator set (read:%s, write:%s) hosted by: %s is not accessible",
+                member.getGetter(), member.getSetter(), getHost()));
+      }
+    }
+    return member;
   }
 }

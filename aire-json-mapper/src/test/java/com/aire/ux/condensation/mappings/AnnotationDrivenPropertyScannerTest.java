@@ -24,9 +24,7 @@ class AnnotationDrivenPropertyScannerTest {
   @Test
   void ensurePropertyScannerCanScanRootElements() {
     @RootElement
-    class A {
-
-    }
+    class A {}
     val properties = scanner.scan(A.class);
     assertEquals(0, properties.getProperties().size());
   }
@@ -35,10 +33,17 @@ class AnnotationDrivenPropertyScannerTest {
   void ensurePropertyScannerCanScanSimpleFieldPropertyOnTypeWithPrivateVisibility() {
     @RootElement
     class A {
-      @Attribute
-      private int numberProperty;
+      @Attribute private int numberProperty;
     }
     instantiator.register(A.class, A::new);
     val properties = scanner.scan(A.class);
+    assertEquals(1, properties.getProperties().size());
+    val property = properties.getProperty(0);
+    assertEquals("numberProperty", property.getMemberReadName());
+    assertEquals("numberProperty", property.getMemberWriteName());
+
+    val host = new A();
+    property.set(host, 10);
+    assertEquals(10, (int) property.get(host));
   }
 }

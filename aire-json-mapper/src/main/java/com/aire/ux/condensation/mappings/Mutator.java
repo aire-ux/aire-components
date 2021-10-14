@@ -7,13 +7,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
 public final class Mutator extends AccessibleObject {
 
-  private final Method getter;
-  private final Method setter;
+  @Getter private final Method getter;
+  @Getter private final Method setter;
 
   public Mutator(@NonNull Method getter, @NonNull Method setter) {
     this.getter = getter;
@@ -34,8 +35,8 @@ public final class Mutator extends AccessibleObject {
 
   @Override
   public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
-    return getter.isAnnotationPresent(annotationClass) || setter
-        .isAnnotationPresent(annotationClass);
+    return getter.isAnnotationPresent(annotationClass)
+        || setter.isAnnotationPresent(annotationClass);
   }
 
   @Override
@@ -45,8 +46,8 @@ public final class Mutator extends AccessibleObject {
     val setterAnnotations = setter.getAnnotationsByType(annotationClass);
     val result = new ArrayList<>(List.of(getterAnnotations));
     result.addAll(List.of(setterAnnotations));
-    return (T[]) result
-        .toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
+    return (T[])
+        result.toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
   }
 
   @Override
@@ -72,8 +73,8 @@ public final class Mutator extends AccessibleObject {
     val setterAnnotations = setter.getDeclaredAnnotationsByType(annotationClass);
     val result = new ArrayList<>(List.of(getterAnnotations));
     result.addAll(List.of(setterAnnotations));
-    return (T[]) result
-        .toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
+    return (T[])
+        result.toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
   }
 
   @Override
@@ -82,8 +83,7 @@ public final class Mutator extends AccessibleObject {
     val setterAnnotations = setter.getDeclaredAnnotations();
     val result = new ArrayList<>(List.of(getterAnnotations));
     result.addAll(List.of(setterAnnotations));
-    return result
-        .toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
+    return result.toArray(new Annotation[getterAnnotations.length + setterAnnotations.length]);
   }
 
   @SuppressWarnings("unchecked")

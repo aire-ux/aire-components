@@ -12,8 +12,7 @@ public class FieldProperty extends AbstractProperty<Field> {
       @NonNull Field member,
       @NonNull Class<?> host,
       @NonNull String readAlias,
-      @NonNull String writeAlias
-  ) {
+      @NonNull String writeAlias) {
     super(member, host, readAlias, writeAlias);
   }
 
@@ -27,7 +26,6 @@ public class FieldProperty extends AbstractProperty<Field> {
   public <T> Type getGenericType() {
     return getMember().getGenericType();
   }
-
 
   @Override
   public String getMemberReadName() {
@@ -53,7 +51,6 @@ public class FieldProperty extends AbstractProperty<Field> {
     }
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
   public <T, U> T get(U host) {
@@ -70,8 +67,8 @@ public class FieldProperty extends AbstractProperty<Field> {
     if (!field.canAccess(host)) {
       if (!field.trySetAccessible()) {
         throw new IllegalStateException(
-            String.format("Error: field '%s' on type '%s' cannot be made accessible", field,
-                getHost()));
+            String.format(
+                "Error: field '%s' on type '%s' cannot be made accessible", field, getHost()));
       }
     }
     return field;

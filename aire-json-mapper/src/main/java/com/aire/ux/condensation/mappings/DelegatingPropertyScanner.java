@@ -28,26 +28,35 @@ public class DelegatingPropertyScanner implements PropertyScanner {
   public <T> TypeDescriptor<T> scan(
       Class<T> type, boolean traverseHierarchy, boolean includeInterfaces) {
 
-    final Stream<Property<?>> properties;
+    final List<Property<?>> properties;
     if (traverseHierarchy && includeInterfaces) {
-      properties = Reflect.collectOverHierarchy(type,
-          t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()));
+      properties =
+          Reflect.collectOverHierarchy(
+                  type, t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()))
+              .collect(Collectors.toList());
     } else if (traverseHierarchy) {
-      properties = Reflect.linearSupertypes(type)
-          .flatMap(t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()));
+      properties =
+          Reflect.linearSupertypes(type)
+              .flatMap(t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()))
+              .collect(Collectors.toList());
     } else if (includeInterfaces) {
-      properties = Stream.concat(Stream.of(type), Stream.of(type.getInterfaces()))
-          .flatMap(t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()));
+      properties =
+          Stream.concat(Stream.of(type), Stream.of(type.getInterfaces()))
+              .flatMap(t -> delegates.stream().flatMap(delegate -> delegate.scan(t).stream()))
+              .collect(Collectors.toList());
     } else {
-      properties = delegates.stream().flatMap(delegate -> delegate.scan(type).stream());
+      properties =
+          delegates.stream()
+              .flatMap(delegate -> delegate.scan(type).stream())
+              .collect(Collectors.toList());
     }
-    return new ImmutableTypeDescriptor<T>(type, properties.collect(Collectors.toList()));
+    return new ImmutableTypeDescriptor<T>(type, properties);
   }
 
   <T> List<T> concat(Collection<T>... collections) {
-    return Stream
-        .of(collections)
-        .flatMap(Collection::stream).distinct()
+    return Stream.of(collections)
+        .flatMap(Collection::stream)
+        .distinct()
         .collect(Collectors.toList());
   }
 

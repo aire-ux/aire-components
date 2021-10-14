@@ -15,6 +15,4 @@ public interface Document {
   <T> T select(String selector);
 
   Collection<?> selectAll(String selector);
-
-  <T> T read(Class<T> type, PropertyMappingStrategy strategy);
 }

@@ -27,22 +27,21 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
     this(cacheSize, new ReflectiveTypeInstantiator());
   }
 
-  public AnnotationDrivenPropertyScanner(
-      TypeInstantiator instantiator) {
+  public AnnotationDrivenPropertyScanner(TypeInstantiator instantiator) {
     this(DEFAULT_CACHE_SIZE, instantiator);
   }
 
-  public AnnotationDrivenPropertyScanner(int cacheSize,
-      @NonNull final TypeInstantiator instantiator) {
+  public AnnotationDrivenPropertyScanner(
+      int cacheSize, @NonNull final TypeInstantiator instantiator) {
     this.typeInstantiator = instantiator;
-    this.typeDescriptorCache = new LinkedHashMap<>() {
-      @Override
-      protected boolean removeEldestEntry(Entry<TypeDescriptorKey, TypeDescriptor<?>> eldest) {
-        return size() >= cacheSize;
-      }
-    };
+    this.typeDescriptorCache =
+        new LinkedHashMap<>() {
+          @Override
+          protected boolean removeEldestEntry(Entry<TypeDescriptorKey, TypeDescriptor<?>> eldest) {
+            return size() >= cacheSize;
+          }
+        };
   }
-
 
   @Override
   @SuppressWarnings("unchecked")
@@ -53,12 +52,15 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
       throw new IllegalArgumentException(
           "Type must be annotated by @RootElement to be registered and scanned");
     }
-    return (TypeDescriptor<T>) typeDescriptorCache.computeIfAbsent(
-        new TypeDescriptorKey(type, traverseHierarchy, includeInterfaces),
-        key -> new DelegatingPropertyScanner(getTypeInstantiator(),
-            new FieldAnnotationPropertyScanningStrategy(),
-            new MethodAnnotationPropertyScanningStrategy())
-            .scan(type, traverseHierarchy, includeInterfaces));
+    return (TypeDescriptor<T>)
+        typeDescriptorCache.computeIfAbsent(
+            new TypeDescriptorKey(type, traverseHierarchy, includeInterfaces),
+            key ->
+                new DelegatingPropertyScanner(
+                        getTypeInstantiator(),
+                        new FieldAnnotationPropertyScanningStrategy(),
+                        new MethodAnnotationPropertyScanningStrategy())
+                    .scan(type, traverseHierarchy, includeInterfaces));
   }
 
   @Override

@@ -18,8 +18,7 @@ public class Condensation {
     return pf.newParser().parse(data);
   }
 
-  public static <T> T read(
-      Class<T> type, String format, CharSequence data, PropertyMappingStrategy strategy) {
+  public static <T> T read(Class<T> type, String format, CharSequence data, TypeBinder strategy) {
     return parse(format, data).read(type, strategy);
   }
 }

@@ -1,6 +1,6 @@
 package com.aire.ux.condensation;
 
-public interface PropertyMappingStrategy {
+public interface TypeBinder {
 
   <T> T instantiate(Class<T> type);
 
