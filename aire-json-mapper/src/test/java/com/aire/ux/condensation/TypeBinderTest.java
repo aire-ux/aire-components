@@ -38,4 +38,19 @@ class TypeBinderTest {
     val result = Condensation.read(A.class, "json", document, binder);
     assertEquals(result.name, "hello");
   }
+
+  @Test
+  void ensureReadingSimpleDocumentWorksWithAttributeAliasWorks() {
+    @RootElement
+    class A {
+
+      @Attribute(alias = @Alias(read = "waddup"))
+      private String name;
+    }
+
+    val document = "{\n" + "  \"waddup\": \"hello\"\n" + "}";
+    instantiator.register(A.class, A::new);
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertEquals(result.name, "hello");
+  }
 }

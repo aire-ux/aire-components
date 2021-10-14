@@ -121,7 +121,7 @@ public class AstDocument implements Document {
       SyntaxNode<Value<?>, Token> node, Value<?> value) {
     val name = (String) value.getValue();
     val stringValue = this.<String>valueOf(node.getChild(0));
-    val property = currentDescriptor.propertyNamed(Mode.Write, name);
+    val property = currentDescriptor.propertyNamed(Mode.Read, name);
     property.set(result, stringValue);
   }
 

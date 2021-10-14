@@ -39,14 +39,14 @@ public class FieldAnnotationPropertyScanningStrategy implements PropertyScanning
       Class<T> type, Field field, Attribute annotation) {
     val alias = annotation.alias();
     val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
-    val writeAlias = NONE.equals(alias.read()) ? field.getName() : alias.write();
+    val writeAlias = NONE.equals(alias.write()) ? field.getName() : alias.write();
     return new FieldProperty(field, type, readAlias, writeAlias);
   }
 
   private <T> Property<?> constructElementProperty(Class<T> type, Field field, Element annotation) {
     val alias = annotation.alias();
     val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
-    val writeAlias = NONE.equals(alias.read()) ? field.getName() : alias.write();
+    val writeAlias = NONE.equals(alias.write()) ? field.getName() : alias.write();
     return new FieldProperty(field, type, readAlias, writeAlias);
   }
 }

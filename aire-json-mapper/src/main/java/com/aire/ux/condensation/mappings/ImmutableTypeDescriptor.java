@@ -38,9 +38,9 @@ public class ImmutableTypeDescriptor<T> implements TypeDescriptor<T> {
   public Property<?> propertyNamed(Property.Mode mode, String name) {
     switch (mode) {
       case Read:
-        return locate(mode, name, Property::getMemberReadName);
+        return locate(mode, name, Property::getReadAlias);
       case Write:
-        return locate(mode, name, Property::getMemberWriteName);
+        return locate(mode, name, Property::getWriteAlias);
       case Normalized:
         return locate(mode, name, Property::getMemberNormalizedName);
     }
