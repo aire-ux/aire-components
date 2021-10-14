@@ -262,11 +262,13 @@ class TypeBinderTest {
   void ensureReadingNestedObjectWorks() {
     @RootElement
     class B {
+
       @Attribute
       String hello;
     }
     @RootElement
     class A {
+
       @Element
       private B b;
     }
@@ -283,5 +285,87 @@ class TypeBinderTest {
     val result = Condensation.read(A.class, "json", document, binder);
     assertNotNull(result.b);
     assertEquals(result.b.hello, "world");
+  }
+
+
+  @Test
+  void ensureReadingDeeplyNestedObjectWorks() {
+
+    @RootElement
+    class D {
+
+      @Element
+      int[] values;
+    }
+    @RootElement
+    class C {
+
+      @Element
+      D d;
+
+      @Element
+      String name;
+
+
+    }
+    @RootElement
+    class B {
+
+      @Attribute
+      String hello;
+
+      @Element
+      private C c;
+      @Element
+      private D d;
+    }
+    @RootElement
+    class A {
+
+      @Attribute
+      String name;
+
+      @Element
+      private B b;
+
+    }
+
+    val document = "{\n"
+                   + "  \"name\": \"josiah\",\n"
+                   + "  \"b\": {\n"
+                   + "    \"hello\": \"world\",\n"
+                   + "    \"d\": {\n"
+                   + "      \"values\": [\n"
+                   + "        1,\n"
+                   + "        2,\n"
+                   + "        3,\n"
+                   + "        5,\n"
+                   + "        5\n"
+                   + "      ]\n"
+                   + "    },\n"
+                   + "    \"c\": {\n"
+                   + "      \"name\": \"just a c!\",\n"
+                   + "      \"d\": {\n"
+                   + "        \"values\": [\n"
+                   + "          1,\n"
+                   + "          2,\n"
+                   + "          3,\n"
+                   + "          4,\n"
+                   + "          5\n"
+                   + "        ]\n"
+                   + "      }\n"
+                   + "    }\n"
+                   + "  }\n"
+                   + "}";
+
+    instantiator.register(A.class, A::new);
+    instantiator.register(B.class, B::new);
+    instantiator.register(C.class, C::new);
+    instantiator.register(D.class, D::new);
+
+    val result = Condensation.read(A.class, "json", document, binder);
+    assertNotNull(result.b);
+    assertEquals(result.b.hello, "world");
+    assertArrayEquals(new int[]{1, 2, 3, 4, 5}, result.b.c.d.values);
   }
 }
