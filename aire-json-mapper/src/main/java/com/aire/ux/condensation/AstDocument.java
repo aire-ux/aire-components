@@ -92,4 +92,18 @@ public class AstDocument implements Document {
     }
     return result;
   }
+
+  @Override
+  public <T> T read(Class<T> type, PropertyMappingStrategy strategy) {
+    return null;
+//    val root = strategy.instantiate(type);
+//    for (val child : tree.getRoot().getChildren()) {
+//      val value = child.getValue();
+//      val property = strategy.getProperty(type, value);
+//      if (property != null) {
+//        strategy.bind(type, root, value, child, property);
+//      }
+//    }
+//    return root;
+  }
 }

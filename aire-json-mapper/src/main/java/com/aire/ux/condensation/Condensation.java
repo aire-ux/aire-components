@@ -17,4 +17,9 @@ public class Condensation {
                     new NoSuchElementException(String.format("Unsupported format: '%s'", format)));
     return pf.newParser().parse(data);
   }
+
+  public static <T> T read(
+      Class<T> type, String format, CharSequence data, PropertyMappingStrategy strategy) {
+    return parse(format, data).read(type, strategy);
+  }
 }

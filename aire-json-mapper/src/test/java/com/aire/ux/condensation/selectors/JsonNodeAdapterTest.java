@@ -19,13 +19,5 @@ class JsonNodeAdapterTest {
             .plan(DefaultPlanContext.getInstance())
             .evaluate(node.getRoot(), new JsonNodeAdapter());
     System.out.println(results);
-    // results in: [[{beanie={name=weenie::String}::Object}::Object, 2::Number, true::Boolean,
-    // false::Boolean]]
-    //    System.out.println(
-    //        results.stream().flatMap(n -> n.getChildren().stream())
-    //            .map(SyntaxNode::getValue)
-    //            .flatMap(t -> Optional.ofNullable(t).stream())
-    //            .map(Value::getValue)
-    //            .collect(Collectors.toList()));
   }
 }

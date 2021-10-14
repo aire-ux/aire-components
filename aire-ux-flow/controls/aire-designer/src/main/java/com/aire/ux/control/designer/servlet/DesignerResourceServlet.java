@@ -7,13 +7,9 @@ public class DesignerResourceServlet extends HttpServlet {
 
   public DesignerResourceServlet() {
     this(DesignerConfiguration.load());
-
   }
 
   public DesignerResourceServlet(final DesignerConfiguration configuration) {
     this.configuration = configuration;
   }
-
-
-
 }
