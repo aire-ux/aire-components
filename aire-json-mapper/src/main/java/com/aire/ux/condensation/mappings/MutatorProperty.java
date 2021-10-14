@@ -4,13 +4,11 @@ import com.aire.ux.condensation.AbstractProperty;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.regex.Pattern;
 import lombok.NonNull;
 import lombok.val;
 
 public class MutatorProperty extends AbstractProperty<Mutator> {
 
-  static final Pattern pattern = Pattern.compile(Pattern.quote("get|set|is"));
 
   protected MutatorProperty(
       @NonNull Method getter,
@@ -19,6 +17,12 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
       @NonNull String readAlias,
       @NonNull String writeAlias) {
     super(new Mutator(getter, setter), host, readAlias, writeAlias);
+    getMember().setAccessible(true);
+    if (getMember().canAccess(this)) {
+      throw new IllegalStateException(String.format("Error: member "
+                                                    + "(read: %s, write: %s) on type %s is not accessible",
+          getter, setter, getter.getDeclaringClass()));
+    }
   }
 
   @Override

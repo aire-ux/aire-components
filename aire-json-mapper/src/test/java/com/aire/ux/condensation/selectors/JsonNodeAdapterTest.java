@@ -20,4 +20,22 @@ class JsonNodeAdapterTest {
             .evaluate(node.getRoot(), new JsonNodeAdapter());
     System.out.println(results);
   }
+
+  @Test
+  void ensureParsingLargeFileWorks() {
+    long average = 0;
+    val document = read("large.json");
+    val parser = new JsonParser();
+    for (int i = 0; i < 100; i++) {
+      long fst = System.currentTimeMillis();
+      val result = parser.parse(document);
+      long snd = System.currentTimeMillis();
+      val time = (snd - fst);
+      System.out.println("Time: " + time);
+      average = (average + (snd - fst)) ;
+      System.out.println(average);
+    }
+    System.out.println("Average: " + average / 100);
+    System.out.println(parser.parse(document));
+  }
 }
