@@ -71,7 +71,7 @@ class JsonTokenTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"{}", "{ }", "{  }", "{\n " + "\n}"})
+  @ValueSource(strings = {"{ }", "{  }", "{\n " + "\n}"})
   void ensureEmptyObjectLiteralIsParsedCorrectly(String value) {
     expect(value, JsonToken.OpenBrace, JsonToken.WhiteSpace, JsonToken.CloseBrace);
   }

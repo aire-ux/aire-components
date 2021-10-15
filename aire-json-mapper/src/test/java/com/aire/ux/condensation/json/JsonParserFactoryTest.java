@@ -13,7 +13,7 @@ class JsonParserFactoryTest {
   void ensureParsingDocumentWorks() {
     val document = Condensation.parse("json", read("test.json"));
     val value = document.select(".world > .five");
-    assertEquals(value, 5);
+    assertEquals(value, 5d);
   }
 
   @Test

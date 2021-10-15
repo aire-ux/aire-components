@@ -10,6 +10,7 @@ import com.aire.ux.parsing.core.Token;
 import java.util.NoSuchElementException;
 import lombok.val;
 
+@SuppressWarnings("PMD.CompareObjectsWithEquals")
 public class JsonParser {
 
   public AbstractSyntaxTree<Value<?>, Token> parse(CharSequence sequence) {

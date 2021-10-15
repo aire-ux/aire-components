@@ -33,8 +33,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private String name;
+      @Attribute private String name;
     }
 
     val document = "{\n" + "  \"name\": \"hello\"\n" + "}";
@@ -65,8 +64,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Integer name;
+      @Attribute private Integer name;
     }
 
     val document = String.format("{\n" + "  \"name\": %s\n" + "}", value);
@@ -82,8 +80,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Double name;
+      @Attribute private Double name;
     }
 
     val document = String.format("{\n" + "  \"name\": %s\n" + "}", value);
@@ -140,21 +137,19 @@ class TypeBinderTest {
     assertEquals("josiah", result.getName());
   }
 
-
   @Test
   void ensureReadingDoubleArrayIntoDoubleArrayWorks_Doubles_field() {
     @RootElement
     class A {
 
-      @Attribute
-      private Double[] doubles;
+      @Attribute private Double[] doubles;
     }
 
     val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new Double[]{1d, 2d, 3d, 4d, 5d, 1e-17, 1e7, -1E-17}, result.doubles);
+    assertArrayEquals(new Double[] {1d, 2d, 3d, 4d, 5d, 1e-17, 1e7, -1E-17}, result.doubles);
   }
 
   @Test
@@ -162,15 +157,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private double[] doubles;
+      @Attribute private double[] doubles;
     }
 
     val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new double[]{1, 2, 3, 4, 5, 1e-17, 1e7, -1E-17}, result.doubles);
+    assertArrayEquals(new double[] {1, 2, 3, 4, 5, 1e-17, 1e7, -1E-17}, result.doubles);
   }
 
   @Test
@@ -178,8 +172,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private float[] floats;
+      @Attribute private float[] floats;
     }
 
     val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
@@ -187,25 +180,22 @@ class TypeBinderTest {
 
     val result = Condensation.read(A.class, "json", document, binder);
     assertArrayEquals(
-        new float[]{1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7}, result.floats);
+        new float[] {1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7}, result.floats);
   }
-
 
   @Test
   void ensureReadingDoubleArrayIntoDoubleArrayWorks_Float_field() {
     @RootElement
     class A {
 
-      @Attribute
-      private Float[] floats;
+      @Attribute private Float[] floats;
     }
 
     val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(
-        new Float[]{1f, 2f, 3f, 4f, 5f, 1e-3f, 1e4f, -1E-7f}, result.floats);
+    assertArrayEquals(new Float[] {1f, 2f, 3f, 4f, 5f, 1e-3f, 1e4f, -1E-7f}, result.floats);
   }
 
   @Test
@@ -213,15 +203,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Boolean[] booleans;
+      @Attribute private Boolean[] booleans;
     }
 
     val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new Boolean[]{true, false, true, true}, result.booleans);
+    assertArrayEquals(new Boolean[] {true, false, true, true}, result.booleans);
   }
 
   @Test
@@ -229,15 +218,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private boolean[] booleans;
+      @Attribute private boolean[] booleans;
     }
 
     val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new boolean[]{true, false, true, true}, result.booleans);
+    assertArrayEquals(new boolean[] {true, false, true, true}, result.booleans);
   }
 
   @Test
@@ -247,37 +235,29 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private String[] strings;
+      @Attribute private String[] strings;
     }
 
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new String[]{"one", "two", "three!"}, result.strings);
+    assertArrayEquals(new String[] {"one", "two", "three!"}, result.strings);
   }
-
 
   @Test
   void ensureReadingNestedObjectWorks() {
     @RootElement
     class B {
 
-      @Attribute
-      String hello;
+      @Attribute String hello;
     }
     @RootElement
     class A {
 
-      @Element
-      private B b;
+      @Element private B b;
     }
 
-    val document = "{\n"
-                   + "  \"b\": {\n"
-                   + "    \"hello\": \"world\"\n"
-                   + "  }\n"
-                   + "}";
+    val document = "{\n" + "  \"b\": {\n" + "    \"hello\": \"world\"\n" + "  }\n" + "}";
 
     instantiator.register(A.class, A::new);
     instantiator.register(B.class, B::new);
@@ -287,76 +267,65 @@ class TypeBinderTest {
     assertEquals(result.b.hello, "world");
   }
 
-
   @Test
   void ensureReadingDeeplyNestedObjectWorks() {
 
     @RootElement
     class D {
 
-      @Element
-      int[] values;
+      @Element int[] values;
     }
     @RootElement
     class C {
 
-      @Element
-      D d;
+      @Element D d;
 
-      @Element
-      String name;
-
-
+      @Element String name;
     }
     @RootElement
     class B {
 
-      @Attribute
-      String hello;
+      @Attribute String hello;
 
-      @Element
-      private C c;
-      @Element
-      private D d;
+      @Element private C c;
+      @Element private D d;
     }
     @RootElement
     class A {
 
-      @Attribute
-      String name;
+      @Attribute String name;
 
-      @Element
-      private B b;
-
+      @Element private B b;
     }
 
-    val document = "{\n"
-                   + "  \"name\": \"josiah\",\n"
-                   + "  \"b\": {\n"
-                   + "    \"hello\": \"world\",\n"
-                   + "    \"d\": {\n"
-                   + "      \"values\": [\n"
-                   + "        1,\n"
-                   + "        2,\n"
-                   + "        3,\n"
-                   + "        5,\n"
-                   + "        5\n"
-                   + "      ]\n"
-                   + "    },\n"
-                   + "    \"c\": {\n"
-                   + "      \"name\": \"just a c!\",\n"
-                   + "      \"d\": {\n"
-                   + "        \"values\": [\n"
-                   + "          1,\n"
-                   + "          2,\n"
-                   + "          3,\n"
-                   + "          4,\n"
-                   + "          5\n"
-                   + "        ]\n"
-                   + "      }\n"
-                   + "    }\n"
-                   + "  }\n"
-                   + "}";
+    val document =
+        "{\n"
+            + "  \"name\": \"josiah\",\n"
+            + "  \"b\": {\n"
+            + "    \"hello\": \"world\",\n"
+            + "    \"d\": {\n"
+            + "      \"values\": [\n"
+            + "        1,\n"
+            + "        2,\n"
+            + "        3,\n"
+            + "        5,\n"
+            + "        5\n"
+            + "      ]\n"
+            + "    },\n"
+            + "    \"c\": {\n"
+            + "      \"name\": \"just a c!\",\n"
+            + "      \"d\": {\n"
+            + "        \"values\": [\n"
+            + "          1,\n"
+            + "          2,\n"
+            + "          3,\n"
+            + "          4,\n"
+            + "          5\n"
+            + "        ]\n"
+            + "      }\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
 
     instantiator.register(A.class, A::new);
     instantiator.register(B.class, B::new);
@@ -366,6 +335,6 @@ class TypeBinderTest {
     val result = Condensation.read(A.class, "json", document, binder);
     assertNotNull(result.b);
     assertEquals(result.b.hello, "world");
-    assertArrayEquals(new int[]{1, 2, 3, 4, 5}, result.b.c.d.values);
+    assertArrayEquals(new int[] {1, 2, 3, 4, 5}, result.b.c.d.values);
   }
 }

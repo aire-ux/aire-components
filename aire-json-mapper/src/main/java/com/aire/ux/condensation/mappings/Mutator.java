@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class Mutator extends AccessibleObject {
 
   @Getter private final Method getter;

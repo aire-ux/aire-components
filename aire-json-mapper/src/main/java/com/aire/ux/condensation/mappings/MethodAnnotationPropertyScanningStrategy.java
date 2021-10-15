@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.val;
 
+@SuppressWarnings("PMD")
 public class MethodAnnotationPropertyScanningStrategy implements PropertyScanningStrategy {
 
   @Override

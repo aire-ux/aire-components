@@ -8,11 +8,7 @@ import lombok.val;
 
 public class FieldProperty extends AbstractProperty<Field> {
 
-  protected FieldProperty(
-      @NonNull Field member,
-      @NonNull Class<?> host,
-      @NonNull String readAlias,
-      @NonNull String writeAlias) {
+  protected FieldProperty(Field member, Class<?> host, String readAlias, String writeAlias) {
     super(member, host, readAlias, writeAlias);
   }
 

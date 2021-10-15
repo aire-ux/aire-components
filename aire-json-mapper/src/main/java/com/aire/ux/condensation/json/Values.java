@@ -11,7 +11,7 @@ import lombok.val;
 
 public class Values {
 
-  public static Value NULL_VALUE = new AbstractValue(Type.Null, null);
+  public static final Value NULL_VALUE = new AbstractValue(Type.Null, null);
 
   public static Value string(Token value) {
     val lexeme = value.getLexeme();

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import lombok.val;
 
+@SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals"})
 public class DefaultTypeBinder implements TypeBinder {
 
   private static final Set<Class<?>> WRAPPER_TYPES =
@@ -77,9 +78,12 @@ public class DefaultTypeBinder implements TypeBinder {
     val currentDescriptor = descriptorFor(type);
     for (val child : node.getChildren()) {
       switch (typeOf(child)) {
-        /** at this point we're at the identifier */
+          /** at this point we're at the identifier */
         case String:
           readScalar(result, currentDescriptor, child, child.getValue());
+          break;
+        default:
+          throw new UnsupportedOperationException();
       }
     }
   }
@@ -101,14 +105,13 @@ public class DefaultTypeBinder implements TypeBinder {
         property.set(result, readHomogeneousArray(property, componentType, child));
       }
     }
-    if(isObject(child)) {
+    if (isObject(child)) {
       val type = property.getType();
       val instance = instantiate(type);
       bind(type, instance, child);
       property.set(result, instance);
     }
   }
-
 
   private boolean isObject(SyntaxNode<Value<?>, Token> child) {
     return child.getValue().getType() == Type.Object;
@@ -243,7 +246,7 @@ public class DefaultTypeBinder implements TypeBinder {
   private boolean expectsHomogeneousCollection(Property<?> property) {
     if (property.isCollection() || property.isArray()) {
       return isWrapperType(property.getComponentType())
-             || property.getComponentType().isPrimitive();
+          || property.getComponentType().isPrimitive();
     }
     return false;
   }

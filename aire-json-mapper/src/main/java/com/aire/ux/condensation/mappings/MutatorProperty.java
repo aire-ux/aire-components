@@ -10,11 +10,7 @@ import lombok.val;
 public class MutatorProperty extends AbstractProperty<Mutator> {
 
   protected MutatorProperty(
-      @NonNull Method getter,
-      @NonNull Method setter,
-      @NonNull Class<?> host,
-      @NonNull String readAlias,
-      @NonNull String writeAlias) {
+      Method getter, Method setter, Class<?> host, String readAlias, String writeAlias) {
     super(new Mutator(getter, setter), host, readAlias, writeAlias);
     getMember().setAccessible(true);
     if (getMember().canAccess(this)) {

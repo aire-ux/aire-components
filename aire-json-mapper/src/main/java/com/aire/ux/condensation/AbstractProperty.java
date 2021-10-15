@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import lombok.NonNull;
 import lombok.val;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals", "PMD.CompareObjectsWithEquals"})
 public abstract class AbstractProperty<T extends AccessibleObject> implements Property<T> {
 
   static final Map<Pair<Class<?>, Class<?>>, Function<?, ?>> defaultConverters;
@@ -39,10 +39,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   private final Function<?, T> converter;
 
   protected AbstractProperty(
-      @NonNull final T member,
-      @NonNull final Class<?> host,
-      @NonNull final String readAlias,
-      @NonNull final String writeAlias) {
+      final T member, final Class<?> host, final String readAlias, final String writeAlias) {
     this(member, host, readAlias, writeAlias, null);
   }
 
