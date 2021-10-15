@@ -14,7 +14,7 @@ document.addEventListener(
     });
 
 export function registerListeners() {
-  window.Aire.ThemeManager.addStyleChangeListener(Aire.EventType.ThemeInstalled, registerEffects)
+  // window.Aire.ThemeManager.addStyleChangeListener(Aire.EventType.ThemeInstalled, registerEffects)
 }
 
 export function registerEffects() {
