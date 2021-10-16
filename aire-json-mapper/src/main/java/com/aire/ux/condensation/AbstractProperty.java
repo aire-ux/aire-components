@@ -40,8 +40,14 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
 
   protected AbstractProperty(
       final T member, final Class<?> host, final String readAlias, final String writeAlias) {
-    this(member, host, readAlias, writeAlias, null);
+    this.host = host;
+    this.member = member;
+    this.readAlias = readAlias;
+    this.writeAlias = writeAlias;
+    this.converter = readConverter(host, member);
   }
+
+  protected abstract Function<?,T> readConverter(Class<?> host, T member);
 
   protected AbstractProperty(
       @NonNull final T member,
@@ -71,7 +77,8 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   @SuppressWarnings("unchecked")
   public <R, S> R convert(S value) {
     if (converter == null) {
-      val converter = (Function<S, R>) defaultConverters.get(Pair.of(value.getClass(), getType()));
+      val type = isArray() || isCollection() ? getComponentType() : getType();
+      val converter = (Function<S, R>) defaultConverters.get(Pair.of(value.getClass(), type));
       if (converter != null) {
         return converter.apply(value);
       }

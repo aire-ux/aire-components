@@ -1,8 +1,11 @@
 package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
+import com.aire.ux.condensation.Convert;
+import io.sunshower.arcus.reflect.Reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.function.Function;
 import lombok.NonNull;
 import lombok.val;
 
@@ -11,6 +14,8 @@ public class FieldProperty extends AbstractProperty<Field> {
   protected FieldProperty(Field member, Class<?> host, String readAlias, String writeAlias) {
     super(member, host, readAlias, writeAlias);
   }
+
+
 
   @Override
   @SuppressWarnings("unchecked")
@@ -68,5 +73,14 @@ public class FieldProperty extends AbstractProperty<Field> {
       }
     }
     return field;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  protected Function<?, Field> readConverter(Class<?> host, Field member) {
+    if (member.isAnnotationPresent(Convert.class)) {
+      return Reflect.instantiate(member.getAnnotation(Convert.class).value());
+    }
+    return null;
   }
 }
