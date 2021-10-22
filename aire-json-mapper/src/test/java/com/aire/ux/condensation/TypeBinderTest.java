@@ -34,6 +34,7 @@ class TypeBinderTest {
     binder = new DefaultTypeBinder(scanner);
   }
 
+
   @Test
   void ensureReadingSimpleDocumentWorks() {
     @RootElement
