@@ -34,14 +34,12 @@ class TypeBinderTest {
     binder = new DefaultTypeBinder(scanner);
   }
 
-
   @Test
   void ensureReadingSimpleDocumentWorks() {
     @RootElement
     class A {
 
-      @Attribute
-      private String name;
+      @Attribute private String name;
     }
 
     val document = "{\n" + "  \"name\": \"hello\"\n" + "}";
@@ -72,8 +70,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Integer name;
+      @Attribute private Integer name;
     }
 
     val document = format("{\n" + "  \"name\": %s\n" + "}", value);
@@ -89,8 +86,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Double name;
+      @Attribute private Double name;
     }
 
     val document = format("{\n" + "  \"name\": %s\n" + "}", value);
@@ -152,15 +148,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Double[] doubles;
+      @Attribute private Double[] doubles;
     }
 
     val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new Double[]{1d, 2d, 3d, 4d, 5d, 1e-17, 1e7, -1E-17}, result.doubles);
+    assertArrayEquals(new Double[] {1d, 2d, 3d, 4d, 5d, 1e-17, 1e7, -1E-17}, result.doubles);
   }
 
   @Test
@@ -168,15 +163,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private double[] doubles;
+      @Attribute private double[] doubles;
     }
 
     val document = "\n" + "{\n" + "  \"doubles\": [1,2,3,4,5, 1e-17,1e7, -1E-17]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new double[]{1, 2, 3, 4, 5, 1e-17, 1e7, -1E-17}, result.doubles);
+    assertArrayEquals(new double[] {1, 2, 3, 4, 5, 1e-17, 1e7, -1E-17}, result.doubles);
   }
 
   @Test
@@ -184,8 +178,7 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private float[] floats;
+      @Attribute private float[] floats;
     }
 
     val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
@@ -193,7 +186,7 @@ class TypeBinderTest {
 
     val result = Condensation.read(A.class, "json", document, binder);
     assertArrayEquals(
-        new float[]{1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7}, result.floats);
+        new float[] {1, 2, 3, 4, 5, (float) 1e-3, (float) 1e4, (float) -1E-7}, result.floats);
   }
 
   @Test
@@ -201,15 +194,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Float[] floats;
+      @Attribute private Float[] floats;
     }
 
     val document = "\n" + "{\n" + "  \"floats\": [1,2,3,4,5, 1e-3,1e4, -1E-7]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new Float[]{1f, 2f, 3f, 4f, 5f, 1e-3f, 1e4f, -1E-7f}, result.floats);
+    assertArrayEquals(new Float[] {1f, 2f, 3f, 4f, 5f, 1e-3f, 1e4f, -1E-7f}, result.floats);
   }
 
   @Test
@@ -217,15 +209,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private Boolean[] booleans;
+      @Attribute private Boolean[] booleans;
     }
 
     val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new Boolean[]{true, false, true, true}, result.booleans);
+    assertArrayEquals(new Boolean[] {true, false, true, true}, result.booleans);
   }
 
   @Test
@@ -233,15 +224,14 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private boolean[] booleans;
+      @Attribute private boolean[] booleans;
     }
 
     val document = "\n" + "{\n" + "  \"booleans\": [true, false, true,   true]\n" + "}";
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new boolean[]{true, false, true, true}, result.booleans);
+    assertArrayEquals(new boolean[] {true, false, true, true}, result.booleans);
   }
 
   @Test
@@ -251,14 +241,13 @@ class TypeBinderTest {
     @RootElement
     class A {
 
-      @Attribute
-      private String[] strings;
+      @Attribute private String[] strings;
     }
 
     instantiator.register(A.class, A::new);
 
     val result = Condensation.read(A.class, "json", document, binder);
-    assertArrayEquals(new String[]{"one", "two", "three!"}, result.strings);
+    assertArrayEquals(new String[] {"one", "two", "three!"}, result.strings);
   }
 
   @Test
@@ -266,14 +255,12 @@ class TypeBinderTest {
     @RootElement
     class B {
 
-      @Attribute
-      String hello;
+      @Attribute String hello;
     }
     @RootElement
     class A {
 
-      @Element
-      private B b;
+      @Element private B b;
     }
 
     val document = "{\n" + "  \"b\": {\n" + "    \"hello\": \"world\"\n" + "  }\n" + "}";
@@ -292,67 +279,59 @@ class TypeBinderTest {
     @RootElement
     class D {
 
-      @Element
-      int[] values;
+      @Element int[] values;
     }
     @RootElement
     class C {
 
-      @Element
-      D d;
+      @Element D d;
 
-      @Element
-      String name;
+      @Element String name;
     }
     @RootElement
     class B {
 
-      @Attribute
-      String hello;
+      @Attribute String hello;
 
-      @Element
-      private C c;
-      @Element
-      private D d;
+      @Element private C c;
+      @Element private D d;
     }
     @RootElement
     class A {
 
-      @Attribute
-      String name;
+      @Attribute String name;
 
-      @Element
-      private B b;
+      @Element private B b;
     }
 
     val document =
         "{\n"
-        + "  \"name\": \"josiah\",\n"
-        + "  \"b\": {\n"
-        + "    \"hello\": \"world\",\n"
-        + "    \"d\": {\n"
-        + "      \"values\": [\n"
-        + "        1,\n"
-        + "        2,\n"
-        + "        3,\n"
-        + "        5,\n"
-        + "        5\n"
-        + "      ]\n"
-        + "    },\n"
-        + "    \"c\": {\n"
-        + "      \"name\": \"just a c!\",\n"
-        + "      \"d\": {\n"
-        + "        \"values\": [\n"
-        + "          1,\n"
-        + "          2,\n"
-        + "          3,\n"
-        + "          4,\n"
-        + "          5\n"
-        + "        ]\n"
-        + "      }\n"
-        + "    }\n"
-        + "  }\n"
-        + "}";
+            + "  \"name\": \"josiah\",\n"
+            + "  \"b\": {\n"
+            + "    \"hello\": \"world\",\n"
+            + "    \"d\": {\n"
+            + "      \"values\": [\n"
+            + "        1,\n"
+            + "        2,\n"
+            + "        3,\n"
+            + "        5,\n"
+            + "        5\n"
+            + "      ]\n"
+            + "    },\n"
+            + "    \"c\": {\n"
+            + "      \"name\": \"just a c!\",\n"
+            + "      \"d\": {\n"
+            + "        \"values\": [\n"
+            + "          1,\n"
+            + "          2,\n"
+            + "          3,\n"
+            + "          4,\n"
+            + "          5\n"
+            + "        ]\n"
+            + "      }\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
 
     instantiator.register(A.class, A::new);
     instantiator.register(B.class, B::new);
@@ -362,16 +341,13 @@ class TypeBinderTest {
     val result = Condensation.read(A.class, "json", document, binder);
     assertNotNull(result.b);
     assertEquals(result.b.hello, "world");
-    assertArrayEquals(new int[]{1, 2, 3, 4, 5}, result.b.c.d.values);
+    assertArrayEquals(new int[] {1, 2, 3, 4, 5}, result.b.c.d.values);
   }
 
   @Test
   void ensureMappingSimpleCollectionOfIntsWorks() {
 
-    val document = "\n"
-                   + "{\n"
-                   + "  \"my-list\": [1,2,3,4,5]\n"
-                   + "}";
+    val document = "\n" + "{\n" + "  \"my-list\": [1,2,3,4,5]\n" + "}";
 
     @RootElement
     class ListTest {
@@ -387,51 +363,34 @@ class TypeBinderTest {
 
   @Test
   void ensureReadingArrayOfPrimitivesIntsWorks() {
-    val doc = "[\n"
-              + "  1,\n"
-              + "  2,\n"
-              + "  3\n"
-              + "]";
+    val doc = "[\n" + "  1,\n" + "  2,\n" + "  3\n" + "]";
 
     val read = Condensation.read(int[].class, "json", doc, binder);
-    assertArrayEquals(read, new int[]{1, 2, 3});
+    assertArrayEquals(read, new int[] {1, 2, 3});
   }
 
   @Test
   void ensureReadingArrayOfPrimitivesFloatsWorks() {
-    val doc = "[\n"
-              + "  1,\n"
-              + "  2,\n"
-              + "  3\n"
-              + "]";
+    val doc = "[\n" + "  1,\n" + "  2,\n" + "  3\n" + "]";
 
     val read = Condensation.read(float[].class, "json", doc, binder);
-    assertArrayEquals(read, new float[]{1, 2, 3});
+    assertArrayEquals(read, new float[] {1, 2, 3});
   }
-
 
   @Test
   void ensureReadingArrayOfPrimitivesLongsWorks() {
-    val doc = "[\n"
-              + "  1,\n"
-              + "  2,\n"
-              + "  3\n"
-              + "]";
+    val doc = "[\n" + "  1,\n" + "  2,\n" + "  3\n" + "]";
 
     val read = Condensation.read(long[].class, "json", doc, binder);
-    assertArrayEquals(read, new long[]{1, 2, 3});
+    assertArrayEquals(read, new long[] {1, 2, 3});
   }
 
   @Test
   void ensureReadingArrayOfPrimitivesStringsWorks() {
-    val doc = "[\n"
-              + "  \"1\",\n"
-              + "  \"2\",\n"
-              + "  \"3\"\n"
-              + "]";
+    val doc = "[\n" + "  \"1\",\n" + "  \"2\",\n" + "  \"3\"\n" + "]";
 
     val read = Condensation.read(String[].class, "json", doc, binder);
-    assertArrayEquals(read, new String[]{"1", "2", "3"});
+    assertArrayEquals(read, new String[] {"1", "2", "3"});
   }
 
   @Test
@@ -440,29 +399,28 @@ class TypeBinderTest {
     @RootElement
     class Content {
 
-      @Attribute
-      String name;
+      @Attribute String name;
     }
     @RootElement
     class Container {
 
-      @Element
-      private List<Content> contents;
+      @Element private List<Content> contents;
     }
 
     instantiator.register(Content.class, Content::new);
     instantiator.register(Container.class, Container::new);
 
-    val value = "{\n"
-                + "  \"contents\": [\n"
-                + "    {\n"
-                + "      \"name\": \"Josiah\"\n"
-                + "    },\n"
-                + "    {\n"
-                + "      \"name\": \"Frances\"\n"
-                + "    }\n"
-                + "  ]\n"
-                + "}";
+    val value =
+        "{\n"
+            + "  \"contents\": [\n"
+            + "    {\n"
+            + "      \"name\": \"Josiah\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"name\": \"Frances\"\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
 
     val result = Condensation.read(Container.class, "json", value, binder);
     assertEquals(2, result.contents.size());
@@ -480,45 +438,44 @@ class TypeBinderTest {
       @Attribute(alias = @Alias(read = "@type"))
       Class<?> type;
 
-      @Attribute
-      String firstname;
+      @Attribute String firstname;
     }
 
     @RootElement
     class Animal extends Critter {
 
-      @Attribute
-      String noise;
+      @Attribute String noise;
     }
 
     @RootElement
     class Menagerie {
 
-      @Element
-      Map<String, Critter> values;
+      @Element Map<String, Critter> values;
     }
 
-    val doc = format("{\n"
-                     + "  \"values\": {\n"
-                     + "    \"person1\": {\n"
-                     + "      \"@type\": \"%s\",\n"
-                     + "      \"firstname\": \"josiah\"\n"
-                     + "    },\n"
-                     + "\n"
-                     + "    \"critter1\": {\n"
-                     + "      \"@type\": \"%s\",\n"
-                     + "      \"firstname\": \"fran\",\n"
-                     + "      \"noise\": \"bark!\"\n"
-                     + "    }\n"
-                     + "  }\n"
-                     + "}", Critter.class.getName(), Animal.class.getName());
+    val doc =
+        format(
+            "{\n"
+                + "  \"values\": {\n"
+                + "    \"person1\": {\n"
+                + "      \"@type\": \"%s\",\n"
+                + "      \"firstname\": \"josiah\"\n"
+                + "    },\n"
+                + "\n"
+                + "    \"critter1\": {\n"
+                + "      \"@type\": \"%s\",\n"
+                + "      \"firstname\": \"fran\",\n"
+                + "      \"noise\": \"bark!\"\n"
+                + "    }\n"
+                + "  }\n"
+                + "}",
+            Critter.class.getName(), Animal.class.getName());
     instantiator.register(Menagerie.class, Menagerie::new);
     instantiator.register(Critter.class, Critter::new);
     instantiator.register(Animal.class, Animal::new);
 
     val result = Condensation.read(Menagerie.class, "json", doc, binder);
     assertEquals(result.values.size(), 2);
-
   }
 
   @Test
@@ -527,50 +484,48 @@ class TypeBinderTest {
     @Discriminator(field = "@type")
     class Content {
 
-      @Attribute
-      String name;
-      @Attribute(
-          alias = @Alias(read = "@type")
-      )
+      @Attribute String name;
+
+      @Attribute(alias = @Alias(read = "@type"))
       @Convert(TypeConverter.class)
       private Class<? extends Content> type;
     }
     @RootElement
     class Container {
 
-      @Element
-      private List<Content> contents;
+      @Element private List<Content> contents;
     }
     @RootElement
     class SubContent extends Content {
 
-      @Attribute
-      private String value;
+      @Attribute private String value;
     }
 
     instantiator.register(Content.class, Content::new);
     instantiator.register(SubContent.class, SubContent::new);
     instantiator.register(Container.class, Container::new);
 
-    val value = format("{\n"
-                       + "  \"contents\": [\n"
-                       + "    {\n"
-                       + "      \"name\": \"Josiah\",\n"
-                       + "      \"@type\": \"%s\"\n"
-                       + "    },\n"
-                       + "    {\n"
-                       + "      \"name\": \"Frances\",\n"
-                       + "      \"@type\": \"%s\",\n"
-                       + "      \"value\": \"Whatever\"\n"
-                       + "    }\n"
-                       + "  ]\n"
-                       + "}", Content.class.getName(), SubContent.class.getName());
+    val value =
+        format(
+            "{\n"
+                + "  \"contents\": [\n"
+                + "    {\n"
+                + "      \"name\": \"Josiah\",\n"
+                + "      \"@type\": \"%s\"\n"
+                + "    },\n"
+                + "    {\n"
+                + "      \"name\": \"Frances\",\n"
+                + "      \"@type\": \"%s\",\n"
+                + "      \"value\": \"Whatever\"\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}",
+            Content.class.getName(), SubContent.class.getName());
 
     val result = Condensation.read(Container.class, "json", value, binder);
     assertEquals(2, result.contents.size());
     assertInstanceOf(Content.class, result.contents.get(0));
   }
-
 
   @Test
   void ensureReadingPolymorphicValuesWorksForArray() {
@@ -578,44 +533,43 @@ class TypeBinderTest {
     @Discriminator(field = "@type")
     class Content {
 
-      @Attribute
-      String name;
-      @Attribute(
-          alias = @Alias(read = "@type")
-      )
+      @Attribute String name;
+
+      @Attribute(alias = @Alias(read = "@type"))
       @Convert(TypeConverter.class)
       private Class<? extends Content> type;
     }
     @RootElement
     class Container {
 
-      @Element
-      private Content[] contents;
+      @Element private Content[] contents;
     }
     @RootElement
     class SubContent extends Content {
 
-      @Attribute
-      private String value;
+      @Attribute private String value;
     }
 
     instantiator.register(Content.class, Content::new);
     instantiator.register(SubContent.class, SubContent::new);
     instantiator.register(Container.class, Container::new);
 
-    val value = format("{\n"
-                       + "  \"contents\": [\n"
-                       + "    {\n"
-                       + "      \"name\": \"Josiah\",\n"
-                       + "      \"@type\": \"%s\"\n"
-                       + "    },\n"
-                       + "    {\n"
-                       + "      \"name\": \"Frances\",\n"
-                       + "      \"@type\": \"%s\",\n"
-                       + "      \"value\": \"Whatever\"\n"
-                       + "    }\n"
-                       + "  ]\n"
-                       + "}", Content.class.getName(), SubContent.class.getName());
+    val value =
+        format(
+            "{\n"
+                + "  \"contents\": [\n"
+                + "    {\n"
+                + "      \"name\": \"Josiah\",\n"
+                + "      \"@type\": \"%s\"\n"
+                + "    },\n"
+                + "    {\n"
+                + "      \"name\": \"Frances\",\n"
+                + "      \"@type\": \"%s\",\n"
+                + "      \"value\": \"Whatever\"\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}",
+            Content.class.getName(), SubContent.class.getName());
 
     val result = Condensation.read(Container.class, "json", value, binder);
     assertEquals(2, result.contents.length);
@@ -629,16 +583,10 @@ class TypeBinderTest {
     @RootElement
     class MapTest {
 
-      @Element
-      Map<String, Integer> values;
+      @Element Map<String, Integer> values;
     }
 
-    val doc = "{\n"
-              + "  \"values\": {\n"
-              + "    \"1\": 1,\n"
-              + "    \"2\": 2 \n"
-              + "  }\n"
-              + "}";
+    val doc = "{\n" + "  \"values\": {\n" + "    \"1\": 1,\n" + "    \"2\": 2 \n" + "  }\n" + "}";
     instantiator.register(MapTest.class, MapTest::new);
 
     val result = Condensation.read(MapTest.class, "json", doc, binder);
@@ -648,9 +596,7 @@ class TypeBinderTest {
   @Test
   void ensureReadingArrayOfIntegersWorks() {
 
-    val doc = "[\n"
-              + "  1,2,3\n"
-              + "]";
+    val doc = "[\n" + "  1,2,3\n" + "]";
 
     val result = Condensation.read(int[].class, "json", doc, binder);
     assertEquals(result.length, 3);
@@ -658,24 +604,23 @@ class TypeBinderTest {
 
   @Test
   void ensureReadingArrayOfObjectsWorks() {
-    val doc = "[\n"
-              + "  {\n"
-              + "    \"firstName\": \"Josiah\",\n"
-              + "    \"lastName\": \"Haswell\"\n"
-              + "  },\n"
-              + "  {\n"
-              + "    \"firstName\": \"Lisa\",\n"
-              + "    \"lastName\": \"Gumerman\"\n"
-              + "  }\n"
-              + "]";
+    val doc =
+        "[\n"
+            + "  {\n"
+            + "    \"firstName\": \"Josiah\",\n"
+            + "    \"lastName\": \"Haswell\"\n"
+            + "  },\n"
+            + "  {\n"
+            + "    \"firstName\": \"Lisa\",\n"
+            + "    \"lastName\": \"Gumerman\"\n"
+            + "  }\n"
+            + "]";
 
     @RootElement
     class Person {
 
-      @Attribute
-      String firstName;
-      @Attribute
-      String lastName;
+      @Attribute String firstName;
+      @Attribute String lastName;
     }
     instantiator.register(Person.class, Person::new);
     val result = Condensation.read(Person[].class, "json", doc, binder);
@@ -683,37 +628,35 @@ class TypeBinderTest {
     assertEquals(result[0].firstName, "Josiah");
   }
 
-
   @Test
   void ensureMapContainingValuesWorks() {
 
     @RootElement
     class Value {
 
-      @Attribute
-      String name;
+      @Attribute String name;
     }
     @RootElement
     class MapTest {
 
-      @Element
-      Map<String, Value> values;
+      @Element Map<String, Value> values;
     }
-    val doc = "{\n"
-              + "  \"values\": {\n"
-              + "    \"josiah\": {\n"
-              + "      \"name\" : \"joebees\"\n"
-              + "    },\n"
-              + "\n"
-              + "    \"lisa\": {\n"
-              + "      \"name\" : \"wabbus\"\n"
-              + "    },\n"
-              + "\n"
-              + "    \"fran\": {\n"
-              + "      \"name\" : \"the custard\"\n"
-              + "    }\n"
-              + "  }\n"
-              + "}";
+    val doc =
+        "{\n"
+            + "  \"values\": {\n"
+            + "    \"josiah\": {\n"
+            + "      \"name\" : \"joebees\"\n"
+            + "    },\n"
+            + "\n"
+            + "    \"lisa\": {\n"
+            + "      \"name\" : \"wabbus\"\n"
+            + "    },\n"
+            + "\n"
+            + "    \"fran\": {\n"
+            + "      \"name\" : \"the custard\"\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
 
     instantiator.register(MapTest.class, MapTest::new);
     instantiator.register(Value.class, Value::new);
@@ -724,8 +667,7 @@ class TypeBinderTest {
 
   public static class TypeConverter<T> implements Function<String, Class<T>> {
 
-    public TypeConverter() {
-    }
+    public TypeConverter() {}
 
     @Override
     @SneakyThrows
@@ -734,6 +676,4 @@ class TypeBinderTest {
       return (Class<T>) Class.forName(s, true, Thread.currentThread().getContextClassLoader());
     }
   }
-
-
 }

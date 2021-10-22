@@ -13,16 +13,16 @@ public class Condensation {
   private final PropertyScanner scanner;
   private final TypeInstantiator instantiator;
 
-
   private Condensation(final String format) {
     this.format = format;
     val condensationConfiguration =
-        ServiceLoader.load(CondensationConfiguration.class, Thread.currentThread()
-            .getContextClassLoader())
+        ServiceLoader.load(
+                CondensationConfiguration.class, Thread.currentThread().getContextClassLoader())
             .stream()
             .map(Provider::get)
             .filter(configuration -> configuration.supports(format))
-            .findAny().orElseGet(DefaultCondensationConfiguration::new);
+            .findAny()
+            .orElseGet(DefaultCondensationConfiguration::new);
     this.scanner = condensationConfiguration.getScanner();
     this.instantiator = condensationConfiguration.getInstantiator();
     if (condensationConfiguration.providesBinder()) {
@@ -31,7 +31,6 @@ public class Condensation {
       this.typeBinder = new DefaultTypeBinder(scanner);
     }
   }
-
 
   public static Document parse(String format, CharSequence data) {
     val pf =

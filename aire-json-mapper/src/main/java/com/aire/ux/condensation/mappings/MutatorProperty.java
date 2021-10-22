@@ -3,7 +3,6 @@ package com.aire.ux.condensation.mappings;
 import com.aire.ux.condensation.AbstractProperty;
 import com.aire.ux.condensation.Convert;
 import io.sunshower.arcus.reflect.Reflect;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -89,7 +88,7 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
   @Override
   @SuppressWarnings("unchecked")
   protected Function<?, Mutator> readConverter(Class<?> host, Mutator member) {
-    if(member.isAnnotationPresent(Convert.class)) {
+    if (member.isAnnotationPresent(Convert.class)) {
       val type = member.getAnnotation(Convert.class);
       return Reflect.instantiate(type.value());
     }

@@ -47,7 +47,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
     this.converter = readConverter(host, member);
   }
 
-  protected abstract Function<?,T> readConverter(Class<?> host, T member);
+  protected abstract Function<?, T> readConverter(Class<?> host, T member);
 
   protected AbstractProperty(
       @NonNull final T member,

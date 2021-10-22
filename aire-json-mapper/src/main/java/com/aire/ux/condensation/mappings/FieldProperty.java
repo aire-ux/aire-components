@@ -15,8 +15,6 @@ public class FieldProperty extends AbstractProperty<Field> {
     super(member, host, readAlias, writeAlias);
   }
 
-
-
   @Override
   @SuppressWarnings("unchecked")
   public <U> Class<U> getType() {

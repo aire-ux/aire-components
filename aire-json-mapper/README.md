@@ -3,6 +3,13 @@
 The Aire object mapper is intended to be a lightweight and (reasonably) fast,
 external-dependency-free interchange format (JSON, XML, etc.) binder.
 
+## Why another mapper?
+Condensation seeks to provide first-class support for dynamic polymorphism.  For instance, in JAXB,
+one must enumerate all of the subtypes that an element-type may have, or rely on implementation-specific details.
+Libraries like Jackson have better support, but can be heavy depending on the features required.  Condensation aims to
+be fast, simple, and lightweight
+
+
 ## Usage (JSON)
 
 ### Simple Scenario

@@ -5,8 +5,7 @@ import com.aire.ux.condensation.mappings.CachingDelegatingTypeInstantiator;
 import com.aire.ux.condensation.mappings.DefaultTypeBinder;
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
 
-public class DefaultCondensationConfiguration implements
-    CondensationConfiguration {
+public class DefaultCondensationConfiguration implements CondensationConfiguration {
 
   private static final String JSON = "json";
   private final ReflectiveTypeInstantiator instantiator;
@@ -15,11 +14,10 @@ public class DefaultCondensationConfiguration implements
 
   public DefaultCondensationConfiguration() {
     instantiator = new ReflectiveTypeInstantiator();
-    scanner = new AnnotationDrivenPropertyScanner(
-        new CachingDelegatingTypeInstantiator(instantiator));
+    scanner =
+        new AnnotationDrivenPropertyScanner(new CachingDelegatingTypeInstantiator(instantiator));
     binder = new DefaultTypeBinder(scanner);
   }
-
 
   @Override
   public boolean supports(String format) {
