@@ -36,4 +36,9 @@ class CondensationTest {
     assertArrayEquals(new int[]{1,2,3,4}, values);
   }
 
+  @Test
+  void ensureObjectExampleWorks() {
+
+  }
+
 }

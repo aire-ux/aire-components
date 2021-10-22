@@ -5,7 +5,7 @@ external-dependency-free interchange format (JSON, XML, etc.) binder.
 
 ## Usage (JSON)
 
-### Simple Scenario 
+### Simple Scenario
 
 The annotation `@RootElement` denotes a type that can be bound to a document element. For instance:
 
@@ -51,17 +51,19 @@ class Example {
 
 Condensation supports arbitrarily-nested objects, Arrays, Lists, Maps, etc.
 
+### Arrays
 
-### Arrays 
 Condensation natively supports arrays of objects, primitive arrays, etc.
 
 #### Primitive Arrays
 
-The default numeric type for JSON/JavaScript is 8-byte IEEE 754 floating-point. 
-Any primitive numeric type (or their wrappers) may be used and conversions are automatically applied
+The default numeric type for JSON/JavaScript is 8-byte IEEE 754 floating-point. Any primitive
+numeric type (or their wrappers) may be used and conversions are automatically applied
+
 ```java
 
 class ExampleInts {
+
   public Example() {
     Condensation condensation = Condensation.create("json");
     int[] values = condensation.read(int[].class, "[1,2,3,4]");
@@ -69,12 +71,41 @@ class ExampleInts {
 }
 
 /**
- * 
+ *
  */
-class ExampleDoubles{
+class ExampleDoubles {
+
   public Example() {
     Condensation condensation = Condensation.create("json");
     double[] values = condensation.read(double[].class, "[1,2,3,4]");
+  }
+}
+
+
+class ExampleStrings {
+
+  public Example() {
+    Condensation condensation = Condensation.create("json");
+    String[] values = condensation.read(String[].class, "[\"1\",\"2\",\"3\",\"4\"]");
+  }
+}
+
+class ExampleObjects {
+
+  public Example() {
+    Condensation condensation = Condensation.create("json");
+    String value = "[\n"
+                   + "  {\n"
+                   + "    \"firstName\": \"Josiah\",\n"
+                   + "    \"lastName\": \"Haswell\"\n"
+                   + "  },\n"
+                   + "\n"
+                   + "  {\n"
+                   + "    \"firstName\": \"Bob\",\n"
+                   + "    \"lastName\": \"Porgnorgler\"\n"
+                   + "  }\n"
+                   + "]";
+    Person[] values = condensation.read(Person[].class, "[\"1\",\"2\",\"3\",\"4\"]");
   }
 }
 ```
