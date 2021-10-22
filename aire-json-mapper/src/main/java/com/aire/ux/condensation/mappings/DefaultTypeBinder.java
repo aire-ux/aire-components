@@ -1,5 +1,7 @@
 package com.aire.ux.condensation.mappings;
 
+import static java.util.Objects.requireNonNull;
+
 import com.aire.ux.condensation.Discriminator;
 import com.aire.ux.condensation.Property;
 import com.aire.ux.condensation.Property.Mode;
@@ -209,6 +211,10 @@ public class DefaultTypeBinder implements TypeBinder {
         case String:
           readValue(result, currentDescriptor, child, child.getValue());
           break;
+        case Object:
+          bind(type, result, child);
+          break;
+//          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
         default:
           throw new UnsupportedOperationException();
       }
@@ -235,6 +241,10 @@ public class DefaultTypeBinder implements TypeBinder {
         property.set(result, collection);
       }
     }
+    readObject(result, child, property);
+  }
+
+  private <T> void readObject(T result, SyntaxNode<Value<?>, Token> child, Property<?> property) {
     if (isObject(child)) {
       val type = property.getType();
       if (isMap(type)) {
@@ -243,7 +253,6 @@ public class DefaultTypeBinder implements TypeBinder {
         val instance = instantiate(type);
         bind(type, instance, child);
         property.set(result, instance);
-
       }
     }
   }
@@ -283,9 +292,17 @@ public class DefaultTypeBinder implements TypeBinder {
     } else {
       actualType = type;
     }
-    val instance = instantiate(actualType);
-    bind((Class) actualType, instance, node);
-    return instance;
+    val collectionType = CollectionType.forType(type);
+    if (collectionType != null) {
+      // we're a primitive
+      val child = requireNonNull(node.getChild(0));
+      val argument = valueOf(child);
+      return (T) collectionType.convert((Double) argument);
+    } else {
+      val instance = instantiate(actualType);
+      bind((Class) actualType, instance, node);
+      return instance;
+    }
   }
 
   @SneakyThrows
@@ -528,12 +545,42 @@ public class DefaultTypeBinder implements TypeBinder {
   }
 
   enum CollectionType {
-    String(String.class),
-    Integer(Integer.class, int.class),
-    Short(Short.class, short.class),
-    Long(Long.class, long.class),
-    Double(Double.class, double.class),
-    Float(Float.class, float.class);
+    String(String.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d;
+      }
+    },
+    Integer(Integer.class, int.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d.intValue();
+      }
+    },
+    Short(Short.class, short.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d.shortValue();
+      }
+    },
+    Long(Long.class, long.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d.longValue();
+      }
+    },
+    Double(Double.class, double.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d;
+      }
+    },
+    Float(Float.class, float.class) {
+      @Override
+      Number convert(java.lang.Double d) {
+        return d.floatValue();
+      }
+    };
 
     CollectionType(Class<?>... types) {
       for (val type : types) {
@@ -544,6 +591,8 @@ public class DefaultTypeBinder implements TypeBinder {
     static CollectionType forType(Class<?> type) {
       return typeMapping.get(type);
     }
+
+    abstract Number convert(Double d);
 
   }
 }

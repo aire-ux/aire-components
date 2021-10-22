@@ -588,9 +588,46 @@ class TypeBinderTest {
     instantiator.register(MapTest.class, MapTest::new);
 
     val result = Condensation.read(MapTest.class, "json", doc, binder);
-    assertEquals(result.values.get(0), 1);
+    assertEquals(result.values.get("1"), 1);
   }
 
+
+  @Test
+  void ensureMapContainingValuesWorks() {
+
+    @RootElement
+    class Value {
+      @Attribute
+      String name;
+    }
+    @RootElement
+    class MapTest {
+
+      @Element
+      Map<String, Value> values;
+    }
+    val doc = "{\n"
+              + "  \"values\": {\n"
+              + "    \"josiah\": {\n"
+              + "      \"name\" : \"joebees\"\n"
+              + "    },\n"
+              + "\n"
+              + "    \"lisa\": {\n"
+              + "      \"name\" : \"wabbus\"\n"
+              + "    },\n"
+              + "\n"
+              + "    \"fran\": {\n"
+              + "      \"name\" : \"the custard\"\n"
+              + "    }\n"
+              + "  }\n"
+              + "}";
+
+    instantiator.register(MapTest.class, MapTest::new);
+    instantiator.register(Value.class, Value::new);
+
+    val result = Condensation.read(MapTest.class, "json", doc, binder);
+    assertEquals(result.values.get("josiah").name, "joebees");
+  }
 
   public static class TypeConverter<T> implements Function<String, Class<T>> {
 
