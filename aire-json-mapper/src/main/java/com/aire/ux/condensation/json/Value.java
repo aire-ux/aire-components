@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 public interface Value<T> {
 
-
   enum Type {
     String,
     Object,
@@ -28,8 +27,8 @@ public interface Value<T> {
       case Null:
       case Hexadecimal:
         return true;
-      default: return false;
+      default:
+        return false;
     }
   }
-
 }

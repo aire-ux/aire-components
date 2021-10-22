@@ -76,17 +76,17 @@ public final class TestFrame implements AutoCloseable {
   @SuppressWarnings("unchecked")
   public <T> T get(Class<T> type) {
     val result = (T) values.get(type);
-    if(result != null) {
+    if (result != null) {
       return result;
     }
 
-    for(val mock : mocks) {
-      if(mock != null && Reflect.isCompatible(type, mock.getClass())) {
+    for (val mock : mocks) {
+      if (mock != null && Reflect.isCompatible(type, mock.getClass())) {
         return (T) mock;
       }
     }
-    for(val spy : spies) {
-      if(spy != null && Reflect.isCompatible(type, spy.getClass())) {
+    for (val spy : spies) {
+      if (spy != null && Reflect.isCompatible(type, spy.getClass())) {
         return (T) spy;
       }
     }

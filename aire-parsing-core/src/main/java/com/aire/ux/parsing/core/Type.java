@@ -6,17 +6,13 @@ import javax.annotation.Nonnull;
 
 public interface Type {
 
-
   /**
-   *
    * @param <T> this type
    * @return the list of all possible values of this type
    */
   <T extends Type> Iterable<T> enumerate();
 
-  /**
-   * @return the name of this type
-   */
+  /** @return the name of this type */
   @Nonnull
   String name();
 

@@ -17,7 +17,6 @@ public interface SyntaxNode<T, U> extends Cloneable {
 
   SyntaxNode<T, U> getParent();
 
-
   T getValue();
 
   U getSource();

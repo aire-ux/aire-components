@@ -1,8 +1,5 @@
 package com.aire.ux.theme;
 
-import com.vaadin.flow.component.JsonSerializable;
-import com.vaadin.flow.internal.JsonSerializer;
-import elemental.json.JsonObject;
 import io.sunshower.lang.common.encodings.Encoding;
 import io.sunshower.lang.common.encodings.Encodings;
 import io.sunshower.lang.common.encodings.Encodings.Type;
@@ -15,26 +12,21 @@ public interface ResourceDefinition {
 
   HashCode hashcode = Hashes.hashCode(Algorithm.MD5);
 
-  /**
-   *
-   */
+  /** */
   Encoding encoding = Encodings.create(Type.Base58);
-
 
   enum Source {
     remote,
     inline;
 
-    /**
-     * shitty serialization makes it impossible to override them names
-     */
+    /** shitty serialization makes it impossible to override them names */
     public static final Source Inline = Source.inline;
+
     public static final Source Remote = Source.remote;
 
     public String toString() {
       return name().toLowerCase(Locale.ROOT);
     }
-
 
     public Source fromValue(String value) {
       if (value == null) {
@@ -48,6 +40,5 @@ public interface ResourceDefinition {
       }
       throw new IllegalArgumentException("No source corresponding to value '" + value + "'");
     }
-
   }
 }

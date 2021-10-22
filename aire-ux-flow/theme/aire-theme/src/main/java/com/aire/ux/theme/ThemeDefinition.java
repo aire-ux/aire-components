@@ -25,8 +25,7 @@ public class ThemeDefinition {
   }
 
   public ThemeDefinition(
-      final Collection<StyleDefinition> styles,
-      final Collection<ScriptDefinition> scripts) {
+      final Collection<StyleDefinition> styles, final Collection<ScriptDefinition> scripts) {
     this.styles = new ArrayList<>(styles);
     this.scripts = new ArrayList<>(scripts);
   }

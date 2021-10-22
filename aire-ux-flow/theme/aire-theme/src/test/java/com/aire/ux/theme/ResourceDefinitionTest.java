@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.val;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -19,10 +18,7 @@ class ResourceDefinitionTest {
   @AllArgsConstructor
   @NoArgsConstructor
   public static class A {
-    @Getter
-    @Setter
-    private Source source;
-
+    @Getter @Setter private Source source;
   }
 
   @ParameterizedTest
@@ -32,5 +28,4 @@ class ResourceDefinitionTest {
     val parsed = Json.parse(value);
     assertEquals(source, Source.valueOf(parsed.get("source").asString()));
   }
-
 }

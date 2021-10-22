@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 import lombok.val;
 
 public enum JsonToken implements Type, Symbol {
-
   Colon(":"),
   Comma(","),
   Null("null"),

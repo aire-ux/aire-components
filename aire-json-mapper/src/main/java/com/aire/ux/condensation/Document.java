@@ -16,4 +16,5 @@ public interface Document {
 
   Collection<?> selectAll(String selector);
 
+  <T> T read(Class<T> type, TypeBinder strategy);
 }

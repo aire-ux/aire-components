@@ -48,10 +48,11 @@ public class AstDocument implements Document {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T select(String selector) {
-    val workingSet = selectorParser
-        .parse(selector)
-        .plan(DefaultPlanContext.getInstance())
-        .evaluate(tree.getRoot(), nodeAdapter);
+    val workingSet =
+        selectorParser
+            .parse(selector)
+            .plan(DefaultPlanContext.getInstance())
+            .evaluate(tree.getRoot(), nodeAdapter);
     if (workingSet.size() > 0) {
       val next = workingSet.iterator().next();
       return valueFor(next);
@@ -80,10 +81,11 @@ public class AstDocument implements Document {
 
   @Override
   public Collection<?> selectAll(String selector) {
-    val workingSet = selectorParser
-        .parse(selector)
-        .plan(DefaultPlanContext.getInstance())
-        .evaluate(tree.getRoot(), nodeAdapter);
+    val workingSet =
+        selectorParser
+            .parse(selector)
+            .plan(DefaultPlanContext.getInstance())
+            .evaluate(tree.getRoot(), nodeAdapter);
     val result = new ArrayList<>(workingSet.size());
     for (val c : workingSet) {
       result.add(valueFor(c));
@@ -91,5 +93,8 @@ public class AstDocument implements Document {
     return result;
   }
 
-
+  @Override
+  public <T> T read(Class<T> type, TypeBinder strategy) {
+    return strategy.bind(type, tree.getRoot());
+  }
 }

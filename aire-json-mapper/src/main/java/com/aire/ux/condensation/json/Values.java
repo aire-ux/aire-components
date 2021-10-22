@@ -11,7 +11,7 @@ import lombok.val;
 
 public class Values {
 
-  public static Value NULL_VALUE = new AbstractValue(Type.Null, null);
+  public static final Value NULL_VALUE = new AbstractValue(Type.Null, null);
 
   public static Value string(Token value) {
     val lexeme = value.getLexeme();
@@ -54,9 +54,6 @@ public class Values {
     public NumericValue(String lexeme) {
       super(Type.Number, new BigDecimal(lexeme).doubleValue());
     }
-
-
-
   }
 
   static class BooleanValue extends AbstractValue<Boolean> {
@@ -65,7 +62,6 @@ public class Values {
       super(Type.Boolean, b);
     }
   }
-
 
   static class IntegerValue extends AbstractValue<Integer> {
 
