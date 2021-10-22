@@ -124,7 +124,12 @@ public class DefaultTypeBinder implements TypeBinder {
     if (CollectionType.forType(componentType) != null) {
       return (T) readPrimitiveArray(componentType, result, collectionType, root.getChildren());
     }
-    throw new IllegalStateException();
+    int i = 0;
+    val r = (Object[]) result;
+    for (val child : root.getChildren()) {
+      r[i++] = bind(componentType, child);
+    }
+    return (T) r;
   }
 
   private Object readPrimitiveArray(Class<Object> componentType, Object result,
@@ -231,8 +236,7 @@ public class DefaultTypeBinder implements TypeBinder {
     val property = currentDescriptor.propertyNamed(Mode.Read, name);
     if (isScalar(child)) {
       property.set(result, property.convert(valueOf(child)));
-    }
-    if (expectsHomogeneousCollection(property)) {
+    } else if (expectsHomogeneousCollection(property)) {
       if (isArray(child) && !property.isCollection()) {
         val componentType = property.getComponentType();
         property.set(result, readHomogeneousArray(property, componentType, child));
@@ -240,8 +244,9 @@ public class DefaultTypeBinder implements TypeBinder {
         val collection = readCollection(property, child);
         property.set(result, collection);
       }
+    } else {
+      readObject(result, child, property);
     }
-    readObject(result, child, property);
   }
 
   private <T> void readObject(T result, SyntaxNode<Value<?>, Token> child, Property<?> property) {
@@ -267,11 +272,20 @@ public class DefaultTypeBinder implements TypeBinder {
     }
     val genericType = property.getGenericType();
     if (genericType instanceof ParameterizedType) {
-      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
+//      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
+      val discriminatorType = extractTypeFrom(property, 1);
       for (val child : node.getChildren()) {
         val key = valueOf(child);
-        val value = read((Class) mapType, child, null);
+        Class<?> actualType;
+        if(discriminatorType.snd == null) {
+          actualType = discriminatorType.fst;
+        } else {
+          actualType = readDiscriminatorType(child.getChild(0), discriminatorType.snd);
+          actualType = actualType == null ? discriminatorType.fst : actualType;
+        }
+        val value = read(actualType, child, discriminatorType.snd);
         result.put(key, value);
+
       }
     }
     return result;
@@ -289,6 +303,9 @@ public class DefaultTypeBinder implements TypeBinder {
     Class<? extends T> actualType;
     if (snd != null) {
       actualType = readDiscriminatorType(node, snd);
+      if (actualType == null) {
+        actualType = type;
+      }
     } else {
       actualType = type;
     }
@@ -327,7 +344,7 @@ public class DefaultTypeBinder implements TypeBinder {
     } else {
       collection = new ArrayList<>();
     }
-    val type = extractTypeFrom(property, child);
+    val type = extractTypeFrom(property);
     if (isWrapperType(type.fst)) {
       for (val n : child.getChildren()) {
         collection.add(property.convert(valueOf(n)));
@@ -346,7 +363,7 @@ public class DefaultTypeBinder implements TypeBinder {
       SyntaxNode<Value<?>, Token> node) {
     val children = node.getChildren();
     val array = (Object[]) Array.newInstance(componentType, children.size());
-    val typePair = extractTypeFrom(property, node);
+    val typePair = extractTypeFrom(property);
     int i = 0;
     for (val child : children) {
       array[i++] = read(typePair.fst, child, typePair.snd);
@@ -354,12 +371,12 @@ public class DefaultTypeBinder implements TypeBinder {
     return array;
   }
 
-  private Pair<Class<?>, Discriminator> extractTypeFrom(Property<?> property,
-      SyntaxNode<Value<?>, Token> child) {
+
+  private Pair<Class<?>, Discriminator> extractTypeFrom(Property<?> property, int idx) {
     Class<?> actualType = null;
     if (property.getGenericType() instanceof ParameterizedType) {
       val type = (ParameterizedType) property.getGenericType();
-      actualType = (Class<?>) type.getActualTypeArguments()[0];
+      actualType = (Class<?>) type.getActualTypeArguments()[idx];
     } else if (property.isArray()) {
       actualType = property.getComponentType();
     }
@@ -368,7 +385,10 @@ public class DefaultTypeBinder implements TypeBinder {
     } else {
       return Pair.of(actualType, null);
     }
+  }
 
+  private Pair<Class<?>, Discriminator> extractTypeFrom(Property<?> property) {
+    return extractTypeFrom(property, 0);
   }
 
   private boolean isInstantiable(Property<?> property) {
