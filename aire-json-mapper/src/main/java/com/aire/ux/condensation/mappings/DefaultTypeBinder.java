@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -119,7 +120,7 @@ public class DefaultTypeBinder implements TypeBinder {
     val result = Array.newInstance(componentType, root.getChildren().size());
     val collectionType = CollectionType.forType(componentType);
     if (CollectionType.forType(componentType) != null) {
-      return (T) readPrimitiveArray(componentType, result, collectionType, root.getChildren());
+      return (T) readPrimitiveArray(result, collectionType, root.getChildren());
     }
     int i = 0;
     val r = (Object[]) result;
@@ -130,10 +131,7 @@ public class DefaultTypeBinder implements TypeBinder {
   }
 
   private Object readPrimitiveArray(
-      Class<Object> componentType,
-      Object result,
-      CollectionType collectionType,
-      List<SyntaxNode<Value<?>, Token>> children) {
+      Object result, CollectionType collectionType, List<SyntaxNode<Value<?>, Token>> children) {
 
     switch (collectionType) {
       case String:
@@ -210,14 +208,14 @@ public class DefaultTypeBinder implements TypeBinder {
     val currentDescriptor = descriptorFor(type);
     for (val child : node.getChildren()) {
       switch (typeOf(child)) {
-          /** at this point we're at the identifier */
+        /** at this point we're at the identifier */
         case String:
           readValue(result, currentDescriptor, child, child.getValue());
           break;
         case Object:
           bind(type, result, child);
           break;
-          //          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
+        //          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
         default:
           throw new UnsupportedOperationException();
       }
@@ -260,6 +258,7 @@ public class DefaultTypeBinder implements TypeBinder {
     }
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   private Map<?, ?> readMap(
       Class<Object> type, Property<?> property, SyntaxNode<Value<?>, Token> node) {
     final Map result;
@@ -271,6 +270,7 @@ public class DefaultTypeBinder implements TypeBinder {
     val genericType = property.getGenericType();
     if (genericType instanceof ParameterizedType) {
       //      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
+      Function converter = property.getKeyConverter();
       val discriminatorType = extractTypeFrom(property, 1);
       for (val child : node.getChildren()) {
         val key = valueOf(child);
@@ -282,7 +282,7 @@ public class DefaultTypeBinder implements TypeBinder {
           actualType = actualType == null ? discriminatorType.fst : actualType;
         }
         val value = read(actualType, child, discriminatorType.snd);
-        result.put(key, value);
+        result.put(converter != null ? converter.apply(key) : key, value);
       }
     }
     return result;

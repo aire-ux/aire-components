@@ -2,6 +2,7 @@ package com.aire.ux.condensation;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
+import java.util.function.Function;
 
 public interface Property<T extends AccessibleObject> {
 
@@ -10,6 +11,13 @@ public interface Property<T extends AccessibleObject> {
     Write,
     Normalized
   }
+
+  /**
+   * @return a key converter if and only if isMap() returns true, a {@code @Convert} annotation is
+   *     present on the property, and the {@code Converter(key=)} property is set to an instantiable
+   *     type
+   */
+  Function<?, ?> getKeyConverter();
 
   /**
    * if a property has a converter, apply that converter to convert the property to the desired type

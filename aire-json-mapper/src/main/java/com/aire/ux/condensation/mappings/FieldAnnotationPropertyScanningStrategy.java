@@ -3,6 +3,7 @@ package com.aire.ux.condensation.mappings;
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.Property;
+import com.aire.ux.condensation.TypeInstantiator;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,11 @@ import lombok.val;
 public class FieldAnnotationPropertyScanningStrategy implements PropertyScanningStrategy {
 
   public static final String NONE = "..none..";
+  private final TypeInstantiator instantiator;
+
+  public FieldAnnotationPropertyScanningStrategy(final TypeInstantiator instantiator) {
+    this.instantiator = instantiator;
+  }
 
   @Override
   public <T> Set<Property<?>> scan(Class<T> type) {
@@ -40,13 +46,13 @@ public class FieldAnnotationPropertyScanningStrategy implements PropertyScanning
     val alias = annotation.alias();
     val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? field.getName() : alias.write();
-    return new FieldProperty(field, type, readAlias, writeAlias);
+    return new FieldProperty(instantiator, field, type, readAlias, writeAlias);
   }
 
   private <T> Property<?> constructElementProperty(Class<T> type, Field field, Element annotation) {
     val alias = annotation.alias();
     val readAlias = NONE.equals(alias.read()) ? field.getName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? field.getName() : alias.write();
-    return new FieldProperty(field, type, readAlias, writeAlias);
+    return new FieldProperty(instantiator, field, type, readAlias, writeAlias);
   }
 }

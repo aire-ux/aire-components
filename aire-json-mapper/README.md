@@ -97,8 +97,14 @@ class ExampleStrings {
   }
 }
 
-class ExampleObjects {
+```
 
+### Arrays of Objects
+
+Condensation also supports arrays of objects.  The `Person` type mapped above may be read as follows:
+```java
+
+class Example {
   public Example() {
     Condensation condensation = Condensation.create("json");
     String value = "[\n"
@@ -112,9 +118,67 @@ class ExampleObjects {
                    + "    \"lastName\": \"Porgnorgler\"\n"
                    + "  }\n"
                    + "]";
-    Person[] values = condensation.read(Person[].class, "[\"1\",\"2\",\"3\",\"4\"]");
+    Person[] values = condensation.read(Person[].class, value);
   }
 }
+```
+
+### Maps
+
+Condensation supports maps whose values may be any mapped type or primitive,
+and whose keys may be mapped to strings.  
+
+```java
+    class StringToIntegerConverter implements Function<String, Integer> {
+
+      @Override
+      public Integer apply(String s) {
+        return Integer.parseInt(s);
+      }
+    }
+    @RootElement
+    class KV {
+
+      @Element
+      @Convert(key = StringToIntegerConverter.class)
+      Map<Integer, Integer> elements;
+
+    }
+    val value = "{" + "\"elements\": {" + "\"1\": 1," + "\"2\": 3}" + "} ";
+    KV kv = condensation.read(KV.class, value);
+```
+
+Converters may be applied for both the key and the value of a map:
+
+```java
+
+class IntegerToStringConverter implements Function<Integer, String> {
+
+  @Override
+  public String apply(Integer s) {
+    return s.toString();
+  }
+}
+class StringToIntegerConverter implements Function<String, Integer> {
+
+  @Override
+  public Integer apply(String s) {
+    return Integer.parseInt(s);
+  }
+}
+@RootElement
+class KV {
+
+  @Element
+  @Convert(
+      key = StringToIntegerConverter.class, 
+      value = IntegerToStringConverter.class
+  )
+  Map<Integer, Integer> elements;
+
+}
+val value = "{" + "\"elements\": {" + "1: \"1\"," + "2: \"3\"}" + "} ";
+KV kv = condensation.read(KV.class, value);
 ```
 
 

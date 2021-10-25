@@ -1,7 +1,9 @@
 package com.aire.ux.condensation.mappings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
+import com.aire.ux.condensation.TypeInstantiator;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,8 @@ class MutatorPropertyTest {
     }
     val getter = A.class.getDeclaredMethod("getInt");
     val setter = A.class.getDeclaredMethod("setInt", int.class);
-    val property = new MutatorProperty(getter, setter, A.class, "test", "test");
+    val property =
+        new MutatorProperty(mock(TypeInstantiator.class), getter, setter, A.class, "test", "test");
     assertEquals(property.getMemberNormalizedName(), "int");
     val instance = new A();
     property.set(instance, 1);

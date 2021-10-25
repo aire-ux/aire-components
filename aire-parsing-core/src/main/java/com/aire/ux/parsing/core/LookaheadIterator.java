@@ -73,7 +73,7 @@ final class DefaultLookaheadIterator<T> implements LookaheadIterator<T> {
   @Override
   public Stream<T> toStream() {
     return Stream.concat(
-        StreamSupport.stream(lookback.spliterator(), false),
+        lookback.stream(),
         StreamSupport.stream(
             Spliterators.spliteratorUnknownSize(delegate, Spliterator.ORDERED), false));
   }
