@@ -58,8 +58,8 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
             key ->
                 new DelegatingPropertyScanner(
                         getTypeInstantiator(),
-                        new FieldAnnotationPropertyScanningStrategy(),
-                        new MethodAnnotationPropertyScanningStrategy())
+                        new FieldAnnotationPropertyScanningStrategy(typeInstantiator),
+                        new MethodAnnotationPropertyScanningStrategy(typeInstantiator))
                     .scan(type, traverseHierarchy, includeInterfaces));
   }
 

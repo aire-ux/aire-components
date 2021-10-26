@@ -11,5 +11,9 @@ import java.util.function.Function;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Convert {
+
+  /** @return a mapper for the key-type */
+  Class<? extends Function> key() default Function.class;
+
   Class<? extends Function> value() default Function.class;
 }

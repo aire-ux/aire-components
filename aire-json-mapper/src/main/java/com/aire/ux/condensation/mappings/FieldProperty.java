@@ -2,6 +2,7 @@ package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
 import com.aire.ux.condensation.Convert;
+import com.aire.ux.condensation.TypeInstantiator;
 import io.sunshower.arcus.reflect.Reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -9,13 +10,17 @@ import java.util.function.Function;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class FieldProperty extends AbstractProperty<Field> {
 
-  protected FieldProperty(Field member, Class<?> host, String readAlias, String writeAlias) {
-    super(member, host, readAlias, writeAlias);
+  protected FieldProperty(
+      TypeInstantiator instantiator,
+      Field member,
+      Class<?> host,
+      String readAlias,
+      String writeAlias) {
+    super(instantiator, member, host, readAlias, writeAlias);
   }
-
-
 
   @Override
   @SuppressWarnings("unchecked")
@@ -79,7 +84,21 @@ public class FieldProperty extends AbstractProperty<Field> {
   @SuppressWarnings("unchecked")
   protected Function<?, Field> readConverter(Class<?> host, Field member) {
     if (member.isAnnotationPresent(Convert.class)) {
-      return Reflect.instantiate(member.getAnnotation(Convert.class).value());
+      val convert = member.getAnnotation(Convert.class);
+      if (!Function.class.equals(convert.value())) {
+        return Reflect.instantiate(member.getAnnotation(Convert.class).value());
+      }
+    }
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected Function<String, ?> readKeyConverter(Class<?> host, Field member) {
+    if (member.isAnnotationPresent(Convert.class)) {
+      val type = member.getAnnotation(Convert.class);
+      if (!Function.class.equals(type.key())) {
+        return getInstantiator().instantiate(type.key());
+      }
     }
     return null;
   }

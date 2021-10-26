@@ -2,8 +2,7 @@ package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
 import com.aire.ux.condensation.Convert;
-import io.sunshower.arcus.reflect.Reflect;
-import java.lang.reflect.Field;
+import com.aire.ux.condensation.TypeInstantiator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -14,8 +13,13 @@ import lombok.val;
 public class MutatorProperty extends AbstractProperty<Mutator> {
 
   protected MutatorProperty(
-      Method getter, Method setter, Class<?> host, String readAlias, String writeAlias) {
-    super(new Mutator(getter, setter), host, readAlias, writeAlias);
+      TypeInstantiator instantiator,
+      Method getter,
+      Method setter,
+      Class<?> host,
+      String readAlias,
+      String writeAlias) {
+    super(instantiator, new Mutator(getter, setter), host, readAlias, writeAlias);
     getMember().setAccessible(true);
     if (getMember().canAccess(this)) {
       throw new IllegalStateException(
@@ -23,6 +27,11 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
               "Error: member " + "(read: %s, write: %s) on type %s is not accessible",
               getter, setter, getter.getDeclaringClass()));
     }
+  }
+
+  @Override
+  public Function<?, ?> getKeyConverter() {
+    return null;
   }
 
   @Override
@@ -89,9 +98,23 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
   @Override
   @SuppressWarnings("unchecked")
   protected Function<?, Mutator> readConverter(Class<?> host, Mutator member) {
-    if(member.isAnnotationPresent(Convert.class)) {
+    if (member.isAnnotationPresent(Convert.class)) {
       val type = member.getAnnotation(Convert.class);
-      return Reflect.instantiate(type.value());
+      if (!Function.class.equals(type.value())) {
+        return getInstantiator().instantiate(type.value());
+      }
+    }
+    return null;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  protected Function<String, ?> readKeyConverter(Class<?> host, Mutator member) {
+    if (member.isAnnotationPresent(Convert.class)) {
+      val type = member.getAnnotation(Convert.class);
+      if (!Function.class.equals(type.key())) {
+        return getInstantiator().instantiate(type.key());
+      }
     }
     return null;
   }

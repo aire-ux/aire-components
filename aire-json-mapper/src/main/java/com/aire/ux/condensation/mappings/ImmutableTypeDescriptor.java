@@ -3,6 +3,7 @@ package com.aire.ux.condensation.mappings;
 import com.aire.ux.condensation.Property;
 import com.aire.ux.condensation.Property.Mode;
 import com.aire.ux.condensation.TypeDescriptor;
+import com.aire.ux.condensation.TypeInstantiator;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -15,10 +16,13 @@ public class ImmutableTypeDescriptor<T> implements TypeDescriptor<T> {
 
   private final Class<T> type;
   private final List<Property<?>> properties;
+  private final TypeInstantiator instantiator;
   private final Map<Mode, Map<String, Property<?>>> propertyCache;
 
-  public ImmutableTypeDescriptor(@NonNull Class<T> type, List<Property<?>> properties) {
+  public ImmutableTypeDescriptor(
+      TypeInstantiator typeInstantiator, @NonNull Class<T> type, List<Property<?>> properties) {
     this.type = type;
+    this.instantiator = typeInstantiator;
     this.properties = Collections.unmodifiableList(properties);
     this.propertyCache = new EnumMap<>(Mode.class);
   }

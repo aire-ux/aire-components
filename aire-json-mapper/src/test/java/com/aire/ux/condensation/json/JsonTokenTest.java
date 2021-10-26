@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -123,6 +124,7 @@ class JsonTokenTest {
 
   @Test
   @SneakyThrows
+  @Disabled("Testing a huge file that we don't want to commit into github")
   void ensureReadingHugeFileWorks() {
     val contents = Files.readString(Path.of("/home/josiah/Downloads/citylots.json"));
     long l1 = System.currentTimeMillis();

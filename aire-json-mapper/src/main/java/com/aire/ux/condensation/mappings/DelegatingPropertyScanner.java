@@ -47,7 +47,7 @@ public class DelegatingPropertyScanner implements PropertyScanner {
               .flatMap(delegate -> delegate.scan(type).stream())
               .collect(Collectors.toList());
     }
-    return new ImmutableTypeDescriptor<T>(type, properties);
+    return new ImmutableTypeDescriptor<T>(typeInstantiator, type, properties);
   }
 
   <T> List<T> concat(Collection<T>... collections) {

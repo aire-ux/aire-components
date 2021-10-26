@@ -5,6 +5,7 @@ import static com.aire.ux.condensation.mappings.FieldAnnotationPropertyScanningS
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.Property;
+import com.aire.ux.condensation.TypeInstantiator;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -16,6 +17,12 @@ import lombok.val;
 
 @SuppressWarnings("PMD")
 public class MethodAnnotationPropertyScanningStrategy implements PropertyScanningStrategy {
+
+  private final TypeInstantiator instantiator;
+
+  public MethodAnnotationPropertyScanningStrategy(TypeInstantiator typeInstantiator) {
+    this.instantiator = typeInstantiator;
+  }
 
   @Override
   public <T> Set<Property<?>> scan(Class<T> type) {
@@ -67,7 +74,7 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
     val alias = attribute.alias();
     val readAlias = NONE.equals(alias.read()) ? descriptor.getDisplayName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? descriptor.getDisplayName() : alias.write();
-    return new MutatorProperty(readMethod, writeMethod, type, readAlias, writeAlias);
+    return new MutatorProperty(instantiator, readMethod, writeMethod, type, readAlias, writeAlias);
   }
 
   private Property<?> scanElement(
@@ -79,7 +86,7 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
     val alias = element.alias();
     val readAlias = NONE.equals(alias.read()) ? descriptor.getDisplayName() : alias.read();
     val writeAlias = NONE.equals(alias.write()) ? descriptor.getDisplayName() : alias.write();
-    return new MutatorProperty(readMethod, writeMethod, type, readAlias, writeAlias);
+    return new MutatorProperty(instantiator, readMethod, writeMethod, type, readAlias, writeAlias);
   }
 
   private <T extends Annotation> T locateOn(Class<T> elementClass, Method... methods) {

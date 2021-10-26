@@ -37,29 +37,51 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
 
   private final String writeAlias;
   private final Function<?, T> converter;
+  private final TypeInstantiator instantiator;
+  private final Function<String, ?> keyConverter;
 
   protected AbstractProperty(
-      final T member, final Class<?> host, final String readAlias, final String writeAlias) {
+      final TypeInstantiator instantiator,
+      final T member,
+      final Class<?> host,
+      final String readAlias,
+      final String writeAlias) {
     this.host = host;
     this.member = member;
     this.readAlias = readAlias;
     this.writeAlias = writeAlias;
+    this.instantiator = instantiator;
     this.converter = readConverter(host, member);
+    this.keyConverter = readKeyConverter(host, member);
   }
 
-  protected abstract Function<?,T> readConverter(Class<?> host, T member);
-
   protected AbstractProperty(
+      @NonNull TypeInstantiator instantiator,
       @NonNull final T member,
       @NonNull final Class<?> host,
       @NonNull final String readAlias,
       @NonNull final String writeAlias,
-      @Nullable final Function<?, T> converter) {
+      @Nullable final Function<?, T> converter,
+      @Nullable final Function<String, ?> keyConverter) {
     this.host = host;
     this.member = member;
     this.readAlias = readAlias;
     this.writeAlias = writeAlias;
     this.converter = converter;
+    this.keyConverter = keyConverter;
+    this.instantiator = instantiator;
+  }
+
+  protected TypeInstantiator getInstantiator() {
+    return instantiator;
+  }
+
+  protected abstract Function<?, T> readConverter(Class<?> host, T member);
+
+  protected abstract Function<String, ?> readKeyConverter(Class<?> host, T member);
+
+  public Function<?, ?> getKeyConverter() {
+    return keyConverter;
   }
 
   @Override

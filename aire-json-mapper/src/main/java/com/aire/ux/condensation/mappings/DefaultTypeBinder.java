@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -114,15 +115,12 @@ public class DefaultTypeBinder implements TypeBinder {
     }
   }
 
-  private <T> T bindArray(
-      Class<T> type,
-      SyntaxNode<Value<?>, Token> root
-  ) {
+  private <T> T bindArray(Class<T> type, SyntaxNode<Value<?>, Token> root) {
     val componentType = actualType(type);
     val result = Array.newInstance(componentType, root.getChildren().size());
     val collectionType = CollectionType.forType(componentType);
     if (CollectionType.forType(componentType) != null) {
-      return (T) readPrimitiveArray(componentType, result, collectionType, root.getChildren());
+      return (T) readPrimitiveArray(result, collectionType, root.getChildren());
     }
     int i = 0;
     val r = (Object[]) result;
@@ -132,8 +130,8 @@ public class DefaultTypeBinder implements TypeBinder {
     return (T) r;
   }
 
-  private Object readPrimitiveArray(Class<Object> componentType, Object result,
-      CollectionType collectionType, List<SyntaxNode<Value<?>, Token>> children) {
+  private Object readPrimitiveArray(
+      Object result, CollectionType collectionType, List<SyntaxNode<Value<?>, Token>> children) {
 
     switch (collectionType) {
       case String:
@@ -161,8 +159,7 @@ public class DefaultTypeBinder implements TypeBinder {
     return array;
   }
 
-  private Object readLongArray(Object result,
-      List<SyntaxNode<Value<?>, Token>> children) {
+  private Object readLongArray(Object result, List<SyntaxNode<Value<?>, Token>> children) {
     val array = (long[]) result;
     int i = 0;
     for (val child : children) {
@@ -171,8 +168,7 @@ public class DefaultTypeBinder implements TypeBinder {
     return array;
   }
 
-  private Object readShortArray(Object result,
-      List<SyntaxNode<Value<?>, Token>> children) {
+  private Object readShortArray(Object result, List<SyntaxNode<Value<?>, Token>> children) {
     val array = (short[]) result;
     int i = 0;
     for (val child : children) {
@@ -212,14 +208,14 @@ public class DefaultTypeBinder implements TypeBinder {
     val currentDescriptor = descriptorFor(type);
     for (val child : node.getChildren()) {
       switch (typeOf(child)) {
-        /** at this point we're at the identifier */
+          /** at this point we're at the identifier */
         case String:
           readValue(result, currentDescriptor, child, child.getValue());
           break;
         case Object:
           bind(type, result, child);
           break;
-//          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
+          //          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
         default:
           throw new UnsupportedOperationException();
       }
@@ -262,8 +258,9 @@ public class DefaultTypeBinder implements TypeBinder {
     }
   }
 
-  private Map<?, ?> readMap(Class<Object> type,
-      Property<?> property, SyntaxNode<Value<?>, Token> node) {
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  private Map<?, ?> readMap(
+      Class<Object> type, Property<?> property, SyntaxNode<Value<?>, Token> node) {
     final Map result;
     if (isInstantiable(property)) {
       result = (Map<?, ?>) instantiate(type);
@@ -272,34 +269,31 @@ public class DefaultTypeBinder implements TypeBinder {
     }
     val genericType = property.getGenericType();
     if (genericType instanceof ParameterizedType) {
-//      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
+      //      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
+      Function converter = property.getKeyConverter();
       val discriminatorType = extractTypeFrom(property, 1);
       for (val child : node.getChildren()) {
         val key = valueOf(child);
         Class<?> actualType;
-        if(discriminatorType.snd == null) {
+        if (discriminatorType.snd == null) {
           actualType = discriminatorType.fst;
         } else {
           actualType = readDiscriminatorType(child.getChild(0), discriminatorType.snd);
           actualType = actualType == null ? discriminatorType.fst : actualType;
         }
         val value = read(actualType, child, discriminatorType.snd);
-        result.put(key, value);
-
+        result.put(converter != null ? converter.apply(key) : key, value);
       }
     }
     return result;
-
   }
 
   private boolean isMap(Class<Object> type) {
     return Map.class.isAssignableFrom(type);
   }
 
-
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private <T> T read(Class<T> type, SyntaxNode<Value<?>, Token> node,
-      Discriminator snd) {
+  private <T> T read(Class<T> type, SyntaxNode<Value<?>, Token> node, Discriminator snd) {
     Class<? extends T> actualType;
     if (snd != null) {
       actualType = readDiscriminatorType(node, snd);
@@ -329,8 +323,8 @@ public class DefaultTypeBinder implements TypeBinder {
       val value = valueOf(child);
       if (field.equals(value)) {
         val typeValue = child.getChild(0);
-        return (Class<T>) Class.forName(valueOf(typeValue), true, Thread.currentThread()
-            .getContextClassLoader());
+        return (Class<T>)
+            Class.forName(valueOf(typeValue), true, Thread.currentThread().getContextClassLoader());
       }
     }
     return null;
@@ -358,9 +352,8 @@ public class DefaultTypeBinder implements TypeBinder {
     return collection;
   }
 
-
-  private Object readObjectArray(Property<?> property, Class<Object> componentType,
-      SyntaxNode<Value<?>, Token> node) {
+  private Object readObjectArray(
+      Property<?> property, Class<Object> componentType, SyntaxNode<Value<?>, Token> node) {
     val children = node.getChildren();
     val array = (Object[]) Array.newInstance(componentType, children.size());
     val typePair = extractTypeFrom(property);
@@ -370,7 +363,6 @@ public class DefaultTypeBinder implements TypeBinder {
     }
     return array;
   }
-
 
   private Pair<Class<?>, Discriminator> extractTypeFrom(Property<?> property, int idx) {
     Class<?> actualType = null;
@@ -410,7 +402,6 @@ public class DefaultTypeBinder implements TypeBinder {
       return readObjectArray(property, componentType, child);
     }
   }
-
 
   @SuppressWarnings("unchecked")
   private Object readPrimitiveArray(
@@ -531,8 +522,7 @@ public class DefaultTypeBinder implements TypeBinder {
 
   private boolean expectsHomogeneousCollection(Property<?> property) {
     if (property.isCollection() || property.isArray()) {
-      if (isWrapperType(property.getComponentType())
-          || property.getComponentType().isPrimitive()) {
+      if (isWrapperType(property.getComponentType()) || property.getComponentType().isPrimitive()) {
         return true;
       }
 
@@ -613,6 +603,5 @@ public class DefaultTypeBinder implements TypeBinder {
     }
 
     abstract Number convert(Double d);
-
   }
 }
