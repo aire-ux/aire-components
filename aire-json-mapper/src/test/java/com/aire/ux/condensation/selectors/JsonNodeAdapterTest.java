@@ -2,9 +2,13 @@ package com.aire.ux.condensation.selectors;
 
 import static com.aire.ux.condensation.json.JsonParserTest.read;
 
+import com.aire.ux.condensation.Condensation;
+import com.aire.ux.condensation.Element;
+import com.aire.ux.condensation.RootElement;
 import com.aire.ux.condensation.json.JsonParser;
 import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.select.css.CssSelectorParser;
+import java.util.Collection;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +25,11 @@ class JsonNodeAdapterTest {
     System.out.println(results);
   }
 
+  @Test
+  void ensureQueryingFriendsWorks() {
+
+
+  }
   @Test
   void ensureParsingLargeFileWorks() {
     long average = 0;

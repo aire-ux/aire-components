@@ -95,7 +95,6 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
     return member;
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
   protected Function<?, Mutator> readConverter(Class<?> host, Mutator member) {

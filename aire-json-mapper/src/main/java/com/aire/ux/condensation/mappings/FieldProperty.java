@@ -10,6 +10,7 @@ import java.util.function.Function;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class FieldProperty extends AbstractProperty<Field> {
 
   protected FieldProperty(
@@ -20,7 +21,6 @@ public class FieldProperty extends AbstractProperty<Field> {
       String writeAlias) {
     super(instantiator, member, host, readAlias, writeAlias);
   }
-
 
   @Override
   @SuppressWarnings("unchecked")
@@ -91,7 +91,6 @@ public class FieldProperty extends AbstractProperty<Field> {
     }
     return null;
   }
-
 
   @SuppressWarnings("unchecked")
   protected Function<String, ?> readKeyConverter(Class<?> host, Field member) {
