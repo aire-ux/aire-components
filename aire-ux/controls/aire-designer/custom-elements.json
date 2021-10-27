@@ -2,8 +2,8 @@
   "version": 2,
   "tags": [
     {
-      "name": "aire-button",
-      "description": "A component with a title and an action counter",
+      "name": "aire-designer",
+      "description": "Full-featured bindings and goodies to MXGraph",
       "properties": [
         {
           "name": "title",

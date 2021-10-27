@@ -1,7 +1,9 @@
 const gulp = require('gulp'),
     csslit = require('gulp-csslit'),
     rename = require('gulp-rename'),
-    sass = require('gulp-dart-sass');
+    rollup = require('gulp-rollup'),
+    sass = require('gulp-dart-sass'),
+    typescript = require('gulp-typescript');
 
 const themes = [
   'base',
@@ -12,7 +14,9 @@ const themes = [
   'aire'
 ]
 
-
+/**
+ * theme-related tasks
+ */
 const themeTasks = themes.map(theme => {
   const name = `build:theme:${theme}`;
   gulp.task(name, () => {
@@ -29,12 +33,41 @@ const themeTasks = themes.map(theme => {
   return name;
 });
 
-gulp.task('build:themes', gulp.parallel(...themeTasks));
+/**
+ * build themes
+ */
+gulp.task(
+    'build:themes'
+    , gulp.parallel(...themeTasks)
+);
 
-gulp.task('themes:build:watch', () => {
-  gulp.watch('./src/themes/**/*.scss', gulp.series('build:themes'))
-});
+/**
+ * watch theme files to see if any need to be rebuilt
+ */
+gulp.task(
+    'themes:build:watch',
+    () => {
+      gulp.watch(
+          './src/themes/**/*.scss',
+          gulp.series('build:themes')
+      )
+    }
+);
 
-// exports.build = gulp.parallel(...themeTasks);
-// exports['build:watch'] =
+const typescriptProject =
+    typescript.createProject('tsconfig.json');
+/**
+ * Typescript-related tasks
+ */
+
+gulp.task('build:source', () => {
+  return typescriptProject
+      .src()
+      .pipe(typescriptProject())
+      .pipe(gulp.dest('dist'));
+})
+
+
+
+
 
