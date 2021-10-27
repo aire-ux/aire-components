@@ -84,5 +84,4 @@ class CondensationTest {
     assertEquals(result.elements.size(), 2);
     assertEquals(result.elements.get(2), 3);
   }
-
 }
