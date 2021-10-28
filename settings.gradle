@@ -38,7 +38,6 @@ include(
          */
         'aire-ux-flow:controls:aire-button',
         'aire-ux-flow:controls:aire-designer',
-        'aire-ux-demos:aire-ux-flow-demo',
 
         'aire-ux',
         /**
