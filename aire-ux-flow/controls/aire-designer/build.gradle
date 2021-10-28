@@ -1,22 +1,17 @@
-plugins {
-    id "com.github.node-gradle.node" version "3.1.0"
+aire {
+    control = true
 }
 
 dependencies {
     api "com.vaadin:flow-server"
     api project(':aire-ux-core')
-
     api 'io.sunshower.arcus:arcus-lang'
     api 'io.sunshower.arcus:arcus-reflect'
     api 'javax.servlet:javax.servlet-api'
 
     testImplementation project(':aire-test-vaadin')
+
+
+    aireComponent project(':aire-ux:controls:aire-designer-component')
 }
 
-build.dependsOn npmInstall
-
-jar {
-    from("${project.projectDir}/node_modules/mxgraph") {
-        into "client/mxgraph"
-    }
-}
