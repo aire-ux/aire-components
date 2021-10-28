@@ -1,3 +1,6 @@
+aire {
+    component = true
+}
 
 dependencies {
     api "com.vaadin:flow-server"
@@ -7,7 +10,7 @@ dependencies {
     api 'io.sunshower.arcus:arcus-reflect'
     api 'javax.servlet:javax.servlet-api'
 
-    aire project(':aire-ux:controls:aire-designer')
+    aireComponent project(':aire-ux:controls:aire-designer')
 
     testImplementation project(':aire-test-vaadin')
 }

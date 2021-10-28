@@ -64,7 +64,11 @@ subprojects {
     apply plugin: 'io.freefair.lombok'
     apply plugin: "com.github.spotbugs"
     apply plugin: "com.diffplug.spotless"
-    extensions.add('component', new AireComponent(project))
+
+
+    extensions.add('aire', new AireComponent(project))
+
+
     spotbugsMain {
         reports {
             html {
@@ -82,7 +86,7 @@ subprojects {
     }
 
     configurations {
-        aire {
+        aireComponent {
             transitive false
         }
     }
@@ -131,12 +135,6 @@ subprojects {
             archiveClassifier = 'javadoc'
         }
 
-        afterEvaluate { Project project -> {
-                if (project.component) {
-
-                }
-            }
-        }
 
 
         publications {
