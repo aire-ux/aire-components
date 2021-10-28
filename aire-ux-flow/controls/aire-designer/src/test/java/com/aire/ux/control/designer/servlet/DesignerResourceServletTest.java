@@ -3,7 +3,6 @@ package com.aire.ux.control.designer.servlet;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import lombok.val;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class DesignerResourceServletTest {
