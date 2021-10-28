@@ -15,9 +15,6 @@ class AireComponent {
             project.with {
                 apply plugin: 'com.github.node-gradle.node'
 
-//                task bundle(type:NpmTask) {
-//                }
-
                 project.task(type: NpmTask, 'bundle', {
                     args = ['run', 'bundle', '--no-warnings']
                 })
