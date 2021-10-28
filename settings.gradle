@@ -44,5 +44,6 @@ include(
         /**
          * javascript controls
          */
-        'aire-ux:controls:aire-designer'
+        'aire-ux:controls:aire-button-component',
+        'aire-ux:controls:aire-designer-component'
 )

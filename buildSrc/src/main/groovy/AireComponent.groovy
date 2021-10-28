@@ -7,26 +7,21 @@ class AireComponent {
         this.project = project;
     }
 
-    void setComponent(boolean component) {
-        if (component) {
+
+    void setControl(boolean control) {
+        if (control) {
             project.afterEvaluate {
                 project.with {
-                    apply plugin: 'java'
                     jar {
+
                         exclude(
                                 'META-INF/*.SF',
                                 'META-INF/*.DSA',
                                 'META-INF/*.RSA',
                                 'META-INF/*.MF'
                         )
-
-                        manifest {
-                            attributes 'Class-Path': configurations
-                                    .aireComponent
-                                    .files
-                                    .collect { file ->
-                                        "component/${file.name}"
-                                    }
+                        configurations.aireComponent.files.each {
+                            from(zipTree(it))
                         }
                     }
                 }
