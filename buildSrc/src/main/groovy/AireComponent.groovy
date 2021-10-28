@@ -2,11 +2,41 @@ import org.gradle.api.Project;
 
 class AireComponent {
     final Project project;
+    private boolean component;
 
     AireComponent(Project project) {
         this.project = project;
     }
 
+
+    void setComponent(boolean component) {
+        this.component = component
+        project.afterEvaluate {
+            project.with {
+                apply plugin: 'com.github.node-gradle.node'
+
+//                task bundle(type:NpmTask) {
+//                }
+
+                project.task(type: NpmTask, 'bundle', {
+                    args = ['run', 'bundle', '--no-warnings']
+                })
+
+                /**
+                 * install npm before building
+                 */
+                bundle.dependsOn npmInstall
+                bundle.mustRunAfter npmInstall
+
+
+                /**
+                 *
+                 */
+                build.dependsOn bundle
+                build.mustRunAfter bundle
+            }
+        }
+    }
 
     void setControl(boolean control) {
         if (control) {
