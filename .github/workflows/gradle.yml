@@ -2,10 +2,9 @@ name: Java CI
 
 on:
   push:
-    tags:
-      - '!release/*'
     branches:
       - '*'
+    tags:
       - '!release/*'
 
 #################   Build Overview #################
