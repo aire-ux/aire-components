@@ -10,9 +10,15 @@ export default {
   external: ['lit-html', 'lit-element', 'mxGraph'],
   input: "./src/index.ts",
   output: {
+    sourcemap: true,
     // dir: 'dist',
+    name: 'AireDesigner',
     format: 'iife',
-    file: 'dist/iife/aire-designer.min.js'
+    file: 'dist/iife/aire-designer.min.js',
+    globals : {
+      'mxGraph': 'mxGraph',
+      'lit-element': 'lit-element'
+    }
   },
   plugins: [
 

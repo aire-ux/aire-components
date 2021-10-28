@@ -5,8 +5,28 @@ plugins {
 
 
 task bundle(type:NpmTask) {
-
+    args = ['run', 'bundle', '--no-warnings']
 }
 
-build.dependsOn npmInstall
+/**
+ * install npm before building
+ */
+bundle.dependsOn npmInstall
+
+
+/**
+ *
+ */
+build.dependsOn bundle
+
+
+jar {
+    from("${project.projectDir}/node_modules/mxgraph") {
+        into "ZEPHYR-INF/client/mxgraph"
+    }
+    from("${project.projectDir}/dist/iife") {
+        into "ZEPHR-INF/client/aire-designer/packages/iife"
+    }
+}
+
 

@@ -12,6 +12,8 @@ plugins {
 apply from: "$rootDir/tasks/revisions.gradle"
 
 
+
+
 allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'io.spring.dependency-management'
@@ -62,7 +64,7 @@ subprojects {
     apply plugin: 'io.freefair.lombok'
     apply plugin: "com.github.spotbugs"
     apply plugin: "com.diffplug.spotless"
-
+    extensions.add('component', new AireComponent(project))
     spotbugsMain {
         reports {
             html {
@@ -77,6 +79,12 @@ subprojects {
 
     spotbugsTest {
         enabled = false
+    }
+
+    configurations {
+        aire {
+            transitive false
+        }
     }
 
     pmd {
@@ -123,6 +131,12 @@ subprojects {
             archiveClassifier = 'javadoc'
         }
 
+        afterEvaluate { Project project -> {
+                if (project.component) {
+
+                }
+            }
+        }
 
 
         publications {

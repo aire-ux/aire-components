@@ -38,6 +38,11 @@ include(
          */
         'aire-ux-flow:controls:aire-button',
         'aire-ux-flow:controls:aire-designer',
+        'aire-ux-demos:aire-ux-flow-demo',
 
-        'aire-ux-demos:aire-ux-flow-demo'
+        'aire-ux',
+        /**
+         * javascript controls
+         */
+        'aire-ux:controls:aire-designer'
 )
