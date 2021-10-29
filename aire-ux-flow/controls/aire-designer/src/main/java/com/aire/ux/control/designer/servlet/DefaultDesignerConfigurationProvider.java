@@ -4,6 +4,6 @@ public class DefaultDesignerConfigurationProvider implements DesignerConfigurati
 
   @Override
   public DesignerConfiguration load() {
-
+    return null;
   }
 }

@@ -12,6 +12,7 @@ dependencies {
     implementation project(':aire-json-mapper')
 
     testImplementation project(':aire-test-vaadin')
+    testImplementation project(':aire-test-spring')
 
 
     aireComponent project(':aire-ux:controls:aire-designer-component')

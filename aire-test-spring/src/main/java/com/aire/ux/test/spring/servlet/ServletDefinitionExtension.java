@@ -104,15 +104,23 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
 
   private void defineServlets(Store store, WithServlets withServletsAnnotation,
       ConfigurableListableBeanFactory beanFactory) {
+
+    for (val servletDefinition : withServletsAnnotation.servlets()) {
+      if (!Servlet.class.equals(servletDefinition.type())) {
+        defineServlet(store, servletDefinition.type(), beanFactory, servletDefinition.paths());
+      }
+    }
     for (val servlet : withServletsAnnotation.value()) {
-      defineServlet(store, servlet, beanFactory);
+      if (!Servlet.class.equals(servlet)) {
+        defineServlet(store, servlet, beanFactory, getRequestMappings(servlet));
+      }
     }
 
   }
 
   @SuppressWarnings("unchecked")
   private void defineServlet(Store store, Class<? extends Servlet> servlet,
-      ConfigurableListableBeanFactory beanFactory) {
+      ConfigurableListableBeanFactory beanFactory, String[] names) {
     val definitions = (List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
         (k) -> new ArrayList<BeanDefinition>());
     /**
@@ -127,7 +135,7 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
             ServletRegistrationBean.class)
         .addConstructorArgReference(definition.getBeanClassName())
         .addConstructorArgValue(true)
-        .addConstructorArgValue(getRequestMappings(servlet))
+        .addConstructorArgValue(names)
         .addPropertyValue("initOnStartup", 1)
         .setLazyInit(false)
         .getBeanDefinition();
@@ -144,7 +152,7 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
     }
     throw new UnsupportedOperationException(
         String.format(
-            "Error: must annotation '%s' with an @WebServlet containing request mappings",
+            "Error: must annotate '%s' with an @WebServlet containing request mappings",
             servlet));
   }
 

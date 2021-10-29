@@ -12,5 +12,7 @@ import javax.servlet.Servlet;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WithServlets {
-  Class<? extends Servlet>[] value();
+  Class<? extends Servlet>[] value() default Servlet.class;
+
+  ServletDefinition[] servlets() default {};
 }
