@@ -9,12 +9,18 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import lombok.Getter;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-public class TestServlet implements Servlet, DisposableBean, InitializingBean {
+@WebServlet({"/test/*"})
+public class TestServlet extends HttpServlet implements DisposableBean, InitializingBean {
 
 
+  @Getter
   private Servlet mockServlet;
   private ServletConfig mockServletConfiguration;
 
@@ -42,6 +48,8 @@ public class TestServlet implements Servlet, DisposableBean, InitializingBean {
   @Override
   public void destroy() {
     mockServlet.destroy();
+    Mockito.reset(mockServlet);
+    Mockito.reset(mockServletConfiguration);
   }
 
   @Override

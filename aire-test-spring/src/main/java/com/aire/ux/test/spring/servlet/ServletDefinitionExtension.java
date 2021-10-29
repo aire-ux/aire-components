@@ -1,10 +1,12 @@
 package com.aire.ux.test.spring.servlet;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.Servlet;
+import javax.servlet.annotation.WebServlet;
 import lombok.val;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -43,7 +45,7 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
       ExtensionContext context) {
 
     val store = context.getStore(Namespace.create(applicationContext, context));
-
+    registerClient(store, applicationContext);
     context
         .getTestClass()
         .flatMap(testClass -> Optional.ofNullable(testClass.getAnnotation(WithServlets.class)))
@@ -55,6 +57,22 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
 
     postProcessBeanFactory(store,
         ((ConfigurableListableBeanFactory) applicationContext.getAutowireCapableBeanFactory()));
+  }
+
+  @SuppressWarnings("unchecked")
+  private void registerClient(Store store, ApplicationContext applicationContext) {
+
+    val beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
+    val beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DefaultClient.class)
+        .addConstructorArgValue(applicationContext)
+        .getBeanDefinition();
+    val definitions = (List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
+        (k) -> new ArrayList<BeanDefinition>());
+
+    definitions.add(beanDefinition);
+    beanDefinitionRegistry.registerBeanDefinition(
+        Objects.requireNonNull(beanDefinition.getBeanClassName()),
+        beanDefinition);
   }
 
   private void postProcessBeanFactory(Store store, ConfigurableListableBeanFactory beanFactory)
@@ -106,13 +124,28 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
         Objects.requireNonNull(definition.getBeanClassName()), definition);
 
     val servletRegistrationDefinition = BeanDefinitionBuilder.rootBeanDefinition(
-            ServletRegistrationBean.class).addConstructorArgReference(definition.getBeanClassName())
+            ServletRegistrationBean.class)
+        .addConstructorArgReference(definition.getBeanClassName())
+        .addConstructorArgValue(true)
+        .addConstructorArgValue(getRequestMappings(servlet))
+        .addPropertyValue("initOnStartup", 1)
+        .setLazyInit(false)
         .getBeanDefinition();
 
     ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(
-        Objects.requireNonNull(servletRegistrationDefinition.getBeanClassName()),
+        Objects.requireNonNull(definition.getBeanClassName() + "registration"),
         servletRegistrationDefinition);
     definitions.addAll(List.of(definition, servletRegistrationDefinition));
+  }
+
+  private String[] getRequestMappings(Class<? extends Servlet> servlet) {
+    if (servlet.isAnnotationPresent(WebServlet.class)) {
+      return servlet.getAnnotation(WebServlet.class).value();
+    }
+    throw new UnsupportedOperationException(
+        String.format(
+            "Error: must annotation '%s' with an @WebServlet containing request mappings",
+            servlet));
   }
 
 
@@ -121,13 +154,15 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
       ExtensionContext context) {
 
     val store = context.getStore(Namespace.create(applicationContext, context));
-    val definitions = (List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
-        (k) -> new ArrayList<BeanDefinition>());
+    val definitions = new HashSet<>((List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
+        (k) -> new ArrayList<BeanDefinition>()));
 
     val registry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
-    for (val definition : definitions) {
-      registry.removeBeanDefinition(
-          Objects.requireNonNull(definition.getBeanClassName()));
+    for (val name : registry.getBeanDefinitionNames()) {
+      val definition = registry.getBeanDefinition(name);
+      if (definitions.contains(definition)) {
+        registry.removeBeanDefinition(name);
+      }
     }
   }
 }
