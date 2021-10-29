@@ -8,15 +8,19 @@ dependencies {
     api project(':aire-test-vaadin')
 
 
+    api 'com.vaadin:flow-server'
+    api 'io.sunshower.arcus:arcus-lang'
+    api 'io.sunshower.arcus:arcus-reflect'
+    api 'javax.servlet:javax.servlet-api'
 
     /**
      *
      */
     api 'com.vaadin:vaadin-spring'
     api 'org.springframework:spring-test'
+    api 'org.mockito:mockito-junit-jupiter'
     api 'org.springframework:spring-context'
-
-    implementation 'javax.inject:javax.inject:1'
+    api 'org.springframework.boot:spring-boot'
+    api'javax.inject:javax.inject:1'
     implementation 'com.github.mvysny.kaributesting:karibu-testing-v10-spring'
-
 }

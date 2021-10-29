@@ -9,6 +9,8 @@ dependencies {
     api 'io.sunshower.arcus:arcus-reflect'
     api 'javax.servlet:javax.servlet-api'
 
+    implementation project(':aire-json-mapper')
+
     testImplementation project(':aire-test-vaadin')
 
 
