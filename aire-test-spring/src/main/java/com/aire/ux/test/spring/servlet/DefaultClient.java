@@ -1,7 +1,9 @@
 package com.aire.ux.test.spring.servlet;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -28,6 +30,7 @@ public class DefaultClient implements Client {
   }
 
   @Override
+  @SuppressFBWarnings
   public String get(String path) {
     val request = new MockHttpServletRequest();
     val response = new MockHttpServletResponse();
@@ -36,7 +39,9 @@ public class DefaultClient implements Client {
     try {
       request.setRequestURI(path);
       request.setMethod("GET");
-      context.getServletContext().getRequestDispatcher(path).include(request, response);
+      Objects.requireNonNull(context.getServletContext())
+          .getRequestDispatcher(path)
+          .include(request, response);
       servlet.service(request, response);
       return response.getContentAsString();
     } catch (IOException | ServletException ex) {
@@ -57,6 +62,5 @@ public class DefaultClient implements Client {
   }
 
   @Override
-  public void post(String path, String body) {
-  }
+  public void post(String path, String body) {}
 }

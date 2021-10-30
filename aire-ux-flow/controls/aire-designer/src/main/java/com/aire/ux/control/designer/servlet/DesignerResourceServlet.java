@@ -35,12 +35,10 @@ public class DesignerResourceServlet extends HttpServlet {
     } catch (IOException ex) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
-
   }
 
   @Nullable
   private InputStream locate(HttpServletRequest request) {
-    return configuration
-        .getResourceAsStream(request.getRequestURI());
+    return configuration.getResourceAsStream(request.getRequestURI());
   }
 }

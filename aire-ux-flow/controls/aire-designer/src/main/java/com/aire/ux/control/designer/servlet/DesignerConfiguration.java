@@ -12,12 +12,9 @@ import java.util.ServiceLoader.Provider;
 import lombok.Getter;
 import lombok.val;
 
-/**
- * the designer needs quite a few configurations. This
- */
+/** the designer needs quite a few configurations. This */
 @RootElement
 public class DesignerConfiguration implements Serializable {
-
 
   @Getter
   @Attribute(alias = @Alias(read = "resource-root"))
@@ -26,7 +23,6 @@ public class DesignerConfiguration implements Serializable {
   @Getter
   @Element(alias = @Alias(read = "request-mappings"))
   private List<String> requestMappings;
-
 
   public static DesignerConfiguration load() {
     return ServiceLoader.load(DesignerConfigurationProvider.class).stream()
@@ -39,7 +35,6 @@ public class DesignerConfiguration implements Serializable {
   public static DesignerConfigurationProvider getDefaults() {
     return new DefaultDesignerConfigurationProvider();
   }
-
 
   public ClassLoader getClassLoader() {
     return Thread.currentThread().getContextClassLoader();

@@ -17,7 +17,8 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 @EnableAireServlet
 @SpringJUnitWebConfig(classes = Cfg.class)
 @WithServlets(
-    servlets = @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/**/*.js"))
+    servlets =
+        @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/**/*.js"))
 class DesignerResourceServletTest {
 
   @Test
@@ -33,7 +34,5 @@ class DesignerResourceServletTest {
   }
 
   @ContextConfiguration
-  public static class Cfg {
-
-  }
+  public static class Cfg {}
 }
