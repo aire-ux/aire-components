@@ -7,14 +7,17 @@ import com.aire.ux.test.spring.servlet.Client;
 import com.aire.ux.test.spring.servlet.EnableAireServlet;
 import com.aire.ux.test.spring.servlet.ServletDefinition;
 import com.aire.ux.test.spring.servlet.WithServlets;
+import javax.script.ScriptException;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 @EnableAireServlet
-@ContextConfiguration(classes = Cfg.class)
-@WithServlets(servlets = @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/*"))
+@SpringJUnitWebConfig(classes = Cfg.class)
+@WithServlets(
+    servlets = @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/**/*.js"))
 class DesignerResourceServletTest {
 
   @Test
@@ -24,9 +27,9 @@ class DesignerResourceServletTest {
   }
 
   @Test
-  void ensureClientIsInjectable(@Autowired Client client) {
-    
-
+  void ensureRequestingMxClientWorks(@Autowired Client client) throws ScriptException {
+    val result = client.get("/aire/designer/client/mxgraph/javascript/mxClient.min.js");
+    assertNotNull(result);
   }
 
   @ContextConfiguration

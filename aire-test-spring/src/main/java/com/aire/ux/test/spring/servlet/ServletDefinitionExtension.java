@@ -1,5 +1,6 @@
 package com.aire.ux.test.spring.servlet;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,45 +35,51 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
     unregisterServletDefinitions(applicationContext, context);
   }
 
-
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
     val applicationContext = SpringExtension.getApplicationContext(context);
     registerServletDefinitions(applicationContext, context);
   }
 
-  private void registerServletDefinitions(ApplicationContext applicationContext,
-      ExtensionContext context) {
+  private void registerServletDefinitions(
+      ApplicationContext applicationContext, ExtensionContext context) {
 
     val store = context.getStore(Namespace.create(applicationContext, context));
     registerClient(store, applicationContext);
     context
         .getTestClass()
         .flatMap(testClass -> Optional.ofNullable(testClass.getAnnotation(WithServlets.class)))
-        .ifPresent(withServlets -> {
-          defineServlets(store, withServlets,
-              (ConfigurableListableBeanFactory)
-                  applicationContext.getAutowireCapableBeanFactory());
-        });
+        .ifPresent(
+            withServlets -> {
+              defineServlets(
+                  store,
+                  withServlets,
+                  (ConfigurableListableBeanFactory)
+                      applicationContext.getAutowireCapableBeanFactory());
+            });
 
-    postProcessBeanFactory(store,
+    postProcessBeanFactory(
+        store,
         ((ConfigurableListableBeanFactory) applicationContext.getAutowireCapableBeanFactory()));
   }
 
+  @SuppressFBWarnings
   @SuppressWarnings("unchecked")
   private void registerClient(Store store, ApplicationContext applicationContext) {
 
-    val beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
-    val beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DefaultClient.class)
-        .addConstructorArgValue(applicationContext)
-        .getBeanDefinition();
-    val definitions = (List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
-        (k) -> new ArrayList<BeanDefinition>());
+    val beanDefinitionRegistry =
+        (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
+    val beanDefinition =
+        BeanDefinitionBuilder.rootBeanDefinition(DefaultClient.class)
+            .addConstructorArgValue(applicationContext)
+            .getBeanDefinition();
+    val definitions =
+        (List<BeanDefinition>)
+            store.getOrComputeIfAbsent(KEY, (k) -> new ArrayList<BeanDefinition>());
 
     definitions.add(beanDefinition);
     beanDefinitionRegistry.registerBeanDefinition(
-        Objects.requireNonNull(beanDefinition.getBeanClassName()),
-        beanDefinition);
+        Objects.requireNonNull(beanDefinition.getBeanClassName()), beanDefinition);
   }
 
   private void postProcessBeanFactory(Store store, ConfigurableListableBeanFactory beanFactory)
@@ -80,8 +87,8 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
 
     if (!(beanFactory instanceof BeanDefinitionRegistry)) {
       throw new IllegalStateException(
-          String.format("Wrong type of bean factory (unsupported context): %s",
-              beanFactory.getClass()));
+          String.format(
+              "Wrong type of bean factory (unsupported context): %s", beanFactory.getClass()));
     }
     val names = beanFactory.getBeanNamesForAnnotation(WithServlets.class);
     for (val name : names) {
@@ -89,8 +96,8 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
     }
   }
 
-  private void scanBeanType(Store store, BeanDefinition beanDefinition,
-      ConfigurableListableBeanFactory beanFactory) {
+  private void scanBeanType(
+      Store store, BeanDefinition beanDefinition, ConfigurableListableBeanFactory beanFactory) {
 
     try {
       val classloader = beanFactory.getBeanClassLoader();
@@ -102,7 +109,9 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
     }
   }
 
-  private void defineServlets(Store store, WithServlets withServletsAnnotation,
+  private void defineServlets(
+      Store store,
+      WithServlets withServletsAnnotation,
       ConfigurableListableBeanFactory beanFactory) {
 
     for (val servletDefinition : withServletsAnnotation.servlets()) {
@@ -115,34 +124,34 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
         defineServlet(store, servlet, beanFactory, getRequestMappings(servlet));
       }
     }
-
   }
 
+  @SuppressFBWarnings
   @SuppressWarnings("unchecked")
-  private void defineServlet(Store store, Class<? extends Servlet> servlet,
-      ConfigurableListableBeanFactory beanFactory, String[] names) {
-    val definitions = (List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
-        (k) -> new ArrayList<BeanDefinition>());
-    /**
-     * register servlet class
-     */
-    val definition = BeanDefinitionBuilder
-        .rootBeanDefinition(servlet).getBeanDefinition();
-    ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(
-        Objects.requireNonNull(definition.getBeanClassName()), definition);
+  private void defineServlet(
+      Store store,
+      Class<? extends Servlet> servlet,
+      ConfigurableListableBeanFactory beanFactory,
+      String[] names) {
+    val definitions =
+        (List<BeanDefinition>)
+            store.getOrComputeIfAbsent(KEY, (k) -> new ArrayList<BeanDefinition>());
+    /** register servlet class */
+    val definition = BeanDefinitionBuilder.rootBeanDefinition(servlet).getBeanDefinition();
+    ((BeanDefinitionRegistry) beanFactory)
+        .registerBeanDefinition(Objects.requireNonNull(definition.getBeanClassName()), definition);
 
-    val servletRegistrationDefinition = BeanDefinitionBuilder.rootBeanDefinition(
-            ServletRegistrationBean.class)
-        .addConstructorArgReference(definition.getBeanClassName())
-        .addConstructorArgValue(true)
-        .addConstructorArgValue(names)
-        .addPropertyValue("initOnStartup", 1)
-        .setLazyInit(false)
-        .getBeanDefinition();
+    val servletRegistrationDefinition =
+        BeanDefinitionBuilder.rootBeanDefinition(ServletRegistrationBean.class)
+            .addConstructorArgReference(definition.getBeanClassName())
+            .addConstructorArgValue(true)
+            .addConstructorArgValue(names)
+            .setLazyInit(false)
+            .getBeanDefinition();
 
-    ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(
-        Objects.requireNonNull(definition.getBeanClassName() + "registration"),
-        servletRegistrationDefinition);
+    ((BeanDefinitionRegistry) beanFactory)
+        .registerBeanDefinition(
+            definition.getBeanClassName() + "registration", servletRegistrationDefinition);
     definitions.addAll(List.of(definition, servletRegistrationDefinition));
   }
 
@@ -152,18 +161,18 @@ public class ServletDefinitionExtension implements Extension, BeforeAllCallback,
     }
     throw new UnsupportedOperationException(
         String.format(
-            "Error: must annotate '%s' with an @WebServlet containing request mappings",
-            servlet));
+            "Error: must annotate '%s' with an @WebServlet containing request mappings", servlet));
   }
 
-
   @SuppressWarnings("unchecked")
-  private void unregisterServletDefinitions(ApplicationContext applicationContext,
-      ExtensionContext context) {
+  private void unregisterServletDefinitions(
+      ApplicationContext applicationContext, ExtensionContext context) {
 
     val store = context.getStore(Namespace.create(applicationContext, context));
-    val definitions = new HashSet<>((List<BeanDefinition>) store.getOrComputeIfAbsent(KEY,
-        (k) -> new ArrayList<BeanDefinition>()));
+    val definitions =
+        new HashSet<>(
+            (List<BeanDefinition>)
+                store.getOrComputeIfAbsent(KEY, (k) -> new ArrayList<BeanDefinition>()));
 
     val registry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
     for (val name : registry.getBeanDefinitionNames()) {

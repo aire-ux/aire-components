@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import lombok.val;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +27,6 @@ public class DefaultClient implements Client {
     this.matcher = new AntPathMatcher();
   }
 
-
   @Override
   public String get(String path) {
     val request = new MockHttpServletRequest();
@@ -36,6 +35,8 @@ public class DefaultClient implements Client {
 
     try {
       request.setRequestURI(path);
+      request.setMethod("GET");
+      context.getServletContext().getRequestDispatcher(path).include(request, response);
       servlet.service(request, response);
       return response.getContentAsString();
     } catch (IOException | ServletException ex) {
@@ -44,15 +45,11 @@ public class DefaultClient implements Client {
   }
 
   private Servlet locate(String path) {
-    val servlets = context.getBeansOfType(Servlet.class);
-    for (val servlet : servlets.values()) {
-      val type = servlet.getClass();
-      if (type.isAnnotationPresent(WebServlet.class)) {
-        val annotation = type.getAnnotation(WebServlet.class);
-        for (val p : annotation.value()) {
-          if (matcher.match(p, path)) {
-            return servlet;
-          }
+    val registrationBeans = context.getBeansOfType(ServletRegistrationBean.class);
+    for (val bean : registrationBeans.values()) {
+      for (val mapping : bean.getUrlMappings()) {
+        if (matcher.match((String) mapping, path)) {
+          return bean.getServlet();
         }
       }
     }
@@ -61,6 +58,5 @@ public class DefaultClient implements Client {
 
   @Override
   public void post(String path, String body) {
-
   }
 }

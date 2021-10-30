@@ -12,6 +12,4 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith({MockitoExtension.class, ServletDefinitionExtension.class})
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
-public @interface EnableAireServlet {
-
-}
+public @interface EnableAireServlet {}

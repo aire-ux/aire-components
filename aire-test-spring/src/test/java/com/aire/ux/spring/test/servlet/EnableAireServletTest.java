@@ -24,29 +24,26 @@ import org.springframework.web.context.WebApplicationContext;
 public class EnableAireServletTest {
 
   @Test
-  void ensureTestServletIsInjectable(@Autowired TestServlet servlet,
-      @Autowired WebApplicationContext context) {
+  void ensureTestServletIsInjectable(
+      @Autowired TestServlet servlet, @Autowired WebApplicationContext context) {
     assertNotNull(servlet);
   }
 
   @Test
   @SneakyThrows
   void ensureInvokingClientWorks(@Autowired Client client, @Autowired TestServlet servlet) {
-    doAnswer(invocation -> {
-      MockHttpServletResponse response = invocation.getArgument(1);
-      response.getWriter().write("hello!");
-      return null;
-    }).when(servlet.getMockServlet()).service(any(), any());
+    doAnswer(
+            invocation -> {
+              MockHttpServletResponse response = invocation.getArgument(1);
+              response.getWriter().write("hello!");
+              return null;
+            })
+        .when(servlet.getMockServlet())
+        .service(any(), any());
     val result = client.get("/test/hello");
     assertEquals(result, "hello!");
   }
 
-
-
   @ContextConfiguration
-  public static class Cfg {
-
-  }
-
-
+  public static class Cfg {}
 }

@@ -5,5 +5,4 @@ public interface Client {
   String get(String path);
 
   void post(String path, String body);
-
 }

@@ -7,7 +7,6 @@ import javax.servlet.Servlet;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ServletDefinition {
 
-
   String[] paths();
 
   Class<? extends Servlet> type();

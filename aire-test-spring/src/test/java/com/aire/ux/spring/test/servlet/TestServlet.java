@@ -19,9 +19,7 @@ import org.springframework.beans.factory.InitializingBean;
 @WebServlet({"/test/*"})
 public class TestServlet extends HttpServlet implements DisposableBean, InitializingBean {
 
-
-  @Getter
-  private Servlet mockServlet;
+  @Getter private Servlet mockServlet;
   private ServletConfig mockServletConfiguration;
 
   @Override
@@ -58,6 +56,4 @@ public class TestServlet extends HttpServlet implements DisposableBean, Initiali
     mockServletConfiguration = mock(ServletConfig.class);
     lenient().doReturn(mockServletConfiguration).when(mockServlet).getServletConfig();
   }
-
-
 }

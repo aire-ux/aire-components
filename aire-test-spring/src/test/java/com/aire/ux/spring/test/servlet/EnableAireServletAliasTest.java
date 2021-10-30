@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.web.context.WebApplicationContext;
 
 @EnableAireServlet
-@WithServlets(servlets = @ServletDefinition(paths = "/designer/*", type = TestServlet.class))
+@WithServlets(servlets = @ServletDefinition(paths = "/test/*", type = TestServlet.class))
 @SpringJUnitWebConfig(classes = Cfg.class)
 public class EnableAireServletAliasTest {
 
