@@ -7,6 +7,7 @@ import com.aire.ux.condensation.RootElement;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import lombok.Getter;
@@ -37,19 +38,25 @@ public class DesignerConfiguration implements Serializable {
   }
 
   public ClassLoader getClassLoader() {
-    return Thread.currentThread().getContextClassLoader();
+    return DesignerConfiguration.class.getClassLoader();
+//    return Thread.currentThread().getContextClassLoader();
   }
 
   public InputStream getResourceAsStream(String requestURI) {
-    if (requestMappings != null) {
-      val classLoader = getClassLoader();
-      for (val mapping : requestMappings) {
-        if (requestURI.startsWith(mapping)) {
-          val substr = requestURI.substring(mapping.length());
-          return classLoader.getResourceAsStream(resourceRoot + substr);
-        }
+    if (requestMappings == null) {
+      return null;
+    }
+    val classloader = getClassLoader();
+    if (classloader == null) {
+      throw new IllegalStateException("No context classloader!");
+    }
+    for (val mapping : requestMappings) {
+      if (requestURI.startsWith(mapping)) {
+        val substr = requestURI.substring(mapping.length());
+        val actualRoot = resourceRoot + substr;
+        return classloader.getResourceAsStream(actualRoot);
       }
     }
-    return null;
+    throw new NoSuchElementException("No request mapping under: " + requestURI);
   }
 }
