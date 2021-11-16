@@ -2,7 +2,6 @@ package com.aire.ux.control.designer.servlet;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.control.designer.servlet.DesignerResourceServletTest.Cfg;
 import com.aire.ux.test.spring.servlet.Client;
@@ -42,7 +41,8 @@ class DesignerResourceServletTest {
   @ParameterizedTest
   @ValueSource(strings = {"css/common.css", "resources/graph.txt", "resources/editor.txt"})
   void ensureRequestingValuesWorks(String value) {
-    val result = client.get(String.format("/aire/designer/client/mxgraph/javascript/src/%s", value));
+    val result =
+        client.get(String.format("/aire/designer/client/mxgraph/javascript/src/%s", value));
     assertFalse(result.trim().isBlank());
   }
 

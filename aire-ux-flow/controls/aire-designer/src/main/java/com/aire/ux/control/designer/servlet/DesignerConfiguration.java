@@ -38,8 +38,8 @@ public class DesignerConfiguration implements Serializable {
   }
 
   public ClassLoader getClassLoader() {
-    return DesignerConfiguration.class.getClassLoader();
-//    return Thread.currentThread().getContextClassLoader();
+    //    return DesignerConfiguration.class.getClassLoader();
+    return Thread.currentThread().getContextClassLoader();
   }
 
   public InputStream getResourceAsStream(String requestURI) {

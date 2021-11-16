@@ -21,12 +21,11 @@ import org.springframework.http.HttpStatus;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = Cfg.class)
 public class DesignerResourceServletIntegrationTest {
 
-  @Inject
-  private TestRestTemplate template;
+  @Inject private TestRestTemplate template;
 
   @ParameterizedTest
-  @ValueSource(strings = {"src/css/common.css", "src/resources/graph.txt",
-      "src/resources/editor.txt"})
+  @ValueSource(
+      strings = {"src/css/common.css", "src/resources/graph.txt", "src/resources/editor.txt"})
   void ensureRequestingValuesWorks(String value) {
     val result =
         template.getForEntity(
