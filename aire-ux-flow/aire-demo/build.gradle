@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'com.vaadin'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+}
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    implementation('com.vaadin:vaadin-spring-boot-starter') {
+        [
+                "com.vaadin.webjar",
+                "org.webjars.bowergithub.insites",
+                "org.webjars.bowergithub.polymer",
+                "org.webjars.bowergithub.polymerelements",
+                "org.webjars.bowergithub.vaadin",
+                "org.webjars.bowergithub.webcomponents"
+        ].forEach { group ->
+            exclude(group: group)
+        }
+    }
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+vaadin {
+    pnpmEnable = false
+}
+
+compileTestJava {
+    dependsOn(':aire-ux-flow:aire-demo:bootJar')
+}
+
+
+bootJar {
+    archiveFileName = 'aire-demo-exe.jar'
+}
+jar {
+    enabled = true
+}
+defaultTasks("clean", "build")

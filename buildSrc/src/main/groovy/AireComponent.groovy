@@ -31,8 +31,6 @@ class AireComponent {
                  */
                 build.dependsOn bundle
                 build.mustRunAfter bundle
-                test.dependsOn build
-                build.mustRunAfter test
             }
         }
     }
