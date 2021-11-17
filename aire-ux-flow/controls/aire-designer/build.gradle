@@ -2,6 +2,12 @@ aire {
     control = true
 }
 
+configurations{
+    demo {
+        extendsFrom implementation
+    }
+}
+
 dependencies {
     api "com.vaadin:flow-server"
     api project(':aire-ux-core')
@@ -19,5 +25,20 @@ dependencies {
 
 
     aireComponent project(':aire-ux:controls:aire-designer-component')
+
+
+    demo 'org.springframework.boot:spring-boot-test'
+    demo 'org.springframework.boot:spring-boot-starter-web'
 }
 
+
+sourceSets {
+    demo {
+        java {
+            srcDir 'src/demo/java'
+        }
+        resources {
+            srcDir 'src/demo/resources'
+        }
+    }
+}
