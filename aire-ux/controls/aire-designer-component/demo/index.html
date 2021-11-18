@@ -10,9 +10,6 @@
 </head>
 <body>
 <div id="demo" style="padding:40px"></div>
-<script type="text/javascript" src="../demo/aire.js">
-
-</script>
 
 <script type="text/javascript">
   mxBasePath = 'node_modules/mxgraph/javascript/src';
@@ -22,16 +19,27 @@
 
 </script>
 
+<style>
+
+  .container {
+    border: 1px solid red;
+    width: 200px;
+    height: 200px;
+  }
+
+</style>
 
 <script type="module">
+  import 'lit-element/lit-element.js';
   import {html, render} from 'lit-html';
-  import '../dist/index.js';
+  // import '../dist/iife/aire-designer.min.js';
+  import '../dist/src/index.js';
 
   render(
       html`
-        <div margin="40px">
-          <aire-designer>sup</aire-designer>
-        </div>
+        <div class="container">
+          <aire-canvas base-path="node_modules/mxgraph/javascript/src"></aire-canvas>
+        </div.>
       `,
       document.querySelector('#demo')
   );

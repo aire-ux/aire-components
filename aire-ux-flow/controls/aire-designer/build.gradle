@@ -16,9 +16,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
-
-
     aireComponent project(':aire-ux:controls:aire-designer-component')
-
 }
 

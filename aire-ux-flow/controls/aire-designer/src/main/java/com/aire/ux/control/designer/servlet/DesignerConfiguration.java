@@ -10,27 +10,52 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.val;
 
-/** the designer needs quite a few configurations. This */
+/**
+ * the designer needs quite a few configurations. This
+ */
 @RootElement
 public class DesignerConfiguration implements Serializable {
+
+  static final AtomicReference<DesignerConfiguration> configuration;
+
+  static {
+    configuration = new AtomicReference<>();
+  }
 
   @Getter
   @Attribute(alias = @Alias(read = "resource-root"))
   private String resourceRoot;
 
+
   @Getter
   @Element(alias = @Alias(read = "request-mappings"))
   private List<String> requestMappings;
 
+  @Getter
+  @Element(alias = @Alias(read = "base-path"))
+  private String basePath;
+
   public static DesignerConfiguration load() {
-    return ServiceLoader.load(DesignerConfigurationProvider.class).stream()
+    val result = ServiceLoader.load(DesignerConfigurationProvider.class).stream()
         .map(Provider::get)
         .findFirst()
         .orElse(getDefaults())
         .load();
+    configuration.set(result);
+    return result;
+  }
+
+
+  public static DesignerConfiguration getInstance() {
+    val result = configuration.get();
+    if (result == null) {
+      return load();
+    }
+    return result;
   }
 
   public static DesignerConfigurationProvider getDefaults() {
@@ -54,7 +79,10 @@ public class DesignerConfiguration implements Serializable {
       if (requestURI.startsWith(mapping)) {
         val substr = requestURI.substring(mapping.length());
         val actualRoot = resourceRoot + substr;
-        return classloader.getResourceAsStream(actualRoot);
+        val result = classloader.getResourceAsStream(actualRoot);
+        if (result != null) {
+          return result;
+        }
       }
     }
     throw new NoSuchElementException("No request mapping under: " + requestURI);

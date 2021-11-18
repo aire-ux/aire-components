@@ -2,6 +2,7 @@ package com.aire.ux.control.designer.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.NoSuchElementException;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +24,13 @@ public class DesignerResourceServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) {
-    val inputStream = locate(request);
-    if (inputStream == null) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      return;
-    }
 
     try {
+      val inputStream = locate(request);
       response.setStatus(HttpServletResponse.SC_OK);
       inputStream.transferTo(response.getOutputStream());
+    } catch (NoSuchElementException ex) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } catch (IOException ex) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
