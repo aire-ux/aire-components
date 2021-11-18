@@ -11,13 +11,13 @@
 <body>
 <div id="demo" style="padding:40px"></div>
 
-<script type="text/javascript">
-  mxBasePath = 'node_modules/mxgraph/javascript/src';
-</script>
+<!--<script type="text/javascript">-->
+<!--&lt;!&ndash;  mxBasePath = 'node_modules/mxgraph/javascript/src';&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
 
-<script type="text/javascript" src="node_modules/mxgraph/javascript/mxClient.min.js">
+<!--&lt;!&ndash;<script type="text/javascript" src="node_modules/mxgraph/javascript/mxClient.min.js">&ndash;&gt;-->
 
-</script>
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
 
 <style>
 
@@ -38,7 +38,10 @@
   render(
       html`
         <div class="container">
-          <aire-canvas base-path="node_modules/mxgraph/javascript/src"></aire-canvas>
+          <aire-canvas
+              base-path="node_modules/mxgraph/javascript/src"
+              client-source="node_modules/mxgraph/javascript/mxClient.min.js"
+          ></aire-canvas>
         </div.>
       `,
       document.querySelector('#demo')
