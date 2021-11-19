@@ -37,6 +37,7 @@ class AireComponent {
     }
 
     void setControl(boolean control) {
+
         if (control) {
             project.afterEvaluate {
                 project.with {
@@ -57,8 +58,10 @@ class AireComponent {
                         )
 
                     }
-                    build.dependsOn('copyAireToBuildDirectory')
-                    build.mustRunAfter('copyAireToBuildDirectory')
+                    build {
+                        dependsOn('copyAireToBuildDirectory')
+                        mustRunAfter('copyAireToBuildDirectory')
+                    }
                 }
             }
         }

@@ -10,8 +10,8 @@ export type mxConfiguration = {
 };
 
 /* eslint-disable */
-// @ts-ignore
 const factory = (cfg: Partial<mxConfiguration>) =>
+  // @ts-ignore
   mxgraph({
     mxLoadResources: cfg.mxLoadResources || false,
     mxForceIncludes: cfg.mxForceIncludes || false,

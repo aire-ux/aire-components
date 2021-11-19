@@ -3,6 +3,8 @@
   "license": "UNLICENSED",
   "vaadin": {
     "dependencies": {
+      "@aire-ux/aire-designer": "0.0.21",
+      "@aire-ux/mxgraph": "4.2.5",
       "@polymer/iron-a11y-announcer": "3.0.2",
       "@polymer/iron-a11y-keys-behavior": "3.0.1",
       "@polymer/iron-fit-behavior": "3.0.2",
@@ -65,8 +67,8 @@
       "@vaadin/vaadin-usage-statistics": "2.1.0",
       "@webcomponents/shadycss": "1.8.0",
       "@webcomponents/webcomponentsjs": "^2.2.10",
-      "construct-style-sheets-polyfill": "2.4.16",
-      "lit-element": "2.5.1",
+      "construct-style-sheets-polyfill": "3.0.4",
+      "lit-element": "3.0.2",
       "lit-html": "1.4.1"
     },
     "devDependencies": {
@@ -89,9 +91,11 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "a34c67beeacd870137abe511dcdc5d8580152fcb1af7084e1710cbdf54f2a279"
+    "hash": "ab3dfb0f7d0f27df6f857469b78aaaf1db845ccc17e3bd3d99670e10ac2d5f8a"
   },
   "dependencies": {
+    "@aire-ux/aire-designer": "^0.0.21",
+    "@aire-ux/mxgraph": "4.2.5",
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
     "@polymer/iron-fit-behavior": "3.0.2",
@@ -154,8 +158,8 @@
     "@vaadin/vaadin-usage-statistics": "2.1.0",
     "@webcomponents/shadycss": "1.8.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "construct-style-sheets-polyfill": "2.4.16",
-    "lit-element": "2.5.1",
+    "construct-style-sheets-polyfill": "3.0.4",
+    "lit-element": "3.0.2",
     "lit-html": "1.4.1"
   },
   "devDependencies": {

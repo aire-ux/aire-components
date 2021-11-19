@@ -3,8 +3,8 @@ aire {
 }
 
 jar {
-    from("${project.projectDir}/node_modules/mxgraph") {
-        into "ZEPHYR-INF/client/mxgraph"
+    from("${project.projectDir}/node_modules/@aire-ux/mxgraph") {
+        into "ZEPHYR-INF/client/@aire-ux/mxgraph"
     }
     from("${project.projectDir}/dist/iife") {
         into "ZEPHYR-INF/client/aire-designer/packages/iife"

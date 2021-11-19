@@ -14,9 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.val;
 
-/**
- * the designer needs quite a few configurations. This
- */
+/** the designer needs quite a few configurations. This */
 @RootElement
 public class DesignerConfiguration implements Serializable {
 
@@ -30,7 +28,6 @@ public class DesignerConfiguration implements Serializable {
   @Attribute(alias = @Alias(read = "resource-root"))
   private String resourceRoot;
 
-
   @Getter
   @Element(alias = @Alias(read = "request-mappings"))
   private List<String> requestMappings;
@@ -40,15 +37,15 @@ public class DesignerConfiguration implements Serializable {
   private String basePath;
 
   public static DesignerConfiguration load() {
-    val result = ServiceLoader.load(DesignerConfigurationProvider.class).stream()
-        .map(Provider::get)
-        .findFirst()
-        .orElse(getDefaults())
-        .load();
+    val result =
+        ServiceLoader.load(DesignerConfigurationProvider.class).stream()
+            .map(Provider::get)
+            .findFirst()
+            .orElse(getDefaults())
+            .load();
     configuration.set(result);
     return result;
   }
-
 
   public static DesignerConfiguration getInstance() {
     val result = configuration.get();

@@ -19,3 +19,9 @@ dependencies {
     aireComponent project(':aire-ux:controls:aire-designer-component')
 }
 
+
+build {
+    dependsOn('copyAireToBuildDirectory')
+    mustRunAfter('copyAireToBuildDirectory')
+}
+

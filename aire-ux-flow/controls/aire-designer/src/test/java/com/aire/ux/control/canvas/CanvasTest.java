@@ -10,15 +10,13 @@ import org.junit.jupiter.api.Test;
 
 class CanvasTest {
 
-
   @Test
   void ensureBasePathIsSet() {
     val canvas = new Canvas();
 
     assertNotNull(Attributes.BasePath.get(canvas.getElement()));
-    assertEquals(DesignerConfiguration.getInstance().getBasePath(),
+    assertEquals(
+        DesignerConfiguration.getInstance().getBasePath(),
         Attributes.BasePath.get(canvas.getElement()));
   }
-
-
 }

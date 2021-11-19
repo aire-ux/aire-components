@@ -1,5 +1,3 @@
 package com.aire.ux.control.graph;
 
-public class Graph {
-
-}
+public class Graph {}
