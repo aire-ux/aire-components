@@ -1,59 +1,29 @@
-import { customElement, html, LitElement, property } from 'lit-element';
+import {
+  css,
+  customElement,
+  html,
+  LitElement,
+  property,
+  PropertyValues,
+} from 'lit-element';
+import factory from './mxgraph';
 
+/**
+ * the html contents of this canvas
+ */
 export const HtmlContents = html` <div class="aire-canvas-container"></div> `;
-
-const scriptId = 'aire-graph-base-path';
-
-const eventName = 'mx-graph-update-complete';
-
-const listener =
-  (tag: Element) =>
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (e: Event) => {
-    const event = new CustomEvent(eventName);
-    document.dispatchEvent(event);
-    tag.removeEventListener(eventName as any, this as any);
-  };
-
-const installClientSource = (clientSource: string) => {
-  const id = `${scriptId}-client-source`;
-  let tag: HTMLScriptElement = document.querySelector(
-    `script#${id}`
-  ) as HTMLScriptElement;
-  if (!tag) {
-    tag = document.createElement('script');
-    tag.type = 'text/javascript';
-
-    tag.addEventListener('load', listener(tag));
-    tag.src = clientSource;
-    tag.id = id;
-    tag.async = false;
-    tag.defer = false;
-    document.head.appendChild(tag);
-  }
-};
-const installBasePath = (basePath: string) => {
-  const id = `${scriptId}-base-path`;
-  let tag: HTMLScriptElement = document.querySelector(
-    `script#${id}`
-  ) as HTMLScriptElement;
-  if (!tag) {
-    tag = document.createElement('script') as HTMLScriptElement;
-    tag.type = 'text/javascript';
-    tag.appendChild(
-      document.createTextNode(`
-      mxBasePath = "${basePath}";
-    `)
-    );
-    tag.id = id;
-    document.head.appendChild(tag);
-  }
-};
 
 @customElement('aire-canvas')
 export class AireCanvas extends LitElement {
-  // eslint-disable-next-line no-undef
-  private graph: mxGraph;
+  private mx: any;
+
+  static get styles() {
+    return css`
+      aire-canvas {
+        display: block;
+      }
+    `;
+  }
 
   /**
    * the base path to use
@@ -73,24 +43,33 @@ export class AireCanvas extends LitElement {
   })
   private clientSource: string;
 
-  // eslint-disable-next-line no-undef
-  private listener: EventListener;
-
-  constructor() {
-    super();
-    this.listener = this.initialize.bind(this);
-    document.addEventListener(eventName, this.listener);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected async initialize(e: Event): Promise<void> {
-    // eslint-disable-next-line new-cap,no-undef
-    this.graph = new mxGraph(this.renderRoot.firstElementChild);
-    document.removeEventListener(eventName, this.listener);
-  }
-
   render() {
     return HtmlContents;
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    const { mx } = this;
+    /* eslint-disable */
+    const graph = new mx.mxGraph(this.renderRoot.firstElementChild);
+
+    // Enables rubberband selection
+    new mx.mxRubberband(graph);
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    const parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      const v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+      const v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+      graph.insertEdge(parent, null, '', v1, v2);
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
   }
 
   attributeChangedCallback(
@@ -98,17 +77,12 @@ export class AireCanvas extends LitElement {
     _old: string | null,
     value: string | null
   ) {
-    // eslint-disable-next-line wc/guard-super-call
     super.attributeChangedCallback(name, _old, value);
-    if (name === 'base-path' && value) {
-      installBasePath(value);
-    }
-    if (name === 'client-source' && value) {
-      installClientSource(value);
-    }
-  }
 
-  protected createRenderRoot(): Element | ShadowRoot {
-    return this;
+    if (name === 'base-path' && value) {
+      this.mx = factory({
+        mxBasePath: value,
+      });
+    }
   }
 }

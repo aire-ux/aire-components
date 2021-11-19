@@ -24,12 +24,13 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
+    "@aire-ux/mxgraph": "^4.2.5",
     "lit-element": "^3.0.0",
-    "lit-html": "^1.4.1",
-    "mxgraph": "^4.2.2"
+    "lit-html": "^1.4.1"
   },
   "devDependencies": {
     "@aire-ux/aire-theme-manager": "^0.0.21",
+    "@aire-ux/typed-mxgraph": "^1.0.4",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^3.0.3",
@@ -92,8 +93,8 @@
       ],
       "import/no-unresolved": "off",
       "import/extensions": [
-        "error",
-        "always",
+        "off",
+        "never",
         {
           "ignorePackages": true
         }

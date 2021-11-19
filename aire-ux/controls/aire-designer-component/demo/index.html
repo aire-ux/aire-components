@@ -11,13 +11,22 @@
 <body>
 <div id="demo" style="padding:40px"></div>
 
+<script type="text/javascript">
+  mxLoadResources = false;
+  mxForceIncludes = false;
+  mxLoadStylesheets = true;
+  mxResourceExtension = '.txt';
+  mxBasePath = 'node_modules/@aire-ux/mxgraph/javascript/src';
+</script>
 <!--<script type="text/javascript">-->
-<!--&lt;!&ndash;  mxBasePath = 'node_modules/mxgraph/javascript/src';&ndash;&gt;-->
-<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!-- mxBasePath = 'node_modules/@aire-ux/mxgraph/javascript/src';-->
+<!--</script>-->
 
-<!--&lt;!&ndash;<script type="text/javascript" src="node_modules/mxgraph/javascript/mxClient.min.js">&ndash;&gt;-->
+<!--<script type="text/javascript" src="node_modules/@aire-ux/mxgraph/javascript/dist/build.js">-->
 
-<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--</script>-->
+
+
 
 <style>
 
@@ -31,18 +40,18 @@
 
 <script type="module">
   import 'lit-element/lit-element.js';
-  import {html, render} from 'lit-html';
+  import {html, render} from 'lit-element';
   // import '../dist/iife/aire-designer.min.js';
   import '../dist/src/index.js';
 
   render(
       html`
-        <div class="container">
+        <aire-designer>
+
           <aire-canvas
-              base-path="node_modules/mxgraph/javascript/src"
-              client-source="node_modules/mxgraph/javascript/mxClient.min.js"
+              base-path="node_modules/@aire-ux/mxgraph/javascript/src"
           ></aire-canvas>
-        </div.>
+        </aire-designer>
       `,
       document.querySelector('#demo')
   );
