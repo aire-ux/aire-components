@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Map;
 import lombok.NonNull;
 import lombok.val;
 
@@ -32,19 +33,25 @@ public class JsonWriter implements DocumentWriter {
       writeArray(type, value, outputStream);
       writeEpilogue(type, outputStream);
     } else if (Iterable.class.isAssignableFrom(type)) {
-      val iterable = (Iterable<?>) value;
-      val iterator = iterable.iterator();
-      writePrologue(type, outputStream);
-      while (iterator.hasNext()) {
-        val next = iterator.next();
-        write((Class) next.getClass(), next, outputStream);
-        if(iterator.hasNext()) {
+      writeIterable(type, (Iterable<?>) value, outputStream);
+    } else if (Map.class.isAssignableFrom(type)) {
+      val map = (Map<Object, Object>) value;
+      outputStream.write('{');
+      val iter = map.entrySet().iterator();
+      while (iter.hasNext()) {
+        val next = iter.next();
+        val key = next.getKey();
+        val v = next.getValue();
+        outputStream.write('"');
+        outputStream.write(String.valueOf(key).getBytes(StandardCharsets.UTF_8));
+        outputStream.write('"');
+        outputStream.write(':');
+        write((Class) v.getClass(), v, outputStream);
+        if (iter.hasNext()) {
           outputStream.write(',');
         }
       }
-      writeEpilogue(type, outputStream);
-
-
+      outputStream.write('}');
     } else {
       val descriptor = binder.descriptorFor(type);
       writePrologue(type, outputStream);
@@ -53,6 +60,22 @@ public class JsonWriter implements DocumentWriter {
     }
 
 
+  }
+
+
+  private <T> void writeIterable(Class<T> type, Iterable<?> value, OutputStream outputStream)
+      throws IOException {
+    val iterable = value;
+    val iterator = iterable.iterator();
+    writePrologue(type, outputStream);
+    while (iterator.hasNext()) {
+      val next = iterator.next();
+      write((Class) next.getClass(), next, outputStream);
+      if (iterator.hasNext()) {
+        outputStream.write(',');
+      }
+    }
+    writeEpilogue(type, outputStream);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})

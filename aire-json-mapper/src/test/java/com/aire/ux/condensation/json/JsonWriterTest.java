@@ -18,7 +18,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,6 +155,48 @@ class JsonWriterTest {
     val read = List.of(Condensation.read(MyType[].class, "json", writer.toString(), binder));
     assertEquals(results, read);
   }
+
+  @Test
+  void ensureWritingMapWorks() throws IOException {
+
+    @RootElement
+    @EqualsAndHashCode
+    class MyType {
+
+      @Element
+      String hello;
+      @Element(alias = @Alias(write = "sup", read = "sup"))
+      String world;
+      @Element
+      Map<String, List<MyType>> values;
+    }
+    val results = new ArrayList<MyType>();
+    for (int i = 0; i < 100; i++) {
+      val t = new MyType();
+      t.hello = "hello-" + i;
+      t.world = "world-" + i;
+      results.add(t);
+    }
+
+    val m = new HashMap<String, MyType>();
+    for (val t : results) {
+      m.put(t.hello, t);
+      t.values = new HashMap<>();
+      t.values.put("values", results.stream().map(result -> {
+        result.values = new HashMap<>();
+        val r = result.world;
+        result.world = result.hello;
+        result.hello = r;
+        return result;
+      }).collect(Collectors.toList()));
+    }
+
+    val writer = new ByteArrayOutputStream();
+    Condensation.create("json").getWriter().write(Map.class, m, writer);
+    instantiator.register(MyType.class, MyType::new);
+    System.out.println(writer.toString());
+  }
+
 
   private void assertResultEquals(ByteArrayOutputStream writer, String s) {
     assertEquals(writer.toString(StandardCharsets.UTF_8), s);
