@@ -4,6 +4,9 @@
     "target": "es5",
     "module": "ESNext",
     "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es2015"],
     "strict": true,
     "skipLibCheck": false,
     "esModuleInterop": true,
@@ -12,6 +15,7 @@
     "paths": {
       "@condensation/*": ["src/main/typescript/*"]
     }
+
   },
   "include": [
     "src/main/typescript/**/*.ts",
