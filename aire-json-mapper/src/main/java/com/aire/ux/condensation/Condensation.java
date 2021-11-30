@@ -1,8 +1,10 @@
 package com.aire.ux.condensation;
 
 import com.aire.ux.condensation.mappings.DefaultTypeBinder;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
@@ -43,6 +45,16 @@ public class Condensation {
     create(format).getWriter()
         .write(type, value, outputStream);
   }
+
+
+  public static <T> String write(@NonNull String format, @NonNull Class<T> type, @NonNull T value)
+      throws IOException {
+    val outputStream = new ByteArrayOutputStream();
+    create(format).getWriter()
+        .write(type, value, outputStream);
+    return outputStream.toString(StandardCharsets.UTF_8);
+  }
+
 
   public static Document parse(String format, CharSequence data) {
     final ParserFactory pf = getParserFactory(format);

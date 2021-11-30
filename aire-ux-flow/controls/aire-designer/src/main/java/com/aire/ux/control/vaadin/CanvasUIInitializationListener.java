@@ -29,6 +29,7 @@ public class CanvasUIInitializationListener implements
     ui.getPage()
         .addJavaScript("context://aire/designer/client/@aire-ux/mxgraph/javascript/dist/build.js",
             LoadMode.EAGER);
+//    ui.getPage().executeJs()
 //    ui.getPage().executeJs("mxgraph($0)", Condensation.write(configuration.))
 //    ui.getPage().executeJs().toCompletableFuture().get();
 
