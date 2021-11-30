@@ -24,4 +24,4 @@ test('root element should be registerable with an alias', () => {
   const cfg = Condensation.typeRegistry.resolveConfiguration(TestElement);
   expect(cfg.alias).toBe('root-element');
 
-})
+});
