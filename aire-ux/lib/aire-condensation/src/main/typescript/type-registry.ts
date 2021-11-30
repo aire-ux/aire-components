@@ -1,9 +1,15 @@
 import {Class} from "@condensation/types";
-import {RootElementConfiguration} from "@condensation/root-element";
+import {PropertyConfiguration, RootElementConfiguration} from "@condensation/root-element";
 
+export type PropertyDefinition = {
+  realName: string,
+  readAlias: string;
+  writeAlias: string
+}
 
 export type TypeRegistration<T> = {
   alias: string
+  properties?: Map<string, PropertyDefinition>
 }
 
 export default class TypeRegistry {
@@ -15,7 +21,9 @@ export default class TypeRegistry {
   }
 
   public register<T>(type: Class<T>): void {
-    this.types.set(type, {alias: type.name});
+    if(!this.types.has(type)) {
+      this.types.set(type, {alias: type.name});
+    }
   }
 
 
@@ -35,12 +43,37 @@ export default class TypeRegistry {
     return registration;
   }
 
-  private check<T>(type: Class<T>) : [Class<T>, TypeRegistration<T>] {
+  private check<T>(type: Class<T>): [Class<T>, TypeRegistration<T>] {
     const toConfigure = this.types.get(type);
     if (!toConfigure) {
       throw new Error(`Error: Attempting to configure type ${type}, but it has not been registered.  
       Have you annotated ${type} with '@RootElement'?`);
     }
     return [type, toConfigure] as [Class<T>, TypeRegistration<T>];
+  }
+
+  defineProperty<T>(target: Class<T>, propertyName: string, configuration?: PropertyConfiguration | undefined) {
+    const [type, registration] = this.check(target);
+    registration.properties = registration.properties || new Map<string, PropertyDefinition>();
+    registration.properties.set(propertyName, readPropertyDefinition(propertyName, configuration));
+
+
+  }
+}
+
+function readPropertyDefinition(name: string, cfg?: PropertyConfiguration): PropertyDefinition {
+  if (!cfg) {
+    return {
+      readAlias: name,
+      writeAlias: name,
+      realName: name
+    }
+  } else {
+    return {
+      realName: name,
+      readAlias: cfg?.read?.alias || name,
+      writeAlias: cfg?.write?.alias || name,
+    }
+
   }
 }

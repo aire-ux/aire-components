@@ -1,6 +1,6 @@
 import {Receive, Remotable} from "@condensation/remotable";
-import {RootElement} from "@condensation/root-element";
-import {Condensation} from "../../main/typescript/condensation";
+import {Property, RootElement} from "@condensation/root-element";
+import {Condensation} from "@condensation/condensation";
 
 test('remotable should work with constructor arguments', () => {
 
@@ -22,10 +22,30 @@ test('remotable should work with constructor arguments', () => {
       .definitions;
 
   expect(defs.length).toBe(1);
-
   expect(defs[0].index).toBe(0);
+});
 
+test('remotable should allow a value to be constructed', () => {
 
+  @RootElement
+  class TestDTO {
+    // @Property
+    // name: string | undefined;
 
+  }
+
+  @Remotable
+  class TestReceiver {
+    private name: string | undefined;
+    constructor(@Receive dto:TestDTO) {
+      // this.name = dto.name;
+    }
+  }
+
+  // const receiver = Condensation.construct(TestReceiver, `
+  //   {
+  //     name: "Josiah"
+  //   }
+  // `);
 
 });

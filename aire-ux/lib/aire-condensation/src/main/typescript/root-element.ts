@@ -24,3 +24,28 @@ export function RootElement<T>(type: Class<T>): Class<T> {
   }
   return type;
 }
+
+type Cfg = {
+  alias: string
+}
+export type ReadConfiguration = {
+} & Cfg;
+
+export type WriteConfiguration = {
+} & Cfg;
+
+export type PropertyConfiguration = {
+  read: ReadConfiguration
+  write: WriteConfiguration
+}
+
+export function Property<T>(configuration?: PropertyConfiguration) : any {
+  return function(target: Class<T>, propertyName: string) {
+    const ctor = target.constructor as Class<T>;
+    RootElement(ctor);
+    const reg = Condensation.typeRegistry;
+    reg.defineProperty(ctor, propertyName, configuration)
+
+  }
+
+}
