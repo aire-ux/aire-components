@@ -4,8 +4,10 @@ import com.aire.ux.condensation.Alias;
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.RootElement;
+import com.aire.ux.control.graph.Graph;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
@@ -14,9 +16,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.val;
 
-/** the designer needs quite a few configurations. This */
+/**
+ * the designer needs quite a few configurations. This
+ */
 @RootElement
 public class DesignerConfiguration implements Serializable {
+
 
   static final AtomicReference<DesignerConfiguration> configuration;
 
@@ -83,5 +88,19 @@ public class DesignerConfiguration implements Serializable {
       }
     }
     throw new NoSuchElementException("No request mapping under: " + requestURI);
+  }
+
+  public boolean requiresInitialization(com.vaadin.flow.dom.Element element) {
+    val stack = new ArrayDeque<com.vaadin.flow.dom.Element>();
+    stack.push(element);
+    while (!stack.isEmpty()) {
+      val el = stack.pop();
+      if (el.getComponent().map(component -> Graph.class.isAssignableFrom(component.getClass()))
+          .isPresent()) {
+        return true;
+      }
+      el.getChildren().forEach(stack::offer);
+    }
+    return false;
   }
 }

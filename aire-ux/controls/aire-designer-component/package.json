@@ -24,18 +24,18 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/mxgraph": "^4.2.5",
+    "@aire-ux/mxgraph": "^4.2.6",
     "lit-element": "^3.0.0",
-    "lit-html": "^1.4.1"
+    "lit-html": "^2.0.0"
   },
   "devDependencies": {
     "@aire-ux/aire-theme-manager": "^0.0.21",
-    "@aire-ux/typed-mxgraph": "^1.0.4",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
     "@open-wc/testing": "^3.0.3",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-typescript": "^8.3.0",
+    "@types/mocha": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "@web/dev-server": "^0.1.17",

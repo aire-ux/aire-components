@@ -18,13 +18,15 @@
     "declaration": true,
     "incremental": true,
     "typeRoots": [
-      "node_modules/@types"
+      "typings",
+      "node_modules/@types",
+      "node_modules/@aire-ux/typed-mxgraph"
     ],
 
   },
   "include": [
     "src/**/*.ts",
-    "node_modules/@aire-ux/typed-mxgraph/**/*.d.ts"
+    "test/**/*.ts"
   ],
   "exclude": ["node_modules"]
 
