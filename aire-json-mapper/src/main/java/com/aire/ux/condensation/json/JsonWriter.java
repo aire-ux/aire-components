@@ -23,6 +23,7 @@ public class JsonWriter implements DocumentWriter {
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public <T> void write(@NonNull Class<T> type, @NonNull T value,
       @NonNull OutputStream outputStream) throws IOException {
 
@@ -30,6 +31,20 @@ public class JsonWriter implements DocumentWriter {
       writePrologue(type, outputStream);
       writeArray(type, value, outputStream);
       writeEpilogue(type, outputStream);
+    } else if (Iterable.class.isAssignableFrom(type)) {
+      val iterable = (Iterable<?>) value;
+      val iterator = iterable.iterator();
+      writePrologue(type, outputStream);
+      while (iterator.hasNext()) {
+        val next = iterator.next();
+        write((Class) next.getClass(), next, outputStream);
+        if(iterator.hasNext()) {
+          outputStream.write(',');
+        }
+      }
+      writeEpilogue(type, outputStream);
+
+
     } else {
       val descriptor = binder.descriptorFor(type);
       writePrologue(type, outputStream);
@@ -55,10 +70,7 @@ public class JsonWriter implements DocumentWriter {
             outputStream.write(',');
           }
         }
-
       }
-//      for (val o : os) {
-//      }
     }
 
   }

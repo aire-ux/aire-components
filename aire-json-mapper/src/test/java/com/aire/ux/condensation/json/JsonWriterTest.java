@@ -17,6 +17,8 @@ import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +123,34 @@ class JsonWriterTest {
     System.out.println(writer.toString());
     val read = Condensation.read(MyType[].class, "json", writer.toString(), binder);
     assertArrayEquals(results, read);
+  }
+
+  @Test
+  void ensureWritingCollectionWorks() throws IOException {
+
+    @RootElement
+    @EqualsAndHashCode
+    class MyType {
+
+      @Element
+      String hello;
+      @Element(alias = @Alias(write = "sup", read = "sup"))
+      String world;
+    }
+    val results = new ArrayList<MyType>();
+    for (int i = 0; i < 100; i++) {
+      val t = new MyType();
+      t.hello = "hello-" + i;
+      t.world = "world-" + i;
+      results.add(t);
+    }
+
+    val writer = new ByteArrayOutputStream();
+    Condensation.create("json").getWriter().write(List.class, results, writer);
+    instantiator.register(MyType.class, MyType::new);
+    System.out.println(writer.toString());
+    val read = List.of(Condensation.read(MyType[].class, "json", writer.toString(), binder));
+    assertEquals(results, read);
   }
 
   private void assertResultEquals(ByteArrayOutputStream writer, String s) {
