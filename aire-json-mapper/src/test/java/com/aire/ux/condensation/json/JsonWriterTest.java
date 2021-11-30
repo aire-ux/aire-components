@@ -187,6 +187,10 @@ class JsonWriterTest {
         val r = result.world;
         result.world = result.hello;
         result.hello = r;
+        val copy = new MyType();
+        copy.hello = r;
+        copy.world = result.hello;
+        result.values.put("value", List.of(copy));
         return result;
       }).collect(Collectors.toList()));
     }
