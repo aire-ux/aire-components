@@ -1,0 +1,8 @@
+
+{
+  "resource-root": "ZEPHYR-INF/",
+  "base-path": "/aire/designer",
+  "request-mappings": [
+    "/aire/designer/"
+  ]
+}

@@ -21,7 +21,7 @@
     <junit-suite-engine.version>1.8.0-M1</junit-suite-engine.version>
     <junit-jupiter-engine.version>5.8.0-M1</junit-jupiter-engine.version>
     <junit-jupiter.version>${junit-jupiter-engine.version}</junit-jupiter.version>
-    <vaadin-bom.version>14.6.4</vaadin-bom.version>
+    <vaadin-bom.version>14.7.5</vaadin-bom.version>
     <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
     <!--    <vaadin-bom.version>17.0.11</vaadin-bom.version>-->
     <arcus.version>1.0.41.Final</arcus.version>

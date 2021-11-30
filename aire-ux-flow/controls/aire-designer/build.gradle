@@ -9,9 +9,19 @@ dependencies {
     api 'io.sunshower.arcus:arcus-reflect'
     api 'javax.servlet:javax.servlet-api'
 
+    implementation project(':aire-json-mapper')
+
     testImplementation project(':aire-test-vaadin')
+    testImplementation project(':aire-test-spring')
 
-
+    testImplementation 'org.springframework.boot:spring-boot-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
     aireComponent project(':aire-ux:controls:aire-designer-component')
+}
+
+
+build {
+    dependsOn('copyAireToBuildDirectory')
+    mustRunAfter('copyAireToBuildDirectory')
 }
 

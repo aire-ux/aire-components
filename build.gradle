@@ -177,8 +177,8 @@ subprojects {
 
 
         testImplementation 'org.mockito:mockito-inline'
-        testImplementation 'org.mockito:mockito-junit-jupiter'
         testImplementation 'org.junit-pioneer:junit-pioneer'
+        testImplementation 'org.mockito:mockito-junit-jupiter'
         testImplementation 'org.junit.jupiter:junit-jupiter-params'
 
         [

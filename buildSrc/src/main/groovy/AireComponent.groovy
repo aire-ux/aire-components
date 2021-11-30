@@ -1,4 +1,5 @@
 import org.gradle.api.Project;
+import org.gradle.api.tasks.Copy;
 
 class AireComponent {
     final Project project;
@@ -36,20 +37,30 @@ class AireComponent {
     }
 
     void setControl(boolean control) {
+
         if (control) {
             project.afterEvaluate {
                 project.with {
-                    jar {
 
+                    tasks.create(name: 'copyAireToBuildDirectory', type:Copy) {
+                        configurations.aireComponent.files.each {
+                            from(zipTree(it))
+                            into file("${project.buildDir}/resources/main")
+                        }
+                    }
+
+                    jar {
                         exclude(
                                 'META-INF/*.SF',
                                 'META-INF/*.DSA',
                                 'META-INF/*.RSA',
                                 'META-INF/*.MF'
                         )
-                        configurations.aireComponent.files.each {
-                            from(zipTree(it))
-                        }
+
+                    }
+                    build {
+                        dependsOn('copyAireToBuildDirectory')
+                        mustRunAfter('copyAireToBuildDirectory')
                     }
                 }
             }

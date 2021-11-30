@@ -91,7 +91,7 @@ public class MethodAnnotationPropertyScanningStrategy implements PropertyScannin
 
   private <T extends Annotation> T locateOn(Class<T> elementClass, Method... methods) {
     for (val method : methods) {
-      if (method.isAnnotationPresent(elementClass)) {
+      if (method != null && method.isAnnotationPresent(elementClass)) {
         return method.getAnnotation(elementClass);
       }
     }
