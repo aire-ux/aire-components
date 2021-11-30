@@ -1,0 +1,41 @@
+{
+  "name": "aire-condensation",
+  "version": "0.0.0",
+  "description": "Client-side serialization library for Aire-UX",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/aire-ux/aire-components.git"
+  },
+  "keywords": [
+    "serialization",
+    "UI"
+  ],
+  "author": "aire-ux",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aire-ux/aire-components/issues"
+  },
+  "homepage": "https://github.com/aire-ux/aire-components#readme",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.2",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.5.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "rootDir": "./",
+    "testMatch": [
+      "**/*.spec.ts"
+    ],
+    "moduleNameMapper": {
+      "^@condensation/(.*)$": "<rootDir>/src/main/typescript/$1"
+    },
+    "roots": ["src/main/typescript", "src/test/typescript"]
+  }
+}
