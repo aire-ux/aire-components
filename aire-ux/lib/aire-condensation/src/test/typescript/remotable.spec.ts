@@ -8,7 +8,7 @@ test("remotable should work with constructor arguments", () => {
 
   @Remotable
   class TestReceiver {
-    constructor(@Receive dto: TestDTO) {}
+    constructor(@Receive(TestDTO) dto: TestDTO) {}
   }
 
   const defs = Condensation.remoteRegistry.resolve(TestReceiver).definitions;
@@ -19,16 +19,57 @@ test("remotable should work with constructor arguments", () => {
 
 test("remotable should allow a value to be constructed", () => {
   @RootElement
-  class TestDTO {
-    // @Property
-    // name: string | undefined;
+  class Person {
+    @Property(String)
+    name: string | undefined;
+  }
+
+  @RootElement
+  class Pet {
+    @Property(String)
+    name: string | undefined;
+
+    @Property(Person)
+    momma: Person | undefined;
+
+    sayHello(): string {
+      return "Mommymommymommy!";
+    }
   }
 
   @Remotable
   class TestReceiver {
-    private name: string | undefined;
-    constructor(@Receive dto: TestDTO) {
-      // this.name = dto.name;
+    name: string | undefined;
+
+    constructor(
+      @Receive(Pet) public readonly pet: Pet,
+      @Receive(Person) public readonly dto: Person
+    ) {
+      this.name = dto.name;
+    }
+
+    set(@Receive(Person) dto: Person): void {
+      console.log(dto);
     }
   }
+
+  let ctx = Condensation.newContext();
+  const receiver = ctx.create<TestReceiver>(
+    TestReceiver,
+    `
+  {
+    "name": "Flances",
+      "momma": {
+        "name": "Wab"
+      }
+  }
+  `,
+    `{
+    "name": "Josiah"
+  }`
+  );
+  expect(receiver.name).toBe("Josiah");
+  expect(receiver.dto.name).toBe("Josiah");
+  expect(receiver.pet.sayHello()).toBe("Mommymommymommy!");
+  expect(receiver?.pet?.momma?.name).toBe("Wab");
 });

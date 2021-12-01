@@ -1,7 +1,11 @@
 import { Class } from "@condensation/types";
 
+export type InvocationType = "method" | "constructor";
 type ParameterDefinition = {
   index: number;
+  type: Class<any>;
+  invocationTarget: PropertyKey;
+  invocationType: InvocationType;
 };
 type RemoteInvocationRegistration = {
   definitions: ParameterDefinition[];

@@ -6,6 +6,22 @@ export function Remotable<T>(type: Class<T>): Class<T> {
   return type;
 }
 
-export function Receive(type: Class<any>, key: PropertyKey, index: number) {
-  Condensation.remoteRegistry.defineParameter(type, { index });
+export function Receive<T>(type: Class<T>) {
+  return <U>(target: Class<U>, key: PropertyKey, index: number) => {
+    if (!key) {
+      Condensation.remoteRegistry.defineParameter(target, {
+        type: type,
+        index: index,
+        invocationType: "constructor",
+        invocationTarget: "constructor",
+      });
+    } else {
+      Condensation.remoteRegistry.defineParameter(target, {
+        type: type,
+        index: index,
+        invocationTarget: key,
+        invocationType: "method",
+      });
+    }
+  };
 }
