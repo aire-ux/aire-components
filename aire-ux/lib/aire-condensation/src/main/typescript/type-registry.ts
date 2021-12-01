@@ -1,19 +1,22 @@
-import {Class} from "@condensation/types";
-import {PropertyConfiguration, RootElementConfiguration} from "@condensation/root-element";
+import { Class } from "@condensation/types";
+import {
+  PropertyConfiguration,
+  RootElementConfiguration,
+} from "@condensation/root-element";
 
 export type PropertyDefinition = {
-  realName: string,
+  type: Class<any>;
+  realName: string;
   readAlias: string;
-  writeAlias: string
-}
+  writeAlias: string;
+};
 
 export type TypeRegistration<T> = {
-  alias: string
-  properties?: Map<string, PropertyDefinition>
-}
+  alias: string;
+  properties?: Map<string, PropertyDefinition>;
+};
 
 export default class TypeRegistry {
-
   private readonly types: Map<Class<any>, TypeRegistration<any>>;
 
   constructor() {
@@ -21,11 +24,10 @@ export default class TypeRegistry {
   }
 
   public register<T>(type: Class<T>): void {
-    if(!this.types.has(type)) {
-      this.types.set(type, {alias: type.name});
+    if (!this.types.has(type)) {
+      this.types.set(type, { alias: type.name });
     }
   }
-
 
   public contains<T>(type: Class<T>): boolean {
     return this.types.has(type);
@@ -33,10 +35,9 @@ export default class TypeRegistry {
 
   public configure<T>(type: Class<T>, cfg: RootElementConfiguration): void {
     let [t, registration] = this.check(type);
-    registration = {...cfg};
+    registration = { ...cfg };
     this.types.set(t, registration);
   }
-
 
   public resolveConfiguration<T>(type: Class<T>): TypeRegistration<T> {
     const [_, registration] = this.check(type);
@@ -52,28 +53,29 @@ export default class TypeRegistry {
     return [type, toConfigure] as [Class<T>, TypeRegistration<T>];
   }
 
-  defineProperty<T>(target: Class<T>, propertyName: string, configuration?: PropertyConfiguration | undefined) {
+  defineProperty<T>(
+    target: Class<T>,
+    propertyName: string,
+    configuration: PropertyConfiguration
+  ) {
     const [type, registration] = this.check(target);
-    registration.properties = registration.properties || new Map<string, PropertyDefinition>();
-    registration.properties.set(propertyName, readPropertyDefinition(propertyName, configuration));
-
-
+    registration.properties =
+      registration.properties || new Map<string, PropertyDefinition>();
+    registration.properties.set(
+      propertyName,
+      readPropertyDefinition(propertyName, configuration)
+    );
   }
 }
 
-function readPropertyDefinition(name: string, cfg?: PropertyConfiguration): PropertyDefinition {
-  if (!cfg) {
-    return {
-      readAlias: name,
-      writeAlias: name,
-      realName: name
-    }
-  } else {
-    return {
-      realName: name,
-      readAlias: cfg?.read?.alias || name,
-      writeAlias: cfg?.write?.alias || name,
-    }
-
-  }
+function readPropertyDefinition(
+  name: string,
+  cfg: PropertyConfiguration
+): PropertyDefinition {
+  return {
+    type: cfg.type,
+    realName: name,
+    readAlias: cfg?.read?.alias || name,
+    writeAlias: cfg?.write?.alias || name,
+  };
 }

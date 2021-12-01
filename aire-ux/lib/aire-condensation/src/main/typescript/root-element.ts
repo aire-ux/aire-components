@@ -1,10 +1,10 @@
-import {Class} from "@condensation/types";
-import {Condensation} from "@condensation/condensation";
-
+import "reflect-metadata";
+import { Class } from "@condensation/types";
+import { Condensation } from "@condensation/condensation";
 
 export type RootElementConfiguration = {
-  alias: string
-}
+  alias: string;
+};
 
 export function Configuration<T>(cfg: RootElementConfiguration): any {
   const reg = Condensation.typeRegistry;
@@ -14,7 +14,7 @@ export function Configuration<T>(cfg: RootElementConfiguration): any {
     }
     reg.configure(type, cfg);
     return type as Class<T>;
-  }
+  };
 }
 
 export function RootElement<T>(type: Class<T>): Class<T> {
@@ -26,26 +26,46 @@ export function RootElement<T>(type: Class<T>): Class<T> {
 }
 
 type Cfg = {
-  alias: string
-}
-export type ReadConfiguration = {
-} & Cfg;
+  alias: string;
+};
+export type ReadConfiguration = {} & Cfg;
 
-export type WriteConfiguration = {
-} & Cfg;
+export type WriteConfiguration = {} & Cfg;
 
 export type PropertyConfiguration = {
-  read: ReadConfiguration
-  write: WriteConfiguration
+  type: Class<any>;
+  read: ReadConfiguration;
+  write: WriteConfiguration;
+};
+
+function isConfiguration<T>(
+  cfg: PropertyConfiguration | Class<T>
+): cfg is PropertyConfiguration {
+  return (cfg as PropertyConfiguration).type !== undefined;
 }
 
-export function Property<T>(configuration?: PropertyConfiguration) : any {
-  return function(target: Class<T>, propertyName: string) {
+export function Property<T>(
+  configuration?: PropertyConfiguration | Class<T>
+): any {
+  return function (target: Class<T>, propertyName: string) {
     const ctor = target.constructor as Class<T>;
     RootElement(ctor);
-    const reg = Condensation.typeRegistry;
-    reg.defineProperty(ctor, propertyName, configuration)
+    let reg = Condensation.typeRegistry,
+      propertyCtor = Reflect.getMetadata("design:type", target, propertyName),
+      type: Class<T>;
+    if (configuration) {
+      if (isConfiguration(configuration)) {
+        type = configuration.type;
+      } else {
+        type = configuration;
+      }
+    } else {
+      type = propertyCtor;
+    }
 
-  }
-
+    reg.defineProperty(ctor, propertyName, {
+      ...configuration,
+      type: type,
+    } as PropertyConfiguration);
+  };
 }
