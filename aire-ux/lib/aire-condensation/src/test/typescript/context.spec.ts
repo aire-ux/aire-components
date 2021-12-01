@@ -8,25 +8,25 @@ beforeEach(() => {
   context = Condensation.newContext();
 });
 
-@RootElement
-class Pet {
-  @Property(String)
-  name: string;
-}
-
-@RootElement
-class PersonDTO {
-  @Property(String)
-  firstName: string;
-
-  @Property(String)
-  lastName: string;
-
-  @Property(Pet)
-  pets: Pet[];
-}
-
-@Remotable
-class Person {}
+// @RootElement
+// class Pet {
+//   @Property(String)
+//   name: string;
+// }
+//
+// @RootElement
+// class PersonDTO {
+//   @Property(String)
+//   firstName: string;
+//
+//   @Property(String)
+//   lastName: string;
+//
+//   @Property(Pet)
+//   pets: Pet[];
+// }
+//
+// @Remotable
+// class Person {}
 
 test("objects should be allocatable in a context", () => {});
