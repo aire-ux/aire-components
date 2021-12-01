@@ -29,12 +29,22 @@ export class TypeRegistrationDeserializer<T> implements Deserializer<T> {
     const reg = this.registration,
       props = reg.properties;
     if (props) {
-      for (let [key, v] of props) {
-        const readAlias = v.readAlias,
-          deserializer = Condensation.deserializerFor(v.type),
-          subobject = (value as any)[readAlias],
-          propertyValue = deserializer.read(subobject);
-        Reflect.set(result as any, v.realName, propertyValue, result);
+      if (Array.isArray(value)) {
+        for (let [key, v] of props) {
+          const readAlias = v.readAlias,
+            deserializer = Condensation.deserializerFor(v.type),
+            values = value as any,
+            pvals = values.map((val: any) => deserializer.read(val));
+          Reflect.set(result as any, v.realName, pvals, result);
+        }
+      } else {
+        for (let [key, v] of props) {
+          const readAlias = v.readAlias,
+            deserializer = Condensation.deserializerFor(v.type),
+            subobject = (value as any)[readAlias],
+            propertyValue = deserializer.read(subobject);
+          Reflect.set(result as any, v.realName, propertyValue, result);
+        }
       }
     }
     return result;

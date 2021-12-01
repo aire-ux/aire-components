@@ -32,7 +32,7 @@ test("remotable should allow a value to be constructed", () => {
     @Property(Person)
     momma: Person | undefined;
 
-    sayHello(): string {
+    sayHenlo(): string {
       return "Mommymommymommy!";
     }
   }
@@ -53,7 +53,7 @@ test("remotable should allow a value to be constructed", () => {
     }
   }
 
-  let ctx = Condensation.newContext();
+  const ctx = Condensation.newContext();
   const receiver = ctx.create<TestReceiver>(
     TestReceiver,
     `
@@ -70,6 +70,38 @@ test("remotable should allow a value to be constructed", () => {
   );
   expect(receiver.name).toBe("Josiah");
   expect(receiver.dto.name).toBe("Josiah");
-  expect(receiver.pet.sayHello()).toBe("Mommymommymommy!");
-  expect(receiver?.pet?.momma?.name).toBe("Wab");
+  expect(receiver.pet.sayHenlo()).toBe("Mommymommymommy!");
+  expect(receiver.pet?.momma?.name).toBe("Wab");
+});
+
+test("ensure array is deserializable", () => {
+  @RootElement
+  class Person {
+    @Property(String)
+    name: string | undefined;
+  }
+
+  @RootElement
+  class Group {
+    @Property(Person)
+    members: Person[] | undefined;
+  }
+
+  const group = Condensation.deserializerFor<Group>(Group).read([
+    {
+      name: "Josiah",
+    },
+    {
+      name: "Lisa",
+    },
+    {
+      name: "Alejandro",
+    },
+
+    {
+      name: "Tiff",
+    },
+  ]);
+
+  expect(group.members?.length).toBe(4);
 });

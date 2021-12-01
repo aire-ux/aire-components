@@ -1,6 +1,13 @@
 import TypeRegistry from "@condensation/type-registry";
 import RemoteRegistry from "@condensation/remote-registry";
-import { Class } from "@condensation/types";
+import {
+  Address,
+  allocate,
+  Class,
+  DefaultRegion,
+  Pointer,
+  Region,
+} from "@condensation/types";
 import {
   Deserializer,
   StringDeserializer,
@@ -10,7 +17,19 @@ import {
 export type Format = "json";
 
 export interface Context {
-  create<T>(t: Class<T>, ...args: string[]): T;
+  region: Region;
+
+  create<T>(t: Class<T>, ...args: string[]): Pointer<T>;
+
+  locate<T>(address: Address): T | null;
+
+  move<T>(address: Address, target: Region): Pointer<T> | null;
+
+  invoke<T>(address: Address, ...args: string[]): T | null;
+
+  delete<T>(address: Address): T | null;
+
+  addressOf<T>(t: T): Address | null;
 }
 
 /**
@@ -42,7 +61,9 @@ export class Condensation {
 }
 
 class DefaultCondensationContext implements Context {
-  create<T>(t: Class<T>, ...args: string[]): T {
+  constructor(readonly region = new Region()) {}
+
+  create<T>(t: Class<T>, ...args: string[]): Pointer<T> {
     const remotes = Condensation.remoteRegistry,
       remote = remotes.resolve(t);
     if (!remote) {
@@ -64,7 +85,27 @@ class DefaultCondensationContext implements Context {
         jsonValue = JSON.parse(doc);
       return Condensation.deserializerFor(def.type).read(jsonValue);
     });
-    return new t(...actualParams) as T;
+    return allocate(new t(...actualParams) as T, this.region);
+  }
+
+  addressOf<T>(t: T): Address {
+    return this.region.addressOf(t);
+  }
+
+  delete<T>(address: Address): T | null {
+    return this.region.delete(address);
+  }
+
+  invoke<T>(address: Address, ...args: string[]): T | null {
+    return null;
+  }
+
+  locate<T>(address: Address): T | null {
+    return null;
+  }
+
+  move<T>(address: Address, target: Region): Pointer<T> | null {
+    return null;
   }
 }
 
