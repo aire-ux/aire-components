@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
@@ -18,13 +19,18 @@
     "declaration": true,
     "incremental": true,
     "typeRoots": [
-      "node_modules/@types"
+      "typings",
+      "node_modules/@types",
+      "node_modules/@aire-ux/typed-mxgraph"
     ],
-
+    "paths": {
+      "@aire-designer/*": ["src/*"],
+      "@condensation/*": ["node_modules/@aire-ux/aire-condensation/dist/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
-    "node_modules/@aire-ux/typed-mxgraph/**/*.d.ts"
+    "test/**/*.ts"
   ],
   "exclude": ["node_modules"]
 
