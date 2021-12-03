@@ -11,13 +11,13 @@
 <body>
 <div id="demo" style="padding:40px"></div>
 
-<script type="text/javascript">
-  mxLoadResources = false;
-  mxForceIncludes = false;
-  mxLoadStylesheets = true;
-  mxResourceExtension = '.txt';
-  mxBasePath = 'node_modules/@aire-ux/mxgraph/javascript/src';
-</script>
+<!--<script type="text/javascript">-->
+<!--  mxLoadResources = false;-->
+<!--  mxForceIncludes = false;-->
+<!--  mxLoadStylesheets = true;-->
+<!--  mxResourceExtension = '.txt';-->
+<!--  mxBasePath = 'node_modules/@aire-ux/mxgraph/javascript/src';-->
+<!--</script>-->
 <!--<script type="text/javascript">-->
 <!-- mxBasePath = 'node_modules/@aire-ux/mxgraph/javascript/src';-->
 <!--</script>-->
@@ -43,10 +43,12 @@
   import {html, render} from 'lit-element';
   import '../dist/src/index.js';
   import {Condensation} from "@aire-ux/aire-condensation"
-  import {MxGraphManager} from "../src/mxgraph";
+  import {MxGraphManager} from "../dist/src/mxgraph.js";
 
   Condensation.newContext().create(MxGraphManager, `{
-    "base-path"="node_modules/@aire-ux/mxgraph/javascript/src"
+    "production-mode": true,
+    "force-includes": true,
+    "base-path":"node_modules/@aire-ux/mxgraph/javascript/src"
   }`);
 
 

@@ -1,64 +1,8 @@
-import "@aire-ux/mxgraph";
-import {mxGraphExportObject, mxGraphOptions} from '@aire-ux/mxgraph'
-import {Property, Receive, Remotable, RootElement} from "@aire-ux/aire-condensation";
+import { mxGraphExportObject, mxGraphOptions } from '@aire-ux/mxgraph';
+import { Receive, Remotable } from '@aire-ux/aire-condensation';
+import GraphConfiguration from '@aire-designer/transfer/configuration/GraphConfiguration';
 
-export type aireCanvasOptions = Partial<mxGraphOptions>
-
-@RootElement
-export class GraphConfiguration {
-  @Property({
-    type:String,
-    read: {
-      alias: 'load-resources'
-    }
-  })
-  loadResources: string;
-
-
-  @Property({
-    type:Boolean,
-    read: {
-      alias: 'force-includes'
-    }
-  })
-  forceIncludes: string;
-
-
-  @Property({
-    type:Boolean,
-    read: {
-      alias: 'load-stylesheets'
-    }
-  })
-  loadStylesheets: boolean;
-
-
-  @Property({
-    type:String,
-    read: {
-      alias: 'resource-extension'
-    }
-  })
-  resourceExtension: boolean;
-
-
-  @Property({
-    type:Boolean,
-    read: {
-      alias: 'production-mode'
-    }
-  })
-  productionMode: boolean;
-
-
-  @Property({
-    type:String,
-    read: {
-      alias: 'base-path'
-    }
-  })
-  basePath: string;
-}
+export type aireCanvasOptions = Partial<mxGraphOptions>;
 
 declare global {
   interface Window {
@@ -66,18 +10,7 @@ declare global {
   }
 }
 
-
-
-@Remotable
-export class MxGraphManager {
-
-  constructor(@Receive(GraphConfiguration) readonly configuration: GraphConfiguration) {
-    if(!window.mx) {
-      window.mx = construct(configuration);
-    }
-  }
-}
-
+/* eslint-disable */
 function construct(cfg: GraphConfiguration) {
   // @ts-ignore
   return mxgraph({
@@ -85,11 +18,22 @@ function construct(cfg: GraphConfiguration) {
     mxForceIncludes: cfg.forceIncludes || false,
     mxLoadStylesheets: cfg.loadStylesheets || true,
     mxResourceExtension: cfg.resourceExtension || '.txt',
-    mxBasePath: cfg.basePath
+    mxProductionMode: cfg.productionMode || true,
+    mxBasePath: cfg.basePath,
   });
-
 }
+/* eslint-enable */
 
+@Remotable
+export class MxGraphManager {
+  constructor(
+    @Receive(GraphConfiguration) readonly configuration: GraphConfiguration
+  ) {
+    if (!window.mx) {
+      window.mx = construct(configuration);
+    }
+  }
+}
 
 // import '@aire-ux/mxgraph'
 // // @ts-ignore
