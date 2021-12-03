@@ -1,9 +1,69 @@
 import {mxGraphExportObject, mxGraphOptions} from '@aire-ux/mxgraph'
+import {Property, Receive, Remotable, RootElement} from "@aire-ux/aire-condensation";
 
 export type aireCanvasOptions = Partial<mxGraphOptions>
-export default function initializeAireCanvas(
 
-) : void {
+@RootElement
+export class GraphConfiguration {
+  @Property({
+    type:String,
+    read: {
+      alias: 'load-resources'
+    }
+  })
+  private loadResources: string;
+
+
+  @Property({
+    type:Boolean,
+    read: {
+      alias: 'force-includes'
+    }
+  })
+  private forceIncludes: string;
+
+
+  @Property({
+    type:Boolean,
+    read: {
+      alias: 'force-includes'
+    }
+  })
+  private loadStylesheets: boolean;
+
+
+  @Property({
+    type:String,
+    read: {
+      alias: 'resource-extension'
+    }
+  })
+  private resourceExtension: boolean;
+
+
+  @Property({
+    type:Boolean,
+    read: {
+      alias: 'production-mode'
+    }
+  })
+  private productionMode: boolean;
+
+
+  @Property({
+    type:String,
+    read: {
+      alias: 'base-path'
+    }
+  })
+  private basePath: string;
+}
+
+@Remotable
+class MxGraphManager {
+
+  constructor(@Receive(GraphConfiguration) readonly configuration: GraphConfiguration) {
+  }
 
 }
 // import '@aire-ux/mxgraph'

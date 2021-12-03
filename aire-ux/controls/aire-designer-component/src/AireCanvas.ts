@@ -1,10 +1,8 @@
+/**
 import {css, customElement, html, LitElement, property, PropertyValues,} from 'lit-element';
 import factory from './mxgraph';
 import {Graph} from "./ext/Graph";
 
-/**
- * the html contents of this canvas
- */
 export const HtmlContents = html`
   <div class="aire-canvas-container"></div> `;
 
@@ -21,19 +19,11 @@ export class AireCanvas extends LitElement {
     `;
   }
 
-  /**
-   * the base path to use
-   * @private
-   */
   @property({
     attribute: 'base-path',
   })
   private basePath: string;
 
-  /**
-   * the client source location to use.  Useful for debugging
-   * @private
-   */
   @property({
     attribute: 'client-source',
   })
@@ -49,7 +39,6 @@ export class AireCanvas extends LitElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    /* eslint-disable */
     this._graph = new Graph(this.renderRoot.firstElementChild as Element);
   }
 
@@ -68,3 +57,4 @@ export class AireCanvas extends LitElement {
     }
   }
 }
+*/

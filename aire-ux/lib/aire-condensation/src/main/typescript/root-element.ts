@@ -39,13 +39,13 @@ export type PropertyConfiguration = {
 };
 
 function isConfiguration<T>(
-  cfg: PropertyConfiguration | Class<T>
-): cfg is PropertyConfiguration {
+  cfg: Partial<PropertyConfiguration> | Class<T>
+): cfg is Partial<PropertyConfiguration> {
   return (cfg as PropertyConfiguration).type !== undefined;
 }
 
 export function Property<T>(
-  configuration?: PropertyConfiguration | Class<T>
+  configuration?: Partial<PropertyConfiguration> | Class<T>
 ): any {
   return function (target: Class<T>, propertyName: string) {
     const ctor = target.constructor as Class<T>;
@@ -55,9 +55,9 @@ export function Property<T>(
       type: Class<T>;
     if (configuration) {
       if (isConfiguration(configuration)) {
-        type = configuration.type;
+        type = configuration.type as Class<T>;
       } else {
-        type = configuration;
+        type = configuration as Class<T>;
       }
     } else {
       type = propertyCtor;

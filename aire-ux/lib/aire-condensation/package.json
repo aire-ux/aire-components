@@ -1,9 +1,10 @@
 {
-  "name": "aire-condensation",
-  "version": "0.0.0",
+  "name": "@aire-ux/aire-condensation",
+  "version": "0.0.2",
   "description": "Client-side serialization library for Aire-UX",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "test": "npx jest",
     "format": "npx prettier --write ."
   },

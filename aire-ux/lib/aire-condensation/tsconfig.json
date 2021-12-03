@@ -9,13 +9,15 @@
     "downlevelIteration": true,
     "lib": ["es2015"],
     "strict": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
+    "declaration": true,
     "paths": {
       "@condensation/*": ["src/main/typescript/*"]
     }
   },
+  "exclude": ["node_modules/**/*"],
   "include": ["src/main/typescript/**/*.ts"]
 }

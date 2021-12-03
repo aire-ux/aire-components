@@ -2,7 +2,9 @@ import TypeRegistry from "@condensation/type-registry";
 import RemoteRegistry, { InvocationType } from "@condensation/remote-registry";
 import { Address, allocate, Class, Pointer, Region } from "@condensation/types";
 import {
+  BooleanDeserializer,
   Deserializer,
+  NumberDeserializer,
   StringDeserializer,
   TypeRegistrationDeserializer,
 } from "@condensation/deserializer";
@@ -136,7 +138,17 @@ export namespace Condensation {}
 Condensation.registry = new TypeRegistry();
 Condensation.remoteRegistry = new RemoteRegistry();
 
-register({
-  type: String,
-  deserializer: new StringDeserializer(),
-});
+register(
+  {
+    type: String,
+    deserializer: new StringDeserializer(),
+  },
+  {
+    type: Boolean,
+    deserializer: new BooleanDeserializer(),
+  },
+  {
+    type: Number,
+    deserializer: new NumberDeserializer(),
+  }
+);

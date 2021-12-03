@@ -74,6 +74,74 @@ test("remotable should allow a value to be constructed", () => {
   expect(receiver.pet?.momma?.name).toBe("Wab");
 });
 
+test("ensure base use-case works", () => {
+  @RootElement
+  class GraphConfiguration {
+    @Property({
+      type: String,
+      read: {
+        alias: "load-resources",
+      },
+    })
+    loadResources: string | undefined;
+
+    @Property({
+      type: Boolean,
+      read: {
+        alias: "force-includes",
+      },
+    })
+    forceIncludes: string | undefined;
+
+    @Property({
+      type: Boolean,
+      read: {
+        alias: "force-includes",
+      },
+    })
+    loadStylesheets: boolean | undefined;
+
+    @Property({
+      type: String,
+      read: {
+        alias: "resource-extension",
+      },
+    })
+    resourceExtension: boolean | undefined;
+
+    @Property({
+      type: Boolean,
+      read: {
+        alias: "production-mode",
+      },
+    })
+    productionMode: boolean | undefined;
+
+    @Property({
+      type: String,
+      read: {
+        alias: "base-path",
+      },
+    })
+    basePath: string | undefined;
+  }
+
+  @Remotable
+  class MxGraphManager {
+    constructor(
+      @Receive(GraphConfiguration) readonly configuration: GraphConfiguration
+    ) {}
+  }
+
+  const mgr = Condensation.newContext().create<MxGraphManager>(
+    MxGraphManager,
+    `{
+      "load-resources": "loading them resources"
+  }`
+  );
+  expect(mgr.configuration?.loadResources).toEqual("loading them resources");
+});
+
 test("ensure array is deserializable", () => {
   @RootElement
   class Person {

@@ -13,6 +13,17 @@ export class StringDeserializer implements Deserializer<string> {
   }
 }
 
+export class BooleanDeserializer implements Deserializer<boolean> {
+  read(object: any): boolean {
+    return object as boolean;
+  }
+}
+
+export class NumberDeserializer implements Deserializer<number> {
+  read(object: any): number {
+    return object as number;
+  }
+}
 export class TypeRegistrationDeserializer<T> implements Deserializer<T> {
   constructor(
     readonly type: Class<T>,

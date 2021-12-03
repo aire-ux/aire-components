@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
@@ -22,7 +23,9 @@
       "node_modules/@types",
       "node_modules/@aire-ux/typed-mxgraph"
     ],
-
+    "paths": {
+      "@aire-designer/*": ["src/**/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
