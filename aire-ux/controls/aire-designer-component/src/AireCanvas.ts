@@ -1,13 +1,18 @@
-import {css, customElement, html, LitElement, property, PropertyValues,} from 'lit-element';
-import {Graph} from "./ext/Graph";
+import * as mx from '@aire-ux/mxgraph';
+import {
+  css,
+  customElement,
+  html,
+  LitElement,
+  property,
+  PropertyValues,
+} from 'lit-element';
 
-export const HtmlContents = html`
-  <div class="aire-canvas-container"></div> `;
+export const HtmlContents = html` <div class="aire-canvas-container"></div> `;
 
 @customElement('aire-canvas')
 export class AireCanvas extends LitElement {
-  private _graph:  Graph;
-
+  private _graph: mx.mxGraph;
 
   static get styles() {
     return css`
@@ -31,14 +36,14 @@ export class AireCanvas extends LitElement {
     return HtmlContents;
   }
 
-  public get graph() : Graph {
+  public get graph(): mx.mxGraph {
     return this._graph;
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    // @ts-ignore
-    this._graph = new mx.mxGraph(this.renderRoot.firstElementChild as Element);
+    this._graph = new mx.mxGraph(
+      this.renderRoot.firstElementChild as HTMLElement
+    );
   }
-
 }

@@ -92,6 +92,7 @@
       "@typescript-eslint/no-unused-vars": [
         "error"
       ],
+      "new-cap": "off",
       "import/no-unresolved": "off",
       "import/extensions": [
         "off",
