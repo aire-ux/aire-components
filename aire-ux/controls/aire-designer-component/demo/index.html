@@ -41,15 +41,20 @@
 <script type="module">
   import 'lit-element/lit-element.js';
   import {html, render} from 'lit-element';
-  // import '../dist/iife/aire-designer.min.js';
   import '../dist/src/index.js';
+  import {Condensation} from "@aire-ux/aire-condensation"
+  import {MxGraphManager} from "../src/mxgraph";
+
+  Condensation.newContext().create(MxGraphManager, `{
+    "base-path"="node_modules/@aire-ux/mxgraph/javascript/src"
+  }`);
+
 
   render(
       html`
         <aire-designer>
 
           <aire-canvas
-              base-path="node_modules/@aire-ux/mxgraph/javascript/src"
           ></aire-canvas>
         </aire-designer>
       `,

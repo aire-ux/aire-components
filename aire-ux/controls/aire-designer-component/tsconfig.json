@@ -24,7 +24,8 @@
       "node_modules/@aire-ux/typed-mxgraph"
     ],
     "paths": {
-      "@aire-designer/*": ["src/**/*"]
+      "@aire-designer/*": ["src/*"],
+      "@condensation/*": ["node_modules/@aire-ux/aire-condensation/dist/*"]
     }
   },
   "include": [

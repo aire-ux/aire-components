@@ -1,3 +1,4 @@
+import "@aire-ux/mxgraph";
 import {mxGraphExportObject, mxGraphOptions} from '@aire-ux/mxgraph'
 import {Property, Receive, Remotable, RootElement} from "@aire-ux/aire-condensation";
 
@@ -11,7 +12,7 @@ export class GraphConfiguration {
       alias: 'load-resources'
     }
   })
-  private loadResources: string;
+  loadResources: string;
 
 
   @Property({
@@ -20,16 +21,16 @@ export class GraphConfiguration {
       alias: 'force-includes'
     }
   })
-  private forceIncludes: string;
+  forceIncludes: string;
 
 
   @Property({
     type:Boolean,
     read: {
-      alias: 'force-includes'
+      alias: 'load-stylesheets'
     }
   })
-  private loadStylesheets: boolean;
+  loadStylesheets: boolean;
 
 
   @Property({
@@ -38,7 +39,7 @@ export class GraphConfiguration {
       alias: 'resource-extension'
     }
   })
-  private resourceExtension: boolean;
+  resourceExtension: boolean;
 
 
   @Property({
@@ -47,7 +48,7 @@ export class GraphConfiguration {
       alias: 'production-mode'
     }
   })
-  private productionMode: boolean;
+  productionMode: boolean;
 
 
   @Property({
@@ -56,16 +57,40 @@ export class GraphConfiguration {
       alias: 'base-path'
     }
   })
-  private basePath: string;
+  basePath: string;
 }
+
+declare global {
+  interface Window {
+    mx: mxGraphExportObject;
+  }
+}
+
+
 
 @Remotable
-class MxGraphManager {
+export class MxGraphManager {
 
   constructor(@Receive(GraphConfiguration) readonly configuration: GraphConfiguration) {
+    if(!window.mx) {
+      window.mx = construct(configuration);
+    }
   }
+}
+
+function construct(cfg: GraphConfiguration) {
+  // @ts-ignore
+  return mxgraph({
+    mxLoadResources: cfg.loadResources || true,
+    mxForceIncludes: cfg.forceIncludes || false,
+    mxLoadStylesheets: cfg.loadStylesheets || true,
+    mxResourceExtension: cfg.resourceExtension || '.txt',
+    mxBasePath: cfg.basePath
+  });
 
 }
+
+
 // import '@aire-ux/mxgraph'
 // // @ts-ignore
 // import * as mx from '@aire-ux/mxgraph';

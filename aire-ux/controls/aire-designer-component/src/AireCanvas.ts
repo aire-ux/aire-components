@@ -1,6 +1,4 @@
-/**
 import {css, customElement, html, LitElement, property, PropertyValues,} from 'lit-element';
-import factory from './mxgraph';
 import {Graph} from "./ext/Graph";
 
 export const HtmlContents = html`
@@ -39,22 +37,8 @@ export class AireCanvas extends LitElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    this._graph = new Graph(this.renderRoot.firstElementChild as Element);
+    // @ts-ignore
+    this._graph = new mx.mxGraph(this.renderRoot.firstElementChild as Element);
   }
 
-
-  attributeChangedCallback(
-      name: string,
-      _old: string | null,
-      value: string | null
-  ) {
-    super.attributeChangedCallback(name, _old, value);
-
-    if (name === 'base-path' && value) {
-      // this.mxns = factory({
-      //   mxBasePath: value,
-      // });
-    }
-  }
 }
-*/

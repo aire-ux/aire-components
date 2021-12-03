@@ -1,10 +1,10 @@
 {
   "name": "@aire-ux/aire-condensation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Client-side serialization library for Aire-UX",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "ttsc -p tsconfig.json",
     "test": "npx jest",
     "format": "npx prettier --write ."
   },
@@ -25,11 +25,13 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",
     "@types/jest": "^27.0.3",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "husky": "^7.0.4",
     "jest": "^27.4.2",
     "lint-staged": "^12.1.2",
     "prettier": "2.5.0",
     "ts-jest": "^27.0.7",
+    "ttypescript": "^1.5.13",
     "typescript": "^4.5.2"
   },
   "jest": {
