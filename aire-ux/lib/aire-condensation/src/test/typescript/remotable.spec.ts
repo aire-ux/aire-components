@@ -104,4 +104,10 @@ test("ensure array is deserializable", () => {
   ]);
 
   expect(group.members?.length).toBe(4);
+  expect(group.members?.map((m) => m.name)).toEqual([
+    "Josiah",
+    "Lisa",
+    "Alejandro",
+    "Tiff",
+  ]);
 });
