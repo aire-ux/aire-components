@@ -16,7 +16,7 @@ export function Receive<T>(type: Class<T>) {
         invocationTarget: "constructor",
       });
     } else {
-      Condensation.remoteRegistry.defineParameter(target, {
+      Condensation.remoteRegistry.defineParameter((target as any).constructor, {
         type: type,
         index: index,
         invocationTarget: key,

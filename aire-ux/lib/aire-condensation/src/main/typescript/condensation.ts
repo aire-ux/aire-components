@@ -1,13 +1,6 @@
 import TypeRegistry from "@condensation/type-registry";
-import RemoteRegistry from "@condensation/remote-registry";
-import {
-  Address,
-  allocate,
-  Class,
-  DefaultRegion,
-  Pointer,
-  Region,
-} from "@condensation/types";
+import RemoteRegistry, {InvocationType} from "@condensation/remote-registry";
+import {Address, allocate, Class, Pointer, Region,} from "@condensation/types";
 import {
   Deserializer,
   StringDeserializer,
@@ -25,7 +18,7 @@ export interface Context {
 
   move<T>(address: Address, target: Region): Pointer<T> | null;
 
-  invoke<T>(address: Address, ...args: string[]): T | null;
+  invoke<T, U>(address: Address, op: string, ...args: string[]): U | null;
 
   delete<T>(address: Address): T | null;
 
@@ -40,7 +33,7 @@ export class Condensation {
   static remoteRegistry: RemoteRegistry;
 
   static deserializerConfigurations: Map<Class<any>, Deserializer<any>> =
-    new Map<Class<any>, Deserializer<any>>();
+      new Map<Class<any>, Deserializer<any>>();
 
   static get typeRegistry(): TypeRegistry {
     return Condensation.registry;
@@ -61,32 +54,14 @@ export class Condensation {
 }
 
 class DefaultCondensationContext implements Context {
-  constructor(readonly region = new Region()) {}
+  constructor(readonly region = new Region()) {
+  }
 
   create<T>(t: Class<T>, ...args: string[]): Pointer<T> {
-    const remotes = Condensation.remoteRegistry,
-      remote = remotes.resolve(t);
-    if (!remote) {
-      throw new Error(
-        `Type ${t.name} is not remotable (did you forget to annotate it with @Remotable?)`
-      );
-    }
-    const ctorArgs = remote.definitions.filter(
-      (definition) => definition.invocationType === "constructor"
-    );
-    if (ctorArgs.length !== args.length) {
-      throw new Error(
-        `Error: Constructor argument count mismatch.  Expected ${ctorArgs.length}, got ${args.length}`
-      );
-    }
-    ctorArgs.sort((lhs, rhs) => lhs.index - rhs.index);
-    const actualParams = ctorArgs.map((def, idx) => {
-      const doc = args[idx],
-        jsonValue = JSON.parse(doc);
-      return Condensation.deserializerFor(def.type).read(jsonValue);
-    });
+    const actualParams = this.formalParams(t, 'constructor', ...args);
     return allocate(new t(...actualParams) as T, this.region);
   }
+
 
   addressOf<T>(t: T): Address {
     return this.region.addressOf(t);
@@ -96,16 +71,45 @@ class DefaultCondensationContext implements Context {
     return this.region.delete(address);
   }
 
-  invoke<T>(address: Address, ...args: string[]): T | null {
-    return null;
+  invoke<T, U>(address: Address, op: string, ...args: string[]): U | null {
+    const v = this.locate(address) as Pointer<T>;
+    if (!v) {
+      throw new Error(`Null pointer exception at ${address} while trying to invoke ${op}`);
+    }
+    const operation = (v as any) [op] as any;
+    if (!operation) {
+      throw new Error(`Type ${typeof v} has no method named '${op}'`);
+    }
+    const formals = this.formalParams((Object.getPrototypeOf(v)).constructor, 'method', ...args);
+    return operation.apply(v, formals);
   }
 
   locate<T>(address: Address): T | null {
-    return null;
+    return this.region.values[address.value];
   }
 
   move<T>(address: Address, target: Region): Pointer<T> | null {
-    return null;
+    const v = this.delete(address) as T;
+    return allocate(v, target);
+  }
+
+  private formalParams<T>(t: Class<T>, type: InvocationType, ...args: string[]): any[] {
+    const remotes = Condensation.remoteRegistry,
+        remote = remotes.resolve(t),
+        ctorArgs = remote.definitions.filter(
+            (definition) => definition.invocationType === type
+        );
+    if (ctorArgs.length !== args.length) {
+      throw new Error(
+          `Error: ${type} argument count mismatch.  Expected ${ctorArgs.length}, got ${args.length}`
+      );
+    }
+    ctorArgs.sort((lhs, rhs) => lhs.index - rhs.index);
+    return ctorArgs.map((def, idx) => {
+      const doc = args[idx],
+          jsonValue = JSON.parse(doc);
+      return Condensation.deserializerFor(def.type).read(jsonValue);
+    });
   }
 }
 
@@ -120,7 +124,8 @@ export function register(...registrations: RegistrationDefinition[]) {
   }
 }
 
-export namespace Condensation {}
+export namespace Condensation {
+}
 Condensation.registry = new TypeRegistry();
 Condensation.remoteRegistry = new RemoteRegistry();
 
