@@ -24,7 +24,7 @@
     "storybook:build": "tsc && build-storybook"
   },
   "dependencies": {
-    "@aire-ux/aire-condensation": "^0.0.2",
+    "@aire-ux/aire-condensation": "^0.0.3",
     "@aire-ux/mxgraph": "^4.2.6",
     "lit-element": "^3.0.0",
     "lit-html": "^2.0.0"
@@ -92,6 +92,7 @@
       "@typescript-eslint/no-unused-vars": [
         "error"
       ],
+      "new-cap": "off",
       "import/no-unresolved": "off",
       "import/extensions": [
         "off",

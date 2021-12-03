@@ -1,4 +1,4 @@
-import {mxGraphExportObject} from '@aire-ux/mxgraph';
+import { mxGraphExportObject } from '@aire-ux/mxgraph';
 
 declare global {
   interface Window {
