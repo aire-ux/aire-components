@@ -25,8 +25,9 @@ public class JsonWriter implements DocumentWriter {
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public <T> void write(@NonNull Class<T> type, @NonNull T value,
-      @NonNull OutputStream outputStream) throws IOException {
+  public <T> void write(
+      @NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
+      throws IOException {
 
     if (type.isArray()) {
       writePrologue(type, outputStream);
@@ -58,10 +59,7 @@ public class JsonWriter implements DocumentWriter {
       writeProperties(descriptor, type, outputStream, value);
       writeEpilogue(type, outputStream);
     }
-
-
   }
-
 
   private <T> void writeIterable(Class<T> type, Iterable<?> value, OutputStream outputStream)
       throws IOException {
@@ -78,7 +76,7 @@ public class JsonWriter implements DocumentWriter {
     writeEpilogue(type, outputStream);
   }
 
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({"unchecked", "rawtypes", "PMD"})
   private <T> void writeArray(Class<T> type, T value, OutputStream outputStream)
       throws IOException {
     if (Property.isPrimitive(type.getComponentType())) {
@@ -95,19 +93,17 @@ public class JsonWriter implements DocumentWriter {
         }
       }
     }
-
   }
 
-
-  private <T> void writeProperties(TypeDescriptor<T> descriptor, Class<T> type,
-      OutputStream outputStream, T value) throws IOException {
+  private <T> void writeProperties(
+      TypeDescriptor<T> descriptor, Class<T> type, OutputStream outputStream, T value)
+      throws IOException {
     val iterator = descriptor.getProperties().iterator();
     while (iterator.hasNext()) {
       val property = iterator.next();
       if (property.isPrimitive()) {
         writePrimitive(property, value, outputStream);
-      }
-      if (String.class.equals(property.getType())) {
+      } else if (String.class.equals(property.getType())) {
         writeString(property, value, outputStream);
       } else {
         val v = property.get(value);
@@ -141,7 +137,7 @@ public class JsonWriter implements DocumentWriter {
   private <T> void writePrimitive(Property<?> property, T value, OutputStream outputStream)
       throws IOException {
     writePropertyPrelude(property, outputStream);
-    write(outputStream, String.valueOf(property.get(value)));
+    write(outputStream, String.valueOf((Object) property.get(value)));
   }
 
   void writePropertyPrelude(Property<?> property, OutputStream outputStream) throws IOException {
@@ -170,7 +166,6 @@ public class JsonWriter implements DocumentWriter {
     } else {
       outputStream.write('}');
     }
-
   }
 
   private <T> boolean isCollection(Class<T> type) {

@@ -53,8 +53,7 @@ class JsonWriterTest {
     @RootElement
     class A {
 
-      @Element
-      private String a;
+      @Element private String a;
     }
     val a = new A();
     a.a = "hello-world";
@@ -69,16 +68,14 @@ class JsonWriterTest {
     @RootElement
     class A {
 
-      @Element
-      private int a;
+      @Element private int a;
     }
     val a = new A();
     a.a = 1;
     val writer = new ByteArrayOutputStream();
     Condensation.create("json").getWriter().write(A.class, a, writer);
-    assertResultEquals(writer, "{\"a\":1");
+    assertResultEquals(writer, "{\"a\":1}");
   }
-
 
   @Test
   void ensureWritingNestedValueWorks() throws IOException {
@@ -86,19 +83,16 @@ class JsonWriterTest {
     @RootElement
     class A {
 
-      @Attribute
-      String value;
+      @Attribute String value;
 
-      @Element
-      private A a;
+      @Element private A a;
     }
     val a = new A();
     a.a = new A();
     a.a.value = "coolbeans";
     val writer = new ByteArrayOutputStream();
     Condensation.create("json").getWriter().write(A.class, a, writer);
-    assertResultEquals(writer, "{\"value\":null\"a\":{\"value\":\"coolbeans\"\"a\":null}}");
-
+    assertResultEquals(writer, "{\"a\":{\"a\":null,\"value\":\"coolbeans\"},\"value\":null}");
   }
 
   @Test
@@ -107,8 +101,8 @@ class JsonWriterTest {
     @EqualsAndHashCode
     class MyType {
 
-      @Element
-      String hello;
+      @Element String hello;
+
       @Element(alias = @Alias(write = "sup", read = "sup"))
       String world;
     }
@@ -135,8 +129,8 @@ class JsonWriterTest {
     @EqualsAndHashCode
     class MyType {
 
-      @Element
-      String hello;
+      @Element String hello;
+
       @Element(alias = @Alias(write = "sup", read = "sup"))
       String world;
     }
@@ -163,12 +157,12 @@ class JsonWriterTest {
     @EqualsAndHashCode
     class MyType {
 
-      @Element
-      String hello;
+      @Element String hello;
+
       @Element(alias = @Alias(write = "sup", read = "sup"))
       String world;
-      @Element
-      Map<String, List<MyType>> values;
+
+      @Element Map<String, List<MyType>> values;
     }
     val results = new ArrayList<MyType>();
     for (int i = 0; i < 100; i++) {
@@ -182,17 +176,22 @@ class JsonWriterTest {
     for (val t : results) {
       m.put(t.hello, t);
       t.values = new HashMap<>();
-      t.values.put("values", results.stream().map(result -> {
-        result.values = new HashMap<>();
-        val r = result.world;
-        result.world = result.hello;
-        result.hello = r;
-        val copy = new MyType();
-        copy.hello = r;
-        copy.world = result.hello;
-        result.values.put("value", List.of(copy));
-        return result;
-      }).collect(Collectors.toList()));
+      t.values.put(
+          "values",
+          results.stream()
+              .map(
+                  result -> {
+                    result.values = new HashMap<>();
+                    val r = result.world;
+                    result.world = result.hello;
+                    result.hello = r;
+                    val copy = new MyType();
+                    copy.hello = r;
+                    copy.world = result.hello;
+                    result.values.put("value", List.of(copy));
+                    return result;
+                  })
+              .collect(Collectors.toList()));
     }
 
     val writer = new ByteArrayOutputStream();
@@ -201,9 +200,7 @@ class JsonWriterTest {
     System.out.println(writer.toString());
   }
 
-
   private void assertResultEquals(ByteArrayOutputStream writer, String s) {
     assertEquals(writer.toString(StandardCharsets.UTF_8), s);
   }
-
 }

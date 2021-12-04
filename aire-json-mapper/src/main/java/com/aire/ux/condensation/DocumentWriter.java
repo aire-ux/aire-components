@@ -7,7 +7,6 @@ import lombok.NonNull;
 public interface DocumentWriter {
 
   /**
-   *
    * @param type the type to write
    * @param value the value of type {@code type} to write
    * @param outputStream the OutputStream to write to
@@ -15,5 +14,4 @@ public interface DocumentWriter {
    */
   <T> void write(@NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
       throws IOException;
-
 }
