@@ -29,7 +29,8 @@ public class DesignerResourceServletIntegrationTest {
   void ensureRequestingValuesWorks(String value) {
     val result =
         template.getForEntity(
-            String.format("/aire/designer/client/mxgraph/javascript/%s", value), String.class);
+            String.format("/aire/designer/client/@aire-ux/mxgraph/javascript/%s", value),
+            String.class);
     assertNotNull(result);
     assertEquals(HttpStatus.OK, result.getStatusCode());
   }

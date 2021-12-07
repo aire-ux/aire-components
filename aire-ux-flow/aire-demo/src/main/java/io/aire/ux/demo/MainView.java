@@ -44,9 +44,7 @@ public class MainView extends VerticalLayout {
 
     add(textField, button);
 
-
     add(new Canvas());
     add(new Canvas());
-
   }
 }

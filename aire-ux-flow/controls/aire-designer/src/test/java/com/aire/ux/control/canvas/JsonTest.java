@@ -14,11 +14,9 @@ public class JsonTest {
   void ensureJsonHandlesStuffLikeIExpect() throws IOException {
     @RootElement
     class A {
-      @Element
-      String name = "coolbeans";
+      @Element String name = "coolbeans";
     }
     val result = Condensation.write("json", A.class, new A());
     val r = JsonCodec.encodeWithTypeInfo(result);
   }
-
 }
