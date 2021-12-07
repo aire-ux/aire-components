@@ -28,9 +28,9 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-//    implementation project(':aire-ux-flow:controls:aire-designer')
+    implementation project(':aire-ux-flow:controls:aire-designer')
 
-    implementation 'com.aire-ux.components:aire-designer:1.0.16-SNAPSHOT'
+//    implementation 'com.aire-ux.components:aire-designer:1.0.16-SNAPSHOT'
 }
 
 vaadin {
