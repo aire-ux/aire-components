@@ -20,13 +20,14 @@ dependencies {
 }
 
 
-test {
-    dependsOn(':aire-ux:controls:aire-designer-component:jar')
-    mustRunAfter(':aire-ux:controls:aire-designer-component:jar')
-}
-
-build {
-    dependsOn('copyAireToBuildDirectory')
-    mustRunAfter('copyAireToBuildDirectory')
+compileJava {
+    dependsOn(
+            'copyAireToBuildDirectory',
+            ':aire-ux:controls:aire-designer-component:jar'
+    )
+    mustRunAfter(
+            'copyAireToBuildDirectory',
+            ':aire-ux:controls:aire-designer-component:jar'
+    )
 }
 
