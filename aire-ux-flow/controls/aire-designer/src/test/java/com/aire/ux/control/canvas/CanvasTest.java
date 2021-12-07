@@ -1,6 +1,3 @@
 package com.aire.ux.control.canvas;
 
-
-class CanvasTest {
-
-}
+class CanvasTest {}

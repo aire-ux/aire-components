@@ -20,6 +20,11 @@ dependencies {
 }
 
 
+test {
+    dependsOn(':aire-ux:controls:aire-designer-component:jar')
+    mustRunAfter(':aire-ux:controls:aire-designer-component:jar')
+}
+
 build {
     dependsOn('copyAireToBuildDirectory')
     mustRunAfter('copyAireToBuildDirectory')

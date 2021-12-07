@@ -16,12 +16,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.val;
 
-/**
- * the designer needs quite a few configurations. This
- */
+/** the designer needs quite a few configurations. This */
 @RootElement
 public class DesignerConfiguration implements Serializable {
-
 
   static final AtomicReference<DesignerConfiguration> configuration;
 
@@ -95,7 +92,8 @@ public class DesignerConfiguration implements Serializable {
     stack.push(element);
     while (!stack.isEmpty()) {
       val el = stack.pop();
-      if (el.getComponent().map(component -> Graph.class.isAssignableFrom(component.getClass()))
+      if (el.getComponent()
+          .map(component -> Graph.class.isAssignableFrom(component.getClass()))
           .isPresent()) {
         return true;
       }

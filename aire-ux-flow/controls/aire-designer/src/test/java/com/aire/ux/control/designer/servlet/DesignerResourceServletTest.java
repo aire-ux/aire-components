@@ -34,7 +34,7 @@ class DesignerResourceServletTest {
 
   @Test
   void ensureRequestingMxClientWorks() throws ScriptException {
-    val result = client.get("/aire/designer/client/mxgraph/javascript/mxClient.min.js");
+    val result = client.get("/aire/designer/client/@aire-ux/mxgraph/javascript/mxClient.min.js");
     assertNotNull(result);
   }
 
@@ -42,7 +42,8 @@ class DesignerResourceServletTest {
   @ValueSource(strings = {"css/common.css", "resources/graph.txt", "resources/editor.txt"})
   void ensureRequestingValuesWorks(String value) {
     val result =
-        client.get(String.format("/aire/designer/client/mxgraph/javascript/src/%s", value));
+        client.get(
+            String.format("/aire/designer/client/@aire-ux/mxgraph/javascript/src/%s", value));
     assertFalse(result.trim().isBlank());
   }
 

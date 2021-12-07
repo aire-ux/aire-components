@@ -4,6 +4,5 @@ import lombok.NonNull;
 
 public interface FormatAware {
 
-
   boolean supports(@NonNull String format);
 }

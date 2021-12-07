@@ -39,22 +39,21 @@ public class Condensation {
     this.writer = getWriterFactory(format).newWriter(typeBinder, instantiator);
   }
 
-  public static <T> void write(@NonNull String format, @NonNull Class<T> type, @NonNull T value,
-      @NonNull
-          OutputStream outputStream) throws IOException {
-    create(format).getWriter()
-        .write(type, value, outputStream);
+  public static <T> void write(
+      @NonNull String format,
+      @NonNull Class<T> type,
+      @NonNull T value,
+      @NonNull OutputStream outputStream)
+      throws IOException {
+    create(format).getWriter().write(type, value, outputStream);
   }
-
 
   public static <T> String write(@NonNull String format, @NonNull Class<T> type, @NonNull T value)
       throws IOException {
     val outputStream = new ByteArrayOutputStream();
-    create(format).getWriter()
-        .write(type, value, outputStream);
+    create(format).getWriter().write(type, value, outputStream);
     return outputStream.toString(StandardCharsets.UTF_8);
   }
-
 
   public static Document parse(String format, CharSequence data) {
     final ParserFactory pf = getParserFactory(format);
@@ -68,9 +67,7 @@ public class Condensation {
         .filter(parserFactory -> parserFactory.supports(format))
         .findAny()
         .orElseThrow(
-            () ->
-                new NoSuchElementException(String.format("Unsupported format: '%s'", format)));
-
+            () -> new NoSuchElementException(String.format("Unsupported format: '%s'", format)));
   }
 
   private static ParserFactory getParserFactory(String format) {
@@ -80,8 +77,7 @@ public class Condensation {
         .filter(parserFactory -> parserFactory.supports(format))
         .findAny()
         .orElseThrow(
-            () ->
-                new NoSuchElementException(String.format("Unsupported format: '%s'", format)));
+            () -> new NoSuchElementException(String.format("Unsupported format: '%s'", format)));
   }
 
   public static <T> T read(Class<T> type, String format, CharSequence data, TypeBinder strategy) {
