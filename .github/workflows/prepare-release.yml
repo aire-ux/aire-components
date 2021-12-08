@@ -18,6 +18,7 @@ jobs:
     #################   Set up Environment  #################
 
     env:
+      AIRE_SERVLET_TESTS: disabled
       CURRENT_MAJOR_VERSION: 1
       CURRENT_MINOR_VERSION: 0
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -116,6 +117,7 @@ jobs:
       - name: Build And Deploy Aire-UX Projects
         uses: eskatos/gradle-command-action@v1
         env:
+          AIRE_SERVLET_TESTS: disabled
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
         with:
           gradle-version: 7.0.2

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
+@DisabledIfEnvironmentVariable(named = "AIRE_SERVLET_TESTS", matches = "disabled")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = Cfg.class)
 public class DesignerResourceServletIntegrationTest {
 
