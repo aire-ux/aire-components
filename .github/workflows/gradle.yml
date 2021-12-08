@@ -86,6 +86,7 @@ jobs:
       - name: Test on All Platforms
         uses: eskatos/gradle-command-action@v1
         env:
+          AIRE_SERVLET_TESTS: disabled
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
         with:
           gradle-version: 7.0.2
@@ -107,6 +108,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         if: matrix.platform == 'ubuntu-latest'
         env:
+          AIRE_SERVLET_TESTS: disabled
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
         with:
           gradle-version: 7.0.2
