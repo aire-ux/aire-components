@@ -1,6 +1,13 @@
 import TypeRegistry from "@condensation/type-registry";
 import RemoteRegistry, { InvocationType } from "@condensation/remote-registry";
-import { Address, allocate, Class, Pointer, Region } from "@condensation/types";
+import {
+  Address,
+  allocate,
+  Class,
+  isPointer,
+  Pointer,
+  Region,
+} from "@condensation/types";
 import {
   BooleanDeserializer,
   Deserializer,
@@ -8,6 +15,7 @@ import {
   StringDeserializer,
   TypeRegistrationDeserializer,
 } from "@condensation/deserializer";
+import { add } from "husky";
 
 export type Format = "json";
 
@@ -20,7 +28,11 @@ export interface Context {
 
   move<T>(address: Address, target: Region): Pointer<T> | null;
 
-  invoke<T, U>(address: Address, op: string, ...args: string[]): U | null;
+  invoke<T, U>(
+    address: Address | Pointer<T>,
+    op: string,
+    ...args: string[]
+  ): U | null;
 
   delete<T>(address: Address): T | null;
 
@@ -71,8 +83,17 @@ class DefaultCondensationContext implements Context {
     return this.region.delete(address);
   }
 
-  invoke<T, U>(address: Address, op: string, ...args: string[]): U | null {
-    const v = this.locate(address) as Pointer<T>;
+  invoke<T, U>(
+    address: Address | Pointer<T>,
+    op: string,
+    ...args: string[]
+  ): U | null {
+    let v: Pointer<T>;
+    if (isPointer(address)) {
+      v = address as Pointer<T>;
+    } else {
+      v = this.locate(address as Address) as Pointer<T>;
+    }
     if (!v) {
       throw new Error(
         `Null pointer exception at ${address} while trying to invoke ${op}`

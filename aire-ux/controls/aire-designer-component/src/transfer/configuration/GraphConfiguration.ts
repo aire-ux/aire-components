@@ -1,4 +1,4 @@
-import { Property, RootElement } from '@condensation/index';
+import { Property, RootElement } from '@aire-ux/aire-condensation';
 
 @RootElement
 export default class GraphConfiguration {

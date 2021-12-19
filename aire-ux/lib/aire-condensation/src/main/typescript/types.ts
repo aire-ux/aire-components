@@ -36,6 +36,14 @@ export type Pointer<T> = {
 } & T;
 
 /**
+ * guard allowing use of pointers as addresses
+ * @param t the value to check
+ */
+export function isPointer<T>(t: Pointer<T> | Address) {
+  return (t as Pointer<T>).address !== undefined;
+}
+
+/**
  * allocate a value into a pointer
  * @param value the value to allocate
  * @param region the region to allocate into

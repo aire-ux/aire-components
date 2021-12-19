@@ -21,12 +21,16 @@
     "typeRoots": [
       "typings",
       "node_modules/@types",
-      "node_modules/@aire-ux/typed-mxgraph"
     ],
     "paths": {
-      "@aire-designer/*": ["src/*"],
-      "@condensation/*": ["node_modules/@aire-ux/aire-condensation/dist/*"]
-    }
+      "@aire-designer/*": ["src/*"]
+    },
+    "plugins": [
+      {
+        "transform": "@zerollup/ts-transform-paths",
+        "exclude": ["*"]
+      }
+    ]
   },
   "include": [
     "src/**/*.ts",

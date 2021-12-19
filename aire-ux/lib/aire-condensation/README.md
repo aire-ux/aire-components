@@ -18,16 +18,15 @@ widgets.
 Define a data-transfer object:
 
 ```typescript
-
 @RootElement
 class Address {
   @Property({
     type: Number,
     read: {
-      alias: 'room-count'
-    }
+      alias: "room-count",
+    },
   })
-  roomCount: number
+  roomCount: number;
 
   @Property(String)
   city: string;
@@ -38,13 +37,12 @@ class Person {
   @Property(String)
   name: string | undefined;
   @Property({
-        type: Address,
-        read: {
-          alias: 'home-addresses'
-        }
-      }
-  )
-  addresses: Address[]
+    type: Address,
+    read: {
+      alias: "home-addresses",
+    },
+  })
+  addresses: Address[];
 }
 
 @RootElement
@@ -57,24 +55,19 @@ class Group {
 ### Define a Remotable Object
 
 ```typescript
-import {Receive, Remotable} from "./remotable";
+import { Receive, Remotable } from "./remotable";
 
 @Remotable
 class RemotableGroup {
   /**
    * @param group the group to construct this from
    */
-  constructor(@Receive(Group) group: Group) {
-    
+  constructor(@Receive(Group) group: Group) {}
+
+  addMember(@Receive(Person) member: Person): void {
+    this.group.members.push(member); // addMember can be called from the server-side
   }
-  
-  addMember(@Receive(Person) member: Person) : void {
-    this.group.members.push(member); // addMember can be called from the server-side 
-  }
-} 
+}
 
 const group = Condensation.newContext().bind(RemotableGroup);
-
-
-
 ```

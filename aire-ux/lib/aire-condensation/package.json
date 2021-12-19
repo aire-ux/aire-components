@@ -1,6 +1,6 @@
 {
   "name": "@aire-ux/aire-condensation",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Client-side serialization library for Aire-UX",
   "main": "dist/index.js",
   "scripts": {

@@ -5,7 +5,7 @@ import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.Property;
 import com.aire.ux.condensation.TypeInstantiator;
 import java.lang.reflect.Field;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.val;
 
@@ -21,7 +21,7 @@ public class FieldAnnotationPropertyScanningStrategy implements PropertyScanning
   @Override
   public <T> Set<Property<?>> scan(Class<T> type) {
     val fields = type.getDeclaredFields();
-    val result = new HashSet<Property<?>>();
+    val result = new LinkedHashSet<Property<?>>();
     for (val field : fields) {
       boolean isElement = false;
       if (field.isAnnotationPresent(Element.class)) {

@@ -30,7 +30,7 @@ class DesignerResourceServletTest {
 
   @Test
   void ensureResourceIsLoadableFromClassPath() {
-    val filePath = "ZEPHYR-INF/client/aire-designer/packages/iife/aire-designer.min.js";
+    val filePath = "ZEPHYR-INF/client/@aire-ux/mxgraph/tsconfig.json";
     assertNotNull(getClass().getClassLoader().getResource(filePath), "file must be loadable here");
   }
 

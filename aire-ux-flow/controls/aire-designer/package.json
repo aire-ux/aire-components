@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/aire-ux/aire-components#readme",
   "devDependencies": {
-    "mxgraph": "^4.2.2"
+    "@aire-ux/mxgraph": "^4.2.6"
   }
 }

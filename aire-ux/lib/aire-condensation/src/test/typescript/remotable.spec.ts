@@ -179,3 +179,35 @@ test("ensure array is deserializable", () => {
     "Tiff",
   ]);
 });
+
+test("pointers should be invocable", () => {
+  @RootElement
+  class Person {
+    @Property(String)
+    name: string | undefined;
+  }
+
+  @Remotable
+  class MxGraphManager {
+    person: Person | undefined;
+
+    public init(@Receive(Person) person: Person): void {
+      this.person = person;
+    }
+  }
+
+  const ctx = Condensation.newContext(),
+    mgr = ctx.create<MxGraphManager>(MxGraphManager);
+
+  ctx.invoke(
+    mgr,
+    "init",
+    `
+    {
+      "name": "Josiah"
+    }
+  `
+  );
+
+  expect(mgr.person?.name).toBe("Josiah");
+});
