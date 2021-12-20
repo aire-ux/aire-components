@@ -1,8 +1,3 @@
-export type Invocation = {
-  readonly qualifiedName: string;
-  readonly formalParameters: string[]
-  readonly next: Invocation | undefined;
-}
 
 /**
  *

@@ -76,7 +76,7 @@ export class Condensation {
 }
 
 class DefaultCondensationContext implements Context {
-  constructor(readonly region = new Region()) {}
+  constructor(readonly region = new Region('default')) {}
 
   create<T>(t: Class<T>, ...args: string[]): Pointer<T> {
     const actualParams = this.formalParams(t, "constructor", ...args);

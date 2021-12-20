@@ -8,9 +8,9 @@ export type Class<T> = new (...args: any[]) => T;
  *
  */
 export type ParameterDecorator = (
-  target: any,
-  propertyKey: PropertyKey,
-  index: number
+    target: any,
+    propertyKey: PropertyKey,
+    index: number
 ) => any;
 
 /**
@@ -18,6 +18,7 @@ export type ParameterDecorator = (
  */
 export class Address {
   public readonly value: number;
+
   constructor(region: Region | number) {
     if (isRegion(region)) {
       this.value = region.address();
@@ -69,13 +70,27 @@ export function allocate<T>(value: T, region = DefaultRegion): Pointer<T> {
   return new Proxy(value as Pointer<T>, handler);
 }
 
+
+export class Regions {
+  static regions: Map<string | number, Region> = new Map();
+
+
+}
+
 /**
  * a contiguous set of memory locations
  */
 export class Region {
+  static value: number;
   values: any[];
-  constructor() {
+
+  constructor(name?: string) {
     this.values = [];
+    if (name) {
+      Regions.regions.set(name, this);
+    } else {
+      Regions.regions.set(Region.value++, this);
+    }
   }
 
   address(): number {
@@ -96,7 +111,7 @@ export class Region {
 
   delete<T>(address: Address): T | null {
     let vs = this.values,
-      value = vs[address.value];
+        value = vs[address.value];
 
     if (value) {
       return vs.splice(address.value, 1)[0] as T;
