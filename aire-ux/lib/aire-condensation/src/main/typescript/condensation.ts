@@ -43,6 +43,7 @@ export interface Context {
  * root context for all operations
  */
 export class Condensation {
+  static context : Context;
   static registry: TypeRegistry;
   static remoteRegistry: RemoteRegistry;
 
@@ -64,6 +65,13 @@ export class Condensation {
 
   static newContext(): Context {
     return new DefaultCondensationContext();
+  }
+
+  static defaultContext() {
+    if(!Condensation.context) {
+      Condensation.context = Condensation.newContext();
+    }
+    return Condensation.context;
   }
 }
 
