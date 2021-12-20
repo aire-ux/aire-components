@@ -326,7 +326,7 @@ export const lex = (vs: string): Iterable<Token> => {
   return new TokenStream(vs);
 }
 
-function* generateStream(vs: string): IterableIterator<Token> {
+export function* generateStream(vs: string): IterableIterator<Token> {
   return yield* lex(vs);
 }
 

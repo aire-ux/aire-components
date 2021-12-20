@@ -30,10 +30,6 @@ test('ensure invoking a method makes sense', () => {
       return `Hello ${name}`;
     }
   }
-  const a = Condensation.defaultContext().create(A);
-      // prog = `(function(){Condensation.defaultContext().invoke(${a.address}, 'Josiah')})()`
-  const r = eval(`Condensation.defaultContext()`);
-  console.log(r);
 
 
 });
