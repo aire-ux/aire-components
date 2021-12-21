@@ -11,3 +11,16 @@ test('a parser must parse an invocation', () => {
 
   parse('hello::world.whatever.cool.beans (${first}, ${second})');
 })
+
+test('a parser must parse an extended invocation', () => {
+  (window as any).hello = 'world';
+
+  parse('hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp');
+})
+
+
+test('a parser must parse an extended invocation multiple times', () => {
+  (window as any).hello = 'world';
+
+  parse('hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp().poobles(${third}, ${fourth}, ${fifth})');
+})

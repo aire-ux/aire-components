@@ -1,4 +1,5 @@
 import {generateStream, lex, TokenType} from "@condensation/lexer";
+import {parse} from "../../main/typescript/parser";
 
 test('a lexer must recognize whitespace', () => {
   const value = ' ',
@@ -154,3 +155,11 @@ test('generateStream must work', () => {
   expect(values.next().value.type).toBe(TokenType.Identifier);
   expect(values.next().value.type).toBe(TokenType.NamespaceSeparator);
 })
+
+test('ensure continued invocation is tokenized correctly', () => {
+
+  const r = [...lex('hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp')];
+  for(const v of r) {
+    console.log(v);
+  }
+});

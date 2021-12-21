@@ -65,7 +65,9 @@ const ws = (iter: PushbackIterator): void => {
   do {
     token = iter.next();
   } while (token.type === TokenType.Whitespace);
-  iter.unread(token);
+  if(token.type !== TokenType.EOF) {
+    iter.unread(token);
+  }
 }
 
 
@@ -74,8 +76,12 @@ const readParameterNames = (seq: string, iter: PushbackIterator): string[] => {
 
   for (; ;) {
     ws(iter);
+    if (iter.peek().type === TokenType.CloseParenthesis) {
+      break;
+    }
     expect(seq, iter, TokenType.ParameterOpen);
     ws(iter);
+
     result.push(expect(seq, iter, TokenType.Identifier).value);
     ws(iter);
     expect(seq, iter, TokenType.ParameterClose);
@@ -138,6 +144,10 @@ const readPath = (seq: string, iter: PushbackIterator): Path => {
       }
       ws(iter);
       expect(seq, iter, TokenType.CloseParenthesis);
+      ws(iter);
+      if(iter.peek().type === TokenType.PropertySeparator) {
+        expect(seq, iter, TokenType.PropertySeparator);
+      }
     }
     else if(peek.type == TokenType.EOF) {
       const value = {
