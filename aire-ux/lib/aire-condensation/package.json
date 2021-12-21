@@ -46,7 +46,10 @@
     "roots": [
       "src/main/typescript",
       "src/test/typescript"
-    ]
+    ],
+    "globals": {
+      "window": {}
+    }
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
