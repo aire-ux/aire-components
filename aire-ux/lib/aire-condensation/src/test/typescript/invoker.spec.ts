@@ -1,35 +1,29 @@
-import {locate} from "@condensation/invoker";
-import {Condensation, Receive, Remotable} from "@condensation/index";
+import { locate } from "@condensation/invoker";
+import { Condensation, Receive, Remotable } from "@condensation/index";
 
-test('an invoker must locate a property correctly', () => {
-
-  class B {
-
-  }
+test("an invoker must locate a property correctly", () => {
+  class B {}
 
   class A {
     b: B | undefined;
   }
 
   let a = new A(),
-      b = new B();
+    b = new B();
 
   a.b = b;
 
-  const [host, prop] = locate('b'.split('.'), a);
+  const [host, prop] = locate("b".split("."), a);
 
   expect(host).toBe(a);
   expect(prop).toBe(b);
-
 });
 
-test('ensure invoking a method makes sense', () => {
+test("ensure invoking a method makes sense", () => {
   @Remotable
   class A {
     sayHello(@Receive(String) name: string): string {
       return `Hello ${name}`;
     }
   }
-
-
 });

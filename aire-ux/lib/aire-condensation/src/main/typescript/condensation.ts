@@ -43,7 +43,7 @@ export interface Context {
  * root context for all operations
  */
 export class Condensation {
-  static context : Context;
+  static context: Context;
   static registry: TypeRegistry;
   static remoteRegistry: RemoteRegistry;
 
@@ -68,7 +68,7 @@ export class Condensation {
   }
 
   static defaultContext() {
-    if(!Condensation.context) {
+    if (!Condensation.context) {
       Condensation.context = Condensation.newContext();
     }
     return Condensation.context;
@@ -76,7 +76,7 @@ export class Condensation {
 }
 
 class DefaultCondensationContext implements Context {
-  constructor(readonly region = new Region('default')) {}
+  constructor(readonly region = new Region("default")) {}
 
   create<T>(t: Class<T>, ...args: string[]): Pointer<T> {
     const actualParams = this.formalParams(t, "constructor", ...args);

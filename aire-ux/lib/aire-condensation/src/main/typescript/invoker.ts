@@ -1,4 +1,3 @@
-
 /**
  *
  * @param invocation the invocation to perform
@@ -26,8 +25,8 @@
 
 export function locate(qnamePath: string[], v: any): [any, any] {
   let host = v,
-      property = undefined,
-      size = qnamePath.length;
+    property = undefined,
+    size = qnamePath.length;
   for (let i = 0; i < size; i++) {
     const pathSegment = qnamePath[i];
     property = host[pathSegment];
@@ -39,5 +38,7 @@ export function locate(qnamePath: string[], v: any): [any, any] {
     }
     host = property;
   }
-  throw new Error(`Error: no property at ${qnamePath.join('.')} reachable from ${host}`);
+  throw new Error(
+    `Error: no property at ${qnamePath.join(".")} reachable from ${host}`
+  );
 }

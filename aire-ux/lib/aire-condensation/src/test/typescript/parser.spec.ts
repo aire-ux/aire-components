@@ -1,26 +1,27 @@
-import {parse} from "@condensation/parser";
+import { parse } from "@condensation/parser";
 
-test('a parser must parse', () => {
-  (window as any).hello = 'world';
+test("a parser must parse", () => {
+  (window as any).hello = "world";
 
-  parse('hello::world.whatever.cool.beans');
-})
+  parse("hello::world.whatever.cool.beans");
+});
 
-test('a parser must parse an invocation', () => {
-  (window as any).hello = 'world';
+test("a parser must parse an invocation", () => {
+  (window as any).hello = "world";
 
-  parse('hello::world.whatever.cool.beans (${first}, ${second})');
-})
+  parse("hello::world.whatever.cool.beans (${first}, ${second})");
+});
 
-test('a parser must parse an extended invocation', () => {
-  (window as any).hello = 'world';
+test("a parser must parse an extended invocation", () => {
+  (window as any).hello = "world";
 
-  parse('hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp');
-})
+  parse("hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp");
+});
 
+test("a parser must parse an extended invocation multiple times", () => {
+  (window as any).hello = "world";
 
-test('a parser must parse an extended invocation multiple times', () => {
-  (window as any).hello = 'world';
-
-  parse('hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp().poobles(${third}, ${fourth}, ${fifth})');
-})
+  parse(
+    "hello::world.whatever.cool.beans (${first}, ${second}).bean.schnorp().poobles(${third}, ${fourth}, ${fifth})"
+  );
+});

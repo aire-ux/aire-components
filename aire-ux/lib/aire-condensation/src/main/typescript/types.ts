@@ -8,9 +8,9 @@ export type Class<T> = new (...args: any[]) => T;
  *
  */
 export type ParameterDecorator = (
-    target: any,
-    propertyKey: PropertyKey,
-    index: number
+  target: any,
+  propertyKey: PropertyKey,
+  index: number
 ) => any;
 
 /**
@@ -70,11 +70,8 @@ export function allocate<T>(value: T, region = DefaultRegion): Pointer<T> {
   return new Proxy(value as Pointer<T>, handler);
 }
 
-
 export class Regions {
   static regions: Map<string | number, Region> = new Map();
-
-
 }
 
 /**
@@ -111,7 +108,7 @@ export class Region {
 
   delete<T>(address: Address): T | null {
     let vs = this.values,
-        value = vs[address.value];
+      value = vs[address.value];
 
     if (value) {
       return vs.splice(address.value, 1)[0] as T;
