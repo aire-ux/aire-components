@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.val;
 
+@SuppressFBWarnings
 public class Node {
 
   static final String EMPTY_CONTENT = "".intern();

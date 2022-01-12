@@ -1,5 +1,6 @@
 package com.aire.ux.condensation;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.lang.tuple.Pair;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.ParameterizedType;
@@ -12,6 +13,7 @@ import javax.annotation.Nullable;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressFBWarnings
 @SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals", "PMD.CompareObjectsWithEquals"})
 public abstract class AbstractProperty<T extends AccessibleObject> implements Property<T> {
 

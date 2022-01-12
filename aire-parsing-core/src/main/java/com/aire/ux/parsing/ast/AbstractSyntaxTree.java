@@ -1,5 +1,6 @@
 package com.aire.ux.parsing.ast;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.val;
 
+@SuppressFBWarnings
 public class AbstractSyntaxTree<T, U> implements Iterable<SyntaxNode<T, U>> {
 
   public static final Symbol ROOT_SYMBOL =

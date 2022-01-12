@@ -1,6 +1,7 @@
 package com.aire.ux.condensation;
 
 import com.aire.ux.condensation.mappings.DefaultTypeBinder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,6 +12,7 @@ import java.util.ServiceLoader.Provider;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressFBWarnings
 public class Condensation {
 
   private final String format;

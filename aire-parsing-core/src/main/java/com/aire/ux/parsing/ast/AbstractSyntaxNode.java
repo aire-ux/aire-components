@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import lombok.val;
 
+@SuppressFBWarnings
 public class AbstractSyntaxNode<T, U> implements SyntaxNode<T, U> {
 
   /** immutable state */

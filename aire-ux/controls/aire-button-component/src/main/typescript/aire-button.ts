@@ -5,7 +5,7 @@ import {customElement, html, LitElement} from "lit-element";
 export default class AireButton extends LitElement {
 
   render() {
-    return html`Sup`
+    return html`<button></button>`
   }
 
 }

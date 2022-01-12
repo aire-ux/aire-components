@@ -1,5 +1,6 @@
 package com.aire.ux.condensation.mappings;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
+@SuppressFBWarnings
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class Mutator extends AccessibleObject {
 

@@ -9,9 +9,11 @@ import com.aire.ux.plan.EvaluatorFactory;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.test.NodeAdapter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collections;
 import java.util.Set;
 
+@SuppressFBWarnings
 public class RootNodeEvaluatorFactory implements EvaluatorFactory {
 
   @Override

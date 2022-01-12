@@ -9,11 +9,13 @@ import com.aire.ux.plan.Evaluator;
 import com.aire.ux.plan.PlanContext;
 import com.aire.ux.plan.WorkingSet;
 import com.aire.ux.test.NodeAdapter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import lombok.val;
 
+@SuppressFBWarnings
 public abstract class AbstractHierarchySearchingEvaluator implements Evaluator {
 
   @Nonnull protected final PlanContext context;
