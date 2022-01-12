@@ -10,48 +10,45 @@
  * closeParam: ')'
  * property: <identifier>
  */
-import {
-  PushbackIterator,
-  stream,
-  Token,
-  TokenType,
-} from "@condensation/lexer";
+import {PushbackIterator, stream, Token, TokenType,} from "@condensation/lexer";
 
 export interface Lookup {
   lookup<T>(name: string | number): T;
 }
 
 export type Invocation = {
-  context: Lookup;
-  invoke: (...args: string[]) => any;
+  path: Path;
+  namespace: string | number
+  // context: Lookup;
+  // invoke: (...args: string[]) => any;
 };
 
 const expectToken = (
-  ctx: string,
-  token: Token,
-  ...expected: TokenType[]
+    ctx: string,
+    token: Token,
+    ...expected: TokenType[]
 ): void => {
   if (expected.indexOf(token.type) === -1) {
     throw new Error(
-      `Expected one of [${[...expected]
-        .map((e) => TokenType[e])
-        .join(",")}].  Got ${TokenType[token.type]} at (${
-        (token.start, token.end)
-      }) '${ctx.substr(token.start, token.end)}'`
+        `Expected one of [${[...expected]
+            .map((e) => TokenType[e])
+            .join(",")}].  Got ${TokenType[token.type]} at (${
+            (token.start, token.end)
+        }) '${ctx.substr(token.start, token.end)}'`
     );
   }
 };
 
 const expect = (
-  ctx: string,
-  iter: PushbackIterator,
-  ...expected: TokenType[]
+    ctx: string,
+    iter: PushbackIterator,
+    ...expected: TokenType[]
 ): Token => {
   if (!iter.hasNext()) {
     throw new Error(
-      `Unexpected end of token stream.  Expected one of [${[...expected]
-        .map((e) => TokenType[e])
-        .join(",")}]`
+        `Unexpected end of token stream.  Expected one of [${[...expected]
+            .map((e) => TokenType[e])
+            .join(",")}]`
     );
   }
   const next = iter.next();
@@ -59,12 +56,13 @@ const expect = (
   return next;
 };
 
-enum SegmentType {
+export enum SegmentType {
   Property,
   Invocation,
+  Reference
 }
 
-type Segment = {
+export type Segment = {
   name: string;
   next: Segment | undefined;
   segmentType: SegmentType;
@@ -87,7 +85,7 @@ const ws = (iter: PushbackIterator): void => {
 const readParameterNames = (seq: string, iter: PushbackIterator): string[] => {
   let result = [];
 
-  for (;;) {
+  for (; ;) {
     ws(iter);
     if (iter.peek().type === TokenType.CloseParenthesis) {
       break;
@@ -114,21 +112,22 @@ const readParameterNames = (seq: string, iter: PushbackIterator): string[] => {
 
 const readPath = (seq: string, iter: PushbackIterator): Path => {
   let root: Segment | null = null,
-    current: Segment | null = null;
+      current: Segment | null = null;
   while (iter.hasNext()) {
     ws(iter);
-    const id = expect(seq, iter, TokenType.Identifier);
+    const id = expect(seq, iter, TokenType.Identifier, TokenType.Number);
     ws(iter);
-    let type: SegmentType,
-      peek = iter.peek();
-
+    let peek = iter.peek();
     if (peek.type === TokenType.PropertySeparator) {
       expect(seq, iter, TokenType.PropertySeparator);
       const value = {
         name: id.value,
         next: undefined,
         formalParameterNames: undefined,
-        segmentType: SegmentType.Property,
+        segmentType:
+            id.type == TokenType.Identifier ?
+                SegmentType.Property :
+                SegmentType.Reference,
       };
       if (!root) {
         root = value as Segment;
@@ -194,5 +193,9 @@ export const parse = (seq: string): Invocation => {
   }
 
   const path = readPath(seq, iter);
-  return null as any;
+  return {
+    path: path,
+    namespace: namespace.value
+  }
+
 };

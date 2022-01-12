@@ -1,22 +1,45 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "es2018",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
-    "lib": ["es2017", "dom"],
-    "strict": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
-    "importHelpers": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "inlineSources": true,
-    "rootDir": "./",
+    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "typeRoots": ["@node_modules/@types", "typings"],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
     "declaration": true,
-    "incremental": true,
+    "paths": {
+      "@aire-button/*": [
+        "src/main/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      },
+      {
+        "transform": "@zerollup/ts-transform-paths",
+        "exclude": [
+          "*"
+        ]
+      }
+    ]
   },
-  "include": ["**/*.ts"]
+  "exclude": [
+    "node_modules/**/*"
+  ],
+  "include": [
+    "src/main/**/*.ts",
+    "src/main/**/*.scss"
+  ]
 }
