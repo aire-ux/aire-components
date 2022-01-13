@@ -5,9 +5,4 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackageClasses = FrontPage.class)
-public class Scenario1 {
-
-
-
-
-}
+public class Scenario1 {}

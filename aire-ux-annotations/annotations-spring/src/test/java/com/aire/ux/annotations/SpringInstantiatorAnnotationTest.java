@@ -15,9 +15,14 @@ import org.springframework.test.context.ContextConfiguration;
 @AireTest
 @EnableSpring
 @ContextConfiguration(classes = Scenario1.class)
-@Routes(scanClassPackage = FrontPage.class)
+@Routes(scanPackage = "com.aire.ux.annotations.scenario1")
 public class SpringInstantiatorAnnotationTest {
 
+  @ViewTest
+  @Navigate("front-page")
+  void ensureFrontPageIsSelectable2(@Select FrontPage page) {
+    assertNotNull(page);
+  }
 
   @ViewTest
   @Navigate("front-page")
@@ -25,6 +30,10 @@ public class SpringInstantiatorAnnotationTest {
     assertNotNull(page);
   }
 
-
-
+  @ViewTest
+  @Navigate("front-page")
+  void ensureFrontPageIsSelectableById(@Select("#my-id") FrontPage page) {
+    assertNotNull(page);
+    assertNotNull(page.bean);
+  }
 }
