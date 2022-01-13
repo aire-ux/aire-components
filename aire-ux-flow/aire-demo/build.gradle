@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'com.vaadin'
-    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'org.springframework.boot' version '2.6.2'
 }
 configurations {
     developmentOnly

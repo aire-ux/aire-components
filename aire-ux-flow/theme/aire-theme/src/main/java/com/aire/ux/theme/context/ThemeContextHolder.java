@@ -1,5 +1,6 @@
 package com.aire.ux.theme.context;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -10,6 +11,7 @@ import lombok.val;
 
 /** */
 @Log
+@SuppressFBWarnings
 public class ThemeContextHolder {
 
   /** the strategy name to use. May be a fully-qualified class name of a themecontextstrategy */
