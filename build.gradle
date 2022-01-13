@@ -8,12 +8,9 @@ plugins {
     id "com.diffplug.spotless" version "6.1.0" apply false
     id "com.github.node-gradle.node" version "3.1.1" apply false
     id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
-
 }
 
 apply from: "$rootDir/tasks/revisions.gradle"
-
-
 
 
 allprojects {
@@ -55,7 +52,6 @@ allprojects {
         ].each { dep ->
             all*.exclude(group: dep)
         }
-
     }
 
 }

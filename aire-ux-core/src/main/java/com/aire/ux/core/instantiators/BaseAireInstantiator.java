@@ -4,7 +4,6 @@ import com.aire.ux.core.decorators.ComponentDecorator;
 import com.aire.ux.core.decorators.ServiceLoaderComponentDecorator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
-import com.vaadin.flow.component.polymertemplate.TemplateParser;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.i18n.I18NProvider;
 import com.vaadin.flow.router.NavigationEvent;
@@ -95,11 +94,6 @@ public class BaseAireInstantiator implements Instantiator {
   @Override
   public I18NProvider getI18NProvider() {
     return delegate.getI18NProvider();
-  }
-
-  @Override
-  public TemplateParser getTemplateParser() {
-    return delegate.getTemplateParser();
   }
 
   /**

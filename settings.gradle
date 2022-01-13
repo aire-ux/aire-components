@@ -8,7 +8,6 @@ pluginManagement {
 include(
 
         'aire-ux:lib:aire-condensation',
-        'aire-ux-flow:aire-ux-annotations',
         /**
          * core items
          */
@@ -38,12 +37,17 @@ include(
          * themes
          */
         'aire-ux-flow:theme:aire-theme',
+        'aire-ux-annotations',
+        'aire-ux-annotations:annotations',
+        'aire-ux-annotations:annotations-core',
+        'aire-ux-annotations:annotations-spring',
 
 
         /**
          * controls
          */
         'aire-ux-flow:controls:aire-designer',
+
 
         'aire-ux',
 
@@ -52,3 +56,4 @@ include(
          */
         'aire-ux:controls:aire-designer-component'
 )
+
