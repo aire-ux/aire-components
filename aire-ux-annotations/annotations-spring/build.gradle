@@ -1,0 +1,9 @@
+
+dependencies {
+    api project(':aire-ux-annotations:annotations')
+    api project(':aire-ux-annotations:annotations-core')
+
+
+    testImplementation project(':aire-ux-core')
+    testImplementation project(':aire-test-spring')
+}
