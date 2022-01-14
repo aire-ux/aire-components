@@ -11,9 +11,7 @@ public class HostDecorator implements ComponentDecorator {
 
   public static final String METHOD_NAME = "setId";
 
-  public HostDecorator() {
-
-  }
+  public HostDecorator() {}
 
   @Override
   public void decorate(@Nonnull HasElement component) {

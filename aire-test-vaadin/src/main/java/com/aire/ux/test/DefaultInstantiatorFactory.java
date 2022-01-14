@@ -1,5 +1,3 @@
 package com.aire.ux.test;
 
-public class DefaultInstantiatorFactory implements InstantiatorFactory {
-
-}
+public class DefaultInstantiatorFactory implements InstantiatorFactory {}

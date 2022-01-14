@@ -27,6 +27,7 @@ class BaseAireInstantiatorTest {
 
   /**
    * debugging OOM
+   *
    * @param view the view
    */
   @ViewTest
@@ -37,6 +38,7 @@ class BaseAireInstantiatorTest {
 
   /**
    * debugging OOM
+   *
    * @param view the view
    */
   @ViewTest
@@ -44,6 +46,7 @@ class BaseAireInstantiatorTest {
   void ensureViewIsInjected3(@Select MainView view) {
     assertEquals("world", view.getElement().getProperty("hello"));
   }
+
   @Configuration
   public static class Cfg {}
 }

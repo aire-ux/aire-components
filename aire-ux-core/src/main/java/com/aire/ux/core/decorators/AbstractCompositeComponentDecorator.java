@@ -5,10 +5,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
-import lombok.val;
 
 public class AbstractCompositeComponentDecorator implements ComponentDecorator {
-
 
   private final Supplier<Stream<? extends ComponentDecorator>> delegateFactory;
 
@@ -27,9 +25,7 @@ public class AbstractCompositeComponentDecorator implements ComponentDecorator {
     delegates().forEach(c -> c.onComponentExited(component));
   }
 
-  /**
-   * @param component the component to apply these decorators to
-   */
+  /** @param component the component to apply these decorators to */
   @Override
   public void decorate(@Nonnull HasElement component) {
     delegates().forEach(c -> c.decorate(component));
@@ -38,19 +34,16 @@ public class AbstractCompositeComponentDecorator implements ComponentDecorator {
   @Nonnull
   public ComponentDecorator compose(@Nonnull ComponentDecorator decorator) {
     return new AbstractCompositeComponentDecorator(
-        () -> Stream.concat(
-            StreamSupport.stream(delegateFactory.get().spliterator(), false),
-            Stream.of(decorator)
-        ));
+        () ->
+            Stream.concat(
+                StreamSupport.stream(delegateFactory.get().spliterator(), false),
+                Stream.of(decorator)));
   }
 
   @Override
-  public void close() {
-  }
+  public void close() {}
 
   protected Stream<? extends ComponentDecorator> delegates() {
     return delegateFactory.get();
   }
-
-
 }

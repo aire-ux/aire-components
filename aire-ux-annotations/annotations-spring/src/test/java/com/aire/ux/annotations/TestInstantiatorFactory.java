@@ -7,10 +7,9 @@ import com.vaadin.flow.di.Instantiator;
 
 public class TestInstantiatorFactory implements InstantiatorFactory {
 
-
   public Instantiator create(Instantiator delegate) {
-    return new BaseAireInstantiator(delegate,
+    return new BaseAireInstantiator(
+        delegate,
         new ServiceLoaderComponentDecorator(() -> Thread.currentThread().getContextClassLoader()));
   }
-
 }

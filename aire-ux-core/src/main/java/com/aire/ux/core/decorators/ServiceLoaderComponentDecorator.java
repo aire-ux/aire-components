@@ -21,7 +21,6 @@ public class ServiceLoaderComponentDecorator extends AbstractCompositeComponentD
    */
   private static Stream<? extends ComponentDecorator> loadComponentDecorators(
       ClassLoader classloader) {
-    return ServiceLoader.load(ComponentDecorator.class, classloader).stream()
-        .map(Provider::get);
+    return ServiceLoader.load(ComponentDecorator.class, classloader).stream().map(Provider::get);
   }
 }
