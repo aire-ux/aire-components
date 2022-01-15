@@ -2,11 +2,11 @@ package com.aire.ux.select.css;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.parsing.ast.AbstractSyntaxTree;
-import com.aire.ux.parsing.ast.Symbol;
-import com.aire.ux.parsing.ast.SyntaxNode;
-import com.aire.ux.parsing.core.Token;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
+import io.sunshower.arcus.ast.AbstractSyntaxTree;
+import io.sunshower.arcus.ast.Symbol;
+import io.sunshower.arcus.ast.SyntaxNode;
+import io.sunshower.arcus.ast.core.Token;
 import java.util.function.Predicate;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;

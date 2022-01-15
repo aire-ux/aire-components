@@ -1,7 +1,7 @@
 package com.aire.ux.condensation.json;
 
 import com.aire.ux.condensation.json.Value.Type;
-import com.aire.ux.parsing.core.Token;
+import io.sunshower.arcus.ast.core.Token;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

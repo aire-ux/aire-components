@@ -2,9 +2,9 @@ package com.aire.ux.condensation.json;
 
 import static java.lang.String.format;
 
-import com.aire.ux.parsing.ast.Symbol;
-import com.aire.ux.parsing.core.TokenBuffer;
-import com.aire.ux.parsing.core.Type;
+import io.sunshower.arcus.ast.Symbol;
+import io.sunshower.arcus.ast.core.TokenBuffer;
+import io.sunshower.arcus.ast.core.Type;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;

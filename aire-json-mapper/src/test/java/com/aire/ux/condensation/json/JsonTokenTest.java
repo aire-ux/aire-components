@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.aire.ux.condensation.Condensation;
-import com.aire.ux.parsing.core.Token;
-import com.aire.ux.parsing.core.Type;
+import io.sunshower.arcus.ast.core.Token;
+import io.sunshower.arcus.ast.core.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;

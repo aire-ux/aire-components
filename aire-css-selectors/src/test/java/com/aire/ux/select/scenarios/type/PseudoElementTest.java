@@ -1,8 +1,8 @@
 package com.aire.ux.select.scenarios.type;
 
-import com.aire.ux.parsing.ast.Symbol;
 import com.aire.ux.select.css.CssSelectorParser.ElementSymbol;
 import com.aire.ux.select.css.CssSelectorParserTest.TestCase;
+import io.sunshower.arcus.ast.Symbol;
 import lombok.val;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

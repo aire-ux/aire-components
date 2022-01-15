@@ -10,7 +10,7 @@ plugins {
     id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
 }
 
-apply from: "$rootDir/tasks/revisions.gradle"
+//apply from: "$rootDir/tasks/revisions.gradle"
 
 
 allprojects {
@@ -25,8 +25,9 @@ allprojects {
         maven {
             url "https://repository.mulesoft.org/nexus/content/repositories/public/"
         }
+
         maven {
-            url uri("https://maven.pkg.github.com/sunshower-io/sunshower-arcus")
+            url "https://maven.pkg.github.com/sunshower-io/sunshower-arcus"
             credentials {
                 username "$mavenRepositoryUsername"
                 password "$mavenRepositoryPassword"
@@ -67,7 +68,7 @@ subprojects {
     apply plugin: "com.diffplug.spotless"
 
 
-    extensions.add('aire', new AireComponent(project))
+//    extensions.add('aire', new AireComponent(project))
 
 
     spotbugs {

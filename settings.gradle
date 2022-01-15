@@ -7,35 +7,22 @@ pluginManagement {
 
 include(
 
-        'aire-ux:lib:aire-condensation',
+        'aire-css-selectors',
         /**
-         * core items
-         */
 
         'aire-ux-core',
         'aire-ux-spring',
         'aire-ux-zephyr',
         'aire-css-selectors',
         'aire-json-mapper',
-        'aire-parsing-core',
         'aire-mock:aire-mockito',
         'aire-mock:aire-mock-core',
 
-        /**
-         * test items
-         */
         'aire-test-common',
         'aire-test-vaadin',
         'aire-test-spring',
-
-        /**
-         * demo project
-         */
         'aire-ux-flow:aire-demo',
 
-        /**
-         * themes
-         */
         'aire-ux-flow:theme:aire-theme',
         'aire-ux-annotations',
         'aire-ux-annotations:annotations',
@@ -43,17 +30,10 @@ include(
         'aire-ux-annotations:annotations-spring',
 
 
-        /**
-         * controls
-         */
         'aire-ux-flow:controls:aire-designer',
 
 
-        'aire-ux',
-
-        /**
-         * javascript controls
-         */
         'aire-ux:controls:aire-designer-component'
+	*/
 )
 

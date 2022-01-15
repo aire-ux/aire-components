@@ -1,6 +1,6 @@
 dependencies {
 
-    api project(':aire-parsing-core')
+    implementation 'io.sunshower.arcus:arcus-ast'
     implementation 'io.sunshower.arcus:arcus-lang'
     implementation 'io.sunshower.arcus:arcus-lambda'
     implementation 'io.sunshower.arcus:arcus-reflect'

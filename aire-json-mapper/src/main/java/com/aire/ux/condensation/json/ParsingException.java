@@ -1,7 +1,7 @@
 package com.aire.ux.condensation.json;
 
-import com.aire.ux.parsing.core.LookaheadIterator;
-import com.aire.ux.parsing.core.Token;
+import io.sunshower.arcus.ast.core.LookaheadIterator;
+import io.sunshower.arcus.ast.core.Token;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
