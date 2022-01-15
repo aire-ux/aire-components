@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'com.vaadin'
+    id 'org.springframework.boot'
+    id "com.github.node-gradle.node"
+}
+
+
+defaultTasks("clean", "build")
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    implementation('com.vaadin:vaadin-spring-boot-starter')
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:$vaadinVersion"
+    }
+}
+
+task watchScss(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'develop']
+}
+
+task buildScss(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'build']
+}
+
+//bootRun.dependsOn watchScss
+
+
+build.dependsOn buildScss
+
+vaadin {
+    pnpmEnable = true
+}

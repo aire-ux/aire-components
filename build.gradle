@@ -1,15 +1,17 @@
+
+
 plugins {
     id 'pmd'
     id 'groovy'
+    id 'com.vaadin'
     id 'java-library'
     id 'java-test-fixtures'
-    id "com.github.spotbugs" version "4.7.0" apply false
-    id "io.freefair.lombok" version "6.3.0" apply false
-    id "com.diffplug.spotless" version "6.1.0" apply false
-    id "com.github.node-gradle.node" version "3.1.1" apply false
-    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
+    id "com.github.spotbugs"
+    id "io.freefair.lombok"
+    id "com.diffplug.spotless"
+    id "com.github.node-gradle.node"
+    id "io.spring.dependency-management"
 }
-
 //apply from: "$rootDir/tasks/revisions.gradle"
 
 
@@ -22,6 +24,9 @@ allprojects {
         mavenLocal()
         mavenCentral()
 
+        maven {
+            url "https://maven.vaadin.com/vaadin-addons"
+        }
         maven {
             url "https://repository.mulesoft.org/nexus/content/repositories/public/"
         }
@@ -83,6 +88,7 @@ subprojects {
     }
 
     java {
+        sourceCompatibility = '17'
         modularity.inferModulePath = true
     }
 
@@ -139,7 +145,6 @@ subprojects {
             from javadoc
             archiveClassifier = 'javadoc'
         }
-
 
 
         publications {

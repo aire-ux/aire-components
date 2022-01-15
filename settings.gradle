@@ -1,12 +1,30 @@
-
 pluginManagement {
     plugins {
-        id 'com.vaadin' version "0.14.7.3"
+
+        id 'pmd'
+        id 'groovy'
+        id 'java-library'
+        id 'java-test-fixtures'
+        id "com.github.spotbugs" version "4.7.0" apply false
+        id "io.freefair.lombok" version "6.3.0" apply false
+        id "com.diffplug.spotless" version "6.1.0" apply false
+        id 'com.vaadin' version "${vaadinVersion}" apply false
+        id 'org.springframework.boot' version '2.6.2' apply false
+        id "com.github.node-gradle.node" version "3.1.1" apply false
+        id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
+    }
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            url "https://maven.vaadin.com/vaadin-prereleases"
+        }
     }
 }
-
 include(
 
+        'aire-ui',
         'aire-json-mapper',
         'aire-css-selectors',
 
