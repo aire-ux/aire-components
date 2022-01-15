@@ -4,6 +4,7 @@ import static com.aire.ux.theme.ThemeUtilities.toScriptDefinition;
 import static com.aire.ux.theme.ThemeUtilities.toStyleDefinition;
 
 import com.aire.ux.Theme;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import lombok.val;
 
 /** DTO for theme resources */
+@SuppressFBWarnings
 public class ThemeDefinition {
 
   /** the style definitions to load */

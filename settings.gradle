@@ -9,31 +9,21 @@ include(
 
         'aire-json-mapper',
         'aire-css-selectors',
-        /**
 
         'aire-ux-core',
         'aire-ux-spring',
         'aire-ux-zephyr',
-        'aire-css-selectors',
+
         'aire-mock:aire-mockito',
         'aire-mock:aire-mock-core',
 
         'aire-test-common',
         'aire-test-vaadin',
         'aire-test-spring',
-        'aire-ux-flow:aire-demo',
-
-        'aire-ux-flow:theme:aire-theme',
         'aire-ux-annotations',
+        'aire-ux-flow:theme:aire-theme',
         'aire-ux-annotations:annotations',
         'aire-ux-annotations:annotations-core',
         'aire-ux-annotations:annotations-spring',
-
-
-        'aire-ux-flow:controls:aire-designer',
-
-
-        'aire-ux:controls:aire-designer-component'
-	*/
 )
 
