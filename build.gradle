@@ -5,7 +5,7 @@ plugins {
     id 'groovy'
     id 'com.vaadin'
     id 'java-library'
-    id 'java-test-fixtures'
+//    id 'java-test-fixtures'
     id "com.github.spotbugs"
     id "io.freefair.lombok"
     id "com.diffplug.spotless"
@@ -67,7 +67,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
     apply plugin: 'java-library'
-    apply plugin: 'java-test-fixtures'
+//    apply plugin: 'java-test-fixtures'
     apply plugin: 'io.freefair.lombok'
     apply plugin: "com.github.spotbugs"
     apply plugin: "com.diffplug.spotless"

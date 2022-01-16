@@ -138,7 +138,7 @@ class JsonTokenTest {
   }
 
   @Test
-  strictfp void ensureNthChildSelectorWorks() {
+  void ensureNthChildSelectorWorks() {
     val doc =
         Condensation.parse(
             "json",

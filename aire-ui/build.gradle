@@ -6,8 +6,6 @@ plugins {
 }
 
 
-defaultTasks("clean", "build")
-
 configurations {
     developmentOnly
     runtimeClasspath {
@@ -16,8 +14,47 @@ configurations {
 }
 
 dependencies {
-    implementation('com.vaadin:vaadin-spring-boot-starter')
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    /**
+     * zephyr dependencies
+     */
+    [
+            'gyre-api',
+            'kernel-api',
+            'kernel-lib@jar',
+            'kernel-core',
+            'synchronous-api@jar',
+            'spring-embedded-plugin'
+    ].each {
+        implementation "io.zephyr:$it"
+    }
+
+
+    /**
+     * implementation dependendencies
+     */
+    [
+            'com.github.zafarkhaja:java-semver',
+            'com.vaadin:vaadin-spring-boot-starter'
+    ].each {
+        implementation it
+    }
+
+    /**
+     * kernel test libraries
+     */
+    [
+            'kernel-test',
+            'kernel-test-common'
+    ].each {
+        testImplementation "io.zephyr:$it"
+    }
+
+    testImplementation project(':aire-test-spring')
+
+    /**
+     * general test libraries
+     */
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -30,20 +67,20 @@ dependencyManagement {
 }
 
 task watchScss(type: NpmTask) {
-    dependsOn npmInstall
+//    dependsOn npmInstall
     args = ['run', 'develop']
 }
 
 task buildScss(type: NpmTask) {
-    dependsOn npmInstall
+//    dependsOn npmInstall
     args = ['run', 'build']
 }
 
 //bootRun.dependsOn watchScss
-
 
 build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = true
 }
+defaultTasks("clean", "build")
