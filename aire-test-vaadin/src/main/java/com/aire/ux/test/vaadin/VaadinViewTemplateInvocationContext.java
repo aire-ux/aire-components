@@ -1,6 +1,7 @@
 package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireTest;
+import com.aire.ux.test.Utilities;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.reflect.Method;
 import java.util.Deque;
@@ -31,7 +32,9 @@ public class VaadinViewTemplateInvocationContext
     if (log.isLoggable(Level.FINE)) {
       log.log(Level.FINE, "Checking AireExtension support for {}", type);
     }
-    boolean supported = type.isAnnotationPresent(AireTest.class);
+
+    //    boolean supported = type.isAnnotationPresent(AireTest.class);
+    val supported = Utilities.isAnnotationPresent(type, AireTest.class);
     logIsSupported(type, supported);
     return supported;
   }
