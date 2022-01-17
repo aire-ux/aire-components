@@ -34,6 +34,7 @@ dependencies {
      * implementation dependendencies
      */
     [
+            'info.picocli:picocli',
             'com.github.zafarkhaja:java-semver',
             'com.vaadin:vaadin-spring-boot-starter'
     ].each {
@@ -84,3 +85,14 @@ vaadin {
     pnpmEnable = true
 }
 defaultTasks("clean", "build")
+
+jar {
+    manifest {
+
+        attributes(
+                "group": project.group,
+                "name": project.name,
+                "version": project.version,
+        )
+    }
+}

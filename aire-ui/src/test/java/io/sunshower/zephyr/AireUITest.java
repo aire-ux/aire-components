@@ -2,6 +2,7 @@ package io.sunshower.zephyr;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.spring.EnableSpring;
+import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,7 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @AireTest
 @EnableSpring
-@SpringBootTest
+@SpringBootTest(classes = {
+    EmbeddedZephyrConfiguration.class,
+    AireUITestConfiguration.class
+})
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AireUITest {}
+public @interface AireUITest {
+
+}
