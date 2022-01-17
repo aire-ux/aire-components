@@ -43,9 +43,7 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
 
       if (type.isNone()) {
         return new CollectionElementSelectorResolver(
-            collectionType,
-            Utilities.firstNonDefault(selector.selector(), selector.value()),
-            true);
+            collectionType, Utilities.firstNonDefault(selector.selector(), selector.value()), true);
       }
 
       val actualType = type.get()[0];
