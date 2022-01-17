@@ -1,0 +1,45 @@
+aire-application-layout {
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+  width: 100%;
+  height: 100vh;
+  //border: 1px solid gray;
+
+  > {
+    box-sizing: content-box;
+  }
+
+  &::part(top) {
+    display: flex;
+    //border:1px solid green;
+    border-bottom: 1px solid green;
+    width:100%;
+    height: var(--aire-application-layout-top-height, 40px);
+  }
+
+  &::part(navigation) {
+    display: flex;
+    width: 48px;
+    border-right: 1px solid green;
+
+    height: calc(100% -
+      var(--aire-application-layout-top-height, 40px) -
+      var(--aire-application-layout-bottom-height, 24px)
+    );
+
+    min-height: calc(100% -
+      var(--aire-application-layout-top-height, 40px) -
+      var(--aire-application-layout-bottom-height, 24px)
+    );
+  }
+
+  &::part(bottom) {
+    display: flex;
+    border:1px solid red;
+    justify-self: flex-end;
+    align-self: flex-end;
+    height: var(--aire-application-layout-bottom-height, 24px);
+  }
+
+}

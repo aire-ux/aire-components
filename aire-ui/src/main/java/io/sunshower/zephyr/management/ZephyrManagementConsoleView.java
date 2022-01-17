@@ -1,17 +1,19 @@
 package io.sunshower.zephyr.management;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
+import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
 import javax.inject.Inject;
 import lombok.val;
 
 @Route("zephyr/management")
-public class ZephyrManagementConsoleView extends VerticalLayout {
+public class ZephyrManagementConsoleView extends ApplicationLayout {
 
   private final Zephyr zephyr;
   @Id("grid")
@@ -22,6 +24,7 @@ public class ZephyrManagementConsoleView extends VerticalLayout {
     this.zephyr = zephyr;
     this.modules = populateGrid();
     add(modules);
+    add(new Button("Hello"));
   }
 
   private Grid<Coordinate> populateGrid() {
