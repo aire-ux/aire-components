@@ -12,6 +12,7 @@ import com.vaadin.flow.dom.Element;
 import io.sunshower.arcus.reflect.Reflect;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.val;
@@ -39,12 +40,27 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
       val collectionType =
           (Class<? extends Collection<?>>) Utilities.resolveCollectionType(param.getType());
       val type = Reflect.getTypeParametersOfParameter(param);
-      boolean isElement = type.isNone() || Element.class.isAssignableFrom((Class<?>) type.get()[0]);
+
+      if (type.isNone()) {
+        return new CollectionElementSelectorResolver(
+            collectionType,
+            Utilities.firstNonDefault(selector.selector(), selector.value()),
+            true);
+      }
+
+      val actualType = type.get()[0];
+      if (actualType instanceof ParameterizedType) {
+        return new CollectionElementSelectorResolver(
+            collectionType,
+            Utilities.firstNonDefault(selector.selector(), selector.value()),
+            Element.class.isAssignableFrom(
+                (Class<?>) ((ParameterizedType) actualType).getRawType()));
+      }
+      boolean isElement = Element.class.isAssignableFrom((Class<?>) type.get()[0]);
       return new CollectionElementSelectorResolver(
           collectionType,
           Utilities.firstNonDefault(selector.selector(), selector.value()),
           isElement);
-
     } else {
       return new SingleElementSelectorResolver(
           Element.class.isAssignableFrom(param.getType()),

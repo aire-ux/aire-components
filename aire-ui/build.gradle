@@ -35,6 +35,7 @@ dependencies {
      */
     [
             'info.picocli:picocli',
+            'javax.inject:javax.inject:1',
             'com.github.zafarkhaja:java-semver',
             'com.vaadin:vaadin-spring-boot-starter'
     ].each {

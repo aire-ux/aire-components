@@ -13,10 +13,10 @@ import io.zephyr.spring.embedded.EmbeddedModuleClasspath;
 import io.zephyr.spring.embedded.EmbeddedModuleLoader;
 import io.zephyr.spring.embedded.EmbeddedSpringConfiguration;
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.ServiceLoader.Provider;
 import lombok.val;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -70,16 +70,12 @@ public class EmbeddedZephyrConfiguration implements
 
 
   @Bean
-  public static ModuleDescriptor moduleDescriptor(File kernelRootDirectory)
-      throws URISyntaxException {
+  public static ModuleDescriptor moduleDescriptor(File kernelRootDirectory) {
     val source = ZephyrApplication.class.getProtectionDomain()
         .getCodeSource().getLocation();
     val file = new File(source.getPath());
     return ServiceLoader.load(ModuleScanner.class)
-        .stream().map(provider -> {
-          System.out.println("GOT PROVIDER " + provider);
-          return provider.get();
-        })
+        .stream().map(Provider::get)
         .map(moduleScanner -> moduleScanner.scan(file, source))
         .flatMap(Optional::stream).findAny()
         .orElseGet(() -> defaultModuleDescriptor(kernelRootDirectory));
