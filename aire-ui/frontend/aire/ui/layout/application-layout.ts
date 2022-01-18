@@ -5,7 +5,7 @@ export class ApplicationLayout extends LitElement {
 
   render() {
     return html`
-      <main>
+      <main part="main">
         <!--
         top slot
         typically used for primary (context-free)
@@ -16,10 +16,10 @@ export class ApplicationLayout extends LitElement {
         <slot 
             name="top" 
             part="top">
-          
         </slot>
 
-        <article>
+        <section part="content-parent">
+        
           <!--
           left navigation
           
@@ -30,7 +30,6 @@ export class ApplicationLayout extends LitElement {
           <slot 
               name="navigation" 
               part="navigation">
-            
           </slot>
 
 
@@ -43,13 +42,13 @@ export class ApplicationLayout extends LitElement {
           <slot name="content"></slot>
 
 
-        </article>
+        </section>
 
 
         <!--
           should be a footer element
         -->
-        <slot name="bottom"></slot>
+        <slot name="bottom" part="bottom"></slot>
 
       </main>`
   }
