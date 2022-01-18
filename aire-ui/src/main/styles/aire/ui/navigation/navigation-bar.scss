@@ -1,3 +1,18 @@
-aire-nativation-bar {
+aire-navigation-bar {
   display: flex;
+  &.vertical {
+    padding:
+        var(--aire-navigation-bar-padding-top, 8px),
+        var(--aire-navigation-bar-padding-bottom, 8px),
+        var(--aire-navigation-bar-padding-left, 0px),
+        var(--aire-navigation-bar-padding-right, 0px),
+  }
+
+  &.horizontal {
+    padding:
+        var(--aire-navigation-bar-padding-top, 8px),
+        var(--aire-navigation-bar-padding-bottom, 8px),
+        var(--aire-navigation-bar-padding-left, 0px),
+        var(--aire-navigation-bar-padding-right, 0px),
+  }
 }

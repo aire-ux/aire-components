@@ -6,8 +6,9 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Main;
-import com.vaadin.flow.component.html.Nav;
+import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
+import io.sunshower.zephyr.ui.navigation.NavigationBar.Direction;
 import java.util.Objects;
 import lombok.val;
 
@@ -89,7 +90,11 @@ public class ApplicationLayout extends Main {
   }
 
   protected HasComponents createTop() {
-    val topNav = new NavigationBar();
+    val topNav = new NavigationBar(Direction.Horizontal);
+    val homeButton = new NavigationBarButton();
+    homeButton.setClassName("container-end");
+    topNav.add(homeButton);
+
     return topNav;
   }
 
@@ -101,7 +106,7 @@ public class ApplicationLayout extends Main {
 
 
   protected HasComponents createNavigation() {
-    val navigation = new NavigationBar();
+    val navigation = new NavigationBar(Direction.Vertical);
     return navigation;
   }
 

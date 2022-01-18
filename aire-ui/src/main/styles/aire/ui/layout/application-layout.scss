@@ -19,7 +19,6 @@ aire-application-layout {
   }
 
   &::part(content-parent) {
-    background-color: aquamarine;
     display: flex;
     flex-direction: row;
     position: absolute;
@@ -37,11 +36,6 @@ aire-application-layout {
   }
 
   &::part(top) {
-    //display: flex;
-    //justify-self: flex-start;
-    //align-self: flex-start;
-    //width:100%;
-    background-color: wheat;
     display: flex;
     height: var(--aire-application-layout-top-height, 40px);
     min-height: var(--aire-application-layout-top-height, 40px);
@@ -50,9 +44,8 @@ aire-application-layout {
 
   &::part(navigation) {
     display: flex;
-    width: 48px;
+    width: var(--aire-application-navigation-width, 48px);
     position: relative;
-    background-color: grey;
     height:100%;
   }
 
@@ -63,7 +56,6 @@ aire-application-layout {
     width:100%;
     bottom:0;
     height: var(--aire-application-layout-bottom-height, 24px);
-    background-color: blue;
   }
 
 }
