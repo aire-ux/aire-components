@@ -55,12 +55,14 @@ export class Drawer extends LitElement {
     :host(.vertical) div.content.closed {
       width:0;
       border: 1px solid #4D5E7C;
-      transition: width .5s;
+      background-color: unset;
+      transition: width .5s, background-color .5s;
     }
     :host(.vertical) div.content.open {
       display: flex;
       width:250px;
-      transition: width .5s;
+      background-color: white;
+      transition: width .5s, background-color .5s;
     }
   `;
 
