@@ -8,7 +8,6 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import io.sunshower.zephyr.management.ZephyrManagementConsoleView;
-import io.sunshower.zephyr.ui.Home;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import lombok.val;
@@ -23,7 +22,7 @@ public class MainView extends ApplicationLayout {
   protected HasComponents createTop() {
     val topNav = super.createTop();
     val menuBar = new MenuBar();
-    menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
+    menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_ICON);
 
     var homeButton = new NavigationBarButton(MainView.class, new Image("images/icon.svg", "Home"));
     homeButton.setClassName("container-end");

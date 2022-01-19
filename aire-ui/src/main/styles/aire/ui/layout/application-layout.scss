@@ -37,6 +37,7 @@ aire-application-layout {
 
   &::part(top) {
     display: flex;
+    flex-direction: row-reverse;
     height: var(--aire-application-layout-top-height, 40px);
     min-height: var(--aire-application-layout-top-height, 40px);
     //line-height: var(--aire-application-layout-top-height, 40px);

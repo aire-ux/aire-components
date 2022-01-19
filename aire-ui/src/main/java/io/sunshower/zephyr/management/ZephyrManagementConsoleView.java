@@ -1,14 +1,14 @@
 package io.sunshower.zephyr.management;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.ui.Home;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
@@ -31,10 +31,15 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     this.zephyr = zephyr;
     this.modules = populateGrid();
     add(modules);
-    add(new Button("Hello"));
   }
 
   private Grid<Coordinate> populateGrid() {
+
+    val moduleTab = new Tab("Modules");
+    val topologyTab = new Tab("Topology");
+    val tabs = new Tabs(moduleTab, topologyTab);
+    add(tabs);
+
     val grid = new Grid<Coordinate>();
     grid.addColumn(Coordinate::getGroup).setHeader("Group");
     grid.addColumn(Coordinate::getName).setHeader("Name");
@@ -48,10 +53,15 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     homeButton = new NavigationBarButton(MainView.class, new Image("images/icon.svg", "Home"));
     homeButton.setClassName("container-end");
     layout.getTop().add(homeButton);
+
+    val homeButton = new NavigationBarButton(ZephyrManagementConsoleView.class,
+        VaadinIcon.PLUG.create());
+
+    layout.getNavigation().add(homeButton);
   }
 
   public void undecorate(ApplicationLayout layout) {
-    if(homeButton != null) {
+    if (homeButton != null) {
       layout.getTop().remove(homeButton);
     }
   }

@@ -1,3 +1,27 @@
 
-navigationbar-button {
+aire-navigation-bar-button {
+  height: 48px;
+  width: 48px;
+  display: flex;
+  position: relative;
+  color: #2385af;
+
+  &[focused]:not(.container-end){
+    color: #4d5e7c;
+    border: 1px solid #4d5e7c;
+    &:before {
+      content: "";
+      position: absolute;
+      height: 24px;
+      right: -5px;
+      border-right: 5px solid #4D5E7C;
+      z-index: 100;
+    }
+  }
+
+  &.container-end {
+    left:0;
+    position: absolute;
+  }
+
 }

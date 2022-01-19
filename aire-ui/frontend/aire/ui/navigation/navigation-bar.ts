@@ -19,6 +19,7 @@ export class NavigationBar extends LitElement {
     :host(.horizontal) nav {
       align-items: center;
       flex-direction: row-reverse;
+      padding-right: 8px;
     }
     
     :host(.vertical) {
