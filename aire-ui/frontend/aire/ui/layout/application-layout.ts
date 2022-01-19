@@ -1,7 +1,19 @@
-import {customElement, html, LitElement} from "lit-element";
+import {css, customElement, html, LitElement} from "lit-element";
 
 @customElement('aire-application-layout')
 export class ApplicationLayout extends LitElement {
+
+  static styles = css`
+    main > section {
+      position: relative;
+      display: flex;
+    }
+    main > section > slot[name="content"] {
+      display: flex;
+      margin:16px;
+      flex-grow:1;
+    }
+  `;
 
   render() {
     return html`
@@ -13,13 +25,13 @@ export class ApplicationLayout extends LitElement {
         
         Default width is 100% of parent
         -->
-        <slot 
-            name="top" 
+        <slot
+            name="top"
             part="top">
         </slot>
 
         <section part="content-parent">
-        
+
           <!--
           left navigation
           
@@ -27,8 +39,8 @@ export class ApplicationLayout extends LitElement {
           
           Width is 40px;
           -->
-          <slot 
-              name="navigation" 
+          <slot
+              name="navigation"
               part="navigation">
           </slot>
 

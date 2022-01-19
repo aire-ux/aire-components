@@ -39,7 +39,7 @@ aire-application-layout {
     display: flex;
     height: var(--aire-application-layout-top-height, 40px);
     min-height: var(--aire-application-layout-top-height, 40px);
-    line-height: var(--aire-application-layout-top-height, 40px);
+    //line-height: var(--aire-application-layout-top-height, 40px);
   }
 
   &::part(navigation) {
