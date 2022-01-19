@@ -24,4 +24,13 @@ aire-navigation-bar-button {
     position: absolute;
   }
 
+  &:not(.container-end):hover:before {
+    content: "";
+    position: absolute;
+    height:24px;
+    left:0px;
+    border-left: 4px solid #2385af;
+    border-radius: 1px;
+  }
+
 }

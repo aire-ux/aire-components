@@ -1,10 +1,4 @@
-import {
-  css,
-  customElement,
-  html,
-  LitElement,
-  PropertyValues
-} from "lit-element";
+import {css, customElement, html, LitElement, PropertyValues} from "lit-element";
 
 @customElement('aire-navigation-bar')
 export class NavigationBar extends LitElement {
@@ -22,9 +16,10 @@ export class NavigationBar extends LitElement {
       padding-right: 8px;
     }
     
-    :host(.vertical) {
+    :host(.vertical) nav {
       flex-direction:column;
     }
+    
   `;
 
   constructor() {

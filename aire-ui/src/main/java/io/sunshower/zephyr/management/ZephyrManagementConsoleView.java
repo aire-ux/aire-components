@@ -9,6 +9,7 @@ import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
+import io.sunshower.zephyr.ui.Home;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
@@ -57,7 +58,10 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     val homeButton = new NavigationBarButton(ZephyrManagementConsoleView.class,
         VaadinIcon.PLUG.create());
 
+    val infoButton = new NavigationBarButton(Home.class, VaadinIcon.HOME.create());
+
     layout.getNavigation().add(homeButton);
+    layout.getNavigation().add(infoButton);
   }
 
   public void undecorate(ApplicationLayout layout) {
