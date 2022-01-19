@@ -5,6 +5,7 @@ aire-navigation-bar-button {
   display: flex;
   position: relative;
   color: #2385af;
+  box-sizing: border-box;
 
   &[focused]:not(.container-end){
     color: #4d5e7c;
@@ -13,8 +14,8 @@ aire-navigation-bar-button {
       content: "";
       position: absolute;
       height: 24px;
-      right: -5px;
-      border-right: 5px solid #4D5E7C;
+      right: -7px;
+      border-right: 6px solid #4D5E7C;
       z-index: 100;
     }
   }

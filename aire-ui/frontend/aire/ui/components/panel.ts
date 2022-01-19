@@ -7,6 +7,7 @@ export class AirePanel extends LitElement {
     article {
       width:100%;
       height:100%;
+      position: relative;
     }
   
   `;

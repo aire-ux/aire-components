@@ -7,6 +7,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.management.ZephyrManagementConsoleView;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
@@ -29,7 +30,7 @@ public class MainView extends ApplicationLayout {
     topNav.add(homeButton);
     val item = menuBar.addItem(VaadinIcon.MENU.create());
     val submenu = item.getSubMenu();
-    submenu.addItem(new RouterLink("Zephyr", ZephyrManagementConsoleView.class));
+    submenu.addItem(new RouterLink("Zephyr", ModuleGrid.class));
     topNav.add(menuBar);
     return topNav;
   }
