@@ -96,21 +96,28 @@ public class ModuleGrid extends VerticalLayout {
     val navigationBar = new NavigationBar(NavigationBar.Direction.Vertical);
     val drawer = new Drawer(Direction.VerticalRight);
     navigationBar.setDrawer(drawer);
-    drawer.addDrawerClosedEventListener(event -> {
-      System.out.println("CLOSED");
-    });
+//    drawer.addDrawerClosedEventListener(event -> {
+//      System.out.println("CLOSED");
+//    });
+//
+//    drawer.addDrawerOpenedEventListener(event -> {
+//      System.out.println("opened");
+//    });
+//    var button =
+//        new DrawerNavigationBarButton(VaadinIcon.INFO.create(), "Module Info");
+//    button.addClickListener(click -> {
+//      getUI().ifPresent(ui -> {
+//        var component = Instantiator.get(ui).createComponent(Test.class);
+//        drawer.add(component);
+//      });
+//    });
 
-    drawer.addDrawerOpenedEventListener(event -> {
-      System.out.println("opened");
-    });
-    var button =
-        new DrawerNavigationBarButton(VaadinIcon.INFO.create(), "Module Info");
-    button.addClickListener(click -> {
-      getUI().ifPresent(ui -> {
-        var component = Instantiator.get(ui).createComponent(Test.class);
-        drawer.add(component);
-      });
-    });
+    var button = new DrawerNavigationBarButton(
+        VaadinIcon.INFO.create(),
+        "Module Info",
+        drawer,
+        Test.class
+    );
     navigationBar.add(button);
 
     panel.setNavigationBar(navigationBar);

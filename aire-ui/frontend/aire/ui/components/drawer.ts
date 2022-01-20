@@ -1,8 +1,8 @@
-import {css, customElement, html, LitElement, query} from "lit-element";
+import {css, customElement, html, LitElement, property, PropertyValues, query} from "lit-element";
 
 export enum State {
-  Open,
-  Closed
+  Open = "open",
+  Closed = "closed"
 }
 
 @customElement('aire-drawer')
@@ -95,6 +95,10 @@ export class Drawer extends LitElement {
   `;
 
 
+  @property({
+    type: String,
+    reflect: true
+  })
   public state: State;
 
   private previousState: State | undefined;
@@ -114,9 +118,8 @@ export class Drawer extends LitElement {
   }
 
 
-
   private drawerAnimationLifecycleEventListener = () => {
-    if(this.state !== this.previousState) {
+    if (this.state !== this.previousState) {
       this.dispatchEvent(this.createEvent());
       this.previousState = this.state;
     }
@@ -163,6 +166,23 @@ export class Drawer extends LitElement {
     }
   }
 
+
+  protected update(changedProperties: PropertyValues) {
+    super.update(changedProperties);
+  }
+
+
+  attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+    super.attributeChangedCallback(name, _old, value);
+    if (name === 'state') {
+      if (value === State.Open) {
+        this.openDrawer();
+      } else {
+        this.closeDrawer();
+
+      }
+    }
+  }
 
   render() {
     return html`
