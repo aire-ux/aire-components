@@ -48,7 +48,7 @@ export class Drawer extends LitElement {
       top:0;
       box-sizing: border-box;
       background-color: white;
-      border: 1px solid #4D5E7C;
+      /*border: 1px solid #4D5E7C;*/
     }
     
     
@@ -81,7 +81,6 @@ export class Drawer extends LitElement {
     
     :host(.vertical) div.content.closed {
       width:0;
-      border: 1px solid #4D5E7C;
       background-color: unset;
       transition: width .5s, background-color .5s;
     }
@@ -95,7 +94,10 @@ export class Drawer extends LitElement {
     }
   `;
 
+
   public state: State;
+
+  private previousState: State | undefined;
 
   constructor() {
     super();
@@ -108,10 +110,30 @@ export class Drawer extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.closeDrawer();
+    this.content?.addEventListener('transitionend', this.drawerAnimationLifecycleEventListener);
   }
+
+
+
+  private drawerAnimationLifecycleEventListener = () => {
+    if(this.state !== this.previousState) {
+      this.dispatchEvent(this.createEvent());
+      this.previousState = this.state;
+    }
+  }
+
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.content?.removeEventListener('transitionend', this.drawerAnimationLifecycleEventListener);
+  }
+
+  private createEvent(): CustomEvent {
+    if (this.state === State.Closed) {
+      return new CustomEvent('drawer-closed');
+    } else {
+      return new CustomEvent('drawer-opened');
+    }
   }
 
   public openDrawer(): void {
@@ -150,11 +172,11 @@ export class Drawer extends LitElement {
           top: 0;
           left: ${this.parentElement?.clientWidth}px;
         }
-        
+
         :host(.verticalright) div.gutter {
           position: absolute;
           right: ${this.parentElement?.clientWidth}px;
-          height:100%;
+          height: 100%;
           display: flex;
           flex-direction: column;
           top: ${this.parentElement?.clientTop}px;

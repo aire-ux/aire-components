@@ -1,10 +1,11 @@
 package io.sunshower.zephyr.ui.components;
 
-import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Aside;
+import com.vaadin.flow.shared.Registration;
 import java.util.Locale;
 
 @Tag("aire-drawer")
@@ -24,6 +25,15 @@ public class Drawer extends Aside {
     getElement().setAttribute("slot", "drawer");
   }
 
+  public Registration addDrawerOpenedEventListener(
+      ComponentEventListener<DrawerOpenedEvent> listener) {
+    return addListener(DrawerOpenedEvent.class, listener);
+  }
+
+  public Registration addDrawerClosedEventListener(
+      ComponentEventListener<DrawerClosedEvent> listener) {
+    return addListener(DrawerClosedEvent.class, listener);
+  }
 
   public enum Direction {
     Vertical,

@@ -10,8 +10,8 @@ export class ApplicationLayout extends LitElement {
     }
     main > section > slot[name="content"] {
       display: flex;
-      margin:16px;
       flex-grow:1;
+      margin-left:6px; // account for gutter
     }
   `;
 
