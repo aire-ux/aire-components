@@ -3,18 +3,15 @@ package io.sunshower.zephyr;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
-import com.aire.ux.test.Select;
-import com.aire.ux.test.ViewTest;
-import com.vaadin.flow.component.grid.Grid.Column;
 import io.sunshower.zephyr.management.ZephyrManagementConsoleView;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.core.Kernel;
-import io.zephyr.kernel.core.ModuleCoordinate;
 import io.zephyr.kernel.launch.KernelOptions;
 import java.io.File;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -64,24 +61,15 @@ class ZephyrApplicationTests {
     assertEquals(1, zephyr.getPlugins().size());
   }
 
-  @ViewTest
-  @Navigate("zephyr/management")
-  void ensureManagementUiIsInjectable(@Select ZephyrManagementConsoleView view) {
-    assertNotNull(view, "view must be injectable");
+  @Test
+  void ensureKernelModuleManagerIsConfiguredProperly(@Autowired Kernel kernel) {
+    assertNotNull(kernel.getModuleManager().getModuleLoader());
   }
 
-  @ViewTest
-  @Navigate("zephyr/management")
-  void ensureGridIsAdded(
-      @Select("vaadin-grid  vaadin-grid-column") List<Column<ModuleCoordinate>> coordinates) {
-    assertEquals(3, coordinates.size());
+  @Test
+  void ensureZephyrCanInstallPlugin(@Autowired Zephyr zephyr) throws MalformedURLException {
+    val url = "file:///home/josiah/dev/src/github.com/zephyr/kernel-tests/test-plugins/test-plugin-1/build/libs/test-plugin-1-2.0.93-SNAPSHOT.war";
+    zephyr.install(new URL(url));
   }
 
-
-  @ViewTest
-  @Navigate("zephyr/management")
-  void ensureGridHasFirstChild(
-      @Select("vaadin-grid  vaadin-grid-column:first-child") Column<ModuleCoordinate> column) {
-    assertNotNull(column);
-  }
 }

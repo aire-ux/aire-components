@@ -1,11 +1,16 @@
 package io.sunshower.zephyr.configuration;
 
 import io.sunshower.zephyr.ZephyrApplication;
+import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Module.Type;
+import io.zephyr.kernel.core.Kernel;
+import io.zephyr.kernel.core.KernelModuleLoader;
 import io.zephyr.kernel.core.ModuleClasspath;
+import io.zephyr.kernel.core.ModuleClasspathManager;
 import io.zephyr.kernel.core.ModuleCoordinate;
 import io.zephyr.kernel.core.ModuleDescriptor;
 import io.zephyr.kernel.core.ModuleScanner;
+import io.zephyr.kernel.core.SunshowerKernel;
 import io.zephyr.kernel.dependencies.DependencyGraph;
 import io.zephyr.kernel.memento.Memento;
 import io.zephyr.spring.embedded.EmbeddedModule;
@@ -44,6 +49,14 @@ public class EmbeddedZephyrConfiguration implements
   @Bean
   public static Memento memento(ApplicationContext context) {
     return Memento.load(context.getClassLoader());
+  }
+
+
+  @Bean
+  public static ModuleClasspathManager moduleClasspathManager(DependencyGraph graph, Kernel kernel) {
+    val result = new KernelModuleLoader(graph, kernel);
+    ((SunshowerKernel) kernel).setModuleClasspathManager(result);
+    return result;
   }
 
   private static ModuleDescriptor defaultModuleDescriptor(File kernelRootDirectory) {
@@ -87,5 +100,7 @@ public class EmbeddedZephyrConfiguration implements
     val context = event.getApplicationContext();
     val graph = context.getBean(DependencyGraph.class);
     graph.add(context.getBean(EmbeddedModule.class));
+    val kernel = context.getBean(Kernel.class);
+    kernel.start();
   }
 }

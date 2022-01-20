@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.router.RouterLayout;
+import io.sunshower.zephyr.ui.navigation.NavigationBar;
 
 @Tag("aire-panel")
 @JsModule("./aire/ui/components/panel.ts")
@@ -13,8 +14,12 @@ import com.vaadin.flow.router.RouterLayout;
 public class Panel extends HtmlContainer implements RouterLayout {
 
 
-  public Panel(Component...components) {
+  public Panel(Component... components) {
     add(components);
+  }
 
+  public void setNavigationBar(NavigationBar navigationBar) {
+    navigationBar.getElement().setAttribute("slot", "navigation-bar");
+    add(navigationBar);
   }
 }

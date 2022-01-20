@@ -24,7 +24,8 @@ dependencies {
             'kernel-lib@jar',
             'kernel-core',
             'synchronous-api@jar',
-            'spring-embedded-plugin'
+            'spring-embedded-plugin',
+            'sunshower-yaml-reader@jar'
     ].each {
         implementation "io.zephyr:$it"
     }
@@ -36,6 +37,7 @@ dependencies {
     [
             'info.picocli:picocli',
             'javax.inject:javax.inject:1',
+            'org.jboss.modules:jboss-modules',
             'com.github.zafarkhaja:java-semver',
             'com.vaadin:vaadin-spring-boot-starter'
     ].each {

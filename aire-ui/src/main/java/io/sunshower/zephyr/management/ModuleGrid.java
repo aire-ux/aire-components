@@ -1,24 +1,30 @@
 package io.sunshower.zephyr.management;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
+import io.sunshower.zephyr.ui.components.Drawer;
+import io.sunshower.zephyr.ui.components.Drawer.Direction;
+import io.sunshower.zephyr.ui.components.Overlays;
+import io.sunshower.zephyr.ui.components.Panel;
+import io.sunshower.zephyr.ui.controls.DrawerNavigationBarButton;
+import io.sunshower.zephyr.ui.layout.Layouts;
+import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
-import io.zephyr.kernel.core.ModuleCoordinate;
-import io.zephyr.kernel.core.SemanticVersion;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.val;
@@ -27,14 +33,16 @@ import lombok.val;
 public class ModuleGrid extends VerticalLayout {
 
   private final Zephyr zephyr;
+  private final Grid<Coordinate> grid;
 
   @Inject
   public ModuleGrid(@NonNull Zephyr zephyr) {
     this.zephyr = zephyr;
     this.setHeight("100%");
     add(createMenubar());
-    add(populateGrid());
+    add(grid = populateGrid());
   }
+
 
   private Component createMenubar() {
     val result = new MenuBar();
@@ -45,37 +53,58 @@ public class ModuleGrid extends VerticalLayout {
     textField.setClearButtonVisible(true);
     textField.setPrefixComponent(VaadinIcon.SEARCH.create());
     result.addItem(textField);
-
     val button = new Button("Add Modules", VaadinIcon.PLUS.create());
-//    button.addThemeVariants(ButtonVariant.LUMO_SMALL);
+    button.addClickListener(clickEvent -> {
+      val overlay = Overlays.open(this, UploadPluginOverlay.class);
+      overlay.addOverlayClosedEventListener(closed -> {
+        if (!closed.isCancelled()) {
+          grid.setItems(new ListDataProvider<>(zephyr.getPluginCoordinates()));
+          notifySuccess();
+        }
+      });
+    });
     result.addItem(button);
-
     return result;
+  }
+
+  private void notifySuccess() {
+    val notification = new Notification("Successfully uploaded modules!");
+    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+    notification.setDuration(5000);
+    notification.setPosition(Position.TOP_STRETCH);
+    notification.open();
   }
 
 
   private Grid<Coordinate> populateGrid() {
-
     val grid = new Grid<Coordinate>();
     grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
     grid.addColumn(Coordinate::getGroup).setHeader("Group");
     grid.addColumn(Coordinate::getName).setHeader("Name");
     grid.addColumn(Coordinate::getVersion).setHeader("Version");
-    val items = getPluginCoordinates();
-    items.addAll(zephyr.getPluginCoordinates());
-    grid.setItems(items);
-
+    grid.setItems(new ListDataProvider<>(zephyr.getPluginCoordinates()));
     return grid;
   }
 
-  List<Coordinate> getPluginCoordinates() {
-    val result = new ArrayList<Coordinate>();
-    for (int i = 0; i < 100; i++) {
-      val coordinate = new ModuleCoordinate("test-plugin" + i, "test",
-          new SemanticVersion("1.0.0"));
 
-      result.add(coordinate);
-    }
-    return result;
+  protected void onAttach(AttachEvent event) {
+    Layouts.locateFirst(event, Panel.class).ifPresent(this::addNavigation);
   }
+
+  private void addNavigation(Panel panel) {
+    val navigationBar = new NavigationBar(NavigationBar.Direction.Vertical);
+    val drawer = new Drawer(Direction.VerticalRight);
+    navigationBar.setDrawer(drawer);
+    navigationBar.add(
+        new DrawerNavigationBarButton(VaadinIcon.INFO.create(), "Module Info", Test.class));
+    panel.setNavigationBar(navigationBar);
+  }
+
+  public static class Test extends Div {
+
+    public Test() {
+      add("Hello!");
+    }
+  }
+
 }

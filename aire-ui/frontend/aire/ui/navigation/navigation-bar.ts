@@ -28,15 +28,15 @@ export class NavigationBar extends LitElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    // const root = this.shadowRoot,
-    //     drawerSlot = root?.querySelector('slot[name="drawer"]');
-    // // drawerSlot?.addEventListener('slotchange', (e) => {
-    // //   console.log("Changed!" + e);
-    // // });
   }
 
   protected render(): unknown {
     return html`
+      <style>
+        :host.verticalright {
+          right: ${this.parentElement?.clientWidth}px;
+        }
+      </style>
       <nav part="navigation">
         <slot>
         </slot>

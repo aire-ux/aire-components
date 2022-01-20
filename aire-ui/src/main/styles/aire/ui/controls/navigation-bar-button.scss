@@ -1,37 +1,47 @@
 
 aire-navigation-bar-button {
-  height: 48px;
-  width: 48px;
-  display: flex;
-  position: relative;
-  color: #2385af;
-  box-sizing: border-box;
+  &:not(.aire-drawer-button) {
+    height: 48px;
+    width: 48px;
+    display: flex;
+    position: relative;
+    color: #2385af;
+    box-sizing: border-box;
 
-  &[focused]:not(.container-end){
-    color: #4d5e7c;
-    border: 1px solid #4d5e7c;
-    &:before {
+    &[focused]:not(.container-end) {
+      color: #4d5e7c;
+      border: 1px solid #4d5e7c;
+
+      &:before {
+        content: "";
+        position: absolute;
+        height: 24px;
+        right: -7px;
+        border-right: 6px solid #4D5E7C;
+        z-index: 100;
+      }
+    }
+
+    &.container-end {
+      left: 0;
+      position: absolute;
+    }
+
+    &:not(.container-end):hover:before {
       content: "";
       position: absolute;
       height: 24px;
-      right: -7px;
-      border-right: 6px solid #4D5E7C;
-      z-index: 100;
+      left: 0px;
+      border-left: 4px solid #2385af;
+      border-radius: 1px;
     }
   }
 
-  &.container-end {
-    left:0;
-    position: absolute;
-  }
-
-  &:not(.container-end):hover:before {
-    content: "";
-    position: absolute;
-    height:24px;
-    left:0px;
-    border-left: 4px solid #2385af;
-    border-radius: 1px;
+  &.aire-drawer-button {
+    width:24px;
+    height:auto;
+    min-height: 32px;
+    border: 1px solid #370e8b;
   }
 
 }

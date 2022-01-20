@@ -52,12 +52,41 @@ export class Drawer extends LitElement {
     }
     
     
+    :host(.verticalright) div.content {
+      height: 100%;
+      position: absolute;
+      z-index: 101;
+      top:0;
+      box-sizing: border-box;
+      background-color: white;
+    }
+    
+    
+    
+    :host(.verticalright) div.content.open {
+      display: flex;
+      width:250px;
+      background-color: #f3f3f3;
+      
+      right:30px;
+      transition: left .5s, width .5s, background-color .5s;
+    }
+    
+    :host(.verticalright) div.content.closed {
+      width:0;
+      background-color: unset;
+      right:30px;
+      transition: right .5s, width .5s, background-color .5s;
+    }
+    
     :host(.vertical) div.content.closed {
       width:0;
       border: 1px solid #4D5E7C;
       background-color: unset;
       transition: width .5s, background-color .5s;
     }
+    
+    
     :host(.vertical) div.content.open {
       display: flex;
       width:250px;
@@ -120,6 +149,15 @@ export class Drawer extends LitElement {
           position: absolute;
           top: 0;
           left: ${this.parentElement?.clientWidth}px;
+        }
+        
+        :host(.verticalright) div.gutter {
+          position: absolute;
+          right: ${this.parentElement?.clientWidth}px;
+          height:100%;
+          display: flex;
+          flex-direction: column;
+          top: ${this.parentElement?.clientTop}px;
         }
 
         :host(.vertical) div.content {

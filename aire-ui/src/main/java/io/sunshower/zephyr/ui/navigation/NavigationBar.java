@@ -36,6 +36,7 @@ public class NavigationBar extends Nav {
 
   public enum Direction {
     Vertical,
+    VerticalRight,
     Horizontal,
   }
 

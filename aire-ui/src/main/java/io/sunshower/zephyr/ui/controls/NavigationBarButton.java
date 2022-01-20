@@ -22,6 +22,11 @@ import javax.annotation.Nullable;
 import lombok.NonNull;
 import lombok.val;
 
+/**
+ * navigation bar button
+ * this type is intended to be used with the NavigationBar type.  It can be provided either a content-type
+ * for the drawer, a navigation target, or both.
+ */
 @Tag("aire-navigation-bar-button")
 @JsModule("./aire/ui/controls/navigation-bar-button.ts")
 @CssImport("./styles/aire/ui/controls/navigation-bar-button.css")

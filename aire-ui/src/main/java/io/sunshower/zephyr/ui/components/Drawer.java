@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.components;
 
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
@@ -27,5 +28,6 @@ public class Drawer extends Aside {
   public enum Direction {
     Vertical,
     Horizontal,
+    VerticalRight,
   }
 }
