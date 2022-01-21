@@ -3,6 +3,7 @@
   "license": "UNLICENSED",
   "vaadin": {
     "dependencies": {
+      "@antv/x6": "1.29.6",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-list": "3.1.0",
       "@polymer/polymer": "3.2.0",
@@ -115,9 +116,10 @@
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "02b39a3eb27ff705f02a39874c9703a373aec0a0563151e83047de48c3497508"
+    "hash": "a4d338c18a740ae8e9b12fce00853a669d27dc612028bab2a1a301db746e9827"
   },
   "dependencies": {
+    "@antv/x6": "1.29.6",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
     "@polymer/polymer": "3.2.0",

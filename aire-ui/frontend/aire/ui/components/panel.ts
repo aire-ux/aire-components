@@ -9,6 +9,11 @@ export class AirePanel extends LitElement {
       height:100%;
       position: relative;
     }
+    
+    ::slotted(section) {
+      max-width: calc(100% - 24px);
+      border: 1px solid blue;
+    }
     ::slotted(aire-navigation-bar) {
       position: absolute !important;
       right:0 !important;
@@ -21,7 +26,7 @@ export class AirePanel extends LitElement {
   render() {
     return html`
       <article>
-        <slot></slot>
+        <slot part="content"></slot>
         <slot name="navigation-bar"></slot>
       </article>
     `
