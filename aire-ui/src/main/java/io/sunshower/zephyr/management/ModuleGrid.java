@@ -44,7 +44,6 @@ import lombok.val;
 public class ModuleGrid extends VerticalLayout
     implements ValueChangeListener<ComponentValueChangeEvent<TextField, String>> {
 
-
   private final Zephyr zephyr;
   private final Drawer drawer;
   private final Grid<Module> grid;
@@ -63,7 +62,6 @@ public class ModuleGrid extends VerticalLayout
     this.moduleOpenAction = createModuleOpenAction();
   }
 
-
   @Override
   public void valueChanged(ComponentValueChangeEvent<TextField, String> event) {
     val text = textField.getValue();
@@ -72,8 +70,8 @@ public class ModuleGrid extends VerticalLayout
             .filter(
                 module ->
                     module.getCoordinate().getName().contains(text)
-                    || module.getCoordinate().getGroup().contains(text)
-                    || module.getCoordinate().getVersion().toString().contains(text))
+                        || module.getCoordinate().getGroup().contains(text)
+                        || module.getCoordinate().getVersion().toString().contains(text))
             .collect(Collectors.toList());
     grid.setItems(new ListDataProvider<>(matches));
   }
@@ -88,7 +86,7 @@ public class ModuleGrid extends VerticalLayout
             VaadinIcon.INFO.create(),
             "Module Info",
             drawer,
-            () -> new ModuleInfoPanel(zephyr, this::getSelectedModule));
+            () -> new ModuleInfoPanel(zephyr, this::getSelectedModule, grid));
     navigationBar.add(button);
     return button;
   }
@@ -152,17 +150,16 @@ public class ModuleGrid extends VerticalLayout
     grid.addItemClickListener(
         event -> {
           drawer.open();
-          drawer.setContent(new ModuleInfoPanel(zephyr, event::getItem));
+          drawer.setContent(new ModuleInfoPanel(zephyr, event::getItem, grid));
         });
 
     grid.setMultiSort(true);
     grid.setAllRowsVisible(true);
     grid.setColumnReorderingAllowed(true);
 
-
     grid.addComponentColumn(
-            (ValueProvider<Module, ModuleLifecycleButtonBar>) module -> new ModuleLifecycleButtonBar(
-                grid, zephyr, module))
+            (ValueProvider<Module, ModuleLifecycleButtonBar>)
+                module -> new ModuleLifecycleButtonBar(grid, zephyr, module))
         .setResizable(true)
         .setHeader("Lifecycle");
     grid.addColumn((ValueProvider<Module, String>) module -> module.getCoordinate().getGroup())
@@ -219,7 +216,6 @@ public class ModuleGrid extends VerticalLayout
           break;
       }
       span.setText(state.name());
-
     }
   }
 }
