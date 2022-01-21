@@ -123,6 +123,6 @@ public class UploadPluginOverlay extends Overlay implements
 
   @Override
   public void onComponentEvent(SucceededEvent event) {
-    System.out.println("Success!");
+
   }
 }

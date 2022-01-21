@@ -53,7 +53,7 @@ export class Drawer extends LitElement {
     
     
     :host(.verticalright) div.content {
-      height: 100%;
+      height: calc(100% - 2px);
       position: absolute;
       z-index: 101;
       top:0;

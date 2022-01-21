@@ -1,9 +1,11 @@
 package io.sunshower.zephyr.ui.components;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.PropertyDescriptor;
 import com.vaadin.flow.component.PropertyDescriptors;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Aside;
@@ -73,6 +75,13 @@ public class Drawer extends Aside {
   public void open() {
     STATE.set(this, State.Open.getName());
 
+  }
+
+  public void setContent(Component component) {
+    UI.getCurrent().access(() -> {
+      removeAll();
+      add(component);
+    });
   }
 
   public enum State {

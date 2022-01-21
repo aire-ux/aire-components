@@ -78,9 +78,7 @@ public class DrawerNavigationBarButton extends HtmlContainer implements
     });
 
     drawerClosedRegistration = host.addDrawerClosedEventListener(drawerClosed -> {
-      if (contents != null && hasChild(host, contents)) {
-        host.remove(contents);
-      }
+      host.removeAll();
     });
 
     clickRegistration = addClickListener(buttonClicked -> {
