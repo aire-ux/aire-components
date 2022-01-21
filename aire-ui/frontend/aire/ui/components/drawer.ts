@@ -59,6 +59,7 @@ export class Drawer extends LitElement {
       top:0;
       box-sizing: border-box;
       background-color: white;
+      border-left: 1px solid #AAAAAA;
     }
     
     
@@ -67,7 +68,7 @@ export class Drawer extends LitElement {
       display: flex;
       width:250px;
       background-color: #f3f3f3;
-      
+      border-right: 1px solid #AAAAAA;
       right:30px;
       transition: left .5s, width .5s, background-color .5s;
     }

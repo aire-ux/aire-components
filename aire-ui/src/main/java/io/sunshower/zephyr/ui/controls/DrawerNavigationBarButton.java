@@ -57,6 +57,7 @@ public class DrawerNavigationBarButton extends HtmlContainer
     drawerOpenedRegistration =
         host.addDrawerOpenedEventListener(
             drawerOpened -> {
+              host.removeAll();
               host.add(contents = componentSupplier.get());
             });
 
@@ -84,6 +85,7 @@ public class DrawerNavigationBarButton extends HtmlContainer
   protected void onDetach(DetachEvent detachEvent) {
     super.onDetach(detachEvent);
     clickRegistration.remove();
+    drawerClosedRegistration.remove();
     drawerOpenedRegistration.remove();
   }
 

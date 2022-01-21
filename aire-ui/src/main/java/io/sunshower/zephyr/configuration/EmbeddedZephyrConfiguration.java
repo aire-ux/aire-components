@@ -2,6 +2,8 @@ package io.sunshower.zephyr.configuration;
 
 import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.kernel.Module.Type;
+import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
+import io.zephyr.kernel.concurrency.WorkerPool;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.KernelModuleLoader;
 import io.zephyr.kernel.core.ModuleClasspath;
@@ -17,10 +19,13 @@ import io.zephyr.spring.embedded.EmbeddedModuleClasspath;
 import io.zephyr.spring.embedded.EmbeddedModuleLoader;
 import io.zephyr.spring.embedded.EmbeddedSpringConfiguration;
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
+import java.util.concurrent.Executors;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -29,10 +34,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
-public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent> {
+public class EmbeddedZephyrConfiguration implements
+    ApplicationListener<ApplicationReadyEvent> {
 
   @Bean
   public static FileProvider fileProvider(ApplicationArguments arguments) {
@@ -47,6 +55,23 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   @Bean
   public static Memento memento(ApplicationContext context) {
     return Memento.load(context.getClassLoader());
+  }
+
+  @Bean
+  @Primary
+  public static WorkerPool workerPool(ThreadPoolTaskExecutor executor) {
+    return new ExecutorWorkerPool(
+        executor.getThreadPoolExecutor(),
+        Executors.newFixedThreadPool(2)
+    );
+  }
+
+  @Bean
+  public static ThreadPoolTaskExecutor executor() {
+    val executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(8);
+    return executor;
   }
 
   @Bean
@@ -99,4 +124,5 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
     val kernel = context.getBean(Kernel.class);
     kernel.start();
   }
+
 }

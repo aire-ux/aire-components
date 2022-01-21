@@ -110,7 +110,7 @@ public class ModuleGrid extends VerticalLayout {
           if (drawer.isClosed()) {
             drawer.open();
           }
-          drawer.setContent(new ModuleInfoPanel(zephyr, () -> event.getItem()));
+          drawer.setContent(new ModuleInfoPanel(zephyr, event::getItem));
         });
     grid.addColumn(Coordinate::getGroup).setHeader("Group");
     grid.addColumn(Coordinate::getName).setHeader("Name");

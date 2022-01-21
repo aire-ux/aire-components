@@ -2,4 +2,13 @@
 aire-panel {
   display: flex;
   flex-grow: 1;
+  &.subnav {
+    margin: 8px;
+    width:calc(100% - 8px);
+    h1 {
+      margin-top:0;
+      font-size: var(--lumo-font-size-l);
+      font-family: var(--lumo-font-family);
+    }
+  }
 }
