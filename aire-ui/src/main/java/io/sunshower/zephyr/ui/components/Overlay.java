@@ -22,25 +22,13 @@ import lombok.val;
 @CssImport("./styles/aire/ui/components/overlay.css")
 public abstract class Overlay extends HtmlContainer {
 
-  /**
-   * the header for this overlay
-   */
-  @Getter
-  @NonNull
-  private Header header;
+  /** the header for this overlay */
+  @Getter @NonNull private Header header;
 
-  /**
-   * the footer for this overlay
-   */
-  @Getter
-  @NonNull
-  private Footer footer;
-  /**
-   * the content for this overlay
-   */
-  @Getter
-  @NonNull
-  private Article content;
+  /** the footer for this overlay */
+  @Getter @NonNull private Footer footer;
+  /** the content for this overlay */
+  @Getter @NonNull private Article content;
 
   protected Overlay() {
     header = createHeader();
@@ -50,7 +38,6 @@ public abstract class Overlay extends HtmlContainer {
     add(content);
     add(footer);
   }
-
 
   public void addContent(Component... components) {
     getContent().add(components);
@@ -64,7 +51,6 @@ public abstract class Overlay extends HtmlContainer {
     button.addClickListener(event -> close());
     return button;
   }
-
 
   public void cancel() {
     getParent().ifPresent(parent -> parent.getElement().removeChild(getElement()));
@@ -92,7 +78,6 @@ public abstract class Overlay extends HtmlContainer {
     footer.getElement().setAttribute("slot", "footer");
     return footer;
   }
-
 
   protected Article createContent() {
     val content = new Article();

@@ -8,7 +8,6 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import io.sunshower.zephyr.management.ModuleGrid;
-import io.sunshower.zephyr.management.ZephyrManagementConsoleView;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import lombok.val;
@@ -16,9 +15,7 @@ import lombok.val;
 @Route("")
 public class MainView extends ApplicationLayout {
 
-  public MainView() {
-
-  }
+  public MainView() {}
 
   protected HasComponents createTop() {
     val topNav = super.createTop();

@@ -28,8 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 @Slf4j
-public class UploadPluginOverlay extends Overlay implements
-    ComponentEventListener<SucceededEvent> {
+public class UploadPluginOverlay extends Overlay implements ComponentEventListener<SucceededEvent> {
 
   private final Kernel kernel;
   private Upload upload;
@@ -88,7 +87,6 @@ public class UploadPluginOverlay extends Overlay implements
     }
   }
 
-
   private void installFiles(Set<Path> uploaded) {
 
     val group = new ModuleInstallationGroup();
@@ -104,7 +102,6 @@ public class UploadPluginOverlay extends Overlay implements
       log.debug("Reason: ", ex);
     }
   }
-
 
   private void copyFiles(Set<Path> uploaded, File directory) throws IOException {
     for (val file : buffer.getFiles()) {
@@ -122,7 +119,5 @@ public class UploadPluginOverlay extends Overlay implements
   }
 
   @Override
-  public void onComponentEvent(SucceededEvent event) {
-
-  }
+  public void onComponentEvent(SucceededEvent event) {}
 }

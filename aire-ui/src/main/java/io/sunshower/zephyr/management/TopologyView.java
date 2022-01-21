@@ -10,5 +10,4 @@ public class TopologyView extends Div {
   public TopologyView() {
     add(new Button("Topology"));
   }
-
 }

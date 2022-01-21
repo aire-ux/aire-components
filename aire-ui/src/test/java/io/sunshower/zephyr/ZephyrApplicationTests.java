@@ -34,8 +34,7 @@ class ZephyrApplicationTests {
   void ensureKernelHasNecessaryConfigurations(
       @Autowired File kernelHome,
       @Autowired KernelOptions options,
-      @Autowired ApplicationArguments arguments
-  ) {
+      @Autowired ApplicationArguments arguments) {
 
     assertNotNull(options);
     assertNotNull(arguments);
@@ -49,10 +48,7 @@ class ZephyrApplicationTests {
    * @param options
    */
   @Test
-  void ensureTestHomeDirectoryIsUsed(
-      @Autowired File kernelHome,
-      @Autowired KernelOptions options
-  ) {
+  void ensureTestHomeDirectoryIsUsed(@Autowired File kernelHome, @Autowired KernelOptions options) {
     assertEquals(kernelHome, options.getHomeDirectory());
   }
 
@@ -68,8 +64,8 @@ class ZephyrApplicationTests {
 
   @Test
   void ensureZephyrCanInstallPlugin(@Autowired Zephyr zephyr) throws MalformedURLException {
-    val url = "file:///home/josiah/dev/src/github.com/zephyr/kernel-tests/test-plugins/test-plugin-1/build/libs/test-plugin-1-2.0.93-SNAPSHOT.war";
+    val url =
+        "file:///home/josiah/dev/src/github.com/zephyr/kernel-tests/test-plugins/test-plugin-1/build/libs/test-plugin-1-2.0.93-SNAPSHOT.war";
     zephyr.install(new URL(url));
   }
-
 }

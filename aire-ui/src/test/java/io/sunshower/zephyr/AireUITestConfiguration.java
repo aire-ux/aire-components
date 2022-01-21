@@ -21,7 +21,6 @@ public class AireUITestConfiguration {
     return Tests::createTemp;
   }
 
-
   @Bean
   public static Memento memento() {
     return Memento.loadProvider(AireUITest.class.getClassLoader()).newMemento();
@@ -39,5 +38,4 @@ public class AireUITestConfiguration {
         List.of(),
         "test module descriptor");
   }
-
 }

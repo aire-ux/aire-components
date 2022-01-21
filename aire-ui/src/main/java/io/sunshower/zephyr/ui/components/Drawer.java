@@ -26,11 +26,9 @@ public class Drawer extends Aside {
 
   private final Direction direction;
 
-
   public Drawer() {
     this(Direction.Vertical);
   }
-
 
   public Drawer(Direction direction) {
     this.direction = direction;
@@ -74,14 +72,15 @@ public class Drawer extends Aside {
 
   public void open() {
     STATE.set(this, State.Open.getName());
-
   }
 
   public void setContent(Component component) {
-    UI.getCurrent().access(() -> {
-      removeAll();
-      add(component);
-    });
+    UI.getCurrent()
+        .access(
+            () -> {
+              removeAll();
+              add(component);
+            });
   }
 
   public enum State {

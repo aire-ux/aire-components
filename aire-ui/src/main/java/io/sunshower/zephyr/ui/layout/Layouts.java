@@ -9,8 +9,8 @@ import lombok.val;
 public class Layouts {
 
   @SuppressWarnings("unchecked")
-  public static <T extends HasElement> Optional<T> locateFirst(AfterNavigationEvent event,
-      Class<T> type) {
+  public static <T extends HasElement> Optional<T> locateFirst(
+      AfterNavigationEvent event, Class<T> type) {
 
     val chain = event.getActiveChain();
     val iter = chain.listIterator();
@@ -24,8 +24,7 @@ public class Layouts {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends HasElement> Optional<T> locateFirst(AttachEvent event,
-      Class<T> type) {
+  public static <T extends HasElement> Optional<T> locateFirst(AttachEvent event, Class<T> type) {
     var source = event.getSource();
     while (source != null && !type.isAssignableFrom(source.getClass())) {
       source = source.getParent().orElse(null);

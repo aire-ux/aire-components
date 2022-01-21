@@ -28,7 +28,6 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     Overlays.createHost(this);
   }
 
-
   @Override
   public Registration addAttachListener(ComponentEventListener<AttachEvent> listener) {
     return super.addAttachListener(listener);
@@ -40,10 +39,12 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     homeButton.setClassName("container-end");
     layout.getTop().add(homeButton);
 
-    val homeButton = new NavigationBarButton(ModuleGrid.class,
-        List.of("modules/list", "modules/topology"),
-        MatchMode.Suffix,
-        VaadinIcon.PLUG.create());
+    val homeButton =
+        new NavigationBarButton(
+            ModuleGrid.class,
+            List.of("modules/list", "modules/topology"),
+            MatchMode.Suffix,
+            VaadinIcon.PLUG.create());
 
     val infoButton = new NavigationBarButton(Home.class, VaadinIcon.HOME.create());
 

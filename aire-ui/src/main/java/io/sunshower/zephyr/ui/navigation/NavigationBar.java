@@ -25,12 +25,8 @@ public class NavigationBar extends Nav {
     addClassName(direction.name().toLowerCase(Locale.ROOT));
   }
 
-
   public void setDrawer(Drawer drawer) {
-    getChildren()
-        .filter(child -> child instanceof Drawer)
-        .findAny()
-        .ifPresent(this::remove);
+    getChildren().filter(child -> child instanceof Drawer).findAny().ifPresent(this::remove);
     addComponentAsFirst(drawer);
   }
 
@@ -39,5 +35,4 @@ public class NavigationBar extends Nav {
     VerticalRight,
     Horizontal,
   }
-
 }

@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.ui.components;
 
-
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -29,22 +28,20 @@ import lombok.val;
 
 @Tag("aire-tab-panel")
 @JsModule("./aire/ui/components/tab-panel.ts")
-public class TabPanel extends HtmlContainer implements RouterLayout,
-    ComponentEventListener<Tabs.SelectedChangeEvent> {
+public class TabPanel extends HtmlContainer
+    implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
   static final String CLASS_NAME = "tab-panel";
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Tabs tabs;
+
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
   private final Map<Tab, ComponentDescriptor> components;
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Component current;
+
   private TabPlacement placement;
 
   public TabPanel(TabPlacement placement) {
@@ -84,9 +81,7 @@ public class TabPanel extends HtmlContainer implements RouterLayout,
   }
 
   public void activate(Tab tab) {
-    UI.getCurrent().access(() ->
-        updateTab(components.get(tab))
-    );
+    UI.getCurrent().access(() -> updateTab(components.get(tab)));
   }
 
   public Tab addTab(String title, Class<? extends Component> componentType) {
@@ -124,10 +119,7 @@ public class TabPanel extends HtmlContainer implements RouterLayout,
     val selectedTab = selectedChangeEvent.getSelectedTab();
     val next = components.get(selectedTab);
     if (next != null) {
-      UI.getCurrent().access(() ->
-          updateTab(next)
-
-      );
+      UI.getCurrent().access(() -> updateTab(next));
     }
   }
 
@@ -195,11 +187,11 @@ public class TabPanel extends HtmlContainer implements RouterLayout,
   }
 
   public Tab tabForComponent(HasElement content) {
-    if(content == null) {
+    if (content == null) {
       return null;
     }
-    for(val kv : this.components.entrySet()) {
-      if(kv.getValue().componentType.equals(content.getClass())) {
+    for (val kv : this.components.entrySet()) {
+      if (kv.getValue().componentType.equals(content.getClass())) {
         return kv.getKey();
       }
     }

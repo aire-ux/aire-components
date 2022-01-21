@@ -13,7 +13,6 @@ import io.sunshower.zephyr.ui.navigation.NavigationBar;
 @CssImport("./styles/aire/ui/components/panel.css")
 public class Panel extends HtmlContainer implements RouterLayout {
 
-
   public Panel(Component... components) {
     add(components);
   }

@@ -11,12 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @AireTest
 @EnableSpring
-@SpringBootTest(classes = {
-    EmbeddedZephyrConfiguration.class,
-    AireUITestConfiguration.class
-})
+@SpringBootTest(classes = {EmbeddedZephyrConfiguration.class, AireUITestConfiguration.class})
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AireUITest {
-
-}
+public @interface AireUITest {}

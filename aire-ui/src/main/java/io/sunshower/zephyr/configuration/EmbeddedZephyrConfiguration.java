@@ -1,7 +1,6 @@
 package io.sunshower.zephyr.configuration;
 
 import io.sunshower.zephyr.ZephyrApplication;
-import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.KernelModuleLoader;
@@ -33,8 +32,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
-public class EmbeddedZephyrConfiguration implements
-    ApplicationListener<ApplicationReadyEvent> {
+public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   @Bean
   public static FileProvider fileProvider(ApplicationArguments arguments) {
@@ -51,9 +49,9 @@ public class EmbeddedZephyrConfiguration implements
     return Memento.load(context.getClassLoader());
   }
 
-
   @Bean
-  public static ModuleClasspathManager moduleClasspathManager(DependencyGraph graph, Kernel kernel) {
+  public static ModuleClasspathManager moduleClasspathManager(
+      DependencyGraph graph, Kernel kernel) {
     val result = new KernelModuleLoader(graph, kernel);
     ((SunshowerKernel) kernel).setModuleClasspathManager(result);
     return result;
@@ -81,19 +79,17 @@ public class EmbeddedZephyrConfiguration implements
         new EmbeddedModuleLoader(context.getClassLoader()), context.getClassLoader());
   }
 
-
   @Bean
   public static ModuleDescriptor moduleDescriptor(File kernelRootDirectory) {
-    val source = ZephyrApplication.class.getProtectionDomain()
-        .getCodeSource().getLocation();
+    val source = ZephyrApplication.class.getProtectionDomain().getCodeSource().getLocation();
     val file = new File(source.getPath());
-    return ServiceLoader.load(ModuleScanner.class)
-        .stream().map(Provider::get)
+    return ServiceLoader.load(ModuleScanner.class).stream()
+        .map(Provider::get)
         .map(moduleScanner -> moduleScanner.scan(file, source))
-        .flatMap(Optional::stream).findAny()
+        .flatMap(Optional::stream)
+        .findAny()
         .orElseGet(() -> defaultModuleDescriptor(kernelRootDirectory));
   }
-
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {

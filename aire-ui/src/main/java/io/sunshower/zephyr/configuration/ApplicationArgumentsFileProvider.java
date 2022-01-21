@@ -27,7 +27,9 @@ public class ApplicationArgumentsFileProvider implements FileProvider {
     try {
       return Files.check(options.getHomeDirectory(), Type.DELETE, Type.READ, Type.WRITE);
     } catch (AccessDeniedException ex) {
-      log.warn("Error:  file {} is not accessible.  Reason: {}", options.getHomeDirectory(),
+      log.warn(
+          "Error:  file {} is not accessible.  Reason: {}",
+          options.getHomeDirectory(),
           ex.getMessage());
     }
     try {
@@ -38,7 +40,7 @@ public class ApplicationArgumentsFileProvider implements FileProvider {
     } catch (AccessDeniedException ex) {
       throw new IllegalStateException(ex);
     } catch (IllegalStateException ex) {
-      //we're bootstrapping--need to ignore this for now
+      // we're bootstrapping--need to ignore this for now
       val file = new File(System.getProperty("user.dir"), ".zephyr");
       if (!(file.exists() || file.mkdir())) {
         throw new IllegalStateException("Could not create directory " + file);
@@ -49,7 +51,6 @@ public class ApplicationArgumentsFileProvider implements FileProvider {
       } catch (AccessDeniedException ex2) {
         log.error("Exhausted locations for Zephyr Home.  Reason: {}", ex2.getMessage());
       }
-
     }
     throw new IllegalStateException(
         "Could not locate a suitable home directory for Zephyr.  Cannot continue");

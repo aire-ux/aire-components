@@ -15,24 +15,17 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.val;
 
-
 @Tag("aire-application-layout")
 @JsModule("./aire/ui/layout/application-layout.ts")
 @CssImport("./styles/aire/ui/layout/application-layout.css")
 public class ApplicationLayout extends Main implements ThemableLayout, RouterLayout {
 
+  /** */
+  @Getter private HasComponents top;
 
-  /**
-   *
-   */
-  @Getter
-  private HasComponents top;
-  @Getter
-  private HasComponents bottom;
-  @Getter
-  private HasComponents content;
-  @Getter
-  private HasComponents navigation;
+  @Getter private HasComponents bottom;
+  @Getter private HasComponents content;
+  @Getter private HasComponents navigation;
 
   public ApplicationLayout() {
     top = createTop();
@@ -50,7 +43,7 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
     content.getElement().setAttribute("slot", "content");
     getElement().appendChild(content.getElement());
 
-    if(content instanceof ApplicationLayoutDecorator) {
+    if (content instanceof ApplicationLayoutDecorator) {
       ((ApplicationLayoutDecorator) content).decorate(this);
     }
   }
@@ -59,30 +52,27 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
     set(Slot.Bottom, bottom);
   }
 
-  /**
-   * @param top the component to add to the {@code top} slot
-   */
+  /** @param top the component to add to the {@code top} slot */
   public void setTop(HasComponents top) {
     set(Slot.Top, top);
   }
 
-
-  /**
-   * @param navigation the component to add to the {@code navigation} slot
-   */
+  /** @param navigation the component to add to the {@code navigation} slot */
   public void setNavigation(HasComponents navigation) {
     set(Slot.Navigation, navigation);
   }
-
 
   @SuppressWarnings("unchecked")
   public <T extends HasElement, U extends HasElement> U set(Slot slot, T value) {
     Objects.requireNonNull(slot, "Slot must not be null!");
     Objects.requireNonNull(value, "value must not be null!");
 
-    val existing = value.getElement().getChildren()
-        .filter(child -> slot.slot.equals(child.getAttribute("slot")))
-        .findAny();
+    val existing =
+        value
+            .getElement()
+            .getChildren()
+            .filter(child -> slot.slot.equals(child.getAttribute("slot")))
+            .findAny();
     existing.ifPresent(child -> getElement().removeChild(child));
     value.getElement().setAttribute("slot", slot.slot);
     getElement().appendChild(value.getElement());
@@ -111,12 +101,10 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
     return topNav;
   }
 
-
   protected HasComponents createBottom() {
     val bottom = new NavigationBar();
     return bottom;
   }
-
 
   protected HasComponents createNavigation() {
     val navigation = new NavigationBar(Direction.Vertical);
@@ -124,24 +112,18 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
     return navigation;
   }
 
-
   public enum Slot {
 
-    /**
-     * top-slot
-     */
+    /** top-slot */
     Top("top"),
     Bottom("bottom"),
     Content("content"),
     Navigation("navigation");
-
 
     final String slot;
 
     Slot(String slot) {
       this.slot = Objects.requireNonNull(slot);
     }
-
-
   }
 }
