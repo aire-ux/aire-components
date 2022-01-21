@@ -26,7 +26,9 @@ public class ModuleInfoPanel extends VerticalLayout {
     setModuleLifecycle(module, grid);
   }
 
-  private void setModuleLifecycle(Supplier<Module> module, Grid<Module> grid) {}
+  private void setModuleLifecycle(Supplier<Module> module, Grid<Module> grid) {
+    add(new ModuleLifecycleButtonBar(grid, zephyr, module.get()));
+  }
 
   private void setModuleDependencies(Supplier<Module> module) {
     val propertyPanel = new PropertyPanel(VaadinIcon.LINES_LIST.create(), "Dependencies");

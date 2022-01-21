@@ -24,10 +24,12 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
+import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Drawer;
 import io.sunshower.zephyr.ui.components.Drawer.Direction;
 import io.sunshower.zephyr.ui.components.Overlays;
 import io.sunshower.zephyr.ui.components.Panel;
+import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.DrawerNavigationBarButton;
 import io.sunshower.zephyr.ui.layout.Layouts;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
@@ -41,6 +43,7 @@ import lombok.val;
 @JsModule("@vaadin/vaadin-lumo-styles/badge.js")
 @CssImport(value = "./styles/shared-styles.css", include = "lumo-badge")
 @Route(value = "modules/list", layout = PluginTabView.class)
+@Breadcrumb(name = "Modules", icon = "vaadin:plug", host = MainView.class)
 public class ModuleGrid extends VerticalLayout
     implements ValueChangeListener<ComponentValueChangeEvent<TextField, String>> {
 
@@ -70,8 +73,8 @@ public class ModuleGrid extends VerticalLayout
             .filter(
                 module ->
                     module.getCoordinate().getName().contains(text)
-                        || module.getCoordinate().getGroup().contains(text)
-                        || module.getCoordinate().getVersion().toString().contains(text))
+                    || module.getCoordinate().getGroup().contains(text)
+                    || module.getCoordinate().getVersion().toString().contains(text))
             .collect(Collectors.toList());
     grid.setItems(new ListDataProvider<>(matches));
   }

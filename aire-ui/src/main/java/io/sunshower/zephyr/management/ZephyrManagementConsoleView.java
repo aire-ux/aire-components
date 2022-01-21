@@ -11,6 +11,7 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.Home;
 import io.sunshower.zephyr.ui.components.Overlays;
 import io.sunshower.zephyr.ui.components.Panel;
+import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
@@ -50,6 +51,7 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
 
     layout.getNavigation().add(homeButton);
     layout.getNavigation().add(infoButton);
+    layout.getTop().add(new BreadcrumbNavigation());
   }
 
   public void undecorate(ApplicationLayout layout) {
