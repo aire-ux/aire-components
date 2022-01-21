@@ -48,7 +48,7 @@ public abstract class Overlay extends HtmlContainer {
     button.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL);
     button.addClassName("aire-overlay-close");
     button.getStyle().set("margin-left", "auto");
-    button.addClickListener(event -> close());
+    button.addClickListener(event -> cancel());
     return button;
   }
 

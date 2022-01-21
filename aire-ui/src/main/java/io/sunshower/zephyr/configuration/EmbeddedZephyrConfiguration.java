@@ -1,6 +1,7 @@
 package io.sunshower.zephyr.configuration;
 
 import io.sunshower.zephyr.ZephyrApplication;
+import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
 import io.zephyr.kernel.concurrency.WorkerPool;
@@ -19,7 +20,6 @@ import io.zephyr.spring.embedded.EmbeddedModuleClasspath;
 import io.zephyr.spring.embedded.EmbeddedModuleLoader;
 import io.zephyr.spring.embedded.EmbeddedSpringConfiguration;
 import java.io.File;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -37,10 +37,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+@Slf4j
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
-public class EmbeddedZephyrConfiguration implements
-    ApplicationListener<ApplicationReadyEvent> {
+public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   @Bean
   public static FileProvider fileProvider(ApplicationArguments arguments) {
@@ -61,9 +61,7 @@ public class EmbeddedZephyrConfiguration implements
   @Primary
   public static WorkerPool workerPool(ThreadPoolTaskExecutor executor) {
     return new ExecutorWorkerPool(
-        executor.getThreadPoolExecutor(),
-        Executors.newFixedThreadPool(2)
-    );
+        executor.getThreadPoolExecutor(), Executors.newFixedThreadPool(2));
   }
 
   @Bean
@@ -120,9 +118,17 @@ public class EmbeddedZephyrConfiguration implements
   public void onApplicationEvent(ApplicationReadyEvent event) {
     val context = event.getApplicationContext();
     val graph = context.getBean(DependencyGraph.class);
-    graph.add(context.getBean(EmbeddedModule.class));
-    val kernel = context.getBean(Kernel.class);
-    kernel.start();
+    val module = context.getBean(EmbeddedModule.class);
+    try {
+      graph.add(context.getBean(EmbeddedModule.class));
+      val kernel = context.getBean(Kernel.class);
+      log.info("Starting embedded kernel...");
+      kernel.start();
+      log.info("Embedded kernel started successfully.  Started embedded module");
+      module.getLifecycle().setState(State.Active);
+      log.info("Module started successfully");
+    } catch (Exception ex) {
+      log.error("Encountered an error attempting to start kernel: {}", ex.getMessage(), ex);
+    }
   }
-
 }

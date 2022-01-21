@@ -119,6 +119,5 @@ public class UploadPluginOverlay extends Overlay implements ComponentEventListen
   }
 
   @Override
-  public void onComponentEvent(SucceededEvent event) {
-  }
+  public void onComponentEvent(SucceededEvent event) {}
 }

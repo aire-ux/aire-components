@@ -21,10 +21,8 @@ import lombok.Getter;
 @CssImport("./styles/aire/ui/components/property-panel.css")
 public class PropertyPanel extends HtmlContainer {
 
-  @Getter
-  private final Header header;
-  @Getter
-  private final Section content;
+  @Getter private final Header header;
+  @Getter private final Section content;
 
   private final Grid<Property> propertyGrid;
 
@@ -37,8 +35,7 @@ public class PropertyPanel extends HtmlContainer {
     add(content);
 
     propertyGrid = new Grid<>();
-    propertyGrid.setMaxHeight("130px");
-    propertyGrid.setHeight("130px");
+    propertyGrid.setAllRowsVisible(true);
     propertyGrid.addColumn(Property::getKey).setHeader("Key");
     propertyGrid.addColumn(Property::getValue).setHeader("Value");
     propertyGrid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER);
@@ -51,26 +48,21 @@ public class PropertyPanel extends HtmlContainer {
     setHeaderComponents(headerIcon, new H1(headerDescription));
   }
 
-
   public void setHeaderComponents(Component... components) {
     header.removeAll();
     header.add(components);
   }
-
 
   public void setContent(Component... components) {
     content.removeAll();
     content.add(components);
   }
 
-
   public void setProperties(Collection<Property> properties) {
-    if(getChildren().noneMatch(propertyGrid::equals)) {
+    if (getChildren().noneMatch(propertyGrid::equals)) {
       content.removeAll();
       content.add(propertyGrid);
     }
     propertyGrid.setItems(new ListDataProvider<>(new ArrayList<>(properties)));
   }
-
-
 }

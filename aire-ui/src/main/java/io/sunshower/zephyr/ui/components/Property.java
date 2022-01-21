@@ -6,5 +6,4 @@ import lombok.Data;
 public class Property {
   private final String key;
   private final String value;
-
 }

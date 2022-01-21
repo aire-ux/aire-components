@@ -145,7 +145,9 @@ export class Drawer extends LitElement {
     if (content) {
       content.classList.add('open');
       content.classList.remove('closed');
+      const previousState = this.state;
       this.state = State.Open;
+      this.requestUpdate('state', previousState);
     }
   }
 
@@ -155,7 +157,9 @@ export class Drawer extends LitElement {
     if (content) {
       content.classList.add('closed');
       content.classList.remove('open');
+      const previousState = this.state;
       this.state = State.Closed;
+      this.requestUpdate('state', previousState);
     }
   }
 

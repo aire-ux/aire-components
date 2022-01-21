@@ -74,12 +74,12 @@ public class Drawer extends Aside {
     STATE.set(this, State.Open.getName());
   }
 
-  public void setContent(Component component) {
+  public void setContent(Component... components) {
     UI.getCurrent()
         .access(
             () -> {
               removeAll();
-              add(component);
+              add(components);
             });
   }
 
