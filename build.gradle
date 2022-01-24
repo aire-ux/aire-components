@@ -78,6 +78,7 @@ subprojects {
 
     spotbugs {
         toolVersion = '4.5.3'
+        includeFilter = file("${project.rootDir}/check/spotbugs/exclusions.xml")
     }
     spotbugsMain {
         reports {

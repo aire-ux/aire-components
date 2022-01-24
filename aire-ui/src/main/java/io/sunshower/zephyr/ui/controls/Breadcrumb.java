@@ -15,5 +15,4 @@ public @interface Breadcrumb {
   String icon() default "";
 
   Class<? extends RouterLayout> host() default RouterLayout.class;
-
 }

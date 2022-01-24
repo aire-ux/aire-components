@@ -13,7 +13,6 @@ import lombok.val;
 
 public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver {
 
-
   public BreadcrumbNavigation() {
     getStyle().set("position", "absolute");
     getStyle().set("left", "80px");
@@ -50,13 +49,12 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
             host = bc.host();
           }
         } else {
-          host = null;
+          break;
         }
       }
     }
     return results;
   }
-
 
   private Pair<Breadcrumb, Class<? extends Component>> locateRouteTarget(
       AfterNavigationEvent event) {
@@ -75,5 +73,4 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
     }
     return null;
   }
-
 }

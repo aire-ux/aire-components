@@ -18,8 +18,7 @@ import lombok.val;
 @Breadcrumb(name = "Home", icon = "vaadin:home")
 public class MainView extends ApplicationLayout {
 
-  public MainView() {
-  }
+  public MainView() {}
 
   protected HasComponents createTop() {
     val topNav = super.createTop();

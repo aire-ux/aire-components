@@ -21,6 +21,7 @@ import io.sunshower.gyre.CompactTrieMap;
 import io.sunshower.gyre.RegexStringAnalyzer;
 import io.sunshower.gyre.TrieMap;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -107,10 +108,10 @@ public class TabPanel extends HtmlContainer
     val classlist = getClassNames();
     val previousPlacement = this.placement;
     if (previousPlacement != null) {
-      classlist.removeIf(t -> t.equals(previousPlacement.name().toLowerCase()));
+      classlist.removeIf(t -> t.equalsIgnoreCase(previousPlacement.name()));
     }
     this.placement = placement;
-    classlist.add(placement.name().toLowerCase());
+    classlist.add(placement.name().toLowerCase(Locale.ROOT));
     updateTabOrientation(placement);
   }
 
@@ -170,6 +171,7 @@ public class TabPanel extends HtmlContainer
       case TOP:
       case BOTTOM:
         tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        break;
     }
   }
 

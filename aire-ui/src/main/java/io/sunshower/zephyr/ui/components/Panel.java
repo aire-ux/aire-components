@@ -21,4 +21,8 @@ public class Panel extends HtmlContainer implements RouterLayout {
     navigationBar.getElement().setAttribute("slot", "navigation-bar");
     add(navigationBar);
   }
+
+  public void removeNavigationBar(NavigationBar navigationBar) {
+    remove(navigationBar);
+  }
 }

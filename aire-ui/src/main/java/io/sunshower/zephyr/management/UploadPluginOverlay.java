@@ -82,8 +82,6 @@ public class UploadPluginOverlay extends Overlay implements ComponentEventListen
     } catch (IOException ex) {
       log.warn("Failed to install module.  Reason: {} ", ex.getMessage());
       log.debug("Full trace: ", ex);
-    } finally {
-      //      buffer = null;
     }
   }
 
@@ -97,7 +95,7 @@ public class UploadPluginOverlay extends Overlay implements ComponentEventListen
         group.add(request);
       }
       kernel.getModuleManager().prepare(group).commit().toCompletableFuture().get();
-    } catch (Throwable ex) {
+    } catch (Exception ex) {
       log.warn("Somehow a local filesystem URL was malformed.  Reason at debug");
       log.debug("Reason: ", ex);
     }

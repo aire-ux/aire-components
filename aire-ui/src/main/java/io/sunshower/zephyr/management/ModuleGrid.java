@@ -3,6 +3,7 @@ package io.sunshower.zephyr.management;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -24,6 +25,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Drawer;
 import io.sunshower.zephyr.ui.components.Drawer.Direction;
@@ -55,6 +57,7 @@ public class ModuleGrid extends VerticalLayout
   private TextField textField;
 
   @Inject
+  @SuppressFBWarnings(justification = "Access pattern is safe")
   public ModuleGrid(@NonNull Zephyr zephyr) {
     this.zephyr = zephyr;
     this.setHeight("100%");
@@ -73,14 +76,20 @@ public class ModuleGrid extends VerticalLayout
             .filter(
                 module ->
                     module.getCoordinate().getName().contains(text)
-                    || module.getCoordinate().getGroup().contains(text)
-                    || module.getCoordinate().getVersion().toString().contains(text))
+                        || module.getCoordinate().getGroup().contains(text)
+                        || module.getCoordinate().getVersion().toString().contains(text))
             .collect(Collectors.toList());
     grid.setItems(new ListDataProvider<>(matches));
   }
 
   protected void onAttach(AttachEvent event) {
     Layouts.locateFirst(event, Panel.class).ifPresent(this::addNavigation);
+  }
+
+  protected void onDetach(DetachEvent event) {
+
+    Layouts.locateFirst(event, Panel.class)
+        .ifPresent(panel -> panel.removeNavigationBar(navigationBar));
   }
 
   private DrawerNavigationBarButton createModuleOpenAction() {
@@ -211,11 +220,11 @@ public class ModuleGrid extends VerticalLayout
         case Active:
           themeList.add("badge success");
           break;
-        case Resolved, Installed, Uninstalled:
-          themeList.add("badge");
-          break;
         case Failed:
           themeList.add("badge error");
+          break;
+        default: // Resolved, Installed, Uninstalled:
+          themeList.add("badge");
           break;
       }
       span.setText(state.name());

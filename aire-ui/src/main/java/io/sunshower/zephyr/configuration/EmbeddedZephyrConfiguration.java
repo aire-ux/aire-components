@@ -53,6 +53,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   }
 
   @Bean
+  @SuppressWarnings("PMD.UseProperClassLoader")
   public static Memento memento(ApplicationContext context) {
     return Memento.load(context.getClassLoader());
   }
@@ -97,6 +98,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   }
 
   @Bean
+  @SuppressWarnings("PMD.UseProperClassLoader")
   public static ModuleClasspath moduleClasspath(ApplicationContext context) {
     return new EmbeddedModuleClasspath(
         new EmbeddedModuleLoader(context.getClassLoader()), context.getClassLoader());

@@ -88,6 +88,7 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
         break;
       case Content:
         this.content = (HasComponents) value;
+        break;
       default:
         throw new IllegalArgumentException(
             "Not sure how you got slot '" + slot + "', but it's not one of mine");

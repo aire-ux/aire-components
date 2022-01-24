@@ -41,6 +41,7 @@ public class ModuleLifecycleButtonBar extends MenuBar {
     return addListener(ModuleLifecycleChangedEvent.class, listener);
   }
 
+  @SuppressWarnings("PMD.MissingBreakInSwitch")
   private void updateStatus(Module module) {
     val lifecycle = module.getLifecycle();
     switch (lifecycle.getState()) {
