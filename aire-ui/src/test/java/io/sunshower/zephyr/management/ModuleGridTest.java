@@ -8,6 +8,7 @@ import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
+import com.aire.ux.test.View;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.Query;
@@ -50,5 +51,10 @@ class ModuleGridTest {
     val $ = context.downTo(grid);
     val g = $.selectFirst(Grid.class).get();
     assertEquals(g.getDataProvider().size(new Query()), 1);
+  }
+
+  @ViewTest
+  void ensureModuleGridIsInjectable(@View ModuleGrid grid) {
+    assertNotNull(grid);
   }
 }
