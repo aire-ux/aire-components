@@ -12,6 +12,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -63,6 +64,7 @@ class ZephyrApplicationTests {
   }
 
   @Test
+  @Disabled
   void ensureZephyrCanInstallPlugin(@Autowired Zephyr zephyr) throws MalformedURLException {
     val url =
         "file:///home/josiah/dev/src/github.com/zephyr/kernel-tests/test-plugins/test-plugin-1/build/libs/test-plugin-1-2.0.93-SNAPSHOT.war";

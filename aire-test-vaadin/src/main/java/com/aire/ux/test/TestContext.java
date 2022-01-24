@@ -63,4 +63,8 @@ public interface TestContext {
   default <T> T resolve(Class<T> contextClass) {
     return resolve(contextClass, Mode.None);
   }
+
+  <T extends Component> TestContext downTo(Class<T> contextClass);
+
+  <T extends Component> TestContext downTo(T value);
 }

@@ -2,3 +2,4 @@ com.aire.ux.test.resolvers.TypeResolvingElementResolverFactory
 com.aire.ux.test.resolvers.SelectorResolvingElementResolverFactory
 com.aire.ux.test.resolvers.TestContextResolvingElementResolverFactory
 com.aire.ux.test.resolvers.UIResolvingElementResolverFactory
+com.aire.ux.test.resolvers.InstantiatorElementResolverFactory

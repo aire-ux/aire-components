@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
@@ -39,6 +40,7 @@ public class TabPanel extends HtmlContainer
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
+  @Getter
   private final Map<Tab, ComponentDescriptor> components;
   /** mutable state */
   private Component current;
@@ -186,6 +188,10 @@ public class TabPanel extends HtmlContainer
     val internals = ui.getInternals();
     val viewLocation = internals.getActiveViewLocation();
     return viewLocation.getPath();
+  }
+
+  public Tab getActiveTab() {
+    return tabForComponent(current);
   }
 
   public Tab tabForComponent(HasElement content) {
