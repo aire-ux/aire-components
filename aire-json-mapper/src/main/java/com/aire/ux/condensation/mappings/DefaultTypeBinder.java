@@ -2,6 +2,7 @@ package com.aire.ux.condensation.mappings;
 
 import static java.util.Objects.requireNonNull;
 
+import com.aire.ux.condensation.Converter;
 import com.aire.ux.condensation.Discriminator;
 import com.aire.ux.condensation.Property;
 import com.aire.ux.condensation.Property.Mode;
@@ -82,6 +83,7 @@ public class DefaultTypeBinder implements TypeBinder {
   }
 
   @Override
+  @SuppressWarnings("rawtypes")
   public <T> TypeDescriptor<T> descriptorFor(Class<T> type) {
     val actualType = actualType(type);
     return scanner.scan((Class) actualType, traverseHierarchy, scanInterfaces);
@@ -154,7 +156,7 @@ public class DefaultTypeBinder implements TypeBinder {
     val array = (String[]) result;
     int i = 0;
     for (val child : children) {
-      array[i++] = ((String) valueOf(child));
+      array[i++] = valueOf(child);
     }
     return array;
   }
@@ -270,7 +272,7 @@ public class DefaultTypeBinder implements TypeBinder {
     val genericType = property.getGenericType();
     if (genericType instanceof ParameterizedType) {
       //      val mapType = ((ParameterizedType) genericType).getActualTypeArguments()[1];
-      Function converter = property.getKeyConverter();
+      Converter converter = property.getKeyConverter();
       val discriminatorType = extractTypeFrom(property, 1);
       for (val child : node.getChildren()) {
         val key = valueOf(child);
@@ -282,7 +284,7 @@ public class DefaultTypeBinder implements TypeBinder {
           actualType = actualType == null ? discriminatorType.fst : actualType;
         }
         val value = read(actualType, child, discriminatorType.snd);
-        result.put(converter != null ? converter.apply(key) : key, value);
+        result.put(converter != null ? converter.read(key) : key, value);
       }
     }
     return result;

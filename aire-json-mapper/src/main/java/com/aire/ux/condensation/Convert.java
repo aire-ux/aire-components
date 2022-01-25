@@ -13,7 +13,7 @@ import java.util.function.Function;
 public @interface Convert {
 
   /** @return a mapper for the key-type */
-  Class<? extends Function> key() default Function.class;
+  Class<? extends Converter> key() default Converter.class;
 
-  Class<? extends Function> value() default Function.class;
+  Class<? extends Converter> value() default Converter.class;
 }

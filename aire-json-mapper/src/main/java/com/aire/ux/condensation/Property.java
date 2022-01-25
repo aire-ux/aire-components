@@ -24,7 +24,7 @@ public interface Property<T extends AccessibleObject> {
    *     present on the property, and the {@code Converter(key=)} property is set to an instantiable
    *     type
    */
-  Function<?, ?> getKeyConverter();
+  Converter<?, ?> getKeyConverter();
 
   /**
    * if a property has a converter, apply that converter to convert the property to the desired type

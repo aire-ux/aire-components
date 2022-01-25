@@ -2,6 +2,7 @@ package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
 import com.aire.ux.condensation.Convert;
+import com.aire.ux.condensation.Converter;
 import com.aire.ux.condensation.TypeInstantiator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +31,7 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
   }
 
   @Override
-  public Function<?, ?> getKeyConverter() {
+  public Converter<?, ?> getKeyConverter() {
     return null;
   }
 
@@ -97,10 +98,10 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected Function<?, Mutator> readConverter(Class<?> host, Mutator member) {
+  protected Converter<Mutator, ?> readConverter(Class<?> host, Mutator member) {
     if (member.isAnnotationPresent(Convert.class)) {
       val type = member.getAnnotation(Convert.class);
-      if (!Function.class.equals(type.value())) {
+      if (!Converter.class.equals(type.value())) {
         return getInstantiator().instantiate(type.value());
       }
     }
@@ -109,7 +110,7 @@ public class MutatorProperty extends AbstractProperty<Mutator> {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected Function<String, ?> readKeyConverter(Class<?> host, Mutator member) {
+  protected Converter<String, ?> readKeyConverter(Class<?> host, Mutator member) {
     if (member.isAnnotationPresent(Convert.class)) {
       val type = member.getAnnotation(Convert.class);
       if (!Function.class.equals(type.key())) {

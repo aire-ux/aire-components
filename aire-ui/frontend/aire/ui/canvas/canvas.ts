@@ -1,12 +1,12 @@
 import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
 import {Graph} from "@antv/x6";
-import {Vertex} from "Frontend/aire/ui/canvas/element";
-import {Receive, Remotable} from "@aire-ux/aire-condensation";
+import {Vertex} from "./cell";
+import {Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 
 
 // @ts-ignore
-@Remotable
 @customElement('aire-canvas')
+@Remotable
 export class Canvas extends LitElement {
 
   private graph: Graph | undefined;
@@ -42,32 +42,33 @@ export class Canvas extends LitElement {
       return;
     }
     const container = this.container;
-    // if(container) {
-    //   const graph = new Graph({
-    //     panning: true,
-    //     container: container,
-    //     grid : {
-    //       size: 10,
-    //       visible: true
-    //     }
-    //   });
-    //
-    //
-    //   this.graph = graph;
-    //   this.graph.addNode({
-    //     x: 100,
-    //     y: 100,
-    //     width: 30,
-    //     height: 30,
-    //     label: 'hello'
-    //   });
-    //   graph.centerContent();
-    // }
+    if(container) {
+      const graph = new Graph({
+        panning: true,
+        container: container,
+        grid : {
+          size: 10,
+          visible: true
+        }
+      });
+
+
+      this.graph = graph;
+      this.graph.addNode({
+        x: 100,
+        y: 100,
+        width: 30,
+        height: 30,
+        label: 'hello'
+      });
+      graph.centerContent();
+    }
   }
 
+  @Remote
   public addVertex(@Receive(Vertex) vertex: Vertex) {
-    console.log(vertex);
-    // this.graph?.addNode(vertex as any);
+    // @ts-ignore
+    this.graph?.addNode(vertex as any);
   }
 
   disconnectedCallback() {

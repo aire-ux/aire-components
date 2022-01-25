@@ -16,6 +16,7 @@ configurations {
 dependencies {
 
     implementation "io.sunshower.arcus:arcus-lang"
+    implementation "io.sunshower.arcus:arcus-reflect"
     implementation "io.sunshower.arcus.persist:persist-api"
 
     [

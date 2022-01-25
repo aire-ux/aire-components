@@ -1,6 +1,6 @@
 package io.sunshower.zephyr.ui.canvas;
 
-public interface Element {
+public interface Cell {
 
   Type getType();
 

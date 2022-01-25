@@ -32,15 +32,19 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   private final T member;
-  /** the type of the host-class */
+  /**
+   * the type of the host-class
+   */
   private final Class<?> host;
-  /** the read-alias of this property */
+  /**
+   * the read-alias of this property
+   */
   private final String readAlias;
 
   private final String writeAlias;
-  private final Function<?, T> converter;
+  private final Converter<T, ?> converter;
   private final TypeInstantiator instantiator;
-  private final Function<String, ?> keyConverter;
+  private final Converter<String, ?> keyConverter;
 
   protected AbstractProperty(
       final TypeInstantiator instantiator,
@@ -63,8 +67,8 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
       @NonNull final Class<?> host,
       @NonNull final String readAlias,
       @NonNull final String writeAlias,
-      @Nullable final Function<?, T> converter,
-      @Nullable final Function<String, ?> keyConverter) {
+      @Nullable final Converter<T, ?> converter,
+      @Nullable final Converter<String, ?> keyConverter) {
     this.host = host;
     this.member = member;
     this.readAlias = readAlias;
@@ -78,11 +82,11 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
     return instantiator;
   }
 
-  protected abstract Function<?, T> readConverter(Class<?> host, T member);
+  protected abstract Converter<T, ?> readConverter(Class<?> host, T member);
 
-  protected abstract Function<String, ?> readKeyConverter(Class<?> host, T member);
+  protected abstract Converter<String, ?> readKeyConverter(Class<?> host, T member);
 
-  public Function<?, ?> getKeyConverter() {
+  public Converter<?, ?> getKeyConverter() {
     return keyConverter;
   }
 
@@ -113,7 +117,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
         return converter.apply(value);
       }
     } else {
-      return ((Function<S, R>) converter).apply(value);
+      return ((Converter<R, S>) converter).read(value);
     }
     return (R) value;
   }

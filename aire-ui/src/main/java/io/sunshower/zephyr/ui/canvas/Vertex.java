@@ -15,4 +15,6 @@ public class Vertex {
   @Attribute private Float y;
 
   @Attribute private String label;
+  @Attribute private Float width;
+  @Attribute private Float height;
 }
