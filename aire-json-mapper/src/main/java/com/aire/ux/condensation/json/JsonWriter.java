@@ -101,7 +101,9 @@ public class JsonWriter implements DocumentWriter {
     val iterator = descriptor.getProperties().iterator();
     while (iterator.hasNext()) {
       val property = iterator.next();
-      if (property.isPrimitive()) {
+      if (property.isConvertable()) {
+        writeConvertableProperty(property, value, outputStream);
+      } else if (property.isPrimitive()) {
         writePrimitive(property, value, outputStream);
       } else if (String.class.equals(property.getType())) {
         writeString(property, value, outputStream);
@@ -125,6 +127,21 @@ public class JsonWriter implements DocumentWriter {
 
     writePropertyPrelude(property, outputStream);
     val v = property.get(value);
+    if (v != null) {
+      outputStream.write('"');
+      outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));
+      outputStream.write('"');
+    } else {
+      write(outputStream, "null");
+    }
+  }
+
+  private <T> void writeConvertableProperty(Property<?> property, T value,
+      OutputStream outputStream)
+      throws IOException {
+
+    writePropertyPrelude(property, outputStream);
+    val v = property.getConverter().write(property.get(value));
     if (v != null) {
       outputStream.write('"');
       outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));

@@ -19,6 +19,8 @@ public interface Property<T extends AccessibleObject> {
 
   boolean isPrimitive();
 
+  boolean isConvertable();
+
   /**
    * @return a key converter if and only if isMap() returns true, a {@code @Convert} annotation is
    *     present on the property, and the {@code Converter(key=)} property is set to an instantiable
@@ -26,6 +28,7 @@ public interface Property<T extends AccessibleObject> {
    */
   Converter<?, ?> getKeyConverter();
 
+  Converter<?, ?> getConverter();
   /**
    * if a property has a converter, apply that converter to convert the property to the desired type
    *

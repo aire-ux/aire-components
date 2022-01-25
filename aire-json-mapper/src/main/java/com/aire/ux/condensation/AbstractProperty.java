@@ -86,14 +86,26 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
 
   protected abstract Converter<String, ?> readKeyConverter(Class<?> host, T member);
 
+  @Override
   public Converter<?, ?> getKeyConverter() {
     return keyConverter;
+  }
+
+
+  @Override
+  public Converter<?, ?> getConverter() {
+    return converter;
   }
 
   @Override
   public boolean isPrimitive() {
     val type = getType();
     return Property.isPrimitive(type);
+  }
+
+  @Override
+  public boolean isConvertable() {
+    return converter != null;
   }
 
   @Override

@@ -1,15 +1,21 @@
 package io.sunshower.zephyr;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.aire.ux.condensation.Alias;
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.Condensation;
 import com.aire.ux.condensation.Convert;
+import com.aire.ux.condensation.Converter;
+import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.RootElement;
 import io.sunshower.lang.common.encodings.Base58;
 import io.sunshower.lang.common.encodings.Base58.Alphabets;
 import io.sunshower.lang.common.encodings.Encoding;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -30,36 +36,74 @@ public class IdentifierSerializationTest {
   @SneakyThrows
   void ensureIdentifiersAreSerializedCorrectly() {
     val element = new TestElement();
-    element.setIdentifier(Identifiers.newSequence().next());
+    val id = Identifiers.newSequence().next();
+    element.setIdentifier(id);
     val s = condensation.getWriter().write(TestElement.class, element);
+    val el = condensation.read(TestElement.class, s);
+    assertEquals(id, el.getIdentifier());
+    System.out.println(el);
     System.out.println(s);
 
+  }
+
+  @Test
+  @SneakyThrows
+  void ensureNestedElementsAreReadCorrectly() {
+    val element = new TestElement();
+    val id = Identifiers.newSequence().next();
+    element.setIdentifier(id);
+    val holder = new TestElementHolder();
+    holder.elements.add(element);
+    val s = condensation.getWriter().write(TestElementHolder.class, holder);
+    System.out.println(s);
+    val elements = condensation.read(TestElementHolder.class, s);
+    assertEquals(id, elements.elements.get(0).identifier);
+  }
+
+  @RootElement
+  public static class TestElementHolder {
+
+    @Element
+    private List<TestElement> elements;
+
+    public TestElementHolder() {
+      this.elements = new ArrayList<>();
+    }
   }
 
   @RootElement
   public static class TestElement {
 
+    @Getter
+    @Setter
+    @Attribute(alias = @Alias(read = "@id", write = "@id"))
+    @Convert(Base58Decoder.class)
+    private Identifier identifier;
+
     public TestElement() {
 
     }
-
-    @Getter
-    @Setter
-    @Attribute
-    @Convert(Base58Decoder.class)
-    private Identifier identifier;
 
   }
 
 
   public static class Base58Decoder implements
-      Function<String, Identifier> {
+      Converter<Identifier, String> {
 
     static final Encoding encoding = Base58.getInstance(Alphabets.Default);
 
-    @Override
     public Identifier apply(String s) {
       return Identifier.valueOf(encoding.decode(s));
+    }
+
+    @Override
+    public Identifier read(String s) {
+      return apply(s);
+    }
+
+    @Override
+    public String write(Identifier identifier) {
+      return encoding.encode(identifier.getId());
     }
   }
 
