@@ -9,6 +9,4 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface View {
-
-}
+public @interface View {}

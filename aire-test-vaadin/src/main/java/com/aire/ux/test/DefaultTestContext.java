@@ -132,12 +132,12 @@ public class DefaultTestContext implements TestContext {
   @Override
   public List<?> selectComponents(String selector) {
     return new CssSelectorParser()
-        .parse(selector)
-        .plan(DefaultPlanContext.getInstance())
-        .evaluate(supplier.get(), new ComponentHierarchyNodeAdapter())
-        .stream()
-        .flatMap(t -> t.getComponent().stream())
-        .collect(Collectors.toList());
+            .parse(selector)
+            .plan(DefaultPlanContext.getInstance())
+            .evaluate(supplier.get(), new ComponentHierarchyNodeAdapter())
+            .stream()
+            .flatMap(t -> t.getComponent().stream())
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -158,6 +158,7 @@ public class DefaultTestContext implements TestContext {
   public <T extends Component> TestContext downTo(T type) {
     return new DefaultTestContext(type::getElement);
   }
+
   private Predicate<Element> elementTypePredicate(Class<?>... types) {
     if (types == null || types.length == 0) {
       return element -> true;

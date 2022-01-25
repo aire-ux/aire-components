@@ -6,7 +6,7 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 
-@Breadcrumb(name = "Module Topology", host = MainView.class)
+@Breadcrumb(name = "Topology", host = MainView.class)
 @Route(value = "modules/topology", layout = PluginTabView.class)
 public class TopologyView extends VerticalLayout {
 

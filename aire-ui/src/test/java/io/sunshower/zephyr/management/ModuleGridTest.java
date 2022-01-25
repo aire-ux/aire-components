@@ -35,8 +35,8 @@ class ModuleGridTest {
   }
 
   @ViewTest
-  void ensureModuleGridHasCorrectLayout(@Context TestContext context,
-      @Context Instantiator instantiator) {
+  void ensureModuleGridHasCorrectLayout(
+      @Context TestContext context, @Context Instantiator instantiator) {
     val grid = instantiator.createComponent(ModuleGrid.class);
     val $ = context.downTo(grid);
     val columns = $.select(Grid.Column.class);
@@ -45,8 +45,8 @@ class ModuleGridTest {
 
   @ViewTest
   @SuppressWarnings({"unchecked", "rawtypes"})
-  void ensureModuleGridContainsDefaultPlugin(@Context TestContext context,
-      @Context Instantiator instantiator) {
+  void ensureModuleGridContainsDefaultPlugin(
+      @Context TestContext context, @Context Instantiator instantiator) {
     val grid = instantiator.createComponent(ModuleGrid.class);
     val $ = context.downTo(grid);
     val g = $.selectFirst(Grid.class).get();

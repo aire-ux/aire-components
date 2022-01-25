@@ -23,16 +23,15 @@ public class ViewElementResolverFactory implements ElementResolverFactory {
 
     private final Parameter element;
 
-    public ViewElementResolver(
-        AnnotatedElement element) {
+    public ViewElementResolver(AnnotatedElement element) {
       this.element = (Parameter) element;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T resolve() {
-      return (T) VaadinServlet.getCurrent().getService().getInstantiator()
-          .getOrCreate(element.getType());
+      return (T)
+          VaadinServlet.getCurrent().getService().getInstantiator().getOrCreate(element.getType());
     }
   }
 }

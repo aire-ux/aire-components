@@ -1,6 +1,11 @@
 import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
 import {Graph} from "@antv/x6";
+import {Vertex} from "Frontend/aire/ui/canvas/element";
+import {Receive, Remotable} from "@aire-ux/aire-condensation";
 
+
+// @ts-ignore
+@Remotable
 @customElement('aire-canvas')
 export class Canvas extends LitElement {
 
@@ -37,27 +42,32 @@ export class Canvas extends LitElement {
       return;
     }
     const container = this.container;
-    if(container) {
-      const graph = new Graph({
-        panning: true,
-        container: container,
-        grid : {
-          size: 10,
-          visible: true
-        }
-      });
+    // if(container) {
+    //   const graph = new Graph({
+    //     panning: true,
+    //     container: container,
+    //     grid : {
+    //       size: 10,
+    //       visible: true
+    //     }
+    //   });
+    //
+    //
+    //   this.graph = graph;
+    //   this.graph.addNode({
+    //     x: 100,
+    //     y: 100,
+    //     width: 30,
+    //     height: 30,
+    //     label: 'hello'
+    //   });
+    //   graph.centerContent();
+    // }
+  }
 
-
-      this.graph = graph;
-      this.graph.addNode({
-        x: 100,
-        y: 100,
-        width: 30,
-        height: 30,
-        label: 'hello'
-      });
-      graph.centerContent();
-    }
+  public addVertex(@Receive(Vertex) vertex: Vertex) {
+    console.log(vertex);
+    // this.graph?.addNode(vertex as any);
   }
 
   disconnectedCallback() {
@@ -71,6 +81,7 @@ export class Canvas extends LitElement {
   render() {
     return html`
       <div class="container">
+        <slot></slot>
 
       </div>
     `

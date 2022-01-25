@@ -40,8 +40,7 @@ public class TabPanel extends HtmlContainer
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
-  @Getter
-  private final Map<Tab, ComponentDescriptor> components;
+  @Getter private final Map<Tab, ComponentDescriptor> components;
   /** mutable state */
   private Component current;
 

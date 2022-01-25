@@ -15,6 +15,15 @@ configurations {
 
 dependencies {
 
+    implementation "io.sunshower.arcus:arcus-lang"
+    implementation "io.sunshower.arcus.persist:persist-api"
+
+    [
+            ':aire-json-mapper',
+            ':aire-css-selectors'
+    ].each { dependency ->
+        implementation project(dependency)
+    }
     /**
      * zephyr dependencies
      */
