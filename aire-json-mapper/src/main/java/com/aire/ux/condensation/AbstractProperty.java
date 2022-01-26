@@ -32,13 +32,9 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   private final T member;
-  /**
-   * the type of the host-class
-   */
+  /** the type of the host-class */
   private final Class<?> host;
-  /**
-   * the read-alias of this property
-   */
+  /** the read-alias of this property */
   private final String readAlias;
 
   private final String writeAlias;
@@ -90,7 +86,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   public Converter<?, ?> getKeyConverter() {
     return keyConverter;
   }
-
 
   @Override
   public Converter<?, ?> getConverter() {

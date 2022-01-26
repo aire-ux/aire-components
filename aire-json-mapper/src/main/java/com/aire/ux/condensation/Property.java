@@ -2,7 +2,6 @@ package com.aire.ux.condensation;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
-import java.util.function.Function;
 
 public interface Property<T extends AccessibleObject> {
 

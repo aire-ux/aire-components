@@ -13,11 +13,7 @@ class SharedGraphModel extends AbstractEventSource implements Model {
   private final Condensation condensation;
   private Canvas host;
 
-
-//  private Map<Identifier>
-
   SharedGraphModel() {
-    this.host = null;
     this.condensation = Condensation.create(format);
   }
 
@@ -29,7 +25,6 @@ class SharedGraphModel extends AbstractEventSource implements Model {
     this.host = host;
     this.condensation = Condensation.create(format);
   }
-
 
   @Override
   public @NonNull Canvas getHost() {

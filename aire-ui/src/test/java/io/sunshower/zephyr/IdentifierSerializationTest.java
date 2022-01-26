@@ -43,7 +43,6 @@ public class IdentifierSerializationTest {
     assertEquals(id, el.getIdentifier());
     System.out.println(el);
     System.out.println(s);
-
   }
 
   @Test
@@ -59,7 +58,6 @@ public class IdentifierSerializationTest {
     val elements = condensation.read(TestElementHolder.class, s);
     assertEquals(id, elements.elements.get(0).identifier);
   }
-
 
   @Test
   @SneakyThrows
@@ -78,8 +76,7 @@ public class IdentifierSerializationTest {
   @RootElement
   public static class TestElementHolder {
 
-    @Element
-    private List<TestElement> elements;
+    @Element private List<TestElement> elements;
 
     public TestElementHolder() {
       this.elements = new ArrayList<>();
@@ -87,9 +84,7 @@ public class IdentifierSerializationTest {
   }
 
   @RootElement
-  public static class ChildElement extends TestElement {
-
-  }
+  public static class ChildElement extends TestElement {}
 
   @RootElement
   public static class TestElement {
@@ -100,15 +95,10 @@ public class IdentifierSerializationTest {
     @Convert(Base58Decoder.class)
     private Identifier identifier;
 
-    public TestElement() {
-
-    }
-
+    public TestElement() {}
   }
 
-
-  public static class Base58Decoder implements
-      Converter<Identifier, String> {
+  public static class Base58Decoder implements Converter<Identifier, String> {
 
     static final Encoding encoding = Base58.getInstance(Alphabets.Default);
 
@@ -126,6 +116,4 @@ public class IdentifierSerializationTest {
       return encoding.encode(identifier.getId());
     }
   }
-
-
 }

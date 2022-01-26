@@ -136,9 +136,8 @@ public class JsonWriter implements DocumentWriter {
     }
   }
 
-  private <T> void writeConvertableProperty(Property<?> property, T value,
-      OutputStream outputStream)
-      throws IOException {
+  private <T> void writeConvertableProperty(
+      Property<?> property, T value, OutputStream outputStream) throws IOException {
 
     writePropertyPrelude(property, outputStream);
     val v = property.getConverter().write(property.get(value));

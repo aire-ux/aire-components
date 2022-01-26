@@ -16,9 +16,8 @@ import lombok.val;
 @JsModule("@aire-ux/aire-condensation/dist/index.js")
 @CssImport("./styles/aire/ui/canvas/canvas.css")
 @NpmPackage(value = "@antv/x6", version = "1.29.6")
-@NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.3")
+@NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.4")
 public class Canvas extends HtmlContainer {
-
 
   private Model model;
 
@@ -32,5 +31,4 @@ public class Canvas extends HtmlContainer {
     model.setHost(this);
     return m;
   }
-
 }

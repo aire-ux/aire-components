@@ -12,7 +12,8 @@ public interface Model extends EventSource {
     return new SharedGraphModel(canvas);
   }
 
-  @NonNull Canvas getHost();
+  @NonNull
+  Canvas getHost();
 
   void setHost(@NonNull Canvas host);
 
@@ -32,6 +33,6 @@ public interface Model extends EventSource {
   @NonNull
   List<Edge> getEdges(@NonNull Identifier vertex);
 
-  @NonNull List<Edge> getEdges(@NonNull Vertex vertex);
-
+  @NonNull
+  List<Edge> getEdges(@NonNull Vertex vertex);
 }

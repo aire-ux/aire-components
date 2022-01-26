@@ -62,6 +62,12 @@ export class Canvas extends LitElement {
     this.graph?.addNode(vertex as any);
   }
 
+  @Remote
+  public addVertices(@Receive(Vertex) vertices: Vertex[]) {
+    // @ts-ignore
+    this.graph?.addNodes(...vertices);
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     const graph = this.graph;

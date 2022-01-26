@@ -25,5 +25,4 @@ public class TopologyView extends VerticalLayout {
     this.model = Model.create(canvas);
     add(canvas);
   }
-
 }
