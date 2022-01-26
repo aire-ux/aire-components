@@ -24,12 +24,14 @@ import lombok.val;
 public class Canvas extends HtmlContainer {
 
   private Model model;
+  private CommandManager commandManager;
 
 
   public Model setModel(@NonNull final Model model) {
     val m = this.model;
     this.model = model;
     model.setHost(this);
+    this.commandManager = model.getCommandManager();
     return m;
   }
 

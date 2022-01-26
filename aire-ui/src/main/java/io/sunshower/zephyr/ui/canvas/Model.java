@@ -48,4 +48,6 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
   void detach(Canvas canvas);
 
   void attach(Canvas canvas);
+
+  CommandManager getCommandManager();
 }

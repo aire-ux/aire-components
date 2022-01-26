@@ -33,6 +33,7 @@ class SharedGraphModel extends AbstractEventSource implements Model,
    */
   private Canvas host;
   private List<Vertex> vertices;
+  private CommandManager commandManager;
   private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
@@ -59,6 +60,7 @@ class SharedGraphModel extends AbstractEventSource implements Model,
   @Override
   public void setHost(@NonNull Canvas host) {
     this.host = host;
+    this.commandManager = new StackCommandManager(this, host);
   }
 
   @Override
@@ -119,6 +121,11 @@ class SharedGraphModel extends AbstractEventSource implements Model,
   @Override
   public void attach(Canvas canvas) {
     this.canvasReadyEventRegistration = canvas.addOnCanvasReadyListener(this);
+  }
+
+  @Override
+  public CommandManager getCommandManager() {
+    return null;
   }
 
   @Override
