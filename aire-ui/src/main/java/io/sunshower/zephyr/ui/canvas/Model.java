@@ -1,15 +1,20 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import com.vaadin.flow.component.ComponentEventListener;
 import io.sunshower.lang.events.EventSource;
 import io.sunshower.persistence.id.Identifier;
+import java.util.Collection;
 import java.util.List;
 import lombok.NonNull;
+import lombok.val;
 
-public interface Model extends EventSource {
+public interface Model extends EventSource, ComponentEventListener<CanvasReadyEvent> {
 
   @NonNull
   static Model create(@NonNull Canvas canvas) {
-    return new SharedGraphModel(canvas);
+    val model = new SharedGraphModel(canvas);
+    canvas.setModel(model);
+    return model;
   }
 
   @NonNull
@@ -35,4 +40,12 @@ public interface Model extends EventSource {
 
   @NonNull
   List<Edge> getEdges(@NonNull Vertex vertex);
+
+  List<Vertex> getVertices();
+
+  void setVertices(Collection<Vertex> vertices);
+
+  void detach(Canvas canvas);
+
+  void attach(Canvas canvas);
 }

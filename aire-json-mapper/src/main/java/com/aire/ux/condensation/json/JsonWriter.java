@@ -61,6 +61,24 @@ public class JsonWriter implements DocumentWriter {
     }
   }
 
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public <T> void writeAll(@NonNull Class<T> type, @NonNull Collection<? extends T> value,
+      @NonNull OutputStream outputStream) throws IOException {
+    val iterable = value;
+    val iterator = iterable.iterator();
+    writePrologue(Collection.class, outputStream);
+    while (iterator.hasNext()) {
+      val next = iterator.next();
+      write((Class) next.getClass(), next, outputStream);
+      if (iterator.hasNext()) {
+        outputStream.write(',');
+      }
+    }
+    writeEpilogue(Collection.class, outputStream);
+  }
+
+
   private <T> void writeIterable(Class<T> type, Iterable<?> value, OutputStream outputStream)
       throws IOException {
     val iterable = value;

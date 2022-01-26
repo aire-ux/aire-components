@@ -1,10 +1,14 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.shared.Registration;
 import lombok.NonNull;
 import lombok.val;
 
@@ -21,14 +25,27 @@ public class Canvas extends HtmlContainer {
 
   private Model model;
 
-  public Canvas() {
-    this.model = new SharedGraphModel(this);
-  }
 
   public Model setModel(@NonNull final Model model) {
     val m = this.model;
     this.model = model;
     model.setHost(this);
     return m;
+  }
+
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    super.onAttach(attachEvent);
+    model.attach(this);
+  }
+
+  @Override
+  protected void onDetach(DetachEvent detachEvent) {
+    super.onDetach(detachEvent);
+    model.detach(this);
+  }
+
+  public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
+    return this.addListener(CanvasReadyEvent.class, listener);
   }
 }

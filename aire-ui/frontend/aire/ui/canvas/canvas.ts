@@ -1,4 +1,4 @@
-import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
+import {state, css, customElement, html, LitElement, property, PropertyValues, query,} from "lit-element";
 import {Graph} from "@antv/x6";
 import {Vertex} from "./cell";
 import {Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
@@ -24,18 +24,9 @@ export class Canvas extends LitElement {
   `;
 
 
+  @state()
   @query('div.container')
   private container: HTMLDivElement | undefined;
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    this.createGraph();
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.createGraph();
-  }
 
   private createGraph(): void {
     if (this.graph) {
@@ -52,7 +43,6 @@ export class Canvas extends LitElement {
         }
       });
       this.graph = graph;
-      graph.centerContent();
     }
   }
 
@@ -65,22 +55,18 @@ export class Canvas extends LitElement {
   @Remote
   public addVertices(@Receive(Vertex) vertices: Vertex[]) {
     // @ts-ignore
-    this.graph?.addNodes(...vertices);
+    this.graph?.addNodes(vertices);
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    const graph = this.graph;
-    if (graph) {
-      graph.dispose();
-    }
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this.createGraph();
+    this.dispatchEvent(new CustomEvent('canvas-ready'))
   }
 
   render() {
     return html`
       <div class="container">
-        <slot></slot>
-
       </div>
     `
   }

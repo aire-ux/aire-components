@@ -1,17 +1,39 @@
 package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Condensation;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import lombok.NonNull;
+import lombok.val;
 
-class SharedGraphModel extends AbstractEventSource implements Model {
+class SharedGraphModel extends AbstractEventSource implements Model,
+    ComponentEventListener<CanvasReadyEvent> {
 
+  /**
+   * constants
+   */
   static final String format = "json";
+
+  /**
+   * immutable state
+   */
   private final Condensation condensation;
+
+  /**
+   * mutable state
+   */
   private Canvas host;
+  private List<Vertex> vertices;
+  private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
     this.condensation = Condensation.create(format);
@@ -72,5 +94,42 @@ class SharedGraphModel extends AbstractEventSource implements Model {
   @Override
   public List<Edge> getEdges(Vertex vertex) {
     return null;
+  }
+
+  private Serializable write(Class<Vertex> vertexClass, Collection<Vertex> vertices)
+      throws IOException {
+    return condensation.getWriter().writeAll(vertexClass, vertices);
+  }
+
+  @Override
+  public List<Vertex> getVertices() {
+    return null;
+  }
+
+  @Override
+  public void setVertices(Collection<Vertex> vertices) {
+    this.vertices = new ArrayList<>(vertices);
+  }
+
+  @Override
+  public void detach(Canvas canvas) {
+    this.canvasReadyEventRegistration.remove();
+  }
+
+  @Override
+  public void attach(Canvas canvas) {
+    this.canvasReadyEventRegistration = canvas.addOnCanvasReadyListener(this);
+  }
+
+  @Override
+  public void onComponentEvent(CanvasReadyEvent event) {
+    val ui = UI.getCurrent();
+    ui.access(() -> {
+      try {
+        host.getElement().callJsFunction("addVertices", write(Vertex.class, vertices));
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    });
   }
 }
