@@ -37,30 +37,21 @@ export class Canvas extends LitElement {
     this.createGraph();
   }
 
-  private createGraph() : void {
-    if(this.graph) {
+  private createGraph(): void {
+    if (this.graph) {
       return;
     }
     const container = this.container;
-    if(container) {
+    if (container) {
       const graph = new Graph({
         panning: true,
         container: container,
-        grid : {
+        grid: {
           size: 10,
           visible: true
         }
       });
-
-
       this.graph = graph;
-      this.graph.addNode({
-        x: 100,
-        y: 100,
-        width: 30,
-        height: 30,
-        label: 'hello'
-      });
       graph.centerContent();
     }
   }

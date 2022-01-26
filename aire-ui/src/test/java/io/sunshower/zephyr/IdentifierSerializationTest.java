@@ -60,6 +60,21 @@ public class IdentifierSerializationTest {
     assertEquals(id, elements.elements.get(0).identifier);
   }
 
+
+  @Test
+  @SneakyThrows
+  void ensureParentElementsWork() {
+    val element = new ChildElement();
+    val id = Identifiers.newSequence().next();
+    element.setIdentifier(id);
+    val holder = new TestElementHolder();
+    holder.elements.add(element);
+    val s = condensation.getWriter().write(TestElementHolder.class, holder);
+    System.out.println(s);
+    val elements = condensation.read(TestElementHolder.class, s);
+    assertEquals(id, elements.elements.get(0).identifier);
+  }
+
   @RootElement
   public static class TestElementHolder {
 
@@ -69,6 +84,11 @@ public class IdentifierSerializationTest {
     public TestElementHolder() {
       this.elements = new ArrayList<>();
     }
+  }
+
+  @RootElement
+  public static class ChildElement extends TestElement {
+
   }
 
   @RootElement
