@@ -29,7 +29,17 @@ public class JsonWriter implements DocumentWriter {
       @NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
       throws IOException {
 
-    if (type.isArray()) {
+    if (String.class.equals(type)) {
+      if (value == null) {
+        outputStream.write("null".getBytes(StandardCharsets.UTF_8));
+      } else {
+        outputStream.write('"');
+        outputStream.write(((String) value).getBytes(StandardCharsets.UTF_8));
+        outputStream.write('"');
+      }
+    } else if (type.isPrimitive() || Property.isPrimitive(type)) {
+      outputStream.write(String.valueOf(value).getBytes(StandardCharsets.UTF_8));
+    } else if (type.isArray()) {
       writePrologue(type, outputStream);
       writeArray(type, value, outputStream);
       writeEpilogue(type, outputStream);
@@ -63,8 +73,11 @@ public class JsonWriter implements DocumentWriter {
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public <T> void writeAll(@NonNull Class<T> type, @NonNull Collection<? extends T> value,
-      @NonNull OutputStream outputStream) throws IOException {
+  public <T> void writeAll(
+      @NonNull Class<T> type,
+      @NonNull Collection<? extends T> value,
+      @NonNull OutputStream outputStream)
+      throws IOException {
     val iterable = value;
     val iterator = iterable.iterator();
     writePrologue(Collection.class, outputStream);
@@ -77,7 +90,6 @@ public class JsonWriter implements DocumentWriter {
     }
     writeEpilogue(Collection.class, outputStream);
   }
-
 
   private <T> void writeIterable(Class<T> type, Iterable<?> value, OutputStream outputStream)
       throws IOException {

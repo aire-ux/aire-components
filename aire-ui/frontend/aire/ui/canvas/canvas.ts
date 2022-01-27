@@ -1,4 +1,4 @@
-import {state, css, customElement, html, LitElement, property, PropertyValues, query,} from "lit-element";
+import {css, customElement, html, LitElement, PropertyValues, query, state,} from "lit-element";
 import {Graph} from "@antv/x6";
 import {Vertex} from "./cell";
 import {Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
@@ -53,9 +53,15 @@ export class Canvas extends LitElement {
   }
 
   @Remote
-  public addVertices(@Receive(Vertex) vertices: Vertex[]) {
+  public addVertices(@Receive(Vertex) vertices: Vertex[]): void {
     // @ts-ignore
     this.graph?.addNodes(vertices);
+  }
+
+
+  @Remote
+  registerVertexTemplates(@Receive(VertexTemplate) templates: VertexTemplate[]): void {
+    Graph.registerNode(templates);
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

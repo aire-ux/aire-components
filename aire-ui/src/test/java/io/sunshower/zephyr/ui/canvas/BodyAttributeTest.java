@@ -17,18 +17,7 @@ class BodyAttributeTest {
     condensation = Condensation.create("json");
   }
 
-
   @Test
   void ensureNodeAttributeWritesBodyCorrectly() throws IOException {
-    template.setHeight(100f);
-    template.setWidth(100f);
-    val body = new BodyAttribute();
-    body.setStroke("#5F95FF");
-    body.setStrokeWidth(1f);
-    body.setFill("rgba(95,149,255,0.05)");
-
-    template.addAttribute(body);
-    System.out.println(condensation.getWriter().write(VertexTemplate.class, template));
   }
-
 }

@@ -2,7 +2,6 @@ package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Condensation;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.persistence.id.Identifier;
@@ -13,27 +12,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.NonNull;
-import lombok.val;
 
-class SharedGraphModel extends AbstractEventSource implements Model,
-    ComponentEventListener<CanvasReadyEvent> {
+class SharedGraphModel extends AbstractEventSource
+    implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /**
-   * constants
-   */
+  /** constants */
   static final String format = "json";
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Condensation condensation;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas host;
+
   private List<Vertex> vertices;
   private CommandManager commandManager;
+  private VertexTemplate defaultVertexTemplate;
   private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
@@ -47,6 +41,16 @@ class SharedGraphModel extends AbstractEventSource implements Model,
   SharedGraphModel(@NonNull final Canvas host, @NonNull String format) {
     this.host = host;
     this.condensation = Condensation.create(format);
+  }
+
+  @Override
+  public VertexTemplate getDefaultVertexTemplate() {
+    return defaultVertexTemplate;
+  }
+
+  @Override
+  public void setDefaultVertexTemplate(VertexTemplate template) {
+    this.defaultVertexTemplate = template;
   }
 
   @Override
@@ -98,11 +102,6 @@ class SharedGraphModel extends AbstractEventSource implements Model,
     return null;
   }
 
-  private Serializable write(Class<Vertex> vertexClass, Collection<Vertex> vertices)
-      throws IOException {
-    return condensation.getWriter().writeAll(vertexClass, vertices);
-  }
-
   @Override
   public List<Vertex> getVertices() {
     return null;
@@ -111,6 +110,8 @@ class SharedGraphModel extends AbstractEventSource implements Model,
   @Override
   public void setVertices(Collection<Vertex> vertices) {
     this.vertices = new ArrayList<>(vertices);
+    commandManager.addPendingAction(
+        new CompositeAction(vertices.stream().map(AddVertexAction::new)));
   }
 
   @Override
@@ -125,18 +126,17 @@ class SharedGraphModel extends AbstractEventSource implements Model,
 
   @Override
   public CommandManager getCommandManager() {
-    return null;
+    return commandManager;
   }
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
-    val ui = UI.getCurrent();
-    ui.access(() -> {
-      try {
-        host.getElement().callJsFunction("addVertices", write(Vertex.class, vertices));
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    });
+    commandManager.applyPendingActions(false);
+    commandManager.clearPendingActions();
+  }
+
+  private Serializable write(Class<Vertex> vertexClass, Collection<Vertex> vertices)
+      throws IOException {
+    return condensation.getWriter().writeAll(vertexClass, vertices);
   }
 }

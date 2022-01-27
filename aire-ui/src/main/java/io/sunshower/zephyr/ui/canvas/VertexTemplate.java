@@ -4,7 +4,10 @@ import com.aire.ux.condensation.Alias;
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.RootElement;
-import java.util.HashMap;
+import io.sunshower.zephyr.ui.canvas.attributes.VertexTemplateBuilder;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,18 +35,25 @@ public class VertexTemplate {
   @Attribute
   private float height;
 
+  @Element(alias = @Alias(read = "attrs", write = "attrs"))
+  private Map<String, Map<String, Serializable>> attributes;
 
-  /**
-   * the attributes of this template
-   */
-  @Element(alias = @Alias(write = "attrs", read = "attrs"))
-  private Map<String, VertexAttribute> attributes;
+  @Element(alias = @Alias(read = "markup", write = "markup"))
+  private List<Selector> selectors;
 
   public VertexTemplate() {
-    this.attributes = new HashMap<>();
+    selectors = new ArrayList<>();
   }
 
-  public void addAttribute(VertexAttribute attribute) {
-    this.attributes.put(attribute.getKey(), attribute);
+  public static VertexTemplateBuilder newBuilder() {
+    return new VertexTemplateBuilder();
+  }
+
+
+  public static VertexTemplateBuilder newBuilder(String name) {
+    return new VertexTemplateBuilder().name(name);
+  }
+  public void addSelector(String tagName, String selector) {
+    selectors.add(new Selector(tagName, selector));
   }
 }

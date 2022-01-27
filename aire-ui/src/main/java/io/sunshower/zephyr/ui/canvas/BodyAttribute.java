@@ -17,16 +17,12 @@ public class BodyAttribute implements VertexAttribute {
 
   private static final String key = "body";
 
-
-  @Attribute
-  private String stroke;
+  @Attribute private String stroke;
 
   @Attribute(alias = @Alias(read = "stroke-width", write = "stroke-width"))
   private Float strokeWidth;
 
-  @Attribute
-  private String fill;
-
+  @Attribute private String fill;
 
   @Override
   public String getKey() {

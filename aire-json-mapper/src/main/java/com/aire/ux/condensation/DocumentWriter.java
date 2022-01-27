@@ -19,9 +19,11 @@ public interface DocumentWriter {
   <T> void write(@NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
       throws IOException;
 
-  <T> void writeAll(@NonNull Class<T> type, @NonNull Collection<? extends T> value, @NonNull OutputStream outputStream)
+  <T> void writeAll(
+      @NonNull Class<T> type,
+      @NonNull Collection<? extends T> value,
+      @NonNull OutputStream outputStream)
       throws IOException;
-
 
   default <T> String writeAll(@NonNull Class<T> type, @NonNull Collection<? extends T> value)
       throws IOException {

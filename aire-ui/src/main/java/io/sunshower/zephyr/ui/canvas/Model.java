@@ -17,6 +17,10 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
     return model;
   }
 
+  VertexTemplate getDefaultVertexTemplate();
+
+  void setDefaultVertexTemplate(VertexTemplate template);
+
   @NonNull
   Canvas getHost();
 

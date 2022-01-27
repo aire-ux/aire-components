@@ -1,7 +1,5 @@
 package io.sunshower.zephyr.management;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
@@ -32,7 +30,6 @@ public class TopologyView extends VerticalLayout {
     createGraph();
     add(canvas);
   }
-
 
   private void createGraph() {
     val vertices = new ArrayList<Vertex>();

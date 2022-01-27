@@ -10,5 +10,4 @@ public interface Action {
   void redo(Model model);
 
   void apply(Model model);
-
 }
