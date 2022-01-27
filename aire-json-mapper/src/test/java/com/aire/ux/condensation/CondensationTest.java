@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
 import java.util.Map;
-import java.util.function.Function;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -59,11 +58,16 @@ class CondensationTest {
 
   @Test
   void ensureKeyConverterWorks() {
-    class StringToIntegerConverter implements Function<String, Integer> {
+    class StringToIntegerConverter implements Converter<Integer, String> {
 
       @Override
-      public Integer apply(String s) {
-        return Integer.parseInt(s);
+      public Integer read(String s) {
+        return Integer.valueOf(s);
+      }
+
+      @Override
+      public String write(Integer integer) {
+        return integer == null ? null : integer.toString();
       }
     }
     @RootElement

@@ -1,0 +1,17 @@
+
+aire-overlay {
+  header, article, footer {
+    margin: 16px;
+  }
+  header, footer {
+    align-items: center;
+  }
+  footer {
+    justify-content: end;
+  }
+  h1 {
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-l);
+    color: var(--lumo-primary-text-color);
+  }
+}

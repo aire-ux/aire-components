@@ -11,6 +11,7 @@ import com.aire.ux.test.spring.EnableSpring;
 import com.aire.ux.theme.decorators.AireThemeComponentDecoratorTest.Cfg;
 import com.aire.ux.theme.decorators.scenario1.MainView;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -18,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 @EnableThemes
 @AireTest
 @EnableSpring
+@Disabled
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = MainView.class)
 @TestTheme(AireTestTheme.class)

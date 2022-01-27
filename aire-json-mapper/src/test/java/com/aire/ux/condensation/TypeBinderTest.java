@@ -12,7 +12,6 @@ import com.aire.ux.condensation.mappings.DefaultTypeBinder;
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -665,15 +664,29 @@ class TypeBinderTest {
     assertEquals(result.values.get("josiah").name, "joebees");
   }
 
-  public static class TypeConverter<T> implements Function<String, Class<T>> {
+  public static class TypeConverter<T> implements Converter<Class<T>, String> {
 
     public TypeConverter() {}
 
     @Override
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public Class<T> apply(String s) {
+    public Class<T> read(String s) {
       return (Class<T>) Class.forName(s, true, Thread.currentThread().getContextClassLoader());
     }
+
+    @Override
+    public String write(Class<T> tClass) {
+      return tClass.getCanonicalName();
+    }
+
+    //    @Override
+    //    public String read(Class<T> tClass) {
+    //      return null;
+    //    }
+    //
+    //    @Override
+    //    public Class<T> write(String s) {
+    //    }
   }
 }

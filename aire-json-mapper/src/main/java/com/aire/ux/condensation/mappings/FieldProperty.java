@@ -2,11 +2,11 @@ package com.aire.ux.condensation.mappings;
 
 import com.aire.ux.condensation.AbstractProperty;
 import com.aire.ux.condensation.Convert;
+import com.aire.ux.condensation.Converter;
 import com.aire.ux.condensation.TypeInstantiator;
 import io.sunshower.arcus.reflect.Reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.function.Function;
 import lombok.NonNull;
 import lombok.val;
 
@@ -82,10 +82,10 @@ public class FieldProperty extends AbstractProperty<Field> {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected Function<?, Field> readConverter(Class<?> host, Field member) {
+  protected Converter<Field, ?> readConverter(Class<?> host, Field member) {
     if (member.isAnnotationPresent(Convert.class)) {
       val convert = member.getAnnotation(Convert.class);
-      if (!Function.class.equals(convert.value())) {
+      if (!Converter.class.equals(convert.value())) {
         return Reflect.instantiate(member.getAnnotation(Convert.class).value());
       }
     }
@@ -93,10 +93,10 @@ public class FieldProperty extends AbstractProperty<Field> {
   }
 
   @SuppressWarnings("unchecked")
-  protected Function<String, ?> readKeyConverter(Class<?> host, Field member) {
+  protected Converter<String, ?> readKeyConverter(Class<?> host, Field member) {
     if (member.isAnnotationPresent(Convert.class)) {
       val type = member.getAnnotation(Convert.class);
-      if (!Function.class.equals(type.key())) {
+      if (!Converter.class.equals(type.key())) {
         return getInstantiator().instantiate(type.key());
       }
     }

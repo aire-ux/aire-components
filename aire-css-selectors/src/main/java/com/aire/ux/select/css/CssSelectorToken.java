@@ -8,8 +8,8 @@ import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_1;
 import static com.aire.ux.select.css.TokenPatterns.UNCLOSED_STRING_FORM_2;
 import static java.lang.String.format;
 
-import com.aire.ux.parsing.core.TokenBuffer;
-import com.aire.ux.parsing.core.Type;
+import io.sunshower.arcus.ast.core.TokenBuffer;
+import io.sunshower.arcus.ast.core.Type;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;

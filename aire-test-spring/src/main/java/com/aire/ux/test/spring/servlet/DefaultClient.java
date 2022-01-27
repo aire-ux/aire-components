@@ -23,6 +23,7 @@ public class DefaultClient implements Client {
   private final ConfigurableWebApplicationContext context;
 
   @Inject
+  @SuppressFBWarnings
   public DefaultClient(ConfigurableWebApplicationContext context) {
     this.context = context;
     this.mvc = MockMvcBuilders.webAppContextSetup(context).build();

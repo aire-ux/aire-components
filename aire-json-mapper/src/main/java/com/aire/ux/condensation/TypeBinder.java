@@ -1,8 +1,8 @@
 package com.aire.ux.condensation;
 
 import com.aire.ux.condensation.json.Value;
-import com.aire.ux.parsing.ast.SyntaxNode;
-import com.aire.ux.parsing.core.Token;
+import io.sunshower.arcus.ast.SyntaxNode;
+import io.sunshower.arcus.ast.core.Token;
 
 public interface TypeBinder {
 

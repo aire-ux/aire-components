@@ -4,6 +4,7 @@ import com.aire.ux.condensation.Property;
 import com.aire.ux.condensation.Property.Mode;
 import com.aire.ux.condensation.TypeDescriptor;
 import com.aire.ux.condensation.TypeInstantiator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import lombok.NonNull;
 
+@SuppressFBWarnings
 public class ImmutableTypeDescriptor<T> implements TypeDescriptor<T> {
 
   private final Class<T> type;

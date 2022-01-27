@@ -1,0 +1,34 @@
+$lightest-gray: #fafafa;
+$dark-gray-1: #AAAAAA;
+$dark-gray-2: #666666;
+$light-gray-1: #F3F3F3;
+$light-gray-2: #F2F2F2;
+$dark-blue: #4D5E7C;
+
+$white: #FFFFFF;
+$purple: #660066;
+$light-purple: #a366a3;
+$green: #77CCA4;
+$orange: #FF9900;
+$blue: #2385AF;
+$light-blue: #7bb5cf;
+$blue-purple: #370e8b;
+$light-blue: lighten($blue, 50%);
+
+$dark-green: #254033;
+$dark-blue: darken($blue, 0.5);
+
+$black: #2C2C2C;
+
+$dark-red: #990000;
+$light-red: #ED1C24;
+$light-green: lighten($green, 0.5);
+
+
+aire-navigation-bar {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+}

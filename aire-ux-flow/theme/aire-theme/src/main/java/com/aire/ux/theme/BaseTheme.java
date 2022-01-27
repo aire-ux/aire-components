@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.aire.ux.Theme;
 import com.aire.ux.ThemeResource;
 import com.vaadin.flow.component.HasElement;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.arcus.reflect.Reflect;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -19,6 +20,7 @@ import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import lombok.val;
 
+@SuppressFBWarnings
 public abstract class BaseTheme implements Theme {
 
   static final int MAX_CACHE_SIZE = 50;

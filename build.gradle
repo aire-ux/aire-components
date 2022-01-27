@@ -1,19 +1,18 @@
+
+
 plugins {
     id 'pmd'
     id 'groovy'
+    id 'com.vaadin'
     id 'java-library'
-    id 'java-test-fixtures'
-    id "com.github.spotbugs" version "4.7.0" apply false
-    id "io.freefair.lombok" version "5.3.0" apply false
-    id "com.diffplug.spotless" version "5.12.5" apply false
-    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
-
-    id "com.github.node-gradle.node" version "3.1.1" apply false
+//    id 'java-test-fixtures'
+    id "com.github.spotbugs"
+    id "io.freefair.lombok"
+    id "com.diffplug.spotless"
+    id "com.github.node-gradle.node"
+    id "io.spring.dependency-management"
 }
-
-apply from: "$rootDir/tasks/revisions.gradle"
-
-
+//apply from: "$rootDir/tasks/revisions.gradle"
 
 
 allprojects {
@@ -26,7 +25,14 @@ allprojects {
         mavenCentral()
 
         maven {
-            url uri("https://maven.pkg.github.com/sunshower-io/sunshower-arcus")
+            url "https://maven.vaadin.com/vaadin-addons"
+        }
+        maven {
+            url "https://repository.mulesoft.org/nexus/content/repositories/public/"
+        }
+
+        maven {
+            url "https://maven.pkg.github.com/sunshower-io/sunshower-arcus"
             credentials {
                 username "$mavenRepositoryUsername"
                 password "$mavenRepositoryPassword"
@@ -52,7 +58,6 @@ allprojects {
         ].each { dep ->
             all*.exclude(group: dep)
         }
-
     }
 
 }
@@ -62,15 +67,19 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
     apply plugin: 'java-library'
-    apply plugin: 'java-test-fixtures'
+//    apply plugin: 'java-test-fixtures'
     apply plugin: 'io.freefair.lombok'
     apply plugin: "com.github.spotbugs"
     apply plugin: "com.diffplug.spotless"
 
 
-    extensions.add('aire', new AireComponent(project))
+//    extensions.add('aire', new AireComponent(project))
 
 
+    spotbugs {
+        toolVersion = '4.5.3'
+        includeFilter = file("${project.rootDir}/check/spotbugs/exclusions.xml")
+    }
     spotbugsMain {
         reports {
             html {
@@ -80,6 +89,7 @@ subprojects {
     }
 
     java {
+        sourceCompatibility = '17'
         modularity.inferModulePath = true
     }
 
@@ -107,7 +117,7 @@ subprojects {
 
     spotless {
         java {
-            googleJavaFormat('1.9')
+            googleJavaFormat('1.12.0')
         }
     }
 
@@ -136,7 +146,6 @@ subprojects {
             from javadoc
             archiveClassifier = 'javadoc'
         }
-
 
 
         publications {

@@ -15,11 +15,13 @@ import com.aire.ux.theme.decorators.scenario1.MainView;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
 import javax.servlet.http.HttpServletResponse;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @AireTest
+@Disabled
 @EnableAireThemeServlet
 @Routes(scanClassPackage = MainView.class)
 @com.aire.ux.theme.decorators.TestTheme(AireTestTheme.class)

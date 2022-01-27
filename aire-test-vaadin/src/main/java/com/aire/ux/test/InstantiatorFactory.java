@@ -4,5 +4,7 @@ import com.vaadin.flow.di.Instantiator;
 
 public interface InstantiatorFactory {
 
-  Instantiator create(Instantiator delegate);
+  default Instantiator create(Instantiator delegate) {
+    return delegate;
+  }
 }

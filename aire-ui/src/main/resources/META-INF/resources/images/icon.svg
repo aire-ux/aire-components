@@ -1,0 +1,20 @@
+<svg id="f5ec0025-94c9-455a-ba2b-ce79bc1e4d7c" data-name="Layer 1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 692.82 800">
+  <defs>
+    <linearGradient id="a0887528-5856-47b6-ad61-d935481dc725" x1="53.59" y1="200" x2="746.41"
+      y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#606"/>
+      <stop offset="1" stop-color="#2385af"/>
+    </linearGradient>
+    <linearGradient id="b05e806f-a799-4136-95e5-c15c33223f58" x1="140.19" y1="250" x2="659.81"
+      y2="550" xlink:href="#a0887528-5856-47b6-ad61-d935481dc725"/>
+  </defs>
+  <title>mark</title>
+  <path
+    d="M400,52,701.41,226V574L400,748,98.59,574V226L400,52m0-52L53.59,200V600L400,800,746.41,600V200L400,0Z"
+    transform="translate(-53.59)" style="fill:url(#a0887528-5856-47b6-ad61-d935481dc725)"/>
+  <path
+    d="M400,273.2l109.81,63.4V463.4L400,526.8,290.19,463.4V336.6L400,273.2M400,100,140.19,250V550L400,700,659.81,550V250L400,100Z"
+    transform="translate(-53.59)" style="fill:url(#b05e806f-a799-4136-95e5-c15c33223f58)"/>
+</svg>

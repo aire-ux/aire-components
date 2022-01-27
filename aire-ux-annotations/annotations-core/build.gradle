@@ -1,0 +1,4 @@
+dependencies {
+    api "com.vaadin:flow-server"
+    api project(':aire-ux-core')
+}

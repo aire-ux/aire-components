@@ -47,6 +47,8 @@ class AireComponent {
                             from(zipTree(it))
                             into file("${project.buildDir}/resources/main")
                         }
+                        dependsOn(":aire-ux:controls:${project.name}-component:jar")
+                        mustRunAfter(":aire-ux:controls:${project.name}-component:jar")
                     }
 
                     jar {

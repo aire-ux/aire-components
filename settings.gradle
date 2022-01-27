@@ -1,60 +1,47 @@
-
 pluginManagement {
     plugins {
-        id 'com.vaadin' version "0.14.7.3"
+
+        id 'pmd'
+        id 'groovy'
+        id 'java-library'
+//        id 'java-test-fixtures'
+        id "com.github.spotbugs" version "4.7.0" apply false
+        id "io.freefair.lombok" version "6.3.0" apply false
+        id "com.diffplug.spotless" version "6.1.0" apply false
+        id 'com.vaadin' version "${vaadinVersion}" apply false
+        id 'org.springframework.boot' version '2.6.2' apply false
+        id "com.github.node-gradle.node" version "3.1.1" apply false
+        id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
+    }
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            url "https://maven.vaadin.com/vaadin-prereleases"
+        }
     }
 }
-
 include(
 
-        'aire-ux:lib:aire-condensation',
-        /**
-         * core items
-         */
+        'aire-ui',
+        'aire-json-mapper',
+        'aire-css-selectors',
 
         'aire-ux-core',
         'aire-ux-spring',
         'aire-ux-zephyr',
-        'aire-css-selectors',
-        'aire-json-mapper',
-        'aire-parsing-core',
+
         'aire-mock:aire-mockito',
         'aire-mock:aire-mock-core',
 
-        /**
-         * test items
-         */
         'aire-test-common',
         'aire-test-vaadin',
         'aire-test-spring',
-
-        /**
-         * demo project
-         */
-        'aire-ux-flow:aire-demo',
-
-        /**
-         * themes
-         */
+        'aire-ux-annotations',
         'aire-ux-flow:theme:aire-theme',
-        'aire-ux-flow:theme:aire-test-theme',
-        'aire-ux-flow:theme:aire-theme-uikit',
-        'aire-ux-flow:theme:aire-theme-aire',
-        'aire-ux-flow:theme:aire-theme-spectrum',
-//        'aire-ux-flow:theme:aire-theme-material',
-        'aire-ux-flow:theme:aire-theme-bootstrap',
-
-
-        /**
-         * controls
-         */
-        'aire-ux-flow:controls:aire-button',
-        'aire-ux-flow:controls:aire-designer',
-
-        'aire-ux',
-        /**
-         * javascript controls
-         */
-        'aire-ux:controls:aire-button-component',
-        'aire-ux:controls:aire-designer-component'
+        'aire-ux-annotations:annotations',
+        'aire-ux-annotations:annotations-core',
+        'aire-ux-annotations:annotations-spring',
 )
+

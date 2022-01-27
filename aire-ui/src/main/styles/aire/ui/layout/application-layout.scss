@@ -1,0 +1,64 @@
+
+
+aire-application-layout {
+  margin:0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height:100%;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  > {
+    box-sizing: content-box;
+  }
+
+  &::part(main), main {
+    height:100%;
+    box-sizing: border-box;
+  }
+
+  &::part(content-parent) {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    width:100%;
+    height: calc(100% -
+      var(--aire-application-layout-top-height, 40px) -
+      var(--aire-application-layout-bottom-height, 24px)
+    );
+
+
+    min-height: calc(100% -
+      var(--aire-application-layout-top-height, 40px) -
+      var(--aire-application-layout-bottom-height, 24px)
+    );
+  }
+
+  &::part(top) {
+    display: flex;
+    flex-direction: row-reverse;
+    height: var(--aire-application-layout-top-height, 40px);
+    min-height: var(--aire-application-layout-top-height, 40px);
+    border-bottom: 1px solid #AAAAAA;
+    //line-height: var(--aire-application-layout-top-height, 40px);
+  }
+
+  &::part(navigation) {
+    display: flex;
+    width: var(--aire-application-navigation-width, 48px);
+    position: relative;
+    height:100%;
+  }
+
+  &::part(bottom) {
+    display: block;
+    position: absolute;
+    margin-top:auto;
+    width:100%;
+    bottom:0;
+    border-top: 1px solid #AAAAAA;
+    height: var(--aire-application-layout-bottom-height, 24px);
+  }
+
+}

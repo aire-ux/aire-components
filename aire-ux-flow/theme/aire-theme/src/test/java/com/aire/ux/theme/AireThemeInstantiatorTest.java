@@ -13,9 +13,11 @@ import com.aire.ux.theme.context.ThemeChangeListener;
 import com.aire.ux.theme.decorators.EnableThemes;
 import com.aire.ux.theme.themescenario.ScenarioView;
 import com.aire.ux.theme.themescenario.TestButton;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.test.context.ContextConfiguration;
 
 @AireTest
+@Disabled
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = ScenarioView.class)

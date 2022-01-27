@@ -29,7 +29,17 @@ public class JsonWriter implements DocumentWriter {
       @NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
       throws IOException {
 
-    if (type.isArray()) {
+    if (String.class.equals(type)) {
+      if (value == null) {
+        outputStream.write("null".getBytes(StandardCharsets.UTF_8));
+      } else {
+        outputStream.write('"');
+        outputStream.write(((String) value).getBytes(StandardCharsets.UTF_8));
+        outputStream.write('"');
+      }
+    } else if (type.isPrimitive() || Property.isPrimitive(type)) {
+      outputStream.write(String.valueOf(value).getBytes(StandardCharsets.UTF_8));
+    } else if (type.isArray()) {
       writePrologue(type, outputStream);
       writeArray(type, value, outputStream);
       writeEpilogue(type, outputStream);
@@ -59,6 +69,26 @@ public class JsonWriter implements DocumentWriter {
       writeProperties(descriptor, type, outputStream, value);
       writeEpilogue(type, outputStream);
     }
+  }
+
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public <T> void writeAll(
+      @NonNull Class<T> type,
+      @NonNull Collection<? extends T> value,
+      @NonNull OutputStream outputStream)
+      throws IOException {
+    val iterable = value;
+    val iterator = iterable.iterator();
+    writePrologue(Collection.class, outputStream);
+    while (iterator.hasNext()) {
+      val next = iterator.next();
+      write((Class) next.getClass(), next, outputStream);
+      if (iterator.hasNext()) {
+        outputStream.write(',');
+      }
+    }
+    writeEpilogue(Collection.class, outputStream);
   }
 
   private <T> void writeIterable(Class<T> type, Iterable<?> value, OutputStream outputStream)
@@ -101,7 +131,9 @@ public class JsonWriter implements DocumentWriter {
     val iterator = descriptor.getProperties().iterator();
     while (iterator.hasNext()) {
       val property = iterator.next();
-      if (property.isPrimitive()) {
+      if (property.isConvertable()) {
+        writeConvertableProperty(property, value, outputStream);
+      } else if (property.isPrimitive()) {
         writePrimitive(property, value, outputStream);
       } else if (String.class.equals(property.getType())) {
         writeString(property, value, outputStream);
@@ -125,6 +157,20 @@ public class JsonWriter implements DocumentWriter {
 
     writePropertyPrelude(property, outputStream);
     val v = property.get(value);
+    if (v != null) {
+      outputStream.write('"');
+      outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));
+      outputStream.write('"');
+    } else {
+      write(outputStream, "null");
+    }
+  }
+
+  private <T> void writeConvertableProperty(
+      Property<?> property, T value, OutputStream outputStream) throws IOException {
+
+    writePropertyPrelude(property, outputStream);
+    val v = property.getConverter().write(property.get(value));
     if (v != null) {
       outputStream.write('"');
       outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));

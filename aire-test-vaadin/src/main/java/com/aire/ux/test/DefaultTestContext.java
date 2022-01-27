@@ -15,13 +15,25 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultTestContext implements TestContext {
+
+  private final Supplier<Element> supplier;
+
+  public DefaultTestContext(Supplier<Element> supplier) {
+    this.supplier = Objects.requireNonNull(supplier);
+  }
+
+  public DefaultTestContext() {
+    this(() -> UI.getCurrent().getElement());
+  }
 
   @Override
   @SuppressWarnings("unchecked")
@@ -39,7 +51,7 @@ public class DefaultTestContext implements TestContext {
     val result = new ArrayList<>();
     val predicate = elementTypePredicate(types);
 
-    elements.add(UI.getCurrent().getElement());
+    elements.add(supplier.get());
     while (!elements.isEmpty()) {
       val element = elements.remove();
       if (predicate.test(element)) {
@@ -57,7 +69,7 @@ public class DefaultTestContext implements TestContext {
   public List<Element> selectElements(Class<?>... types) {
     val elements = new ArrayDeque<Element>();
     val predicate = elementTypePredicate(types);
-    elements.add(UI.getCurrent().getElement());
+    elements.add(supplier.get());
     val results = new ArrayList<Element>();
     while (!elements.isEmpty()) {
       val element = elements.remove();
@@ -76,7 +88,7 @@ public class DefaultTestContext implements TestContext {
   public <T> List<T> select(Class<T> type) {
     val elements = new ArrayDeque<Element>();
     val predicate = elementTypePredicate(type);
-    elements.add(UI.getCurrent().getElement());
+    elements.add(supplier.get());
     val results = new ArrayList<T>();
     while (!elements.isEmpty()) {
       val element = elements.remove();
@@ -104,7 +116,7 @@ public class DefaultTestContext implements TestContext {
   public <T extends Component> Optional<T> selectFirst(Class<T> type) {
     val elements = new ArrayDeque<Element>();
     val predicate = elementTypePredicate(type);
-    elements.add(UI.getCurrent().getElement());
+    elements.add(supplier.get());
     while (!elements.isEmpty()) {
       val element = elements.remove();
       if (predicate.test(element)) {
@@ -122,7 +134,7 @@ public class DefaultTestContext implements TestContext {
     return new CssSelectorParser()
             .parse(selector)
             .plan(DefaultPlanContext.getInstance())
-            .evaluate(UI.getCurrent().getElement(), new ComponentHierarchyNodeAdapter())
+            .evaluate(supplier.get(), new ComponentHierarchyNodeAdapter())
             .stream()
             .flatMap(t -> t.getComponent().stream())
             .collect(Collectors.toList());
@@ -136,6 +148,15 @@ public class DefaultTestContext implements TestContext {
   @Override
   public <T> T resolve(Class<T> contextClass, Mode mode) {
     return Frames.resolveCurrentFrame().resolveContextVariable(contextClass, mode);
+  }
+
+  @Override
+  public <T extends Component> TestContext downTo(Class<T> contextClass) {
+    return new DefaultTestContext(() -> selectFirst(contextClass).get().getElement());
+  }
+
+  public <T extends Component> TestContext downTo(T type) {
+    return new DefaultTestContext(type::getElement);
   }
 
   private Predicate<Element> elementTypePredicate(Class<?>... types) {

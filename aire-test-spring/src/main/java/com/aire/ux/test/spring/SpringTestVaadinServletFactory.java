@@ -2,6 +2,7 @@ package com.aire.ux.test.spring;
 
 import com.aire.ux.test.InstantiatorFactory;
 import com.aire.ux.test.VaadinServletFactory;
+import com.aire.ux.test.vaadin.Frames;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.github.mvysny.kaributesting.v10.mock.MockInstantiator;
 import com.github.mvysny.kaributesting.v10.mock.MockedUI;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 import lombok.val;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 public class SpringTestVaadinServletFactory implements VaadinServletFactory {
 
@@ -25,7 +27,7 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
   public Supplier<UI> getUIFactory() {
     return () -> {
       try {
-        return AireSpringVaadinExtension.getApplicationContext().getBean(UI.class);
+        return SpringExtension.getApplicationContext(Frames.currentContext()).getBean(UI.class);
       } catch (Exception ex) {
         return new MockedUI();
       }
@@ -34,7 +36,7 @@ public class SpringTestVaadinServletFactory implements VaadinServletFactory {
 
   @Override
   public Optional<VaadinServlet> createServlet(Routes routes) {
-    val context = AireSpringVaadinExtension.getApplicationContext();
+    val context = SpringExtension.getApplicationContext(Frames.currentContext());
     return Optional.of(
         new MockSpringServlet(routes, context, () -> getUIFactory().get()) {
 

@@ -22,16 +22,15 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 @SpringJUnitWebConfig(classes = Cfg.class)
 @WithServlets(
     servlets =
-    @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/**/*"))
+        @ServletDefinition(type = DesignerResourceServlet.class, paths = "/aire/designer/**/*"))
 @DisabledIfEnvironmentVariable(named = "AIRE_SERVLET_TESTS", matches = "disabled")
 class DesignerResourceServletTest {
 
-  @Inject
-  private Client client;
+  @Inject private Client client;
 
   @Test
   void ensureResourceIsLoadableFromClassPath() {
-    val filePath = "ZEPHYR-INF/client/aire-designer/packages/iife/aire-designer.min.js";
+    val filePath = "ZEPHYR-INF/client/@aire-ux/mxgraph/tsconfig.json";
     assertNotNull(getClass().getClassLoader().getResource(filePath), "file must be loadable here");
   }
 
@@ -51,7 +50,5 @@ class DesignerResourceServletTest {
   }
 
   @ContextConfiguration
-  public static class Cfg {
-
-  }
+  public static class Cfg {}
 }

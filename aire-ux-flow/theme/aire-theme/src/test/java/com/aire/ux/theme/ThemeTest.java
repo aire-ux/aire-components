@@ -16,10 +16,12 @@ import com.aire.ux.theme.decorators.TestTheme;
 import com.aire.ux.theme.decorators.scenario1.MainView;
 import com.aire.ux.theme.decorators.scenario1.TestButton;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.test.context.ContextConfiguration;
 
 @EnableThemes
 @AireTest
+@Disabled
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
 @Routes(scanClassPackage = MainView.class)

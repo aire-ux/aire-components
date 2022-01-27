@@ -3,8 +3,8 @@ package com.aire.ux.test;
 import static com.aire.ux.test.Nodes.node;
 import static java.lang.String.format;
 
-import com.aire.ux.parsing.ast.Symbol;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.sunshower.arcus.ast.Symbol;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.val;
 
+@SuppressFBWarnings
 public class Node {
 
   static final String EMPTY_CONTENT = "".intern();
