@@ -49,4 +49,9 @@ public class Canvas extends HtmlContainer {
   public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
     return this.addListener(CanvasReadyEvent.class, listener);
   }
+
+  public void addVertexTemplate(VertexTemplate result) {
+//    getInvoker().invokeSynchronously();
+
+  }
 }

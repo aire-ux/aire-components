@@ -15,6 +15,7 @@ import lombok.val;
 
 public class JsonWriter implements DocumentWriter {
 
+  public static final String NULL = "null";
   private final TypeBinder binder;
   private final TypeInstantiator instantiator;
 
@@ -31,7 +32,7 @@ public class JsonWriter implements DocumentWriter {
 
     if (String.class.equals(type)) {
       if (value == null) {
-        outputStream.write("null".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(NULL.getBytes(StandardCharsets.UTF_8));
       } else {
         outputStream.write('"');
         outputStream.write(((String) value).getBytes(StandardCharsets.UTF_8));
@@ -143,7 +144,7 @@ public class JsonWriter implements DocumentWriter {
         if (v != null) {
           write(property.getType(), property.get(value), outputStream);
         } else {
-          write(outputStream, "null");
+          write(outputStream, NULL);
         }
       }
       if (iterator.hasNext()) {
@@ -162,7 +163,7 @@ public class JsonWriter implements DocumentWriter {
       outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));
       outputStream.write('"');
     } else {
-      write(outputStream, "null");
+      write(outputStream, NULL);
     }
   }
 
@@ -176,7 +177,7 @@ public class JsonWriter implements DocumentWriter {
       outputStream.write(((String) v).getBytes(StandardCharsets.UTF_8));
       outputStream.write('"');
     } else {
-      write(outputStream, "null");
+      write(outputStream, NULL);
     }
   }
 

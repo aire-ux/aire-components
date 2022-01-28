@@ -50,7 +50,8 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
     val rootElement = type.getAnnotation(RootElement.class);
     if (rootElement == null) {
       throw new IllegalArgumentException(
-          String.format("Type '%s' must be annotated by @RootElement to be registered and scanned", type));
+          String.format(
+              "Type '%s' must be annotated by @RootElement to be registered and scanned", type));
     }
     return (TypeDescriptor<T>)
         typeDescriptorCache.computeIfAbsent(

@@ -52,6 +52,10 @@ public class VertexTemplateBuilder {
     public VertexTemplateAttributeBuilder attribute(String attribute) {
       return new VertexTemplateAttributeBuilder().attribute(attribute);
     }
+
+    public VertexTemplate create() {
+      return template;
+    }
   }
 
   public class VertexTemplateAttributeBuilder {
