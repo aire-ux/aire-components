@@ -19,7 +19,7 @@ class ParametersTest {
 
   @Test
   void ensureParameterWorksForMultipleArguments() {
-    assertEquals("this.test($0,$1)",
-        Parameters.constructExpression("test", String.class, Integer.class));
+    assertEquals(
+        "this.test($0,$1)", Parameters.constructExpression("test", String.class, Integer.class));
   }
 }

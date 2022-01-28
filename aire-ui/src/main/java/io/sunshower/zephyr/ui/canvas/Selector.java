@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
@@ -17,12 +16,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@SuppressWarnings("PMD")
 public class Selector {
 
-  @Attribute
-  private String tagName;
+  @Attribute private String tagName;
 
-  @Attribute
-  private String selector;
-
+  @Attribute private String selector;
 }

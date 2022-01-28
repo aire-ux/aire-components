@@ -2,7 +2,6 @@ package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Condensation;
 import java.io.IOException;
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +17,5 @@ class BodyAttributeTest {
   }
 
   @Test
-  void ensureNodeAttributeWritesBodyCorrectly() throws IOException {
-  }
+  void ensureNodeAttributeWritesBodyCorrectly() throws IOException {}
 }

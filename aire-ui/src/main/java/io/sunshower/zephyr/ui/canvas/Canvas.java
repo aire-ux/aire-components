@@ -51,7 +51,7 @@ public class Canvas extends HtmlContainer {
   }
 
   public void addVertexTemplate(VertexTemplate result) {
-//    getInvoker().invokeSynchronously();
+    //    getInvoker().invokeSynchronously();
 
   }
 }

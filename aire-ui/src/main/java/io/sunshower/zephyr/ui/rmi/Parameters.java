@@ -5,8 +5,7 @@ import lombok.val;
 public class Parameters {
 
   @SuppressWarnings("unchecked")
-  public static String constructExpression(String methodName,
-      Class<?>... values) {
+  public static String constructExpression(String methodName, Class<?>... values) {
 
     val result = new StringBuilder("this.").append(methodName).append("(");
     for (int i = 0; i < values.length; i++) {
@@ -17,5 +16,4 @@ public class Parameters {
     }
     return result.append(")").toString();
   }
-
 }

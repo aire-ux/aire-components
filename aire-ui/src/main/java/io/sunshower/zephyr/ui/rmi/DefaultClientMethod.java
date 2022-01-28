@@ -13,13 +13,14 @@ import lombok.val;
 
 final class DefaultClientMethod<T> implements ClientMethod<T> {
 
-
   private final String name;
   private final String expression;
   private final DocumentWriter writer;
   private final Class<?>[] argumentTypes;
 
-  public DefaultClientMethod(@NonNull DocumentWriter writer, @NonNull String name,
+  public DefaultClientMethod(
+      @NonNull DocumentWriter writer,
+      @NonNull String name,
       @NonNull String expression,
       @NonNull Class<?>[] argumentTypes) {
     this.name = name;
@@ -29,21 +30,19 @@ final class DefaultClientMethod<T> implements ClientMethod<T> {
   }
 
   @Override
-  public PendingJavaScriptResult invoke(HasElement element,
-      Object... params) {
+  public PendingJavaScriptResult invoke(HasElement element, Object... params) {
     return element.getElement().callJsFunction(name, (Serializable[]) writeAll(params));
   }
 
   private T read(CompletableFuture<JsonValue> future) {
     return null;
-//    try {
-////      val result = future.get();
-//      return null;
-//    } catch (InterruptedException | ExecutionException ex) {
-//      throw new IllegalStateException(ex);
-//    }
+    //    try {
+    ////      val result = future.get();
+    //      return null;
+    //    } catch (InterruptedException | ExecutionException ex) {
+    //      throw new IllegalStateException(ex);
+    //    }
   }
-
 
   private String[] writeAll(Object[] params) {
     val result = new String[params.length];
@@ -61,11 +60,11 @@ final class DefaultClientMethod<T> implements ClientMethod<T> {
     return result;
   }
 
-
   private void validate(Object[] params) {
     if (params.length != argumentTypes.length) {
       throw new IllegalArgumentException(
-          String.format("Error: argument count mismatch.  Expected %d params, got %d",
+          String.format(
+              "Error: argument count mismatch.  Expected %d params, got %d",
               argumentTypes.length, params.length));
     }
 
@@ -77,9 +76,10 @@ final class DefaultClientMethod<T> implements ClientMethod<T> {
       val actualType = param.getClass();
       val expectedType = argumentTypes[i];
       if (!Reflect.isCompatible(expectedType, actualType)) {
-        throw new IllegalArgumentException(String.format(
-            "Error: expected parameter of type '%s', got a parameter of type '%s' (value: '%s')",
-            expectedType, actualType, param));
+        throw new IllegalArgumentException(
+            String.format(
+                "Error: expected parameter of type '%s', got a parameter of type '%s' (value: '%s')",
+                expectedType, actualType, param));
       }
     }
   }
