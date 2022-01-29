@@ -50,8 +50,12 @@ public class Canvas extends HtmlContainer {
     return this.addListener(CanvasReadyEvent.class, listener);
   }
 
-  public void addVertexTemplate(VertexTemplate result) {
-    //    getInvoker().invokeSynchronously();
-
+  /**
+   * @return the canvas model for this canvas
+   */
+  public final Model getModel() {
+    return model;
   }
+
+
 }

@@ -110,8 +110,8 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public void setVertices(Collection<Vertex> vertices) {
     this.vertices = new ArrayList<>(vertices);
-    commandManager.addPendingAction(
-        new CompositeAction(vertices.stream().map(AddVertexAction::new)));
+//    commandManager.addPendingAction(
+//        new CompositeAction(vertices.stream().map(AddVertexAction::new)));
   }
 
   @Override

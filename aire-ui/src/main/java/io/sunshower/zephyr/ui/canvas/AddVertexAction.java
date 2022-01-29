@@ -18,16 +18,14 @@ public class AddVertexAction implements Action {
   }
 
   @Override
-  public Action merge(Action other) {
-    return null;
+  public void undo(Model model) {
   }
 
   @Override
-  public void undo(Model model) {}
+  public void redo(Model model) {
+  }
 
   @Override
-  public void redo(Model model) {}
-
-  @Override
-  public void apply(Model model) {}
+  public void apply(Model model) {
+  }
 }

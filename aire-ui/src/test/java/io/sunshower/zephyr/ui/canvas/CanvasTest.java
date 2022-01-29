@@ -16,6 +16,7 @@ import com.aire.ux.test.View;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.AireUITest;
+import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.IOException;
 import lombok.val;
@@ -61,5 +62,14 @@ class CanvasTest {
     verify(spiedElement)
         .callJsFunction(eq("addVertexTemplate"), eq(writer.write(VertexTemplate.class, result)));
     Mockito.reset(ui);
+  }
+
+  @ViewTest
+  void ensureInvocationAPIResultsInActionAvailableWhenAppliedThroughAction(@View Canvas canvas,
+      @Context(mode = Mode.Spy) UI ui) {
+    val result = VertexTemplate.newBuilder("test").width(100f).height(100f).create();
+
+    val action = new AddVertexTemplateAction(() -> ui, result);
+    action.apply(canvas.getModel());
   }
 }

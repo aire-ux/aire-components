@@ -1,10 +1,9 @@
 import {css, customElement, html, LitElement, PropertyValues, query, state,} from "lit-element";
-import {Graph} from "@antv/x6";
-import {Vertex} from "./cell";
-import {Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
+import {Graph, Node} from "@antv/x6";
+import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
+import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
 
 
-// @ts-ignore
 @customElement('aire-canvas')
 @Remotable
 export class Canvas extends LitElement {
@@ -46,23 +45,22 @@ export class Canvas extends LitElement {
     }
   }
 
+
   @Remote
-  public addVertex(@Receive(Vertex) vertex: Vertex) {
-    // @ts-ignore
-    this.graph?.addNode(vertex as any);
+  public addVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
+    this.graph!.addNodes(vertices);
   }
 
   @Remote
-  public addVertices(@Receive(Vertex) vertices: Vertex[]): void {
-    // @ts-ignore
-    this.graph?.addNodes(vertices);
+  public setVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
+    this.graph!.addNodes(vertices);
   }
-
 
   @Remote
-  registerVertexTemplates(@Receive(VertexTemplate) templates: VertexTemplate[]): void {
-    Graph.registerNode(templates);
+  public addVertexTemplate(@Receive(Dynamic) template: VertexTemplate): Node.Definition {
+    return Graph.registerNode(template.name, template as any, true);
   }
+
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
