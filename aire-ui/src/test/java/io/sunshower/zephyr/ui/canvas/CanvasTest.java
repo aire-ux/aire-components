@@ -65,8 +65,8 @@ class CanvasTest {
   }
 
   @ViewTest
-  void ensureInvocationAPIResultsInActionAvailableWhenAppliedThroughAction(@View Canvas canvas,
-      @Context(mode = Mode.Spy) UI ui) {
+  void ensureInvocationAPIResultsInActionAvailableWhenAppliedThroughAction(
+      @View Canvas canvas, @Context(mode = Mode.Spy) UI ui) {
     val result = VertexTemplate.newBuilder("test").width(100f).height(100f).create();
 
     val action = new AddVertexTemplateAction(() -> ui, result);

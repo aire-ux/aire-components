@@ -50,12 +50,8 @@ public class Canvas extends HtmlContainer {
     return this.addListener(CanvasReadyEvent.class, listener);
   }
 
-  /**
-   * @return the canvas model for this canvas
-   */
+  /** @return the canvas model for this canvas */
   public final Model getModel() {
     return model;
   }
-
-
 }

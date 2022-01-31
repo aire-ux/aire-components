@@ -12,22 +12,16 @@ public class AddVerticesAction extends AbstractClientMethodBoundAction {
   static final String METHOD_NAME = "addVertices";
   private final List<Vertex> vertices;
 
-
   public AddVerticesAction(Supplier<UI> supplier, List<Vertex> vertices) {
     super(NAME, supplier, METHOD_NAME, String.class, List.class);
     this.vertices = vertices;
   }
 
+  @Override
+  public void undo(Model model) {}
 
   @Override
-  public void undo(Model model) {
-
-  }
-
-  @Override
-  public void redo(Model model) {
-
-  }
+  public void redo(Model model) {}
 
   @Override
   public void apply(Model model) {

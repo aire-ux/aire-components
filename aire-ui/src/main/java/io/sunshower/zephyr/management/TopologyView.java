@@ -25,8 +25,8 @@ import lombok.val;
 
 @Breadcrumb(name = "Topology", host = MainView.class)
 @Route(value = "modules/topology", layout = PluginTabView.class)
-public class TopologyView extends VerticalLayout implements
-    ComponentEventListener<CanvasReadyEvent> {
+public class TopologyView extends VerticalLayout
+    implements ComponentEventListener<CanvasReadyEvent> {
 
   private final Model model;
   private final Zephyr zephyr;
@@ -59,10 +59,14 @@ public class TopologyView extends VerticalLayout implements
             .attribute("image")
             .property("xlink:href")
             .string("https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png")
-            .property("width").number(16)
-            .property("height").number(16)
-            .property("x").number(12)
-            .property("y").number(12)
+            .property("width")
+            .number(16)
+            .property("height")
+            .number(16)
+            .property("x")
+            .number(12)
+            .property("y")
+            .number(12)
             .tagName("image")
             .selector("image")
             .create();
@@ -94,8 +98,7 @@ public class TopologyView extends VerticalLayout implements
   }
 
   private List<Vertex> convertModulesToVertices() {
-    return zephyr.getPluginCoordinates()
-        .stream()
+    return zephyr.getPluginCoordinates().stream()
         .map(this::convertModuleToVertex)
         .collect(Collectors.toList());
   }

@@ -22,11 +22,8 @@ public class RemoveVertexTemplateAction extends AbstractClientMethodBoundAction 
   }
 
   @Override
-  public void redo(Model model) {
-  }
+  public void redo(Model model) {}
 
   @Override
-  public void apply(Model model) {
-
-  }
+  public void apply(Model model) {}
 }
