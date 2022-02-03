@@ -9,7 +9,6 @@ public final class Path implements Iterable<Point> {
 
   private final List<Point> points;
 
-
   Path(final Collection<Point> points) {
     this.points = List.copyOf(points);
   }

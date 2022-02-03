@@ -21,9 +21,7 @@ public interface Selector {
    */
   Plan plan(PlanContext context);
 
-  /**
-   * @return the syntax tree that forms the base of this selector
-   */
+  /** @return the syntax tree that forms the base of this selector */
   AbstractSyntaxTree<Symbol, Token> getSyntaxTree();
 
   /**

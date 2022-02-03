@@ -210,14 +210,14 @@ public class DefaultTypeBinder implements TypeBinder {
     val currentDescriptor = descriptorFor(type);
     for (val child : node.getChildren()) {
       switch (typeOf(child)) {
-        /** at this point we're at the identifier */
+          /** at this point we're at the identifier */
         case String:
           readValue(result, currentDescriptor, child, child.getValue());
           break;
         case Object:
           bind(type, result, child);
           break;
-        //          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
+          //          readObject(result, child, currentDescriptor.propertyNamed(Mode.Read, "name"));
         default:
           throw new UnsupportedOperationException();
       }
@@ -301,8 +301,6 @@ public class DefaultTypeBinder implements TypeBinder {
       val child = requireNonNull(node.getChild(0));
       if (child.hasChildren() && type == null && snd == null) {
         return (T) readDirect(child);
-      } else {
-        return valueOf(child);
       }
     }
     if (snd != null) {
@@ -317,9 +315,16 @@ public class DefaultTypeBinder implements TypeBinder {
     if (collectionType != null) {
       // we're a primitive
       val child = requireNonNull(node.getChild(0));
+      if (child.getSymbol() == JsonToken.String) {
+        return valueOf(child);
+      }
       val argument = valueOf(child);
       return (T) collectionType.convert((Double) argument);
     } else {
+      if (actualType != null && actualType.isInterface()) {
+        val child = requireNonNull(node.getChild(0));
+        return valueOf(child);
+      }
       val instance = instantiate(actualType);
       bind((Class) actualType, instance, node);
       return instance;

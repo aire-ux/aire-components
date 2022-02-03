@@ -1,7 +1,3 @@
 package io.sunshower.zephyr.management;
 
-public class DefaultTemplates {
-
-
-
-}
+public class DefaultTemplates {}

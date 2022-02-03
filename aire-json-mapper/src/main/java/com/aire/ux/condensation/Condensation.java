@@ -6,9 +6,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
+import java.util.function.Supplier;
 import lombok.NonNull;
 import lombok.val;
 
@@ -16,6 +18,7 @@ import lombok.val;
 public class Condensation {
 
   private final String format;
+  private final Parser parser;
   private final TypeBinder typeBinder;
   private final DocumentWriter writer;
   private final PropertyScanner scanner;
@@ -38,6 +41,7 @@ public class Condensation {
     } else {
       this.typeBinder = new DefaultTypeBinder(scanner);
     }
+    this.parser = getParserFactory(format).newParser();
     this.writer = getWriterFactory(format).newWriter(typeBinder, instantiator);
   }
 
@@ -100,5 +104,12 @@ public class Condensation {
 
   public DocumentWriter getWriter() {
     return writer;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T, U extends Collection<? super T>> U readAll(
+      Class<T> type, Supplier<U> instantiator, CharSequence s) {
+    val document = parser.parse(s);
+    return document.readAll(type, instantiator, typeBinder);
   }
 }

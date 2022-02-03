@@ -4,11 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
+import java.util.ArrayList;
 import java.util.Map;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 class CondensationTest {
+
+  @Test
+  void ensureReadingCollectionWorks() {
+    @RootElement
+    class A {
+
+      @Attribute String name;
+    }
+    val condensation = Condensation.create("json");
+    ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
+    val result = condensation.readAll(A.class, ArrayList::new, "[{\"name\":\"josiah\"}]");
+    assertEquals(result.size(), 1);
+    assertEquals(result.get(0).name, "josiah");
+  }
 
   @Test
   void ensureBinderWorks() {

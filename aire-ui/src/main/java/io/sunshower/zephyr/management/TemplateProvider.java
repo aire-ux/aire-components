@@ -1,5 +1,3 @@
 package io.sunshower.zephyr.management;
 
-public interface TemplateProvider {
-
-}
+public interface TemplateProvider {}

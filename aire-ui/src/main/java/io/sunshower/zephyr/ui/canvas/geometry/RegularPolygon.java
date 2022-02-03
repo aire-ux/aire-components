@@ -1,7 +1,5 @@
 package io.sunshower.zephyr.ui.canvas.geometry;
 
-import static java.lang.Math.toRadians;
-
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.val;
@@ -20,7 +18,6 @@ public class RegularPolygon {
     this.sides = sides;
   }
 
-
   public Path unit() {
     return generate(1d);
   }
@@ -31,14 +28,13 @@ public class RegularPolygon {
 
   public Path generate(Point center, double circumradius) {
     val theta = 360d / sides;
-    return new Path(IntStream.range(0, sides)
-        .mapToObj(
-            i ->
-                new Point(
-                    center.x + circumradius * Math.sin((i * theta)),
-                    center.y + circumradius * Math.cos((i * theta))))
-        .collect(Collectors.toList()));
+    return new Path(
+        IntStream.range(0, sides)
+            .mapToObj(
+                i ->
+                    new Point(
+                        center.x + circumradius * Math.sin((i * theta)),
+                        center.y + circumradius * Math.cos((i * theta))))
+            .collect(Collectors.toList()));
   }
-
-
 }
