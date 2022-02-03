@@ -11,7 +11,6 @@ import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
-import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
@@ -30,9 +29,8 @@ public class TopologyView extends VerticalLayout
 
   private final Model model;
   private final Zephyr zephyr;
-  private final VertexTemplate template;
-  private final Registration onCanvasReadyRegistration;
   private Canvas canvas;
+  private final Registration onCanvasReadyRegistration;
 
   @Inject
   public TopologyView(final Zephyr zephyr) {
@@ -43,33 +41,7 @@ public class TopologyView extends VerticalLayout
     createGraph();
     add(canvas);
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
-    template =
-        VertexTemplate.newBuilder("test")
-            .width(100f)
-            .height(100f)
-            .attribute("body")
-            .property("stroke")
-            .hex("5F95FF")
-            .property("strokeWidth")
-            .number(1)
-            .property("fill")
-            .string("rgba(95,149,255,0.05)")
-            .tagName("rect")
-            .selector("body")
-            .attribute("image")
-            .property("xlink:href")
-            .string("https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png")
-            .property("width")
-            .number(16)
-            .property("height")
-            .number(16)
-            .property("x")
-            .number(12)
-            .property("y")
-            .number(12)
-            .tagName("image")
-            .selector("image")
-            .create();
+
   }
 
   private void createGraph() {
@@ -93,8 +65,8 @@ public class TopologyView extends VerticalLayout
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
-    new AddVertexTemplateAction(UI::getCurrent, template).apply(model);
-    new AddVerticesAction(UI::getCurrent, convertModulesToVertices()).apply(model);
+//    new AddVertexTemplateAction(UI::getCurrent, template).apply(model);
+//    new AddVerticesAction(UI::getCurrent, convertModulesToVertices()).apply(model);
   }
 
   private List<Vertex> convertModulesToVertices() {
@@ -107,7 +79,6 @@ public class TopologyView extends VerticalLayout
     val vertex = new Vertex();
     vertex.setX(100f);
     vertex.setY(100f);
-    vertex.setTemplate(template);
     return vertex;
   }
 

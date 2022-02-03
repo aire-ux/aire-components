@@ -3,6 +3,7 @@ package io.sunshower.zephyr.ui.canvas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aire.ux.condensation.Condensation;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,66 @@ class VertexTemplateTest {
             .create();
     assertEquals(2, result.getAttributes().size());
     assertEquals(2, result.getSelectors().size());
+  }
+
+  @Test
+  @SneakyThrows
+  void ensureTemplateIsReadableFromJson() {
+    val document = """
+        {
+            "width": 200,
+            "height": 60,
+            "attrs": {
+              "body": {
+                "stroke": "#5F95FF",
+                "strokeWidth": 1,
+                "fill": "rgba(95,149,255,0.05)"
+              },
+              "image": {
+                "xlink:href":
+                  "https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png",
+                "width": 16,
+                "height": 16,
+                "x": 12,
+                "y": 12
+              },
+              "title": {
+                "text": "Node",
+                "refX": 40,
+                "refY": 14,
+                "fill": "rgba(0,0,0,0.85)",
+                "fontSize": 12,
+                "text-anchor": "start"
+              },
+              "text": {
+                "text": "this is content text",
+                "refX": 40,
+                "refY": 38,
+                "fontSize": 12,
+                "fill": "rgba(0,0,0,0.6)",
+                "text-anchor": "start"
+              }
+            },
+            "markup": [
+              {
+                "tagName": "rect",
+                "selector": "body"
+              },
+              {
+                "tagName": "image",
+                "selector": "image"
+              },
+              {
+                "tagName": "text",
+                "selector": "title"
+              },
+              {
+                "tagName": "text",
+                "selector": "text"
+              }
+            ]
+          }
+                """;
+    condensation.read(VertexTemplate.class, document);
   }
 }

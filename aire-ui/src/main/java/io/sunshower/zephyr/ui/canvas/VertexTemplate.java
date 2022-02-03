@@ -21,10 +21,10 @@ public class VertexTemplate {
   @Attribute private String name;
 
   /** the width of nodes struck from this template */
-  @Attribute private float width;
+  @Attribute private double width;
 
   /** the height of nodes struck from this template */
-  @Attribute private float height;
+  @Attribute private double height;
 
   @Element(alias = @Alias(read = "attrs", write = "attrs"))
   private Map<String, Map<String, Serializable>> attributes;

@@ -22,6 +22,7 @@ import lombok.val;
 @Routes(scanClassPackage = ModuleGrid.class)
 class ModuleGridTest {
 
+
   @ViewTest
   void ensureModuleGridIsInjectable(
       @Select("a[href='zephyr/management/modules/list']") RouterLink tag,
@@ -52,6 +53,7 @@ class ModuleGridTest {
     val g = $.selectFirst(Grid.class).get();
     assertEquals(g.getDataProvider().size(new Query()), 1);
   }
+
 
   @ViewTest
   void ensureModuleGridIsInjectable(@View ModuleGrid grid) {

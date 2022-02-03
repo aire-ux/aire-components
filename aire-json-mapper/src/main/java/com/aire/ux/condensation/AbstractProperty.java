@@ -3,8 +3,6 @@ package com.aire.ux.condensation;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.lang.tuple.Pair;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -32,9 +30,13 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   private final T member;
-  /** the type of the host-class */
+  /**
+   * the type of the host-class
+   */
   private final Class<?> host;
-  /** the read-alias of this property */
+  /**
+   * the read-alias of this property
+   */
   private final String readAlias;
 
   private final String writeAlias;
@@ -93,12 +95,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  public boolean isPrimitive() {
-    val type = getType();
-    return Property.isPrimitive(type);
-  }
-
-  @Override
   public boolean isConvertable() {
     return converter != null;
   }
@@ -130,22 +126,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <U> Class<U> getComponentType() {
-    if (isArray()) {
-      return (Class<U>) getType().getComponentType();
-    }
-    if (isCollection()) {
-      val parameterizedType = (ParameterizedType) getGenericType();
-      val typeArgs = parameterizedType.getActualTypeArguments();
-      if (typeArgs != null && typeArgs.length > 0) {
-        return (Class<U>) typeArgs[0];
-      }
-    }
-    return getType();
-  }
-
-  @Override
   public String getReadAlias() {
     return readAlias;
   }
@@ -155,13 +135,4 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
     return writeAlias;
   }
 
-  @Override
-  public boolean isArray() {
-    return getType().isArray();
-  }
-
-  @Override
-  public boolean isCollection() {
-    return Collection.class.isAssignableFrom(getType());
-  }
 }

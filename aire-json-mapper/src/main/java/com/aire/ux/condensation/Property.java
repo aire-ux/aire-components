@@ -1,7 +1,11 @@
 package com.aire.ux.condensation;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Map;
+import lombok.val;
 
 public interface Property<T extends AccessibleObject> {
 
@@ -16,7 +20,10 @@ public interface Property<T extends AccessibleObject> {
         || Short.class.equals(type);
   }
 
-  boolean isPrimitive();
+  default boolean isPrimitive() {
+    val type = getType();
+    return isPrimitive(type);
+  }
 
   boolean isConvertable();
 
@@ -55,18 +62,28 @@ public interface Property<T extends AccessibleObject> {
 
   <T> Type getGenericType();
 
-  /** @return true if the underlying type, returned by <code>getType()</code>is an array */
-  boolean isArray();
+  default boolean isArray() {
+    return getType().isArray();
+  }
 
-  /** @return true if the underlying type, returned by <code>getType()</code> is a collection */
-  boolean isCollection();
+  default boolean isCollection() {
+    return Collection.class.isAssignableFrom(getType());
+  }
 
-  /**
-   * @param <U> the component-type. If this is an array or a collection, this returns the type of
-   *     the contents, otherwise it returns <code>getType()</code>
-   * @return the type of the contents of this property if it is an array or collection
-   */
-  <U> Class<U> getComponentType();
+  @SuppressWarnings("unchecked")
+  default <U> Class<U> getComponentType() {
+    if (isArray()) {
+      return (Class<U>) getType().getComponentType();
+    }
+    if (isCollection()) {
+      val parameterizedType = (ParameterizedType) getGenericType();
+      val typeArgs = parameterizedType.getActualTypeArguments();
+      if (typeArgs != null && typeArgs.length > 0) {
+        return (Class<U>) typeArgs[0];
+      }
+    }
+    return getType();
+  }
 
   /**
    * @return the physical name of the member if this is a field such as {@code private String
@@ -113,6 +130,10 @@ public interface Property<T extends AccessibleObject> {
    * @return the value
    */
   <T, U> T get(U host);
+
+  default boolean isMap() {
+    return Map.class.isAssignableFrom(getType());
+  }
 
   enum Mode {
     Read,
