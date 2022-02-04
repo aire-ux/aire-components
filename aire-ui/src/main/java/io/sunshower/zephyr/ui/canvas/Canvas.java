@@ -26,6 +26,10 @@ public class Canvas extends HtmlContainer {
   private Model model;
   private CommandManager commandManager;
 
+  public Canvas() {
+    setModel(new SharedGraphModel());
+  }
+
   public Model setModel(@NonNull final Model model) {
     val m = this.model;
     this.model = model;
@@ -50,7 +54,9 @@ public class Canvas extends HtmlContainer {
     return this.addListener(CanvasReadyEvent.class, listener);
   }
 
-  /** @return the canvas model for this canvas */
+  /**
+   * @return the canvas model for this canvas
+   */
   public final Model getModel() {
     return model;
   }

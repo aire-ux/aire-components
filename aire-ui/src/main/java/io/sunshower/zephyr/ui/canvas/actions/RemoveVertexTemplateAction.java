@@ -1,11 +1,12 @@
 package io.sunshower.zephyr.ui.canvas.actions;
 
 import com.vaadin.flow.component.UI;
+import io.sunshower.zephyr.ui.canvas.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import java.util.function.Supplier;
 
-public class RemoveVertexTemplateAction extends AbstractClientMethodBoundAction {
+public class RemoveVertexTemplateAction extends AbstractClientMethodBoundAction<VertexTemplate> {
 
   static final String NAME = "actions:vertices:templates:remove";
   static final String METHOD_NAME = "removeVertexTemplate";
@@ -25,5 +26,7 @@ public class RemoveVertexTemplateAction extends AbstractClientMethodBoundAction 
   public void redo(Model model) {}
 
   @Override
-  public void apply(Model model) {}
+  public ClientResult<VertexTemplate> apply(Model model) {
+    return null;
+  }
 }

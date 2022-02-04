@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.function.Supplier;
 import lombok.NonNull;
 
-public abstract class AbstractClientMethodBoundAction implements Action {
+public abstract class AbstractClientMethodBoundAction<T> implements Action<T> {
 
   protected @NonNull final ClientMethod<Serializable> method;
   @NonNull private final String name;
