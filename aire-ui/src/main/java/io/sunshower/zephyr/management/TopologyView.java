@@ -7,15 +7,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.canvas.Canvas;
+import io.sunshower.zephyr.ui.canvas.CanvasClickedEvent;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
+import io.sunshower.zephyr.ui.canvas.actions.AddVertexAction;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
-import io.zephyr.kernel.Coordinate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.val;
 
@@ -26,8 +24,8 @@ public class TopologyView extends VerticalLayout
 
   private final Model model;
   private final Zephyr zephyr;
-  private Canvas canvas;
   private final Registration onCanvasReadyRegistration;
+  private Canvas canvas;
 
   @Inject
   public TopologyView(final Zephyr zephyr) {
@@ -35,47 +33,22 @@ public class TopologyView extends VerticalLayout
     this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
-    createGraph();
     add(canvas);
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
+    canvas.addOnCanvasClickedEventListener((ComponentEventListener<CanvasClickedEvent>) event -> {
+      val vertex = new Vertex();
+      val click = event.getValue();
+      vertex.setX(click.getX());
+      vertex.setY(click.getY());
+      vertex.setWidth(100d);
+      vertex.setHeight(100d);
+      new AddVertexAction(vertex).apply(model);
+    });
   }
 
-  private void createGraph() {
-    val vertices = new ArrayList<Vertex>();
-    int i = 0;
-    for (val coordinate : zephyr.getPluginCoordinates()) {
-      vertices.add(vertexFrom(coordinate, ++i));
-    }
-    model.setVertices(vertices);
-  }
-
-  private Vertex vertexFrom(Coordinate coordinate, int i) {
-    val vertex = new Vertex();
-    vertex.setWidth(100f);
-    vertex.setHeight(100f);
-    vertex.setX(i * 100f);
-    vertex.setY(i * 100f);
-    vertex.setLabel(coordinate.toCanonicalForm());
-    return vertex;
-  }
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
-    //    new AddVertexTemplateAction(UI::getCurrent, template).apply(model);
-    //    new AddVerticesAction(UI::getCurrent, convertModulesToVertices()).apply(model);
-  }
-
-  private List<Vertex> convertModulesToVertices() {
-    return zephyr.getPluginCoordinates().stream()
-        .map(this::convertModuleToVertex)
-        .collect(Collectors.toList());
-  }
-
-  private Vertex convertModuleToVertex(Coordinate coordinate) {
-    val vertex = new Vertex();
-    vertex.setX(100f);
-    vertex.setY(100f);
-    return vertex;
   }
 
   @Override

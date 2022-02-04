@@ -1,4 +1,4 @@
-import {css, customElement, html, LitElement, PropertyValues, query, state,} from "lit-element";
+import {css, customElement, LitElement, PropertyValues,} from "lit-element";
 import {Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
@@ -10,41 +10,37 @@ export class Canvas extends LitElement {
 
   private graph: Graph | undefined;
 
+  // language=CSS
   static styles = css`
-    :host {
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      display: flex;
-    }
-    div.container {
-      flex: 1;
-    }
+
   `;
 
 
-  @state()
-  @query('div.container')
-  private container: HTMLDivElement | undefined;
+  protected createRenderRoot(): Element | ShadowRoot {
+    this.style.width = '100%';
+    this.style.height = '100%';
+    this.style.border = '1px solid red';
+    return this;
+  }
 
   private createGraph(): void {
     if (this.graph) {
       return;
     }
-    const container = this.container;
-    if (container) {
-      const graph = new Graph({
-        panning: true,
-        container: container,
-        grid: {
-          size: 10,
-          visible: true
-        }
-      });
-      this.graph = graph;
-    }
+    const graph = new Graph({
+      container: this,
+      preventDefaultContextMenu: false,
+      grid: true
+    });
+    this.graph = graph;
+    this.registerListeners(graph);
+    this.graph.addNode({x: 200, y: 200, width: 200, height: 200});
   }
 
+  @Remote
+  public addVertex(@Receive(Dynamic) vertex: Node.Metadata): void {
+    this.graph!.addNode(vertex);
+  }
 
   @Remote
   public addVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
@@ -66,14 +62,19 @@ export class Canvas extends LitElement {
     super.firstUpdated(_changedProperties);
     this.createGraph();
     this.dispatchEvent(new CustomEvent('canvas-ready'));
-
-
   }
 
-  render() {
-    return html`
-      <div class="container">
-      </div>
-    `
+  private registerListeners(graph: Graph) {
+    graph.on('blank:click', (event) => {
+      this.dispatchEvent(new CustomEvent('canvas-clicked', {
+        detail: {
+          click: {
+            x: event.x,
+            y: event.y
+          }
+        }
+      }));
+    });
+
   }
 }

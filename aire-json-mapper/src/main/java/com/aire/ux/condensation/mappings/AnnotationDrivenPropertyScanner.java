@@ -4,9 +4,7 @@ import com.aire.ux.condensation.PropertyScanner;
 import com.aire.ux.condensation.RootElement;
 import com.aire.ux.condensation.TypeDescriptor;
 import com.aire.ux.condensation.TypeInstantiator;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -34,13 +32,7 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
   public AnnotationDrivenPropertyScanner(
       int cacheSize, @NonNull final TypeInstantiator instantiator) {
     this.typeInstantiator = instantiator;
-    this.typeDescriptorCache =
-        new LinkedHashMap<>() {
-          @Override
-          protected boolean removeEldestEntry(Entry<TypeDescriptorKey, TypeDescriptor<?>> eldest) {
-            return size() >= cacheSize;
-          }
-        };
+    this.typeDescriptorCache = new LRUCache<>(DEFAULT_CACHE_SIZE);
   }
 
   @Override
@@ -58,9 +50,9 @@ public class AnnotationDrivenPropertyScanner implements PropertyScanner {
             new TypeDescriptorKey(type, traverseHierarchy, includeInterfaces),
             key ->
                 new DelegatingPropertyScanner(
-                        getTypeInstantiator(),
-                        new FieldAnnotationPropertyScanningStrategy(typeInstantiator),
-                        new MethodAnnotationPropertyScanningStrategy(typeInstantiator))
+                    getTypeInstantiator(),
+                    new FieldAnnotationPropertyScanningStrategy(typeInstantiator),
+                    new MethodAnnotationPropertyScanningStrategy(typeInstantiator))
                     .scan(type, traverseHierarchy, includeInterfaces));
   }
 

@@ -110,6 +110,10 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   @SuppressWarnings("unchecked")
   public <R, S> R convert(S value) {
     if (converter == null) {
+      if(value == null) {
+        // map null to null
+        return null;
+      }
       val type = isArray() || isCollection() ? getComponentType() : getType();
       val converter = (Function<S, R>) defaultConverters.get(Pair.of(value.getClass(), type));
       if (converter != null) {

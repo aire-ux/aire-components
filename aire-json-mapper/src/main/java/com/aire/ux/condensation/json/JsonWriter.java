@@ -30,7 +30,15 @@ public class JsonWriter implements DocumentWriter {
       @NonNull Class<T> type, @NonNull T value, @NonNull OutputStream outputStream)
       throws IOException {
 
-    if (String.class.equals(type)) {
+    if (Property.isConvertible(type, String.class)) {
+      if (value == null) {
+        outputStream.write(NULL.getBytes(StandardCharsets.UTF_8));
+      } else {
+        outputStream.write('"');
+        outputStream.write(Property.convert(value, String.class).getBytes(StandardCharsets.UTF_8));
+        outputStream.write('"');
+      }
+    } else if (String.class.equals(type)) {
       if (value == null) {
         outputStream.write(NULL.getBytes(StandardCharsets.UTF_8));
       } else {

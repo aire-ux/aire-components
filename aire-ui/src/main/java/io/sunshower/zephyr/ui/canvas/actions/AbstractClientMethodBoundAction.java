@@ -10,11 +10,15 @@ import lombok.NonNull;
 
 public abstract class AbstractClientMethodBoundAction<T> implements Action<T> {
 
-  protected @NonNull final ClientMethod<Serializable> method;
-  @NonNull private final String name;
-  @NonNull private final Supplier<UI> supplier;
+  protected @NonNull
+  final ClientMethod<Serializable> method;
+  @NonNull
+  private final String name;
+  @NonNull
+  private final Supplier<UI> supplier;
 
-  @NonNull private final Class<? extends Serializable> returnType;
+  @NonNull
+  private final Class<? extends Serializable> returnType;
 
   protected AbstractClientMethodBoundAction(
       final String name,
@@ -26,6 +30,14 @@ public abstract class AbstractClientMethodBoundAction<T> implements Action<T> {
     this.supplier = supplier;
     this.returnType = returnType;
     this.method = ClientMethods.withUiSupplier(supplier).get(methodName, argumentTypes);
+  }
+
+  protected AbstractClientMethodBoundAction(
+      final String name,
+      final String methodName,
+      final Class<? extends Serializable> returnType,
+      final Class<?>... argumentTypes) {
+    this(name, UI::getCurrent, methodName, returnType, argumentTypes);
   }
 
   @Override

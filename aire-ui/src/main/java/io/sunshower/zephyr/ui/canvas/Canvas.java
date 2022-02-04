@@ -51,7 +51,11 @@ public class Canvas extends HtmlContainer {
   }
 
   public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
-    return this.addListener(CanvasReadyEvent.class, listener);
+    return addListener(CanvasReadyEvent.class, listener);
+  }
+
+  public Registration addOnCanvasClickedEventListener(ComponentEventListener<CanvasClickedEvent> listener) {
+    return addListener(CanvasClickedEvent.class, listener);
   }
 
   /**
