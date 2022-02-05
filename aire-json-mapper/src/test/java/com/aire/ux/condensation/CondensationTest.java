@@ -22,14 +22,12 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute
-      String name;
+      @Attribute String name;
     }
     val condensation = Condensation.create("json");
     val list = List.of(new A("a"), new A("b"));
     val a = condensation.getWriter().writeAll(A.class, list);
     System.out.println(a);
-
   }
 
   @Test
@@ -37,8 +35,7 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute
-      String name;
+      @Attribute String name;
     }
     val condensation = Condensation.create("json");
     ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
@@ -52,8 +49,7 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute
-      String name;
+      @Attribute String name;
     }
     val condensation = Condensation.create("json");
     ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
@@ -66,7 +62,7 @@ class CondensationTest {
 
     Condensation condensation = Condensation.create("json");
     double[] values = condensation.read(double[].class, "[1,2,3,4]");
-    assertArrayEquals(new double[]{1d, 2d, 3d, 4d}, values);
+    assertArrayEquals(new double[] {1d, 2d, 3d, 4d}, values);
   }
 
   @Test
@@ -74,7 +70,7 @@ class CondensationTest {
 
     Condensation condensation = Condensation.create("json");
     int[] values = condensation.read(int[].class, "[1,2,3,4]");
-    assertArrayEquals(new int[]{1, 2, 3, 4}, values);
+    assertArrayEquals(new int[] {1, 2, 3, 4}, values);
   }
 
   @Test
@@ -82,8 +78,7 @@ class CondensationTest {
     @RootElement
     class KV {
 
-      @Element
-      Map<String, Integer> elements;
+      @Element Map<String, Integer> elements;
     }
 
     val value = "{" + "\"elements\": {" + "\"1\": 1," + "\"2\": 3}" + "} ";

@@ -17,7 +17,6 @@ public @interface Argument {
 
   boolean collection() default false;
 
-
   Class<?> type();
 
   Class<? extends Collection> collectionType() default List.class;

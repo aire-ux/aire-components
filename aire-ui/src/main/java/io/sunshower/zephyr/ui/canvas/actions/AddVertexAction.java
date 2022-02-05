@@ -4,7 +4,7 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
-import io.sunshower.zephyr.ui.ClientResult;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import java.util.function.Supplier;
@@ -35,18 +35,15 @@ public class AddVertexAction extends AbstractClientMethodBoundAction<Vertex> {
   }
 
   @Override
-  public void undo(Model model) {
-  }
+  public void undo(Model model) {}
 
   @Override
-  public void redo(Model model) {
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<Vertex> apply(Model model) {
     model.getCommandManager().apply(this);
     model.add(vertex);
-    return ClientResult.create(Vertex.class,
-        method.invoke(model.getHost(), vertex));
+    return ClientResult.create(Vertex.class, method.invoke(model.getHost(), vertex));
   }
 }

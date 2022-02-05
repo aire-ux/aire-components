@@ -17,16 +17,12 @@ import org.springframework.aop.support.AopUtils;
 
 public final class ClientMethods {
 
-  @NonNull
-  private final DocumentWriter writer;
-  @NonNull
-  private final Condensation condensation;
+  @NonNull private final DocumentWriter writer;
+  @NonNull private final Condensation condensation;
 
-  @NonNull
-  private final Supplier<UI> uiSupplier;
+  @NonNull private final Supplier<UI> uiSupplier;
 
-  @NonNull
-  private final Map<String, ClientMethod<?>> internmap;
+  @NonNull private final Map<String, ClientMethod<?>> internmap;
 
   public ClientMethods(final Supplier<UI> uiSupplier) {
     this(uiSupplier, Condensation.create("json"));
@@ -62,8 +58,8 @@ public final class ClientMethods {
 
   public <R, T> Action<T> construct(Class<? extends Action<T>> action, Object... arguments) {
     try {
-      val argumentTypes = collectAnnotatedArguments(action).orElseGet(
-          () -> collectArgumentTypes(arguments));
+      val argumentTypes =
+          collectAnnotatedArguments(action).orElseGet(() -> collectArgumentTypes(arguments));
       val ctor = action.getDeclaredConstructor(argumentTypes);
       val args = new Object[arguments.length + 1];
       args[0] = uiSupplier;

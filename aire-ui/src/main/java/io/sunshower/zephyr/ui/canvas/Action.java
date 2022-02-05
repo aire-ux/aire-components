@@ -1,6 +1,6 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import io.sunshower.zephyr.ui.ClientResult;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 
 public interface Action<T> {
   String getKey();

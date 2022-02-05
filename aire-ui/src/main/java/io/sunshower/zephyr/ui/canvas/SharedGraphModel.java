@@ -17,14 +17,10 @@ import lombok.val;
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /**
-   * constants
-   */
+  /** constants */
   static final String format = "json";
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas host;
 
   private List<Edge> edges;

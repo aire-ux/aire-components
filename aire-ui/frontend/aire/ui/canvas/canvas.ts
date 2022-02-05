@@ -2,7 +2,7 @@ import {css, customElement, LitElement, PropertyValues,} from "lit-element";
 import {Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
-import {CircularLayout, DagreLayout} from "@antv/layout";
+import {CircularLayout} from "@antv/layout";
 
 
 @Remotable
@@ -49,6 +49,13 @@ export class Canvas extends LitElement {
   @Remote
   public addVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
     this.graph!.addNodes(vertices);
+    const layout = new CircularLayout();
+    const model = {
+      nodes: this.graph?.getNodes(),
+      edges: this.graph?.getEdges()
+    }
+    this.graph = this.graph!.fromJSON(layout.layout(model as any));
+    this.graph.centerContent();
   }
 
   @Remote

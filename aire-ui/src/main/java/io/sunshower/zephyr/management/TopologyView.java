@@ -44,19 +44,21 @@ public class TopologyView extends VerticalLayout
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
-    val template = CondensationUtilities.read(
-        VertexTemplate.class,
-        "classpath:canvas/resources/nodes/templates/module-node-template.json"
-    );
-    canvas.invoke(AddVertexTemplateAction.class, template).toFuture()
+    val template =
+        CondensationUtilities.read(
+            VertexTemplate.class,
+            "classpath:canvas/resources/nodes/templates/module-node-template.json");
+    canvas
+        .invoke(AddVertexTemplateAction.class, template)
+        .toFuture()
         .thenAccept(this::configureModuleNodes);
   }
 
   private void configureModuleNodes(VertexTemplate t) {
-    val nodes = zephyr.getPlugins()
-        .stream()
-        .map(module -> this.nodeFromModule(module, t))
-        .collect(Collectors.toList());
+    val nodes =
+        zephyr.getPlugins().stream()
+            .map(module -> this.nodeFromModule(module, t))
+            .collect(Collectors.toList());
     canvas.invoke(AddVerticesAction.class, nodes);
   }
 

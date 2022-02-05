@@ -38,8 +38,7 @@ public class Vertex implements Cell {
   @Getter @Setter @Attribute private String shape;
 
   private VertexTemplate template;
-  @Getter
-  private Type type;
+  @Getter private Type type;
 
   public Vertex() {
     this.type = Type.Vertex;
