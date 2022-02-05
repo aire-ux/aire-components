@@ -6,18 +6,14 @@ import lombok.experimental.Delegate;
 
 final class DefaultClientResult<T> implements ClientResult<T> {
 
-  @NonNull
-  private final Class<T> type;
+  @NonNull private final Class<T> type;
 
-  @NonNull
-  @Delegate
-  private final PendingJavaScriptResult delegate;
+  @NonNull @Delegate private final PendingJavaScriptResult delegate;
 
   public DefaultClientResult(Class<T> type, PendingJavaScriptResult result) {
     this.type = type;
     this.delegate = result;
   }
-
 
   @Override
   public Class<T> getType() {

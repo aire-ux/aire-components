@@ -4,9 +4,14 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.ui.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
+import io.sunshower.zephyr.ui.rmi.Argument;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Argument(
+    collection = true,
+    type = Vertex.class
+)
 public class AddVerticesAction extends AbstractClientMethodBoundAction<List<Vertex>> {
 
   static final String NAME = "actions:vertices:add";
@@ -19,14 +24,19 @@ public class AddVerticesAction extends AbstractClientMethodBoundAction<List<Vert
   }
 
   @Override
-  public void undo(Model model) {}
+  public void undo(Model model) {
+  }
 
   @Override
-  public void redo(Model model) {}
+  public void redo(Model model) {
+  }
 
   @Override
   public ClientResult<List<Vertex>> apply(Model model) {
-    //    method.invoke(model.getHost(), vertices).then(System.out::println);
+    model.getCommandManager().apply(this);
+    model.addVertices(vertices);
     return null;
+//    return (ClientResult<List<Vertex>>) ClientResult.create(List.class,
+//        method.invoke(model.getHost(), vertices));
   }
 }

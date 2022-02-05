@@ -38,54 +38,6 @@ export class Canvas extends LitElement {
     });
     this.graph = graph;
     this.registerListeners(graph);
-
-
-    // Graph.registerNode(
-    //     // true,
-    // );
-    const a = graph.addNode({
-          shape: 'custom-polygon',
-          width: 50,
-          height: 50
-        }),
-        b = graph.addNode({
-          shape: 'custom-polygon',
-          width: 50,
-          height: 50
-        }),
-        edge = graph.addEdge({
-          source: a,
-          target: b,
-          attrs: {
-            line: {
-              strokeWidth: 1,
-              stroke: '#370e8b'
-            }
-          }
-        });
-
-
-    const layout = new CircularLayout({
-      type: 'circular',
-      center: [500, 500]
-    });
-    const dagreLayout = new DagreLayout({
-      type: 'dagre',
-      rankdir: 'LR',
-      align: 'UR',
-      ranksep: 35,
-      nodesep: 15,
-    });
-    const
-        model = {
-          nodes: this.graph?.getNodes(),
-          edges: this.graph?.getEdges()
-        }
-
-    this.graph = this.graph!.fromJSON(layout.layout(model as any));
-    this.graph.centerContent();
-
-
   }
 
   @Remote

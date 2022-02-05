@@ -3,11 +3,10 @@ package io.sunshower.zephyr.ui.rmi;
 import com.aire.ux.condensation.DocumentWriter;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
-import elemental.json.JsonValue;
 import io.sunshower.arcus.reflect.Reflect;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.concurrent.CompletableFuture;
+import java.util.Collection;
 import lombok.NonNull;
 import lombok.val;
 
@@ -34,22 +33,18 @@ final class DefaultClientMethod<T> implements ClientMethod<T> {
     return element.getElement().callJsFunction(name, (Serializable[]) writeAll(params));
   }
 
-  private T read(CompletableFuture<JsonValue> future) {
-    return null;
-    //    try {
-    ////      val result = future.get();
-    //      return null;
-    //    } catch (InterruptedException | ExecutionException ex) {
-    //      throw new IllegalStateException(ex);
-    //    }
-  }
-
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private String[] writeAll(Object[] params) {
     val result = new String[params.length];
     for (int i = 0; i < params.length; i++) {
       val param = params[i];
       try {
-        result[i] = writer.write((Class) param.getClass(), param);
+        if (isCollection(param)) {
+          result[i] = writer.writeAll((Class) param.getClass(), (Collection) param);
+
+        } else {
+          result[i] = writer.write((Class) param.getClass(), param);
+        }
       } catch (IOException ex) {
         throw new IllegalStateException(
             String.format(
@@ -58,6 +53,10 @@ final class DefaultClientMethod<T> implements ClientMethod<T> {
       }
     }
     return result;
+  }
+
+  private boolean isCollection(Object param) {
+    return Collection.class.isAssignableFrom(param.getClass());
   }
 
   private void validate(Object[] params) {

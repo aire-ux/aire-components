@@ -21,6 +21,7 @@ public class CondensationUtilities {
     return condensation.read(type, value.toJson());
   }
 
+
   public static <T> T read(Class<T> type, String location) {
     val resourceLoader = new DefaultResourceLoader(Thread.currentThread().getContextClassLoader());
     val resource = resourceLoader.getResource(location);

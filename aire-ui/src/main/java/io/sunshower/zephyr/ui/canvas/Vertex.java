@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 @RootElement
 @EqualsAndHashCode
-public class Vertex {
+public class Vertex implements Cell {
 
   /** the x location of this vertex */
   @Getter @Setter @Attribute private Double x;
@@ -38,8 +38,12 @@ public class Vertex {
   @Getter @Setter @Attribute private String shape;
 
   private VertexTemplate template;
+  @Getter
+  private Type type;
 
-  public Vertex() {}
+  public Vertex() {
+    this.type = Type.Vertex;
+  }
 
   public void setTemplate(@NonNull VertexTemplate template) {
     this.shape = template.getName();

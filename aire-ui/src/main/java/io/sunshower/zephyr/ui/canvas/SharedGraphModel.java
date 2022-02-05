@@ -1,17 +1,18 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import com.google.common.collect.Streams;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.val;
 
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
@@ -26,6 +27,7 @@ class SharedGraphModel extends AbstractEventSource
    */
   private Canvas host;
 
+  private List<Edge> edges;
   private List<Vertex> vertices;
   private CommandManager commandManager;
   private List<VertexTemplate> vertexTemplates;
@@ -33,13 +35,14 @@ class SharedGraphModel extends AbstractEventSource
   private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
+    this.edges = new ArrayList<>();
+    this.vertices = new ArrayList<>();
     this.vertexTemplates = new ArrayList<>();
   }
 
-
   SharedGraphModel(@NonNull final Canvas host) {
+    this();
     this.host = host;
-    this.vertexTemplates = new ArrayList<>();
   }
 
   @Override
@@ -68,16 +71,28 @@ class SharedGraphModel extends AbstractEventSource
 
   @Override
   public List<Cell> getCells() {
-    return null;
+    return Streams.concat(vertices.stream(), edges.stream()).collect(Collectors.toList());
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Cell> getCells(Type type) {
-    return null;
+    switch (type) {
+      case Vertex:
+        return (List<Cell>) (List) vertices;
+      case Edge:
+        return (List<Cell>) (List) edges;
+    }
+    throw new IllegalArgumentException("Unknown type: " + type);
   }
 
   @Override
   public Identifier add(Cell cell) {
+    if (cell.getType() == Type.Vertex) {
+      vertices.add((Vertex) cell);
+    } else {
+      edges.add((Edge) cell);
+    }
     return null;
   }
 
@@ -103,7 +118,7 @@ class SharedGraphModel extends AbstractEventSource
 
   @Override
   public List<Vertex> getVertices() {
-    return null;
+    return vertices;
   }
 
   @Override
@@ -145,9 +160,15 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
+  public void addVertices(List<Vertex> vertices) {
+    for (val vertex : vertices) {
+      add(vertex);
+    }
+  }
+
+  @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
-
 }

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 @AireUITest
 class ClientMethodsTest {
 
-
   @Test
   @SneakyThrows
   void ensureAddVertexTemplateActionsConstructorIsLocatable() {
@@ -24,9 +23,9 @@ class ClientMethodsTest {
 
   @ViewTest
   void ensureClientMethodIsInvokable() {
-    val result = ClientMethods.withUiSupplier(UI::getCurrent)
-        .construct(AddVertexTemplateAction.class, new VertexTemplate());
+    val result =
+        ClientMethods.withUiSupplier(UI::getCurrent)
+            .construct(AddVertexTemplateAction.class, new VertexTemplate());
     assertNotNull(result);
   }
-
 }

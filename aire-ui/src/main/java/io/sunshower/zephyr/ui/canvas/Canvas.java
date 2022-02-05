@@ -58,7 +58,6 @@ public class Canvas extends HtmlContainer {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 
-
   public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
     return addListener(CanvasReadyEvent.class, listener);
   }
@@ -68,9 +67,7 @@ public class Canvas extends HtmlContainer {
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /**
-   * @return the canvas model for this canvas
-   */
+  /** @return the canvas model for this canvas */
   @NonNull
   public final Model getModel() {
     return model;

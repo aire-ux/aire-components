@@ -20,10 +20,11 @@ public interface ClientResult<T> extends PendingJavaScriptResult {
     val result = getResult();
     val future = new CompletableFuture<T>();
 
-    result.then(value -> {
-      val wrapped = CondensationUtilities.wrap(getType(), value);
-      future.complete(wrapped);
-    });
+    result.then(
+        value -> {
+          val wrapped = CondensationUtilities.wrap(getType(), value);
+          future.complete(wrapped);
+        });
     return future;
   }
 
@@ -34,5 +35,4 @@ public interface ClientResult<T> extends PendingJavaScriptResult {
       throw new IllegalStateException(ex);
     }
   }
-
 }

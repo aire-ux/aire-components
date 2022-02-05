@@ -62,4 +62,5 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
 
   Optional<VertexTemplate> removeVertexTemplate(VertexTemplate template);
 
+  void addVertices(List<Vertex> vertices);
 }

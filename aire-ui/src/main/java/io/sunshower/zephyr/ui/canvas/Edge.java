@@ -1,3 +1,9 @@
 package io.sunshower.zephyr.ui.canvas;
 
-public class Edge {}
+public class Edge implements Cell {
+
+  @Override
+  public Type getType() {
+    return Type.Edge;
+  }
+}

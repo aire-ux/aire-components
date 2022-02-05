@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.NonNull;
 import lombok.val;
@@ -61,7 +62,8 @@ public final class ClientMethods {
 
   public <R, T> Action<T> construct(Class<? extends Action<T>> action, Object... arguments) {
     try {
-      val argumentTypes = collectArgumentTypes(arguments);
+      val argumentTypes = collectAnnotatedArguments(action).orElseGet(
+          () -> collectArgumentTypes(arguments));
       val ctor = action.getDeclaredConstructor(argumentTypes);
       val args = new Object[arguments.length + 1];
       args[0] = uiSupplier;
@@ -70,6 +72,26 @@ public final class ClientMethods {
     } catch (Exception ex) {
       throw new IllegalStateException(ex);
     }
+  }
+
+  private <T> Optional<Class<?>[]> collectAnnotatedArguments(Class<? extends Action<T>> action) {
+
+    val arguments = action.getDeclaredAnnotationsByType(Argument.class);
+    if (arguments.length == 0) {
+      return Optional.empty();
+    }
+
+    val result = new Class<?>[arguments.length + 1];
+    result[0] = Supplier.class;
+    for (int i = 0; i < arguments.length; i++) {
+      val arg = arguments[i];
+      if (arg.collection()) {
+        result[i + 1] = arg.collectionType();
+      } else {
+        result[i + 1] = arg.type();
+      }
+    }
+    return Optional.of(result);
   }
 
   private Class<?>[] collectArgumentTypes(Object[] arguments) {
@@ -81,6 +103,5 @@ public final class ClientMethods {
       result[i + 1] = actualType;
     }
     return result;
-
   }
 }

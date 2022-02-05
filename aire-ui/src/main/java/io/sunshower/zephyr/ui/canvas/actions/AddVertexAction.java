@@ -35,14 +35,18 @@ public class AddVertexAction extends AbstractClientMethodBoundAction<Vertex> {
   }
 
   @Override
-  public void undo(Model model) {}
+  public void undo(Model model) {
+  }
 
   @Override
-  public void redo(Model model) {}
+  public void redo(Model model) {
+  }
 
   @Override
   public ClientResult<Vertex> apply(Model model) {
-    method.invoke(model.getHost(), vertex).then(System.out::println);
-    return null;
+    model.getCommandManager().apply(this);
+    model.add(vertex);
+    return ClientResult.create(Vertex.class,
+        method.invoke(model.getHost(), vertex));
   }
 }

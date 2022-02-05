@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,8 +20,10 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
+import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.IOException;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -38,11 +41,19 @@ class CanvasTest {
   void setUp() {
     condensation = Condensation.create("json");
     writer = condensation.getWriter();
-    template = CondensationUtilities.read(
-        VertexTemplate.class,
-        "classpath:canvas/resources/nodes/templates/module-node-template.json");
+    template =
+        CondensationUtilities.read(
+            VertexTemplate.class,
+            "classpath:canvas/resources/nodes/templates/module-node-template.json");
   }
 
+  @ViewTest
+  void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
+    assertTrue(canvas.getModel().getVertices().isEmpty());
+    val vertices = List.of(new Vertex());
+    canvas.invoke(AddVerticesAction.class, vertices);
+    assertEquals(1, canvas.getModel().getVertices().size());
+  }
 
   @ViewTest
   void ensureCanvasIsInvokable(@View Canvas canvas) {
