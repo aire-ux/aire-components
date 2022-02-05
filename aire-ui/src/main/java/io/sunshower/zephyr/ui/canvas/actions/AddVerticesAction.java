@@ -26,7 +26,7 @@ public class AddVerticesAction extends AbstractClientMethodBoundAction<List<Vert
 
   @Override
   public ClientResult<List<Vertex>> apply(Model model) {
-//    method.invoke(model.getHost(), vertices).then(System.out::println);
+    //    method.invoke(model.getHost(), vertices).then(System.out::println);
     return null;
   }
 }

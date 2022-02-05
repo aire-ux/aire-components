@@ -16,12 +16,11 @@ public class CanvasClickedEvent extends AireComponentEvent<Canvas, Click> {
    * Creates a new event using the given source and indicator whether the event originated from the
    * client side or the server side.
    *
-   * @param source     the source component
+   * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
-  public CanvasClickedEvent(Canvas source, boolean fromClient,
-      @EventData("event.detail.click") JsonValue click
-  ) {
+  public CanvasClickedEvent(
+      Canvas source, boolean fromClient, @EventData("event.detail.click") JsonValue click) {
     super(source, fromClient, click);
   }
 
@@ -29,9 +28,7 @@ public class CanvasClickedEvent extends AireComponentEvent<Canvas, Click> {
   @RootElement
   public static class Click {
 
-    @Attribute
-    private Double x;
-    @Attribute
-    private Double y;
+    @Attribute private Double x;
+    @Attribute private Double y;
   }
 }

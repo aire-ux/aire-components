@@ -2,24 +2,28 @@ import {css, customElement, LitElement, PropertyValues,} from "lit-element";
 import {Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
+import {CircularLayout, DagreLayout} from "@antv/layout";
 
 
-@customElement('aire-canvas')
 @Remotable
+@customElement('aire-canvas')
 export class Canvas extends LitElement {
 
   private graph: Graph | undefined;
 
   // language=CSS
   static styles = css`
-
+    :host {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
   `;
 
 
   protected createRenderRoot(): Element | ShadowRoot {
     this.style.width = '100%';
     this.style.height = '100%';
-    this.style.border = '1px solid red';
     return this;
   }
 
@@ -34,12 +38,60 @@ export class Canvas extends LitElement {
     });
     this.graph = graph;
     this.registerListeners(graph);
-    this.graph.addNode({x: 200, y: 200, width: 200, height: 200});
+
+
+    // Graph.registerNode(
+    //     // true,
+    // );
+    const a = graph.addNode({
+          shape: 'custom-polygon',
+          width: 50,
+          height: 50
+        }),
+        b = graph.addNode({
+          shape: 'custom-polygon',
+          width: 50,
+          height: 50
+        }),
+        edge = graph.addEdge({
+          source: a,
+          target: b,
+          attrs: {
+            line: {
+              strokeWidth: 1,
+              stroke: '#370e8b'
+            }
+          }
+        });
+
+
+    const layout = new CircularLayout({
+      type: 'circular',
+      center: [500, 500]
+    });
+    const dagreLayout = new DagreLayout({
+      type: 'dagre',
+      rankdir: 'LR',
+      align: 'UR',
+      ranksep: 35,
+      nodesep: 15,
+    });
+    const
+        model = {
+          nodes: this.graph?.getNodes(),
+          edges: this.graph?.getEdges()
+        }
+
+    this.graph = this.graph!.fromJSON(layout.layout(model as any));
+    this.graph.centerContent();
+
+
   }
 
   @Remote
-  public addVertex(@Receive(Dynamic) vertex: Node.Metadata): void {
+  public addVertex(@Receive(Dynamic) vertex: Node.Metadata): Node.Metadata {
     this.graph!.addNode(vertex);
+    return vertex;
   }
 
   @Remote
@@ -53,8 +105,15 @@ export class Canvas extends LitElement {
   }
 
   @Remote
-  public addVertexTemplate(@Receive(Dynamic) template: VertexTemplate): Node.Definition {
-    return Graph.registerNode(template.name, template as any, true);
+  public addVertexTemplate(@Receive(Dynamic) template: VertexTemplate): VertexTemplate {
+    Graph.registerNode(template.name, template as any, true);
+    return template;
+  }
+
+
+  @Remote
+  public removeVertexTemplate(@Receive(Dynamic) template: VertexTemplate): void {
+    Graph.unregisterNode(template.name);
   }
 
 

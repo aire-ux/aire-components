@@ -1,5 +1,7 @@
 package io.sunshower.zephyr.ui.canvas.geometry;
 
+import static java.lang.Math.toRadians;
+
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.val;
@@ -33,8 +35,8 @@ public class RegularPolygon {
             .mapToObj(
                 i ->
                     new Point(
-                        center.x + circumradius * Math.sin((i * theta)),
-                        center.y + circumradius * Math.cos((i * theta))))
+                        center.x + circumradius * Math.sin(toRadians(i * theta)),
+                        center.y + circumradius * Math.cos(toRadians(i * theta))))
             .collect(Collectors.toList()));
   }
 }

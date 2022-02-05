@@ -7,7 +7,7 @@ class RegularPolygonTest {
 
   @Test
   void ensureRegularPolygonWorks() {
-    val hex = new RegularPolygon(13);
-    System.out.println(hex.generate(25).toPath());
+    val hex = new RegularPolygon(6);
+    System.out.println(hex.generate(new Point(25, 25), 25).toPath());
   }
 }

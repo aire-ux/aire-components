@@ -16,66 +16,30 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Vertex {
 
-  /**
-   * the x location of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private Double x;
+  /** the x location of this vertex */
+  @Getter @Setter @Attribute private Double x;
 
-  /**
-   * the y location of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private Double y;
+  /** the y location of this vertex */
+  @Getter @Setter @Attribute private Double y;
 
-  /**
-   * the label of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private String label;
+  /** the label of this vertex */
+  @Getter @Setter @Attribute private String label;
 
-  /**
-   * the width of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private Double width;
+  /** the width of this vertex */
+  @Getter @Setter @Attribute private Double width;
 
-  /**
-   * the height of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private Double height;
+  /** the height of this vertex */
+  @Getter @Setter @Attribute private Double height;
 
-  /**
-   * the ID of this vertex
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private Identifier id;
+  /** the ID of this vertex */
+  @Getter @Setter @Attribute private Identifier id;
 
-  /**
-   *
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private String shape;
+  /** */
+  @Getter @Setter @Attribute private String shape;
 
   private VertexTemplate template;
 
-  public Vertex() {
-  }
+  public Vertex() {}
 
   public void setTemplate(@NonNull VertexTemplate template) {
     this.shape = template.getName();

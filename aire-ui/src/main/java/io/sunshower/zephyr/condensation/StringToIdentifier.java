@@ -7,7 +7,6 @@ import java.util.function.Function;
 
 public class StringToIdentifier implements ConverterProvider<String, Identifier> {
 
-
   @Override
   public Function<String, Identifier> getConverter() {
     return Identifier::valueOf;

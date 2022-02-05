@@ -1,0 +1,31 @@
+{
+  "name": "module",
+  "inherit": "polygon",
+  "width": 50,
+  "height": 50,
+  "attrs": {
+    "body": {
+      "strokeWidth": 1,
+      "stroke": "#660066",
+      "fill": "rgba(0,0,0,0)",
+      "refPoints": "0.000000,25.000000 21.650635,12.500000 21.650635,-12.500000 0.000000,-25.000000 -21.650635,-12.500000 -21.650635,12.500000"
+    },
+    "image": {
+      "xlink:href": "images/zephyr.svg",
+      "width": 25,
+      "height": 25,
+      "x": 12.5,
+      "y": 12.5
+    }
+  },
+  "markup": [
+    {
+      "tagName": "polygon",
+      "selector": "body"
+    },
+    {
+      "tagName": "image",
+      "selector": "image"
+    }
+  ]
+}

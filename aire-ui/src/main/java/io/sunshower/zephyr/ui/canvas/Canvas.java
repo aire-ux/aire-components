@@ -14,12 +14,14 @@ import lombok.val;
 
 @Tag("aire-canvas")
 @JsModule("@antv/x6/dist/x6.js")
+@JsModule("@antv/layout/es/index.js")
 @CssImport("@antv/x6/dist/x6.css")
 @JsModule("./aire/ui/canvas/cell.ts")
 @JsModule("./aire/ui/canvas/canvas.ts")
 @JsModule("@aire-ux/aire-condensation/dist/index.js")
 @CssImport("./styles/aire/ui/canvas/canvas.css")
-@NpmPackage(value = "@antv/x6", version = "1.29.6")
+@NpmPackage(value = "@antv/x6", version = "1.30.0")
+@NpmPackage(value = "@antv/layout", version = "0.1.31")
 @NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.5")
 public class Canvas extends HtmlContainer {
 
@@ -54,13 +56,12 @@ public class Canvas extends HtmlContainer {
     return addListener(CanvasReadyEvent.class, listener);
   }
 
-  public Registration addOnCanvasClickedEventListener(ComponentEventListener<CanvasClickedEvent> listener) {
+  public Registration addOnCanvasClickedEventListener(
+      ComponentEventListener<CanvasClickedEvent> listener) {
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /**
-   * @return the canvas model for this canvas
-   */
+  /** @return the canvas model for this canvas */
   public final Model getModel() {
     return model;
   }

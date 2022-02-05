@@ -110,7 +110,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   @SuppressWarnings("unchecked")
   public <R, S> R convert(S value) {
     if (converter == null) {
-      if(value == null) {
+      if (value == null) {
         // map null to null
         return null;
       }

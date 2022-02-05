@@ -71,7 +71,5 @@ class CanvasTest {
 
     val action = new AddVertexTemplateAction(() -> ui, result);
     action.apply(canvas.getModel());
-
   }
-
 }

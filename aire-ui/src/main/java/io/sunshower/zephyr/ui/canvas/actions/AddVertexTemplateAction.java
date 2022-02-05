@@ -23,8 +23,7 @@ public class AddVertexTemplateAction extends AbstractClientMethodBoundAction<Ver
   }
 
   @Override
-  public void redo(Model model) {
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<VertexTemplate> apply(Model model) {

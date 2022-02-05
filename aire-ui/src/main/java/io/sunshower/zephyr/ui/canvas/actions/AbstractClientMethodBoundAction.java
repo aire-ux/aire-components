@@ -10,15 +10,11 @@ import lombok.NonNull;
 
 public abstract class AbstractClientMethodBoundAction<T> implements Action<T> {
 
-  protected @NonNull
-  final ClientMethod<Serializable> method;
-  @NonNull
-  private final String name;
-  @NonNull
-  private final Supplier<UI> supplier;
+  protected @NonNull final ClientMethod<Serializable> method;
+  @NonNull private final String name;
+  @NonNull private final Supplier<UI> supplier;
 
-  @NonNull
-  private final Class<? extends Serializable> returnType;
+  @NonNull private final Class<? extends Serializable> returnType;
 
   protected AbstractClientMethodBoundAction(
       final String name,

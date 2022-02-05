@@ -10,12 +10,9 @@ import lombok.Getter;
 
 public class AireComponentEvent<T extends Component, U> extends ComponentEvent<T> {
 
-  @Getter
-  private final U value;
+  @Getter private final U value;
 
-  @Getter
-  private final Class<U> type;
-
+  @Getter private final Class<U> type;
 
   protected AireComponentEvent(Class<U> type, T source, boolean fromClient, JsonValue value) {
     super(source, fromClient);
@@ -29,11 +26,9 @@ public class AireComponentEvent<T extends Component, U> extends ComponentEvent<T
     this.value = wrap(type, value);
   }
 
-
   @SuppressWarnings("unchecked")
   private Class<U> extractType() {
-    return (Class<U>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+    return (Class<U>)
+        ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
   }
-
-
 }

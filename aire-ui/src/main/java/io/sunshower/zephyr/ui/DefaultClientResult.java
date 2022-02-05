@@ -7,12 +7,9 @@ import lombok.experimental.Delegate;
 
 final class DefaultClientResult<T> implements ClientResult<T> {
 
-  @NonNull
-  @Delegate
-  final PendingJavaScriptResult delegate;
+  @NonNull @Delegate final PendingJavaScriptResult delegate;
 
   DefaultClientResult(@NonNull PendingJavaScriptResult delegate) {
     this.delegate = delegate;
   }
-
 }

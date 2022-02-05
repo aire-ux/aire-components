@@ -20,6 +20,7 @@ public class VertexTemplate {
   /** the name of this descriptor */
   @Attribute private String name;
 
+  @Attribute private String inherit;
   /** the width of nodes struck from this template */
   @Attribute private double width;
 

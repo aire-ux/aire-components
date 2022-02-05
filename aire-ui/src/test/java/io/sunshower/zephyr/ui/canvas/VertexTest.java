@@ -21,5 +21,4 @@ class VertexTest {
     val read = json.read(Vertex.class, result);
     assertEquals(id, read.getId());
   }
-
 }

@@ -16,8 +16,7 @@ class AireComponentEventTest {
   @Test
   void ensureTypeIsCorrect() {
     val b = Json.parse("{\"name\": \"world\"}");
-    assertEquals(B.class,
-        new EventType(new A(), true, b).getType());
+    assertEquals(B.class, new EventType(new A(), true, b).getType());
   }
 
   @Test
@@ -28,19 +27,14 @@ class AireComponentEventTest {
   }
 
   @Tag("Sup")
-  public static class A extends Component {
-
-  }
+  public static class A extends Component {}
 
   @RootElement
   public static class B {
 
-    @Attribute
-    String name;
+    @Attribute String name;
 
-    public B() {
-
-    }
+    public B() {}
   }
 
   class EventType extends AireComponentEvent<A, B> {
@@ -49,5 +43,4 @@ class AireComponentEventTest {
       super(source, fromClient, value);
     }
   }
-
 }
