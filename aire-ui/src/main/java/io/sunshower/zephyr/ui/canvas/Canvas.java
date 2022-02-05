@@ -9,6 +9,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
+import io.sunshower.zephyr.ui.ClientResult;
+import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import lombok.NonNull;
 import lombok.val;
 
@@ -52,6 +54,11 @@ public class Canvas extends HtmlContainer {
     model.detach(this);
   }
 
+  public <T> ClientResult<T> invoke(Class<? extends Action<T>> action, Object... arguments) {
+    return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
+  }
+
+
   public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
     return addListener(CanvasReadyEvent.class, listener);
   }
@@ -61,7 +68,10 @@ public class Canvas extends HtmlContainer {
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /** @return the canvas model for this canvas */
+  /**
+   * @return the canvas model for this canvas
+   */
+  @NonNull
   public final Model getModel() {
     return model;
   }

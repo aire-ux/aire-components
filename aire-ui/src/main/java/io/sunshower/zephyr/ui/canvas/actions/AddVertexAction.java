@@ -4,7 +4,7 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
-import io.sunshower.zephyr.ui.canvas.ClientResult;
+import io.sunshower.zephyr.ui.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import java.util.function.Supplier;

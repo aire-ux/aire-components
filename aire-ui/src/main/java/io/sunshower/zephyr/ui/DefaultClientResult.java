@@ -1,15 +1,31 @@
 package io.sunshower.zephyr.ui;
 
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
-import io.sunshower.zephyr.ui.canvas.ClientResult;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
 
 final class DefaultClientResult<T> implements ClientResult<T> {
 
-  @NonNull @Delegate final PendingJavaScriptResult delegate;
+  @NonNull
+  private final Class<T> type;
 
-  DefaultClientResult(@NonNull PendingJavaScriptResult delegate) {
-    this.delegate = delegate;
+  @NonNull
+  @Delegate
+  private final PendingJavaScriptResult delegate;
+
+  public DefaultClientResult(Class<T> type, PendingJavaScriptResult result) {
+    this.type = type;
+    this.delegate = result;
+  }
+
+
+  @Override
+  public Class<T> getType() {
+    return type;
+  }
+
+  @Override
+  public PendingJavaScriptResult getResult() {
+    return delegate;
   }
 }

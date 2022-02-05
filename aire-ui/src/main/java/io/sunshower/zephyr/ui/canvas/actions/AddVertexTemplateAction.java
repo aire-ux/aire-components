@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.canvas.actions;
 
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.canvas.ClientResult;
+import io.sunshower.zephyr.ui.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import java.util.function.Supplier;
@@ -23,11 +23,14 @@ public class AddVertexTemplateAction extends AbstractClientMethodBoundAction<Ver
   }
 
   @Override
-  public void redo(Model model) {}
+  public void redo(Model model) {
+
+  }
 
   @Override
   public ClientResult<VertexTemplate> apply(Model model) {
-    method.invoke(model.getHost(), value).then(System.out::println);
-    return null;
+    model.getCommandManager().apply(this);
+    model.addVertexTemplate(value);
+    return ClientResult.create(VertexTemplate.class, method.invoke(model.getHost(), value));
   }
 }

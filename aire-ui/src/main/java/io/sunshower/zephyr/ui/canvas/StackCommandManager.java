@@ -76,7 +76,6 @@ public class StackCommandManager implements CommandManager {
   @Override
   public void apply(Action action) {
     undoStack.push(action);
-    action.apply(model);
   }
 
   @Override

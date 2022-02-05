@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Condensation;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.AbstractEventSource;
@@ -11,36 +10,36 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /** constants */
+  /**
+   * constants
+   */
   static final String format = "json";
 
-  /** immutable state */
-  private final Condensation condensation;
-
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas host;
 
   private List<Vertex> vertices;
   private CommandManager commandManager;
+  private List<VertexTemplate> vertexTemplates;
   private VertexTemplate defaultVertexTemplate;
   private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
-    this.condensation = Condensation.create(format);
+    this.vertexTemplates = new ArrayList<>();
   }
+
 
   SharedGraphModel(@NonNull final Canvas host) {
-    this(host, format);
-  }
-
-  SharedGraphModel(@NonNull final Canvas host, @NonNull String format) {
     this.host = host;
-    this.condensation = Condensation.create(format);
+    this.vertexTemplates = new ArrayList<>();
   }
 
   @Override
@@ -110,8 +109,6 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public void setVertices(Collection<Vertex> vertices) {
     this.vertices = new ArrayList<>(vertices);
-    //    commandManager.addPendingAction(
-    //        new CompositeAction(vertices.stream().map(AddVertexAction::new)));
   }
 
   @Override
@@ -130,13 +127,27 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
+  public List<VertexTemplate> getVertexTemplates() {
+    return vertexTemplates;
+  }
+
+  @Override
+  public void addVertexTemplate(VertexTemplate template) {
+    this.vertexTemplates.add(template);
+  }
+
+  @Override
+  public Optional<VertexTemplate> removeVertexTemplate(VertexTemplate template) {
+    if (vertexTemplates.remove(template)) {
+      return Optional.of(template);
+    }
+    return Optional.empty();
+  }
+
+  @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
 
-  private Serializable write(Class<Vertex> vertexClass, Collection<Vertex> vertices)
-      throws IOException {
-    return condensation.getWriter().writeAll(vertexClass, vertices);
-  }
 }

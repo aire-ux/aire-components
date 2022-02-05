@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
@@ -16,6 +17,7 @@ import com.aire.ux.test.View;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.AireUITest;
+import io.sunshower.zephyr.condensation.CondensationUtilities;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.IOException;
@@ -30,11 +32,23 @@ class CanvasTest {
 
   private DocumentWriter writer;
   private Condensation condensation;
+  private VertexTemplate template;
 
   @BeforeEach
   void setUp() {
     condensation = Condensation.create("json");
     writer = condensation.getWriter();
+    template = CondensationUtilities.read(
+        VertexTemplate.class,
+        "classpath:canvas/resources/nodes/templates/module-node-template.json");
+  }
+
+
+  @ViewTest
+  void ensureCanvasIsInvokable(@View Canvas canvas) {
+    assertTrue(canvas.getModel().getVertexTemplates().isEmpty());
+    canvas.invoke(AddVertexTemplateAction.class, template);
+    assertFalse(canvas.getModel().getVertexTemplates().isEmpty());
   }
 
   @ViewTest
