@@ -9,8 +9,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
-import io.sunshower.zephyr.ui.rmi.ClientResult;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 import lombok.NonNull;
 import lombok.val;
 

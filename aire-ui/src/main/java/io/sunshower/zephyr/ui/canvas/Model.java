@@ -33,12 +33,11 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
   @NonNull
   List<Cell> getCells(@NonNull Cell.Type type);
 
-  @NonNull
-  Identifier add(@NonNull Cell cell);
-
   Edge connect(@NonNull Vertex source, @NonNull Vertex target);
 
   Edge connect(@NonNull Identifier source, @NonNull Identifier target);
+
+  void addVertex(@NonNull Vertex source);
 
   @NonNull
   List<Edge> getEdges(@NonNull Identifier vertex);

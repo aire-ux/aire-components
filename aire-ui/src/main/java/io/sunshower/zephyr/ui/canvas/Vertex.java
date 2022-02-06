@@ -3,7 +3,6 @@ package io.sunshower.zephyr.ui.canvas;
 import com.aire.ux.condensation.Attribute;
 import com.aire.ux.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -13,8 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @RootElement
-@EqualsAndHashCode
-public class Vertex implements Cell {
+public class Vertex extends AbstractCell {
 
   /** the x location of this vertex */
   @Getter @Setter @Attribute private Double x;
@@ -38,10 +36,13 @@ public class Vertex implements Cell {
   @Getter @Setter @Attribute private String shape;
 
   private VertexTemplate template;
-  @Getter private Type type;
 
   public Vertex() {
-    this.type = Type.Vertex;
+    this(SharedGraphModel.identifierSequence.next());
+  }
+
+  public Vertex(Identifier id) {
+    super(Type.Vertex, id);
   }
 
   public void setTemplate(@NonNull VertexTemplate template) {

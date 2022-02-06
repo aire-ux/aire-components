@@ -4,9 +4,9 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
-import io.sunshower.zephyr.ui.rmi.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.function.Supplier;
 import lombok.NonNull;
 
@@ -43,7 +43,7 @@ public class AddVertexAction extends AbstractClientMethodBoundAction<Vertex> {
   @Override
   public ClientResult<Vertex> apply(Model model) {
     model.getCommandManager().apply(this);
-    model.add(vertex);
+    model.addVertex(vertex);
     return ClientResult.create(Vertex.class, method.invoke(model.getHost(), vertex));
   }
 }

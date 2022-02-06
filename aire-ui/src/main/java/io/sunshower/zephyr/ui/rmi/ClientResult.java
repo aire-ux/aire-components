@@ -18,18 +18,12 @@ public interface ClientResult<T> extends PendingJavaScriptResult {
   @SuppressWarnings({"unchecked", "rawtypes"})
   static <T> ClientResult<List<T>> createList(Class<T> type, PendingJavaScriptResult invoke) {
     val cl = (Class) List.class;
-    return new DefaultClientResult<List<T>>(
-        cl,
-        (Class) type,
-        invoke
-    );
+    return new DefaultClientResult<List<T>>(cl, (Class) type, invoke);
   }
-
 
   Class<T> getType();
 
   Optional<Class<? extends Collection<? extends T>>> getCollectionType();
-
 
   PendingJavaScriptResult getResult();
 
