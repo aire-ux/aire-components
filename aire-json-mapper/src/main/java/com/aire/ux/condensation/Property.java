@@ -1,7 +1,14 @@
 package com.aire.ux.condensation;
 
+import io.sunshower.lang.tuple.Pair;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.Function;
+import lombok.NonNull;
+import lombok.val;
 
 public interface Property<T extends AccessibleObject> {
 
@@ -16,7 +23,24 @@ public interface Property<T extends AccessibleObject> {
         || Short.class.equals(type);
   }
 
-  boolean isPrimitive();
+  static <T, U> boolean isConvertible(Class<T> from, Class<U> to) {
+    return AbstractProperty.defaultConverters.containsKey(Pair.of(from, to));
+  }
+
+  static <T, U> U convert(T value, @NonNull Class<U> type) {
+    if (value == null) {
+      return null;
+    }
+    @SuppressWarnings("unchecked")
+    val converter =
+        (Function<T, U>) AbstractProperty.defaultConverters.get(Pair.of(value.getClass(), type));
+    return converter.apply(value);
+  }
+
+  default boolean isPrimitive() {
+    val type = getType();
+    return isPrimitive(type);
+  }
 
   boolean isConvertable();
 
@@ -28,6 +52,7 @@ public interface Property<T extends AccessibleObject> {
   Converter<?, ?> getKeyConverter();
 
   Converter<?, ?> getConverter();
+
   /**
    * if a property has a converter, apply that converter to convert the property to the desired type
    *
@@ -55,18 +80,28 @@ public interface Property<T extends AccessibleObject> {
 
   <T> Type getGenericType();
 
-  /** @return true if the underlying type, returned by <code>getType()</code>is an array */
-  boolean isArray();
+  default boolean isArray() {
+    return getType().isArray();
+  }
 
-  /** @return true if the underlying type, returned by <code>getType()</code> is a collection */
-  boolean isCollection();
+  default boolean isCollection() {
+    return Collection.class.isAssignableFrom(getType());
+  }
 
-  /**
-   * @param <U> the component-type. If this is an array or a collection, this returns the type of
-   *     the contents, otherwise it returns <code>getType()</code>
-   * @return the type of the contents of this property if it is an array or collection
-   */
-  <U> Class<U> getComponentType();
+  @SuppressWarnings("unchecked")
+  default <U> Class<U> getComponentType() {
+    if (isArray()) {
+      return (Class<U>) getType().getComponentType();
+    }
+    if (isCollection()) {
+      val parameterizedType = (ParameterizedType) getGenericType();
+      val typeArgs = parameterizedType.getActualTypeArguments();
+      if (typeArgs != null && typeArgs.length > 0) {
+        return (Class<U>) typeArgs[0];
+      }
+    }
+    return getType();
+  }
 
   /**
    * @return the physical name of the member if this is a field such as {@code private String
@@ -80,8 +115,8 @@ public interface Property<T extends AccessibleObject> {
    * @return the <code>normalized</code> name of this member. For instance, if you have {@code class
    *     Sample { int myField; int getMyField() { <p>} <p>void setMyField(int myField) {
    *     this.myField = myField; } } } then the <code> memberReadName()</code> is <code>getMyField()
-   *     </code> and the <code>memberWriteName()</code> is <code>setMyField()</code> and the <code>
-   *     memberNormalizedName</code> is <code>myField
+   * </code> and the <code>memberWriteName()</code> is <code>setMyField()</code> and the <code>
+   * memberNormalizedName</code> is <code>myField
    * </code>.
    *     <p>Note that the memberNormalizedName is not required to correspond to any field on the
    *     host type
@@ -113,6 +148,10 @@ public interface Property<T extends AccessibleObject> {
    * @return the value
    */
   <T, U> T get(U host);
+
+  default boolean isMap() {
+    return Map.class.isAssignableFrom(getType());
+  }
 
   enum Mode {
     Read,

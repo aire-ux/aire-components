@@ -17,23 +17,15 @@ import lombok.Setter;
 @RootElement
 public class VertexTemplate {
 
-  /**
-   * the name of this descriptor
-   */
-  @Attribute
-  private String name;
+  /** the name of this descriptor */
+  @Attribute private String name;
 
-  /**
-   * the width of nodes struck from this template
-   */
-  @Attribute
-  private float width;
+  @Attribute private String inherit;
+  /** the width of nodes struck from this template */
+  @Attribute private double width;
 
-  /**
-   * the height of nodes struck from this template
-   */
-  @Attribute
-  private float height;
+  /** the height of nodes struck from this template */
+  @Attribute private double height;
 
   @Element(alias = @Alias(read = "attrs", write = "attrs"))
   private Map<String, Map<String, Serializable>> attributes;
@@ -49,10 +41,10 @@ public class VertexTemplate {
     return new VertexTemplateBuilder();
   }
 
-
   public static VertexTemplateBuilder newBuilder(String name) {
     return new VertexTemplateBuilder().name(name);
   }
+
   public void addSelector(String tagName, String selector) {
     selectors.add(new Selector(tagName, selector));
   }

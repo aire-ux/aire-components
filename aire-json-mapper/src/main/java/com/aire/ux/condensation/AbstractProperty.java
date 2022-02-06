@@ -3,8 +3,6 @@ package com.aire.ux.condensation;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.lang.tuple.Pair;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -93,12 +91,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  public boolean isPrimitive() {
-    val type = getType();
-    return Property.isPrimitive(type);
-  }
-
-  @Override
   public boolean isConvertable() {
     return converter != null;
   }
@@ -118,6 +110,10 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   @SuppressWarnings("unchecked")
   public <R, S> R convert(S value) {
     if (converter == null) {
+      if (value == null) {
+        // map null to null
+        return null;
+      }
       val type = isArray() || isCollection() ? getComponentType() : getType();
       val converter = (Function<S, R>) defaultConverters.get(Pair.of(value.getClass(), type));
       if (converter != null) {
@@ -130,22 +126,6 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <U> Class<U> getComponentType() {
-    if (isArray()) {
-      return (Class<U>) getType().getComponentType();
-    }
-    if (isCollection()) {
-      val parameterizedType = (ParameterizedType) getGenericType();
-      val typeArgs = parameterizedType.getActualTypeArguments();
-      if (typeArgs != null && typeArgs.length > 0) {
-        return (Class<U>) typeArgs[0];
-      }
-    }
-    return getType();
-  }
-
-  @Override
   public String getReadAlias() {
     return readAlias;
   }
@@ -153,15 +133,5 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   @Override
   public String getWriteAlias() {
     return writeAlias;
-  }
-
-  @Override
-  public boolean isArray() {
-    return getType().isArray();
-  }
-
-  @Override
-  public boolean isCollection() {
-    return Collection.class.isAssignableFrom(getType());
   }
 }

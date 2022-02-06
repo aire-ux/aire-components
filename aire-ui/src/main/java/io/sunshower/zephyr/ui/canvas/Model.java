@@ -5,6 +5,7 @@ import io.sunshower.lang.events.EventSource;
 import io.sunshower.persistence.id.Identifier;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.val;
 
@@ -54,4 +55,12 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
   void attach(Canvas canvas);
 
   CommandManager getCommandManager();
+
+  List<VertexTemplate> getVertexTemplates();
+
+  void addVertexTemplate(VertexTemplate template);
+
+  Optional<VertexTemplate> removeVertexTemplate(VertexTemplate template);
+
+  void addVertices(List<Vertex> vertices);
 }

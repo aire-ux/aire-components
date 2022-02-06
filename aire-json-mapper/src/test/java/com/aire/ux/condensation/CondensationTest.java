@@ -4,11 +4,45 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 class CondensationTest {
+
+  @Test
+  void ensureWritingListDirectlyWorks() throws IOException {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @RootElement
+    class A {
+
+      @Attribute String name;
+    }
+    val condensation = Condensation.create("json");
+    val list = List.of(new A("a"), new A("b"));
+    val a = condensation.getWriter().writeAll(A.class, list);
+    System.out.println(a);
+  }
+
+  @Test
+  void ensureReadingCollectionWorks() {
+    @RootElement
+    class A {
+
+      @Attribute String name;
+    }
+    val condensation = Condensation.create("json");
+    ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
+    val result = condensation.readAll(A.class, ArrayList::new, "[{\"name\":\"josiah\"}]");
+    assertEquals(result.size(), 1);
+    assertEquals(result.get(0).name, "josiah");
+  }
 
   @Test
   void ensureBinderWorks() {

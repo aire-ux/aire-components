@@ -1,79 +1,98 @@
-import {css, customElement, html, LitElement, PropertyValues, query, state,} from "lit-element";
-import {Graph} from "@antv/x6";
-import {Vertex} from "./cell";
-import {Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
+import {css, customElement, LitElement, PropertyValues,} from "lit-element";
+import {Graph, Node} from "@antv/x6";
+import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
+import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
+import {CircularLayout} from "@antv/layout";
 
 
-// @ts-ignore
-@customElement('aire-canvas')
 @Remotable
+@customElement('aire-canvas')
 export class Canvas extends LitElement {
 
   private graph: Graph | undefined;
 
+  // language=CSS
   static styles = css`
     :host {
       width: 100%;
       height: 100%;
-      flex: 1;
-      display: flex;
-    }
-    div.container {
-      flex: 1;
+      display: block;
     }
   `;
 
 
-  @state()
-  @query('div.container')
-  private container: HTMLDivElement | undefined;
+  protected createRenderRoot(): Element | ShadowRoot {
+    this.style.width = '100%';
+    this.style.height = '100%';
+    return this;
+  }
 
   private createGraph(): void {
     if (this.graph) {
       return;
     }
-    const container = this.container;
-    if (container) {
-      const graph = new Graph({
-        panning: true,
-        container: container,
-        grid: {
-          size: 10,
-          visible: true
-        }
-      });
-      this.graph = graph;
+    const graph = new Graph({
+      container: this,
+      preventDefaultContextMenu: false,
+      grid: true
+    });
+    this.graph = graph;
+    this.registerListeners(graph);
+  }
+
+  @Remote
+  public addVertex(@Receive(Dynamic) vertex: Node.Metadata): Node.Metadata {
+    this.graph!.addNode(vertex);
+    return vertex;
+  }
+
+  @Remote
+  public addVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
+    this.graph!.addNodes(vertices);
+    const layout = new CircularLayout();
+    const model = {
+      nodes: this.graph?.getNodes(),
+      edges: this.graph?.getEdges()
     }
+    this.graph = this.graph!.fromJSON(layout.layout(model as any));
+    this.graph.centerContent();
   }
 
   @Remote
-  public addVertex(@Receive(Vertex) vertex: Vertex) {
-    // @ts-ignore
-    this.graph?.addNode(vertex as any);
+  public setVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
+    this.graph!.addNodes(vertices);
   }
 
   @Remote
-  public addVertices(@Receive(Vertex) vertices: Vertex[]): void {
-    // @ts-ignore
-    this.graph?.addNodes(vertices);
+  public addVertexTemplate(@Receive(Dynamic) template: VertexTemplate): VertexTemplate {
+    Graph.registerNode(template.name, template as any, true);
+    return template;
   }
 
 
   @Remote
-  registerVertexTemplates(@Receive(VertexTemplate) templates: VertexTemplate[]): void {
-    Graph.registerNode(templates);
+  public removeVertexTemplate(@Receive(Dynamic) template: VertexTemplate): void {
+    Graph.unregisterNode(template.name);
   }
+
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.createGraph();
-    this.dispatchEvent(new CustomEvent('canvas-ready'))
+    this.dispatchEvent(new CustomEvent('canvas-ready'));
   }
 
-  render() {
-    return html`
-      <div class="container">
-      </div>
-    `
+  private registerListeners(graph: Graph) {
+    graph.on('blank:click', (event) => {
+      this.dispatchEvent(new CustomEvent('canvas-clicked', {
+        detail: {
+          click: {
+            x: event.x,
+            y: event.y
+          }
+        }
+      }));
+    });
+
   }
 }

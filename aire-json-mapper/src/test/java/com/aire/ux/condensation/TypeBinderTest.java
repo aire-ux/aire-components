@@ -10,8 +10,12 @@ import com.aire.ux.condensation.mappings.AnnotationDrivenPropertyScanner;
 import com.aire.ux.condensation.mappings.CachingDelegatingTypeInstantiator;
 import com.aire.ux.condensation.mappings.DefaultTypeBinder;
 import com.aire.ux.condensation.mappings.ReflectiveTypeInstantiator;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -393,7 +397,86 @@ class TypeBinderTest {
   }
 
   @Test
-  void ensureReadingListOfComplexElementsWorks() throws NoSuchFieldException {
+  void ensureReadingMapWithNoDiscriminatorWorks() throws IOException {
+    @Data
+    @RootElement
+    class MapHolder {
+
+      @Attribute private String name;
+      @Element private Map<String, String> collection;
+
+      MapHolder() {
+        collection = new HashMap<>();
+      }
+    }
+
+    instantiator.register(MapHolder.class, MapHolder::new);
+
+    val instance = new MapHolder();
+    instance.collection.put("hello", "world");
+    instance.name = "sup";
+    val a = Condensation.write("json", MapHolder.class, instance);
+    val result = Condensation.read(MapHolder.class, "json", a, binder);
+    assertEquals(1, result.collection.size());
+  }
+
+  @Test
+  void ensureReadingMapOfMapsWorks() throws IOException {
+    @Data
+    @RootElement
+    class MapHolder {
+
+      @Attribute private String name;
+      @Element private Map<String, Map<String, Serializable>> collection;
+
+      MapHolder() {
+        collection = new HashMap<>();
+      }
+    }
+
+    instantiator.register(MapHolder.class, MapHolder::new);
+
+    val instance = new MapHolder();
+    val fst = new HashMap<String, Serializable>();
+    fst.put("child", "value");
+    fst.put("number-value", 1d);
+    instance.collection.put("hello", fst);
+    instance.name = "sup";
+    val a = Condensation.write("json", MapHolder.class, instance);
+    val result = Condensation.read(MapHolder.class, "json", a, binder);
+    assertEquals(1, result.collection.size());
+
+    val childMap = result.collection.get("hello");
+    assertEquals(childMap, fst);
+  }
+
+  @Test
+  void ensureReadingMapWithNoDiscriminatorWorksOnSupertype() throws IOException {
+    @Data
+    @RootElement
+    class MapHolder {
+
+      @Attribute private String name;
+      @Element private Map<String, Serializable> collection;
+
+      MapHolder() {
+        collection = new HashMap<>();
+      }
+    }
+
+    instantiator.register(MapHolder.class, MapHolder::new);
+
+    val instance = new MapHolder();
+    instance.collection.put("hello", "world");
+    instance.collection.put("world", 1);
+    instance.name = "sup";
+    val a = Condensation.write("json", MapHolder.class, instance);
+    val result = Condensation.read(MapHolder.class, "json", a, binder);
+    assertEquals(2, result.collection.size());
+  }
+
+  @Test
+  void ensureReadingListOfComplexElementsWorks() {
 
     @RootElement
     class Content {

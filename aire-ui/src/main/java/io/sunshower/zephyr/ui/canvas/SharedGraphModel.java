@@ -1,17 +1,18 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Condensation;
+import com.google.common.collect.Streams;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.val;
 
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
@@ -19,28 +20,25 @@ class SharedGraphModel extends AbstractEventSource
   /** constants */
   static final String format = "json";
 
-  /** immutable state */
-  private final Condensation condensation;
-
   /** mutable state */
   private Canvas host;
 
+  private List<Edge> edges;
   private List<Vertex> vertices;
   private CommandManager commandManager;
+  private List<VertexTemplate> vertexTemplates;
   private VertexTemplate defaultVertexTemplate;
   private Registration canvasReadyEventRegistration;
 
   SharedGraphModel() {
-    this.condensation = Condensation.create(format);
+    this.edges = new ArrayList<>();
+    this.vertices = new ArrayList<>();
+    this.vertexTemplates = new ArrayList<>();
   }
 
   SharedGraphModel(@NonNull final Canvas host) {
-    this(host, format);
-  }
-
-  SharedGraphModel(@NonNull final Canvas host, @NonNull String format) {
+    this();
     this.host = host;
-    this.condensation = Condensation.create(format);
   }
 
   @Override
@@ -69,16 +67,28 @@ class SharedGraphModel extends AbstractEventSource
 
   @Override
   public List<Cell> getCells() {
-    return null;
+    return Streams.concat(vertices.stream(), edges.stream()).collect(Collectors.toList());
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Cell> getCells(Type type) {
-    return null;
+    switch (type) {
+      case Vertex:
+        return (List<Cell>) (List) vertices;
+      case Edge:
+        return (List<Cell>) (List) edges;
+    }
+    throw new IllegalArgumentException("Unknown type: " + type);
   }
 
   @Override
   public Identifier add(Cell cell) {
+    if (cell.getType() == Type.Vertex) {
+      vertices.add((Vertex) cell);
+    } else {
+      edges.add((Edge) cell);
+    }
     return null;
   }
 
@@ -104,14 +114,12 @@ class SharedGraphModel extends AbstractEventSource
 
   @Override
   public List<Vertex> getVertices() {
-    return null;
+    return vertices;
   }
 
   @Override
   public void setVertices(Collection<Vertex> vertices) {
     this.vertices = new ArrayList<>(vertices);
-    commandManager.addPendingAction(
-        new CompositeAction(vertices.stream().map(AddVertexAction::new)));
   }
 
   @Override
@@ -130,13 +138,33 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
+  public List<VertexTemplate> getVertexTemplates() {
+    return vertexTemplates;
+  }
+
+  @Override
+  public void addVertexTemplate(VertexTemplate template) {
+    this.vertexTemplates.add(template);
+  }
+
+  @Override
+  public Optional<VertexTemplate> removeVertexTemplate(VertexTemplate template) {
+    if (vertexTemplates.remove(template)) {
+      return Optional.of(template);
+    }
+    return Optional.empty();
+  }
+
+  @Override
+  public void addVertices(List<Vertex> vertices) {
+    for (val vertex : vertices) {
+      add(vertex);
+    }
+  }
+
+  @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
-  }
-
-  private Serializable write(Class<Vertex> vertexClass, Collection<Vertex> vertices)
-      throws IOException {
-    return condensation.getWriter().writeAll(vertexClass, vertices);
   }
 }

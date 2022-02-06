@@ -9,6 +9,7 @@ import com.aire.ux.condensation.Property.Mode;
 import com.aire.ux.condensation.PropertyScanner;
 import com.aire.ux.condensation.TypeBinder;
 import com.aire.ux.condensation.TypeDescriptor;
+import com.aire.ux.condensation.json.JsonToken;
 import com.aire.ux.condensation.json.Value;
 import com.aire.ux.condensation.json.Value.Type;
 import io.sunshower.arcus.ast.SyntaxNode;
@@ -296,6 +297,12 @@ public class DefaultTypeBinder implements TypeBinder {
   @SuppressWarnings({"unchecked", "rawtypes"})
   private <T> T read(Class<T> type, SyntaxNode<Value<?>, Token> node, Discriminator snd) {
     Class<? extends T> actualType;
+    if (node.getSymbol() == JsonToken.String) {
+      val child = requireNonNull(node.getChild(0));
+      if (child.hasChildren() && type == null && snd == null) {
+        return (T) readDirect(child);
+      }
+    }
     if (snd != null) {
       actualType = readDiscriminatorType(node, snd);
       if (actualType == null) {
@@ -308,13 +315,35 @@ public class DefaultTypeBinder implements TypeBinder {
     if (collectionType != null) {
       // we're a primitive
       val child = requireNonNull(node.getChild(0));
+      if (child.getSymbol() == JsonToken.String) {
+        return valueOf(child);
+      }
       val argument = valueOf(child);
       return (T) collectionType.convert((Double) argument);
     } else {
+      if (actualType != null && actualType.isInterface()) {
+        val child = requireNonNull(node.getChild(0));
+        return valueOf(child);
+      }
       val instance = instantiate(actualType);
       bind((Class) actualType, instance, node);
       return instance;
     }
+  }
+
+  private Map<String, ?> readDirect(SyntaxNode<Value<?>, Token> node) {
+    val result = new LinkedHashMap<String, Object>();
+    for (val child : node.getChildren()) {
+      val key = (String) child.getValue().getValue();
+      for (val valueNode : child.getChildren()) {
+        if (isScalar(valueNode)) {
+          result.put(key, valueOf(valueNode));
+        } else {
+          result.put(key, readDirect(valueNode));
+        }
+      }
+    }
+    return result;
   }
 
   @SneakyThrows
@@ -369,7 +398,10 @@ public class DefaultTypeBinder implements TypeBinder {
     Class<?> actualType = null;
     if (property.getGenericType() instanceof ParameterizedType) {
       val type = (ParameterizedType) property.getGenericType();
-      actualType = (Class<?>) type.getActualTypeArguments()[idx];
+      val parameterizedTypeArgument = type.getActualTypeArguments()[idx];
+      if (parameterizedTypeArgument instanceof Class<?>) {
+        actualType = (Class<?>) parameterizedTypeArgument;
+      }
     } else if (property.isArray()) {
       actualType = property.getComponentType();
     }

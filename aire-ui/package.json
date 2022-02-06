@@ -4,7 +4,8 @@
   "vaadin": {
     "dependencies": {
       "@aire-ux/aire-condensation": "0.1.5",
-      "@antv/x6": "1.29.6",
+      "@antv/layout": "0.1.31",
+      "@antv/x6": "1.30.0",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-list": "3.1.0",
       "@polymer/polymer": "3.2.0",
@@ -117,11 +118,12 @@
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "ed3190f60f30c12131352d9e35ef120516342ba06a43494c1fb1254ddb60f852"
+    "hash": "569473861adc8bd0e4207abe93983d5d36aaff66518c640943b9ca5011fb3d21"
   },
   "dependencies": {
     "@aire-ux/aire-condensation": "0.1.5",
-    "@antv/x6": "1.29.6",
+    "@antv/layout": "0.1.31",
+    "@antv/x6": "1.30.0",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
     "@polymer/polymer": "3.2.0",

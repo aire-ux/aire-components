@@ -14,22 +14,22 @@ import lombok.ToString;
 @ToString
 @RootElement
 @EqualsAndHashCode
-public class Vertex {
+public class Vertex implements Cell {
 
   /** the x location of this vertex */
-  @Getter @Setter @Attribute private Float x;
+  @Getter @Setter @Attribute private Double x;
 
   /** the y location of this vertex */
-  @Getter @Setter @Attribute private Float y;
+  @Getter @Setter @Attribute private Double y;
 
   /** the label of this vertex */
   @Getter @Setter @Attribute private String label;
 
   /** the width of this vertex */
-  @Getter @Setter @Attribute private Float width;
+  @Getter @Setter @Attribute private Double width;
 
   /** the height of this vertex */
-  @Getter @Setter @Attribute private Float height;
+  @Getter @Setter @Attribute private Double height;
 
   /** the ID of this vertex */
   @Getter @Setter @Attribute private Identifier id;
@@ -38,8 +38,11 @@ public class Vertex {
   @Getter @Setter @Attribute private String shape;
 
   private VertexTemplate template;
+  @Getter private Type type;
 
-  public Vertex() {}
+  public Vertex() {
+    this.type = Type.Vertex;
+  }
 
   public void setTemplate(@NonNull VertexTemplate template) {
     this.shape = template.getName();

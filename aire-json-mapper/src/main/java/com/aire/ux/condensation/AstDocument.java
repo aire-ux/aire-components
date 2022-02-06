@@ -1,6 +1,7 @@
 package com.aire.ux.condensation;
 
 import com.aire.ux.condensation.json.Value;
+import com.aire.ux.condensation.json.Value.Type;
 import com.aire.ux.condensation.json.Values.ObjectValue;
 import com.aire.ux.condensation.selectors.JsonNodeAdapter;
 import com.aire.ux.plan.DefaultPlanContext;
@@ -11,6 +12,7 @@ import io.sunshower.arcus.ast.SyntaxNode;
 import io.sunshower.arcus.ast.core.Token;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Supplier;
 import lombok.val;
 
 public class AstDocument implements Document {
@@ -96,5 +98,27 @@ public class AstDocument implements Document {
   @Override
   public <T> T read(Class<T> type, TypeBinder strategy) {
     return strategy.bind(type, tree.getRoot());
+  }
+
+  @Override
+  public <U extends Collection<? super T>, T> U readAll(
+      Class<T> type, Supplier<U> instantiator, TypeBinder strategy) {
+    val root = tree.getRoot();
+    if (root == null) {
+      return null;
+    }
+    val value = root.getValue();
+    if (value == null) {
+      return null;
+    }
+    val result = instantiator.get();
+    if (value.getType() == Type.Array) {
+      for (val child : root.getChildren()) {
+        result.add(strategy.bind(type, child));
+      }
+      return result;
+    }
+    result.add(strategy.bind(type, root));
+    return result;
   }
 }

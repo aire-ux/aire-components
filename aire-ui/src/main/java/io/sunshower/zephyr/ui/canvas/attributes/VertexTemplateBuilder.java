@@ -36,7 +36,6 @@ public class VertexTemplateBuilder {
     return this;
   }
 
-
   public class VertexTemplateBuilderWithWidthOrHeight {
 
     public VertexTemplateBuilderWithWidthOrHeight width(Number f) {
@@ -51,6 +50,10 @@ public class VertexTemplateBuilder {
 
     public VertexTemplateAttributeBuilder attribute(String attribute) {
       return new VertexTemplateAttributeBuilder().attribute(attribute);
+    }
+
+    public VertexTemplate create() {
+      return template;
     }
   }
 
@@ -87,14 +90,14 @@ public class VertexTemplateBuilder {
     }
   }
 
-
   public class VertexTemplatePropertyBuilder {
 
     private final String key;
     private final Map<String, Serializable> values;
     private final VertexTemplateAttributeBuilder parent;
 
-    public VertexTemplatePropertyBuilder(@NonNull String key,
+    public VertexTemplatePropertyBuilder(
+        @NonNull String key,
         @NonNull Map<String, Serializable> values,
         @NonNull VertexTemplateAttributeBuilder parent) {
       this.key = key;
@@ -121,7 +124,6 @@ public class VertexTemplateBuilder {
   public class MarkupBuilder {
 
     final String tagName;
-
 
     private MarkupBuilder(String tagName) {
       this.tagName = tagName;
