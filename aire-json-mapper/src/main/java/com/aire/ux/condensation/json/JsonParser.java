@@ -87,6 +87,9 @@ public class JsonParser {
     val objectNode = new JsonSyntaxNode(objectToken, value);
     for (; ; ) {
       whitespace(tokens);
+      if(peekType(tokens, JsonToken.CloseBrace)) {
+        return objectNode;
+      }
       val memberName = string(tokens);
       whitespace(tokens);
       expect(tokens, JsonToken.Colon);

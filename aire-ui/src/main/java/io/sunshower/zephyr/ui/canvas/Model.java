@@ -5,7 +5,9 @@ import io.sunshower.lang.events.EventSource;
 import io.sunshower.persistence.id.Identifier;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.NonNull;
 import lombok.val;
 
@@ -62,4 +64,8 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
   Optional<VertexTemplate> removeVertexTemplate(VertexTemplate template);
 
   void addVertices(List<Vertex> vertices);
+
+  void connectAll(List<Edge> edges);
+
+  Set<Edge> getEdges();
 }

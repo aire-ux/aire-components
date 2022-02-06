@@ -1,5 +1,7 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import static java.util.Objects.requireNonNull;
+
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.gyre.AbstractDirectedGraph;
@@ -26,7 +28,9 @@ import lombok.val;
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /** constants */
+  /**
+   * constants
+   */
   static final String format = "json";
 
   static final Sequence<Identifier> identifierSequence;
@@ -35,7 +39,9 @@ class SharedGraphModel extends AbstractEventSource
     identifierSequence = Identifiers.newSequence();
   }
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas host;
 
   private CommandManager commandManager;
@@ -116,7 +122,7 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
-  public Edge connect(Vertex source, Vertex target) {
+  public Edge connect(@NonNull Vertex source, @NonNull Vertex target) {
     val vertices = graph.vertexSet();
     if (!vertices.contains(source)) {
       addVertex(source);
@@ -210,8 +216,22 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
+  public void connectAll(List<Edge> edges) {
+    for (val edge : edges) {
+      connect(edge.getSource(), edge.getTarget());
+    }
+  }
+
+  public Set<Edge> getEdges() {
+    return requireNonNull(graph)
+        .edgeSet().stream().map(DirectedGraph.Edge::getLabel)
+        .collect(Collectors.toUnmodifiableSet());
+  }
+
+  @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
+
 }

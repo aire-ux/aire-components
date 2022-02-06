@@ -29,9 +29,6 @@ public class Vertex extends AbstractCell {
   /** the height of this vertex */
   @Getter @Setter @Attribute private Double height;
 
-  /** the ID of this vertex */
-  @Getter @Setter @Attribute private Identifier id;
-
   /** */
   @Getter @Setter @Attribute private String shape;
 
@@ -49,4 +46,5 @@ public class Vertex extends AbstractCell {
     this.shape = template.getName();
     this.template = template;
   }
+
 }

@@ -30,9 +30,13 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   private final T member;
-  /** the type of the host-class */
+  /**
+   * the type of the host-class
+   */
   private final Class<?> host;
-  /** the read-alias of this property */
+  /**
+   * the read-alias of this property
+   */
   private final String readAlias;
 
   private final String writeAlias;
@@ -107,7 +111,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public <R, S> R convert(S value) {
     if (converter == null) {
       if (value == null) {
@@ -121,6 +125,9 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
       }
     } else {
       return ((Converter<R, S>) converter).read(value);
+    }
+    if (getType().isEnum()) {
+      return (R) Enum.valueOf((Class) getType(), (String) value);
     }
     return (R) value;
   }

@@ -54,7 +54,13 @@ public class Canvas extends HtmlContainer {
     model.detach(this);
   }
 
-  public <T> ClientResult<T> invoke(Class<? extends Action<T>> action, Object... arguments) {
+  public <T> T invoke(Class<? extends Action<T>> action, Object... arguments) {
+    return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel())
+        .block();
+  }
+
+  public <T> ClientResult<T> invokeAsynchronously(Class<? extends Action<T>> action,
+      Object... arguments) {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 
@@ -67,7 +73,9 @@ public class Canvas extends HtmlContainer {
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /** @return the canvas model for this canvas */
+  /**
+   * @return the canvas model for this canvas
+   */
   @NonNull
   public final Model getModel() {
     return model;
