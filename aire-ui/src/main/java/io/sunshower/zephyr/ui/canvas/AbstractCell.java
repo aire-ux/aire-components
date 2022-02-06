@@ -18,28 +18,21 @@ import lombok.ToString;
 @EqualsAndHashCode
 public abstract class AbstractCell implements Cell {
 
-  @NonNull
-  @Attribute
-  private final Type type;
-
+  @NonNull @Attribute private final Type type;
 
   @NonNull
   @Attribute(alias = @Alias(read = "id", write = "id"))
   private final Identifier identifier;
 
-  @NonNull
-  @Element
-  private Map<String, String> properties;
+  @NonNull @Element private Map<String, String> properties;
 
-  @Element
-  private CellTemplate template;
+  @Element private CellTemplate template;
 
   protected AbstractCell(final Type type, final @NonNull Identifier identifier) {
     this.type = type;
     this.identifier = identifier;
     this.properties = new HashMap<>();
   }
-
 
   @Override
   public Type getType() {

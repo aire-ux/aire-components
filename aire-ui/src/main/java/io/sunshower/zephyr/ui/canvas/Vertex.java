@@ -46,5 +46,4 @@ public class Vertex extends AbstractCell {
     this.shape = template.getName();
     this.template = template;
   }
-
 }

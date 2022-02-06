@@ -2,10 +2,8 @@ package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Condensation;
 import com.aire.ux.condensation.DocumentWriter;
-import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 public class AbstractCanvasTest {
 
@@ -22,5 +20,4 @@ public class AbstractCanvasTest {
             VertexTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-node-template.json");
   }
-
 }

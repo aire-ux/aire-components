@@ -29,7 +29,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 @SpyBean(Canvas.class)
 class CanvasTest extends AbstractCanvasTest {
 
-
   @ViewTest
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertices().isEmpty());

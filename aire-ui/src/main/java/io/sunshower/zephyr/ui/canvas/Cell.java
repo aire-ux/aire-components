@@ -15,7 +15,7 @@ public interface Cell {
 
   void setCellTemplate(CellTemplate template);
 
-  void addProperty(@NonNull String key, @NonNull  String value);
+  void addProperty(@NonNull String key, @NonNull String value);
 
   Optional<String> clearProperty(@NonNull String key);
 

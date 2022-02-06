@@ -3,7 +3,6 @@ package io.sunshower.zephyr.ui.canvas.actions;
 import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.ui.canvas.Edge;
 import io.sunshower.zephyr.ui.canvas.Model;
-import io.sunshower.zephyr.ui.canvas.Vertex;
 import io.sunshower.zephyr.ui.rmi.Argument;
 import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.List;
@@ -12,7 +11,6 @@ import lombok.NonNull;
 
 @Argument(collection = true, type = Edge.class)
 public class ConnectVerticesAction extends AbstractClientMethodBoundAction<List<Edge>> {
-
 
   static final String NAME = "actions:edges:add";
   static final String METHOD_NAME = "connectVertices";
@@ -24,14 +22,10 @@ public class ConnectVerticesAction extends AbstractClientMethodBoundAction<List<
   }
 
   @Override
-  public void undo(Model model) {
-
-  }
+  public void undo(Model model) {}
 
   @Override
-  public void redo(Model model) {
-
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<List<Edge>> apply(Model model) {

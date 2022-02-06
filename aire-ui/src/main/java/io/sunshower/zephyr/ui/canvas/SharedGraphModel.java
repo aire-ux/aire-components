@@ -28,9 +28,7 @@ import lombok.val;
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /**
-   * constants
-   */
+  /** constants */
   static final String format = "json";
 
   static final Sequence<Identifier> identifierSequence;
@@ -39,9 +37,7 @@ class SharedGraphModel extends AbstractEventSource
     identifierSequence = Identifiers.newSequence();
   }
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas host;
 
   private CommandManager commandManager;
@@ -223,8 +219,8 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   public Set<Edge> getEdges() {
-    return requireNonNull(graph)
-        .edgeSet().stream().map(DirectedGraph.Edge::getLabel)
+    return requireNonNull(graph).edgeSet().stream()
+        .map(DirectedGraph.Edge::getLabel)
         .collect(Collectors.toUnmodifiableSet());
   }
 
@@ -233,5 +229,4 @@ class SharedGraphModel extends AbstractEventSource
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
-
 }

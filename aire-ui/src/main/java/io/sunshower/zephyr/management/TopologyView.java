@@ -74,12 +74,13 @@ public class TopologyView extends VerticalLayout
         edges.add(new Edge(source.getId(), target.getId()));
       }
     }
-    canvas.invokeAsynchronously(AddVerticesAction.class, new ArrayList<>(vertices.values()))
-        .then(result -> {
-          canvas.invokeAsynchronously(ConnectVerticesAction.class, edges);
-        });
+    canvas
+        .invokeAsynchronously(AddVerticesAction.class, new ArrayList<>(vertices.values()))
+        .then(
+            result -> {
+              canvas.invokeAsynchronously(ConnectVerticesAction.class, edges);
+            });
   }
-
 
   @Override
   protected void onDetach(DetachEvent detachEvent) {

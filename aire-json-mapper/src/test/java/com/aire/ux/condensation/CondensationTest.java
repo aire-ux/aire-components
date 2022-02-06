@@ -21,25 +21,21 @@ class CondensationTest {
   void ensureCopyingEnumWorks() {
     enum Test {
       A;
-
     }
 
     @RootElement
     class TestType {
-      @Attribute
-      Test t;
+      @Attribute Test t;
     }
 
     val condensation = Condensation.create("json");
-    ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(TestType.class, TestType::new);
+    ((ReflectiveTypeInstantiator) condensation.getInstantiator())
+        .register(TestType.class, TestType::new);
     val t = new TestType();
     t.t = Test.A;
     val u = condensation.read(TestType.class, condensation.getWriter().write(TestType.class, t));
     assertEquals(t.t, Test.A);
-
-
   }
-
 
   @Test
   void ensureWritingListDirectlyWorks() throws IOException {
