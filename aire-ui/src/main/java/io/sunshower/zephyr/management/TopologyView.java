@@ -52,7 +52,7 @@ public class TopologyView extends VerticalLayout
             VertexTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-node-template.json");
     canvas
-        .invokeAsynchronously(AddVertexTemplateAction.class, template)
+        .invoke(AddVertexTemplateAction.class, template)
         .toFuture()
         .thenAccept(this::configureModuleNodes);
   }
@@ -75,10 +75,10 @@ public class TopologyView extends VerticalLayout
       }
     }
     canvas
-        .invokeAsynchronously(AddVerticesAction.class, new ArrayList<>(vertices.values()))
+        .invoke(AddVerticesAction.class, new ArrayList<>(vertices.values()))
         .then(
             result -> {
-              canvas.invokeAsynchronously(ConnectVerticesAction.class, edges);
+              canvas.invoke(ConnectVerticesAction.class, edges);
             });
   }
 

@@ -33,14 +33,14 @@ class CanvasTest extends AbstractCanvasTest {
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertices().isEmpty());
     val vertices = List.of(new Vertex());
-    canvas.invokeAsynchronously(AddVerticesAction.class, vertices);
+    canvas.invoke(AddVerticesAction.class, vertices);
     assertEquals(1, canvas.getModel().getVertices().size());
   }
 
   @ViewTest
   void ensureCanvasIsInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertexTemplates().isEmpty());
-    canvas.invokeAsynchronously(AddVertexTemplateAction.class, template);
+    canvas.invoke(AddVertexTemplateAction.class, template);
     assertFalse(canvas.getModel().getVertexTemplates().isEmpty());
   }
 

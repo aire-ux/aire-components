@@ -1,6 +1,7 @@
 package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Attribute;
+import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class Vertex extends AbstractCell {
   /** */
   @Getter @Setter @Attribute private String shape;
 
+
+
+  @Element
   private VertexTemplate template;
 
   public Vertex() {
@@ -45,5 +49,15 @@ public class Vertex extends AbstractCell {
   public void setTemplate(@NonNull VertexTemplate template) {
     this.shape = template.getName();
     this.template = template;
+  }
+
+  @Override
+  public CellTemplate getCellTemplate() {
+    return template;
+  }
+
+  @Override
+  public void setCellTemplate(CellTemplate template) {
+    this.template = (VertexTemplate) template;
   }
 }

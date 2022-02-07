@@ -25,7 +25,9 @@ class CondensationTest {
 
     @RootElement
     class TestType {
-      @Attribute Test t;
+
+      @Attribute
+      Test t;
     }
 
     val condensation = Condensation.create("json");
@@ -37,6 +39,31 @@ class CondensationTest {
     assertEquals(t.t, Test.A);
   }
 
+  @SneakyThrows
+  @Test
+  void ensureAliasedEnumPropertyWorks() {
+    enum Whatever {
+      COOOL;
+    }
+
+    @RootElement
+    class A {
+
+      @Attribute(alias = @Alias(read = "my-enum", write = "my-enum"))
+      Whatever whatever;
+
+      A() {
+        whatever = Whatever.COOOL;
+      }
+    }
+
+    val condensation = Condensation.create("json");
+    ((ReflectiveTypeInstantiator) condensation.getInstantiator())
+        .register(A.class, A::new);
+    val s = condensation.write(A.class, new A());
+    System.out.println(s);
+  }
+
   @Test
   void ensureWritingListDirectlyWorks() throws IOException {
     @NoArgsConstructor
@@ -44,7 +71,8 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute String name;
+      @Attribute
+      String name;
     }
     val condensation = Condensation.create("json");
     val list = List.of(new A("a"), new A("b"));
@@ -57,7 +85,8 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute String name;
+      @Attribute
+      String name;
     }
     val condensation = Condensation.create("json");
     ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
@@ -71,7 +100,8 @@ class CondensationTest {
     @RootElement
     class A {
 
-      @Attribute String name;
+      @Attribute
+      String name;
     }
     val condensation = Condensation.create("json");
     ((ReflectiveTypeInstantiator) condensation.getInstantiator()).register(A.class, A::new);
@@ -84,7 +114,7 @@ class CondensationTest {
 
     Condensation condensation = Condensation.create("json");
     double[] values = condensation.read(double[].class, "[1,2,3,4]");
-    assertArrayEquals(new double[] {1d, 2d, 3d, 4d}, values);
+    assertArrayEquals(new double[]{1d, 2d, 3d, 4d}, values);
   }
 
   @Test
@@ -92,7 +122,7 @@ class CondensationTest {
 
     Condensation condensation = Condensation.create("json");
     int[] values = condensation.read(int[].class, "[1,2,3,4]");
-    assertArrayEquals(new int[] {1, 2, 3, 4}, values);
+    assertArrayEquals(new int[]{1, 2, 3, 4}, values);
   }
 
   @Test
@@ -100,7 +130,8 @@ class CondensationTest {
     @RootElement
     class KV {
 
-      @Element Map<String, Integer> elements;
+      @Element
+      Map<String, Integer> elements;
     }
 
     val value = "{" + "\"elements\": {" + "\"1\": 1," + "\"2\": 3}" + "} ";

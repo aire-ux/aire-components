@@ -26,7 +26,6 @@ public abstract class AbstractCell implements Cell {
 
   @NonNull @Element private Map<String, String> properties;
 
-  @Element private CellTemplate template;
 
   protected AbstractCell(final Type type, final @NonNull Identifier identifier) {
     this.type = type;
@@ -45,14 +44,10 @@ public abstract class AbstractCell implements Cell {
   }
 
   @Override
-  public CellTemplate getCellTemplate() {
-    return template;
-  }
+  public abstract CellTemplate getCellTemplate();
 
   @Override
-  public void setCellTemplate(CellTemplate template) {
-    this.template = template;
-  }
+  public abstract void setCellTemplate(CellTemplate template);
 
   @Override
   public void addProperty(@NonNull String key, @NonNull String value) {

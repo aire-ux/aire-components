@@ -1,0 +1,12 @@
+{
+  "connector": {
+    "name": "smooth"
+  },
+  "attrs": {
+    "line": {
+      "strokeWidth": 1,
+      "stroke": "#2385AF"
+    }
+  }
+
+}

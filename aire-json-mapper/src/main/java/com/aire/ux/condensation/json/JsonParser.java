@@ -70,6 +70,9 @@ public class JsonParser {
 
     for (; ; ) {
       whitespace(tokens);
+      if(peekType(tokens, JsonToken.ArrayClose)) {
+        return arrayNode;
+      }
       val arrayElement = element(tokens);
       arrayNode.addChild(arrayElement);
       value.add(arrayElement.getValue());
