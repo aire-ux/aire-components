@@ -1,8 +1,8 @@
-import {css, customElement, LitElement, PropertyValues,} from "lit-element";
+import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
 import {Edge, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
-import {CircularLayout, Model} from "@antv/layout";
+import {CircularLayout, Edge as LayoutEdge, Model, Node as LayoutNode} from "@antv/layout";
 import {EdgeDefinition} from "Frontend/aire/ui/canvas/cell";
 
 
@@ -13,56 +13,94 @@ export class Canvas extends LitElement {
   static layout = new CircularLayout();
   private graph: Graph | undefined;
 
+  @query('div.container')
+  private container: HTMLDivElement | undefined;
   // language=CSS
   static styles = css`
     :host {
       width: 100%;
       height: 100%;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      position: relative;
+    }
+
+    div.container {
+      flex: 1 1 auto;
+      height: 100%;
+      max-width: 100%;
+      max-height:100%;
+    }
+    div.container > div.x6-graph-grid {
+      position: absolute;
+      top: 0;
+      bottom:0;
+      left:0;
+      right:0;
+      z-index: -1;
     }
   `;
 
-
-  protected createRenderRoot(): Element | ShadowRoot {
-    this.style.width = '100%';
-    this.style.height = '100%';
-    return this;
+  constructor() {
+    super();
   }
 
   private createGraph(): void {
     if (this.graph) {
       return;
     }
+    console.log(this);
+    console.log(this.shadowRoot!.querySelector('div.container'));
+    const container = this.container;
+    console.log(this.container);
     const graph = new Graph({
-      container: this,
+      container: container,
+      autoResize: container,
       preventDefaultContextMenu: false,
       grid: true
     });
+
+
     this.graph = graph;
     this.registerListeners(graph);
   }
 
   @Remote
   public addVertex(@Receive(Dynamic) vertex: Node.Metadata): Node.Metadata {
-    this.graph!.addNode(vertex);
-    const model = {
-      nodes: this.graph?.getNodes(),
-      edges: this.graph?.getEdges()
-    }
-    this.graph = this.graph!.fromJSON(Canvas.layout.layout(model as any));
+    const graph = this.graph,
+        previousNodes = graph?.getNodes(),
+        nodes = Canvas.layout.layout({
+          nodes: [graph?.createNode(vertex)].concat(previousNodes ?? []),
+          edges: graph?.getEdges()
+        } as Model);
+    this.graph = this.graph!.fromJSON(Canvas.layout.layout(nodes as any));
     this.graph.centerContent();
     return vertex;
   }
 
   @Remote
   public addVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
-    const model = Canvas.layout.layout({nodes: vertices, edges:[]} as Model);
-    this.graph?.fromJSON(model);
-    this.graph?.centerContent();
+    const graph = this.graph!,
+        existingNodes = (graph.getNodes().concat(...vertices as any[])) as unknown as LayoutNode[],
+        existingEdges = graph.getEdges() as unknown as LayoutEdge[],
+        model = {
+          nodes: existingNodes,
+          edges: existingEdges
+        } as Model,
+        layout = Canvas.layout;
+    if (existingNodes.length == 1) {
+      graph.fromJSON(model);
+      graph.centerContent();
+    } else {
+      const configuredModel = layout.layout(model);
+      graph.fromJSON(configuredModel);
+      graph.centerContent();
+    }
   }
 
   @Remote
-  public connectVertices(@Receive(Dynamic) edges: Array<EdgeDefinition>) : void {
+  public connectVertices(@Receive(Dynamic) edges: Array<EdgeDefinition>): void {
     const edgeMetadata: Array<Edge.Metadata> = edges.map(edge => {
       return {
         source: edge.source,
@@ -76,10 +114,6 @@ export class Canvas extends LitElement {
 
   @Remote
   public setVertices(@Receive(Dynamic) vertices: Array<Node.Metadata>): void {
-    vertices?.forEach(vertex => {
-      const node = this.graph!.createNode(vertex);
-      this.graph!.addNode(node);
-    });
 
   }
 
@@ -95,6 +129,13 @@ export class Canvas extends LitElement {
     Graph.unregisterNode(template.name);
   }
 
+
+  protected render(): unknown {
+    return html`
+      <div class="container">
+      </div>
+    `;
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);

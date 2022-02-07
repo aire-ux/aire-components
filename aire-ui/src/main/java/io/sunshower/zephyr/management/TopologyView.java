@@ -51,13 +51,21 @@ public class TopologyView extends VerticalLayout
 
   @Inject
   public TopologyView(final Zephyr zephyr) {
-    this.setHeightFull();
     this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
+    this.configureStyles();
+    this.setHeightFull();
     //    model.addNodeTemplate(new ResourceNodeTemplate(""));
     add(canvas);
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
+  }
+
+  private void configureStyles() {
+    val style = this.getStyle();
+    style.set("display", "flex");
+    style.set("justify-content", "center");
+    style.set("align-items", "center");
   }
 
   @Override

@@ -14,7 +14,8 @@
       "refX": 0.5,
       "refY": -4,
       "fontSize": 12,
-      "stroke": "rgba(0,0,0,0.6)",
+      "fontFamily": "monospace",
+      "stroke": "#2C2C2C",
       "textAnchor": "middle",
       "textVerticalAnchor": "bottom"
     },
