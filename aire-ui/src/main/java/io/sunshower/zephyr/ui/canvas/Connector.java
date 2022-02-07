@@ -13,10 +13,7 @@ import lombok.Setter;
 @RootElement
 public class Connector {
 
-  @Getter
-  @Setter
-  @Attribute
-  private String name;
+  @Getter @Setter @Attribute private String name;
 
   @Getter
   @Setter
@@ -30,6 +27,4 @@ public class Connector {
   public void addArgument(String key, Serializable value) {
     arguments.put(key, value);
   }
-
-
 }

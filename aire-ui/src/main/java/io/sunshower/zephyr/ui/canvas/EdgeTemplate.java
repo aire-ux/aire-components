@@ -8,8 +8,5 @@ import lombok.Setter;
 @RootElement
 public class EdgeTemplate extends AbstractCellTemplate {
 
-  @Getter
-  @Setter
-  @Element
-  private Connector connector;
+  @Getter @Setter @Element private Connector connector;
 }

@@ -33,10 +33,7 @@ public class Vertex extends AbstractCell {
   /** */
   @Getter @Setter @Attribute private String shape;
 
-
-
-  @Element
-  private VertexTemplate template;
+  @Element private VertexTemplate template;
 
   public Vertex() {
     this(SharedGraphModel.identifierSequence.next());

@@ -26,7 +26,6 @@ public abstract class AbstractCell implements Cell {
 
   @NonNull @Element private Map<String, String> properties;
 
-
   protected AbstractCell(final Type type, final @NonNull Identifier identifier) {
     this.type = type;
     this.identifier = identifier;

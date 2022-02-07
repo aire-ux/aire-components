@@ -10,6 +10,7 @@ import io.sunshower.zephyr.condensation.CondensationUtilities;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
 import io.sunshower.zephyr.ui.canvas.Edge;
+import io.sunshower.zephyr.ui.canvas.EdgeTemplate;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import io.sunshower.zephyr.ui.canvas.VertexTemplate;
@@ -29,6 +30,20 @@ import lombok.val;
 public class TopologyView extends VerticalLayout
     implements ComponentEventListener<CanvasReadyEvent> {
 
+  static final EdgeTemplate defaultEdgeTemplate;
+  static final VertexTemplate defaultVertexTemplate;
+
+  static {
+    defaultVertexTemplate =
+        CondensationUtilities.read(
+            VertexTemplate.class,
+            "classpath:canvas/resources/nodes/templates/module-node-template.json");
+    defaultEdgeTemplate =
+        CondensationUtilities.read(
+            EdgeTemplate.class,
+            "classpath:canvas/resources/nodes/templates/module-edge-template.json");
+  }
+
   private final Model model;
   private final Zephyr zephyr;
   private final Registration onCanvasReadyRegistration;
@@ -47,12 +62,8 @@ public class TopologyView extends VerticalLayout
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
-    val template =
-        CondensationUtilities.read(
-            VertexTemplate.class,
-            "classpath:canvas/resources/nodes/templates/module-node-template.json");
     canvas
-        .invoke(AddVertexTemplateAction.class, template)
+        .invoke(AddVertexTemplateAction.class, defaultVertexTemplate)
         .toFuture()
         .thenAccept(this::configureModuleNodes);
   }
@@ -63,6 +74,7 @@ public class TopologyView extends VerticalLayout
 
     for (val module : zephyr.getPlugins()) {
       val vertex = new Vertex();
+      vertex.setLabel(module.getCoordinate().toCanonicalForm());
       vertex.setTemplate(t);
       vertices.put(module.getCoordinate(), vertex);
     }
@@ -71,7 +83,8 @@ public class TopologyView extends VerticalLayout
       for (val dependency : module.getDependencies()) {
         val target = vertices.get(dependency.getCoordinate());
         val source = vertices.get(module.getCoordinate());
-        edges.add(new Edge(source.getId(), target.getId()));
+        val edge = new Edge(source.getId(), target.getId(), defaultEdgeTemplate);
+        edges.add(edge);
       }
     }
     canvas

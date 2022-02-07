@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.condensation.Condensation;
-import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import lombok.SneakyThrows;
@@ -53,11 +52,10 @@ class EdgeTest {
     edge.setSource(source);
     edge.setTarget(target);
     val copy = condensation.copy(Edge.class, edge);
+    condensation.getWriter().write(Edge.class, edge, System.out);
     assertNotNull(copy.getCellTemplate());
     assertEquals(source, copy.getSource());
     assertEquals("smooth", copy.getCellTemplate().getConnector().getName());
     assertEquals(1d, copy.getCellTemplate().getAttributes().get("line").get("strokeWidth"));
   }
-
-
 }

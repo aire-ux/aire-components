@@ -25,8 +25,7 @@ class AddVerticesActionTest extends AbstractCanvasTest {
     canvas.invoke(AddVerticesAction.class, List.of(source, target));
     assertEquals(2, canvas.getModel().getVertices().size());
     assertTrue(canvas.getModel().getEdges().isEmpty());
-    canvas.invoke(
-        ConnectVerticesAction.class, List.of(new Edge(source.getId(), target.getId())));
+    canvas.invoke(ConnectVerticesAction.class, List.of(new Edge(source.getId(), target.getId())));
     assertEquals(1, canvas.getModel().getEdges().size());
   }
 }
