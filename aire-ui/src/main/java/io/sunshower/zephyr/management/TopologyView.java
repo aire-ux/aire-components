@@ -45,10 +45,18 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
+
+  /**
+   * immutable state
+   */
   private final Model model;
   private final Zephyr zephyr;
   private final Registration onCanvasReadyRegistration;
-  private Registration onVertexClickedRegistration;
+  private final Registration onVertexClickedRegistration;
+
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
   @Inject
@@ -61,6 +69,7 @@ public class TopologyView extends VerticalLayout
     //    model.addNodeTemplate(new ResourceNodeTemplate(""));
     add(canvas);
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
+    onVertexClickedRegistration = canvas.addVertexListener(Type.Clicked, System.out::println);
   }
 
   private void configureStyles() {
@@ -76,11 +85,6 @@ public class TopologyView extends VerticalLayout
         .invoke(AddVertexTemplateAction.class, defaultVertexTemplate)
         .toFuture()
         .thenAccept(this::configureModuleNodes);
-
-    onVertexClickedRegistration = canvas.addVertexListener(Type.Clicked, vertex -> {
-      System.out.println(vertex);
-    });
-
   }
 
   private void configureModuleNodes(VertexTemplate t) {
@@ -114,5 +118,6 @@ public class TopologyView extends VerticalLayout
   protected void onDetach(DetachEvent detachEvent) {
     super.onDetach(detachEvent);
     onCanvasReadyRegistration.remove();
+    onVertexClickedRegistration.remove();
   }
 }

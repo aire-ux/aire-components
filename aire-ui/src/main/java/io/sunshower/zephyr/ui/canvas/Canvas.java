@@ -9,11 +9,10 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
-import io.sunshower.lang.events.Event;
 import io.sunshower.lang.events.EventListener;
-import io.sunshower.lang.events.EventType;
 import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
 import io.sunshower.zephyr.ui.canvas.actions.AddListenerAction;
+import io.sunshower.zephyr.ui.canvas.actions.AddListenersAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CellListener;
 import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent;
@@ -39,12 +38,10 @@ import lombok.val;
 @NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.5")
 public class Canvas extends HtmlContainer implements ComponentEventListener<CanvasReadyEvent> {
 
+  private final List<PendingVertexEventListenerDescriptor> pendingVertexEventListeners;
   private Model model;
   private volatile boolean ready;
   private CommandManager commandManager;
-
-
-  private final List<PendingVertexEventListenerDescriptor> pendingVertexEventListeners;
 
   public Canvas() {
     setModel(new SharedGraphModel());
@@ -90,12 +87,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
 
   private Registration registerPendingVertexListener(Type type, CellListener<Vertex> listener,
       Predicate<Vertex> vertexFilter) {
-    val pending = new PendingVertexEventListenerDescriptor(type, listener, vertexFilter);
+    val delegate = getEventListener(vertexFilter, listener);
+    val pending = new PendingVertexEventListenerDescriptor(type, delegate, this);
     pendingVertexEventListeners.add(pending);
-    return () -> {
-      // TODO JOSIAH
-    };
-
+    return pending;
   }
 
 
@@ -129,6 +124,27 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
 
   private void bulkRegisterPendingVertexListeners() {
 
+    val definitions = new ArrayList<ListenerDefinition>(pendingVertexEventListeners.size());
+    for (val pendingVertexListener : pendingVertexEventListeners) {
+      val type = pendingVertexListener.getType();
+      val definition = new ListenerDefinition(SharedGraphModel.identifierSequence.next(),
+          type.getMappedName(), CanvasVertexEventListener.CATEGORY, type.getType());
+      definitions.add(definition);
+      model.addEventListener(pendingVertexListener.getDelegate(), type::ordinal);
+      val registration = addListener(CanvasVertexEventListener.class, event -> {
+        model.dispatchEvent(type::ordinal, event::getValue);
+      });
+      pendingVertexListener.setRegistration(registration);
+    }
+    invoke(AddListenersAction.class, definitions);
+  }
+
+  @NonNull
+  private EventListener<VertexDefinition> getEventListener(Predicate<Vertex> vertexFilter,
+      CellListener<Vertex> listener) {
+    return (eventType, event) -> model.findVertex(
+            vertexFilter.and(v -> event.getTarget().getId().equals(v.getId())))
+        .ifPresent(listener::on);
   }
 
   private Registration doRegisterVertexListener(
@@ -136,14 +152,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   ) {
     val definition = new ListenerDefinition(SharedGraphModel.identifierSequence.next(),
         type.getMappedName(), CanvasVertexEventListener.CATEGORY, type.getType());
+    val delegate = getEventListener(vertexFilter, listener);
     invoke(AddListenerAction.class, definition);
-    val delegate = new EventListener<VertexDefinition>() {
-      @Override
-      public void onEvent(EventType eventType, Event<VertexDefinition> event) {
-        model.findVertex(vertexFilter.and(v -> event.getTarget().getId().equals(v.getId())))
-            .ifPresent(listener::on);
-      }
-    };
     model.addEventListener(delegate, type::ordinal);
 
     val registration = addListener(CanvasVertexEventListener.class, event -> {

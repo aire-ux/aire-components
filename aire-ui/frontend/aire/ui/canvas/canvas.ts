@@ -106,23 +106,14 @@ export class Canvas extends LitElement {
 
   @Remote
   public addListener(@Receive(Dynamic) definition: ListenerDefinition): void {
-    const handler = (e: any) => {
-          this.dispatchEvent(new CustomEvent(definition.category, {
-            detail: {
-              source: {
-                id: e.cell.id,
-                targetEventType: definition.targetEventType
-              }
-            }
-          }))
-        },
-        handlers = this.registeredHandlers,
-        hlist = handlers.get(definition.key) || [];
-    if (!handlers.has(definition.key)) {
-      handlers.set(definition.key, hlist)
+    this.doAddListener(definition);
+  }
+
+  @Remote
+  public addListeners(@Receive(Dynamic) definitions: Array<ListenerDefinition>) : void {
+    for(const definition of definitions) {
+      this.doAddListener(definition);
     }
-    hlist.push([definition.id, handler]);
-    this.graph!.on(definition.key, handler);
   }
 
   @Remote
@@ -210,6 +201,7 @@ export class Canvas extends LitElement {
       const host = this,
           container = this.container!;
       if(!(Array.isArray(value) && value.length)) {
+        // required to prevent ResizeObserver loop limit exceeded
         window.requestAnimationFrame(() => {
           for (const entry of value) {
             container.style.width = `${host.clientWidth}px`;
@@ -220,6 +212,27 @@ export class Canvas extends LitElement {
     });
     observer.observe(this);
     this.canvasResizeObserver = observer;
+  }
+
+  private doAddListener(definition: ListenerDefinition) : void {
+
+    const handler = (e: any) => {
+          this.dispatchEvent(new CustomEvent(definition.category, {
+            detail: {
+              source: {
+                id: e.cell.id,
+                targetEventType: definition.targetEventType
+              }
+            }
+          }))
+        },
+        handlers = this.registeredHandlers,
+        hlist = handlers.get(definition.key) || [];
+    if (!handlers.has(definition.key)) {
+      handlers.set(definition.key, hlist)
+    }
+    hlist.push([definition.id, handler]);
+    this.graph!.on(definition.key, handler);
   }
 
 
