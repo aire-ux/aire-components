@@ -5,5 +5,5 @@ import io.sunshower.zephyr.ui.canvas.Cell;
 @FunctionalInterface
 public interface CellListener<T extends Cell, U extends CellEvent<T>> {
 
-  void on(U cell);
+  void on(U cellEvent);
 }

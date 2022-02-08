@@ -21,6 +21,7 @@ public class Location {
   @Attribute
   private Double x;
 
+  @Attribute
   private Double y;
 
 }

@@ -82,10 +82,11 @@ export class Canvas extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     const observer = this.canvasResizeObserver;
-    if(observer) {
+    if (observer) {
       observer.disconnect();
     }
   }
+
   connectedCallback() {
     super.connectedCallback();
   }
@@ -110,8 +111,8 @@ export class Canvas extends LitElement {
   }
 
   @Remote
-  public addListeners(@Receive(Dynamic) definitions: Array<ListenerDefinition>) : void {
-    for(const definition of definitions) {
+  public addListeners(@Receive(Dynamic) definitions: Array<ListenerDefinition>): void {
+    for (const definition of definitions) {
       this.doAddListener(definition);
     }
   }
@@ -200,7 +201,7 @@ export class Canvas extends LitElement {
     const observer = new ResizeObserver((value: Array<ResizeObserverEntry>) => {
       const host = this,
           container = this.container!;
-      if(!(Array.isArray(value) && value.length)) {
+      if (!(Array.isArray(value) && value.length)) {
         // required to prevent ResizeObserver loop limit exceeded
         window.requestAnimationFrame(() => {
           for (const entry of value) {
@@ -214,14 +215,20 @@ export class Canvas extends LitElement {
     this.canvasResizeObserver = observer;
   }
 
-  private doAddListener(definition: ListenerDefinition) : void {
+  private doAddListener(definition: ListenerDefinition): void {
 
-    const handler = (e: any) => {
+    const handler = (o: any) => {
+          const {e, cell} = o;
           this.dispatchEvent(new CustomEvent(definition.category, {
+
             detail: {
               source: {
-                id: e.cell.id,
-                targetEventType: definition.targetEventType
+                id: cell.id,
+                targetEventType: definition.targetEventType,
+                location: {
+                  x: e?.originalEvent.clientX,
+                  y: e?.originalEvent.clientY
+                }
               }
             }
           }))

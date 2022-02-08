@@ -162,18 +162,14 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   private Registration getRegistration(EventType type) {
-    val registration =
-        addListener(
-            CanvasVertexEventListener.class,
-            event -> {
-              val vertexDefinition = event.getValue();
-              model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
-                  .ifPresent(v -> {
-                    model.dispatchEvent(type::ordinal,
-                        new VertexEvent(v, this, vertexDefinition.getLocation()));
-                  });
-            });
-    return registration;
+    return addListener(
+        CanvasVertexEventListener.class,
+        event -> {
+          val vertexDefinition = event.getValue();
+          model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
+              .ifPresent(v -> model.dispatchEvent(type::ordinal,
+                  () -> (new VertexEvent(v, this, vertexDefinition.getLocation()))));
+        });
   }
 
   private void bulkRegisterPendingVertexListeners() {
