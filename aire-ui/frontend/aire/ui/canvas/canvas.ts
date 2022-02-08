@@ -1,4 +1,4 @@
-import {css, customElement, LitElement, PropertyValues, query} from "lit-element";
+import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
 import {Edge, Events, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
@@ -8,6 +8,8 @@ import {
   ListenerDefinition,
   ListenerRegistration
 } from "Frontend/aire/ui/canvas/cell";
+
+import "./patch";
 import EventArgs = Events.EventArgs;
 
 
@@ -18,15 +20,16 @@ export class Canvas extends LitElement {
   static layout = new CircularLayout();
   private graph: Graph | undefined;
 
+  @query('div.container')
+  private container: HTMLDivElement | undefined;
+
+  private canvasResizeObserver: ResizeObserver | undefined;
   /**
    * gotta track these so we can unregister them
    * @private
    */
   private registeredHandlers: Map<Events.EventNames<EventArgs>, Array<[string, Events.Handler<any>]>>;
 
-
-  @query('div.container')
-  private container: HTMLDivElement | undefined;
   // language=CSS
   static styles = css`
     :host {
@@ -43,27 +46,23 @@ export class Canvas extends LitElement {
       height: 100%;
       max-width: 100%;
       max-height: 100%;
+      z-index: 100;
     }
 
-    /*div.container > div.x6-graph-grid {*/
-    /*  position: absolute;*/
-    /*  top: 0;*/
-    /*  bottom: 0;*/
-    /*  left: 0;*/
-    /*  right: 0;*/
-    /*  z-index: -1;*/
-    /*}*/
+    div.container > div.x6-graph-grid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
   `;
+
 
   constructor() {
     super();
     this.registeredHandlers = new Map<Events.EventNames<EventArgs>, Array<[string, Events.Handler<any>]>>();
-  }
-
-  protected createRenderRoot(): Element | ShadowRoot {
-    this.style.width = '100%';
-    this.style.height = '100%';
-    return this;
   }
 
 
@@ -71,16 +70,24 @@ export class Canvas extends LitElement {
     if (this.graph) {
       return;
     }
+    const container = this.container;
     const graph = new Graph({
-      container: this,
-      autoResize: this,
+      container: container,
       preventDefaultContextMenu: false,
       grid: true
     });
-
-
     this.graph = graph;
-    this.registerListeners(graph);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    const observer = this.canvasResizeObserver;
+    if(observer) {
+      observer.disconnect();
+    }
+  }
+  connectedCallback() {
+    super.connectedCallback();
   }
 
   @Remote
@@ -100,12 +107,11 @@ export class Canvas extends LitElement {
   @Remote
   public addListener(@Receive(Dynamic) definition: ListenerDefinition): void {
     const handler = (e: any) => {
-      console.log("CLICKED");
           this.dispatchEvent(new CustomEvent(definition.category, {
             detail: {
               source: {
                 id: e.cell.id,
-                type: definition.targetEventType
+                targetEventType: definition.targetEventType
               }
             }
           }))
@@ -185,31 +191,36 @@ export class Canvas extends LitElement {
   }
 
 
-  // protected render(): unknown {
-  //   return html`
-  //     <div class="container">
-  //     </div>
-  //   `;
-  // }
+  protected render(): unknown {
+    return html`
+      <div class="container">
+      </div>
+    `;
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.createGraph();
+    this.createObservers();
     this.dispatchEvent(new CustomEvent('canvas-ready'));
   }
 
-
-  private registerListeners(graph: Graph) {
-    graph.on('blank:click', (event) => {
-      this.dispatchEvent(new CustomEvent('canvas-clicked', {
-        detail: {
-          click: {
-            x: event.x,
-            y: event.y
+  private createObservers() {
+    const observer = new ResizeObserver((value: Array<ResizeObserverEntry>) => {
+      const host = this,
+          container = this.container!;
+      if(!(Array.isArray(value) && value.length)) {
+        window.requestAnimationFrame(() => {
+          for (const entry of value) {
+            container.style.width = `${host.clientWidth}px`;
+            container.style.height = `${host.clientHeight}px`;
           }
-        }
-      }));
+        });
+      }
     });
-
+    observer.observe(this);
+    this.canvasResizeObserver = observer;
   }
+
+
 }

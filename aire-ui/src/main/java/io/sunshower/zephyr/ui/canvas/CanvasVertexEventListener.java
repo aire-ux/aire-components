@@ -15,7 +15,7 @@ import lombok.Setter;
  * this class is required to translate between CanvasEvents and VertexEvents
  */
 @DomEvent(CanvasVertexEventListener.CATEGORY)
-class CanvasVertexEventListener extends AireComponentEvent<Canvas, VertexDefinition> {
+public class CanvasVertexEventListener extends AireComponentEvent<Canvas, VertexDefinition> {
 
   public static final String CATEGORY = "vertex-event";
 
