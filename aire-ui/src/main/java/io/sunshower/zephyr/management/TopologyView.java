@@ -9,15 +9,18 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
+import io.sunshower.zephyr.ui.canvas.Edge;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
+import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
-import io.zephyr.kernel.Module;
-import java.util.stream.Collectors;
+import io.zephyr.kernel.Coordinate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.inject.Inject;
 import lombok.val;
 
@@ -49,23 +52,34 @@ public class TopologyView extends VerticalLayout
             VertexTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-node-template.json");
     canvas
-        .invoke(AddVertexTemplateAction.class, template)
+        .invokeAsynchronously(AddVertexTemplateAction.class, template)
         .toFuture()
         .thenAccept(this::configureModuleNodes);
   }
 
   private void configureModuleNodes(VertexTemplate t) {
-    val nodes =
-        zephyr.getPlugins().stream()
-            .map(module -> this.nodeFromModule(module, t))
-            .collect(Collectors.toList());
-    canvas.invoke(AddVerticesAction.class, nodes);
-  }
+    val edges = new ArrayList<Edge>();
+    val vertices = new HashMap<Coordinate, Vertex>();
 
-  private Vertex nodeFromModule(Module module, VertexTemplate t) {
-    val vertex = new Vertex();
-    vertex.setTemplate(t);
-    return vertex;
+    for (val module : zephyr.getPlugins()) {
+      val vertex = new Vertex();
+      vertex.setTemplate(t);
+      vertices.put(module.getCoordinate(), vertex);
+    }
+
+    for (val module : zephyr.getPlugins()) {
+      for (val dependency : module.getDependencies()) {
+        val target = vertices.get(dependency.getCoordinate());
+        val source = vertices.get(module.getCoordinate());
+        edges.add(new Edge(source.getId(), target.getId()));
+      }
+    }
+    canvas
+        .invokeAsynchronously(AddVerticesAction.class, new ArrayList<>(vertices.values()))
+        .then(
+            result -> {
+              canvas.invokeAsynchronously(ConnectVerticesAction.class, edges);
+            });
   }
 
   @Override

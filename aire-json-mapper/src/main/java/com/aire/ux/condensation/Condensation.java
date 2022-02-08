@@ -102,6 +102,10 @@ public class Condensation {
     return read(type, format, sequence, typeBinder);
   }
 
+  public <T> String write(Class<T> type, T value) throws IOException {
+    return getWriter().write(type, value);
+  }
+
   public DocumentWriter getWriter() {
     return writer;
   }
@@ -111,5 +115,9 @@ public class Condensation {
       Class<T> type, Supplier<U> instantiator, CharSequence s) {
     val document = parser.parse(s);
     return document.readAll(type, instantiator, typeBinder);
+  }
+
+  public <T> T copy(Class<T> type, T value) throws IOException {
+    return read(type, write(type, value));
   }
 }

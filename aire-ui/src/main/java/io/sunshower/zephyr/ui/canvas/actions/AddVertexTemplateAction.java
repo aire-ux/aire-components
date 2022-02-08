@@ -1,9 +1,9 @@
 package io.sunshower.zephyr.ui.canvas.actions;
 
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.rmi.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.VertexTemplate;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.function.Supplier;
 
 public class AddVertexTemplateAction extends AbstractClientMethodBoundAction<VertexTemplate> {

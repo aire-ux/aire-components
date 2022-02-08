@@ -1,9 +1,30 @@
 package io.sunshower.zephyr.ui.canvas;
 
-public class Edge implements Cell {
+import com.aire.ux.condensation.Attribute;
+import com.aire.ux.condensation.RootElement;
+import io.sunshower.persistence.id.Identifier;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
-  @Override
-  public Type getType() {
-    return Type.Edge;
+@RootElement
+public class Edge extends AbstractCell {
+
+  @Getter @Setter @Attribute private Identifier target;
+
+  @Getter @Setter @Attribute private Identifier source;
+
+  public Edge() {
+    this(SharedGraphModel.identifierSequence.next());
+  }
+
+  public Edge(Identifier identifier) {
+    super(Type.Edge, identifier);
+  }
+
+  public Edge(@NonNull Identifier source, @NonNull Identifier target) {
+    this();
+    setSource(source);
+    setTarget(target);
   }
 }

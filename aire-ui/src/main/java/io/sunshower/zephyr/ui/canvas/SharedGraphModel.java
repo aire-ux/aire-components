@@ -1,16 +1,27 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.google.common.collect.Streams;
+import static java.util.Objects.requireNonNull;
+
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.shared.Registration;
+import io.sunshower.gyre.AbstractDirectedGraph;
+import io.sunshower.gyre.DirectedGraph;
+import io.sunshower.gyre.DirectedGraph.Direction;
+import io.sunshower.gyre.EdgeFilters;
+import io.sunshower.gyre.Graph;
 import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.persistence.id.Identifier;
+import io.sunshower.persistence.id.Identifiers;
+import io.sunshower.persistence.id.Sequence;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.NonNull;
 import lombok.val;
 
@@ -20,19 +31,23 @@ class SharedGraphModel extends AbstractEventSource
   /** constants */
   static final String format = "json";
 
+  static final Sequence<Identifier> identifierSequence;
+
+  static {
+    identifierSequence = Identifiers.newSequence();
+  }
+
   /** mutable state */
   private Canvas host;
 
-  private List<Edge> edges;
-  private List<Vertex> vertices;
   private CommandManager commandManager;
   private List<VertexTemplate> vertexTemplates;
   private VertexTemplate defaultVertexTemplate;
   private Registration canvasReadyEventRegistration;
+  private Graph<DirectedGraph.Edge<Edge>, Vertex> graph;
 
   SharedGraphModel() {
-    this.edges = new ArrayList<>();
-    this.vertices = new ArrayList<>();
+    this.graph = new AbstractDirectedGraph<>();
     this.vertexTemplates = new ArrayList<>();
   }
 
@@ -67,59 +82,93 @@ class SharedGraphModel extends AbstractEventSource
 
   @Override
   public List<Cell> getCells() {
-    return Streams.concat(vertices.stream(), edges.stream()).collect(Collectors.toList());
+    return Stream.concat(
+            graph.edgeSet().stream().map(DirectedGraph.Edge::getLabel), graph.vertexSet().stream())
+        .collect(Collectors.toList());
   }
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Cell> getCells(Type type) {
-    switch (type) {
-      case Vertex:
-        return (List<Cell>) (List) vertices;
-      case Edge:
-        return (List<Cell>) (List) edges;
+    if (type == Type.Edge) {
+      return graph.edgeSet().stream()
+          .map(DirectedGraph.Edge::getLabel)
+          .collect(Collectors.toList());
     }
-    throw new IllegalArgumentException("Unknown type: " + type);
+    return List.copyOf(graph.vertexSet());
   }
 
   @Override
-  public Identifier add(Cell cell) {
-    if (cell.getType() == Type.Vertex) {
-      vertices.add((Vertex) cell);
-    } else {
-      edges.add((Edge) cell);
+  @SuppressWarnings("PMD")
+  public Edge connect(@NonNull Identifier source, @NonNull Identifier target) {
+    val ids = Set.of(source, target);
+    val vertices =
+        graph.vertexSet().stream()
+            .filter(vertex -> ids.contains(vertex.getId()))
+            .collect(Collectors.toList());
+    if (ids.size() != vertices.size()) {
+      val existingIds = vertices.stream().map(Vertex::getId).collect(Collectors.toSet());
+      throw new IllegalStateException(
+          String.format(
+              "Error: expected ids to be present ('%s'), actual ids: '%s'", ids, existingIds));
     }
-    return null;
+    val sv = vertices.get(0);
+    val tv = vertices.get(1);
+    return connect(sv, tv);
   }
 
   @Override
-  public Edge connect(Identifier source, Identifier target) {
-    return null;
+  public Edge connect(@NonNull Vertex source, @NonNull Vertex target) {
+    val vertices = graph.vertexSet();
+    if (!vertices.contains(source)) {
+      addVertex(source);
+    }
+    if (!vertices.contains(target)) {
+      addVertex(target);
+    }
+    val edge =
+        new DirectedGraph.DirectedEdge<>(
+            new Edge(source.getId(), target.getId()), Direction.Outgoing);
+    graph.connect(source, target, edge);
+    return edge.getLabel();
   }
 
   @Override
-  public Edge connect(Vertex source, Vertex target) {
-    return null;
+  public void addVertex(@NonNull Vertex vertex) {
+    graph.add(vertex);
   }
 
   @Override
   public List<Edge> getEdges(Identifier vertex) {
-    return null;
+    return graph.vertexSet().stream()
+        .filter(v -> v.getId().equals(vertex))
+        .findAny()
+        .map(
+            v ->
+                graph.adjacentEdges(v).stream()
+                    .map(DirectedGraph.Edge::getLabel)
+                    .collect(Collectors.toList()))
+        .orElse(Collections.emptyList());
   }
 
+  @NonNull
   @Override
   public List<Edge> getEdges(Vertex vertex) {
-    return null;
+    return graph.getDependents(vertex, EdgeFilters.acceptAll()).stream()
+        .map(DirectedGraph.Edge::getLabel)
+        .toList();
   }
 
   @Override
   public List<Vertex> getVertices() {
-    return vertices;
+    return List.copyOf(graph.vertexSet());
   }
 
   @Override
   public void setVertices(Collection<Vertex> vertices) {
-    this.vertices = new ArrayList<>(vertices);
+    if (graph == null) {
+      graph = new AbstractDirectedGraph<Edge, Vertex>();
+    }
   }
 
   @Override
@@ -158,8 +207,21 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public void addVertices(List<Vertex> vertices) {
     for (val vertex : vertices) {
-      add(vertex);
+      graph.add(vertex);
     }
+  }
+
+  @Override
+  public void connectAll(List<Edge> edges) {
+    for (val edge : edges) {
+      connect(edge.getSource(), edge.getTarget());
+    }
+  }
+
+  public Set<Edge> getEdges() {
+    return requireNonNull(graph).edgeSet().stream()
+        .map(DirectedGraph.Edge::getLabel)
+        .collect(Collectors.toUnmodifiableSet());
   }
 
   @Override

@@ -10,10 +10,32 @@ import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 class CondensationTest {
+
+  @Test
+  @SneakyThrows
+  void ensureCopyingEnumWorks() {
+    enum Test {
+      A;
+    }
+
+    @RootElement
+    class TestType {
+      @Attribute Test t;
+    }
+
+    val condensation = Condensation.create("json");
+    ((ReflectiveTypeInstantiator) condensation.getInstantiator())
+        .register(TestType.class, TestType::new);
+    val t = new TestType();
+    t.t = Test.A;
+    val u = condensation.read(TestType.class, condensation.getWriter().write(TestType.class, t));
+    assertEquals(t.t, Test.A);
+  }
 
   @Test
   void ensureWritingListDirectlyWorks() throws IOException {

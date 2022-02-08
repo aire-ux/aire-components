@@ -38,6 +38,15 @@ public class JsonWriter implements DocumentWriter {
         outputStream.write(Property.convert(value, String.class).getBytes(StandardCharsets.UTF_8));
         outputStream.write('"');
       }
+    } else if (type.isEnum()) {
+      if (value == null) {
+        outputStream.write(NULL.getBytes(StandardCharsets.UTF_8));
+      } else {
+        outputStream.write('"');
+        outputStream.write(((Enum) value).name().getBytes(StandardCharsets.UTF_8));
+        outputStream.write('"');
+      }
+
     } else if (String.class.equals(type)) {
       if (value == null) {
         outputStream.write(NULL.getBytes(StandardCharsets.UTF_8));

@@ -107,7 +107,7 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public <R, S> R convert(S value) {
     if (converter == null) {
       if (value == null) {
@@ -121,6 +121,9 @@ public abstract class AbstractProperty<T extends AccessibleObject> implements Pr
       }
     } else {
       return ((Converter<R, S>) converter).read(value);
+    }
+    if (getType().isEnum()) {
+      return (R) Enum.valueOf((Class) getType(), (String) value);
     }
     return (R) value;
   }

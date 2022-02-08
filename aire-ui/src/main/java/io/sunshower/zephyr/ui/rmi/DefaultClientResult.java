@@ -9,17 +9,14 @@ import lombok.experimental.Delegate;
 
 final class DefaultClientResult<T> implements ClientResult<T> {
 
-  @NonNull
-  private final Class<T> type;
+  @NonNull private final Class<T> type;
 
-  @NonNull
-  @Delegate
-  private final PendingJavaScriptResult delegate;
+  @NonNull @Delegate private final PendingJavaScriptResult delegate;
 
-  @Nullable
-  private final Class<? extends Collection<? extends T>> collectionType;
+  @Nullable private final Class<? extends Collection<? extends T>> collectionType;
 
-  public DefaultClientResult(@Nullable Class<? extends Collection<? extends T>> collectionType,
+  public DefaultClientResult(
+      @Nullable Class<? extends Collection<? extends T>> collectionType,
       Class<T> type,
       PendingJavaScriptResult result) {
     this.type = type;

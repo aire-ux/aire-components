@@ -1,10 +1,10 @@
 package io.sunshower.zephyr.ui.canvas.actions;
 
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.rmi.ClientResult;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import io.sunshower.zephyr.ui.rmi.Argument;
+import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -21,12 +21,10 @@ public class AddVerticesAction extends AbstractClientMethodBoundAction<List<Vert
   }
 
   @Override
-  public void undo(Model model) {
-  }
+  public void undo(Model model) {}
 
   @Override
-  public void redo(Model model) {
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<List<Vertex>> apply(Model model) {
