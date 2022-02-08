@@ -14,12 +14,14 @@ import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
+import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.NonNull;
@@ -225,8 +227,14 @@ class SharedGraphModel extends AbstractEventSource
   }
 
   @Override
+  public Optional<Vertex> findVertex(Predicate<Vertex> filter) {
+    return requireNonNull(graph).vertexSet().stream().filter(filter).findAny();
+  }
+
+  @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
+
 }

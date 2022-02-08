@@ -1,9 +1,14 @@
-import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
-import {Edge, Graph, Node} from "@antv/x6";
+import {css, customElement, LitElement, PropertyValues, query} from "lit-element";
+import {Edge, Events, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
 import {CircularLayout, Edge as LayoutEdge, Model, Node as LayoutNode} from "@antv/layout";
-import {EdgeDefinition} from "Frontend/aire/ui/canvas/cell";
+import {
+  EdgeDefinition,
+  ListenerDefinition,
+  ListenerRegistration
+} from "Frontend/aire/ui/canvas/cell";
+import EventArgs = Events.EventArgs;
 
 
 @Remotable
@@ -12,6 +17,13 @@ export class Canvas extends LitElement {
 
   static layout = new CircularLayout();
   private graph: Graph | undefined;
+
+  /**
+   * gotta track these so we can unregister them
+   * @private
+   */
+  private registeredHandlers: Map<Events.EventNames<EventArgs>, Array<[string, Events.Handler<any>]>>;
+
 
   @query('div.container')
   private container: HTMLDivElement | undefined;
@@ -30,33 +42,38 @@ export class Canvas extends LitElement {
       flex: 1 1 auto;
       height: 100%;
       max-width: 100%;
-      max-height:100%;
+      max-height: 100%;
     }
-    div.container > div.x6-graph-grid {
-      position: absolute;
-      top: 0;
-      bottom:0;
-      left:0;
-      right:0;
-      z-index: -1;
-    }
+
+    /*div.container > div.x6-graph-grid {*/
+    /*  position: absolute;*/
+    /*  top: 0;*/
+    /*  bottom: 0;*/
+    /*  left: 0;*/
+    /*  right: 0;*/
+    /*  z-index: -1;*/
+    /*}*/
   `;
 
   constructor() {
     super();
+    this.registeredHandlers = new Map<Events.EventNames<EventArgs>, Array<[string, Events.Handler<any>]>>();
   }
+
+  protected createRenderRoot(): Element | ShadowRoot {
+    this.style.width = '100%';
+    this.style.height = '100%';
+    return this;
+  }
+
 
   private createGraph(): void {
     if (this.graph) {
       return;
     }
-    console.log(this);
-    console.log(this.shadowRoot!.querySelector('div.container'));
-    const container = this.container;
-    console.log(this.container);
     const graph = new Graph({
-      container: container,
-      autoResize: container,
+      container: this,
+      autoResize: this,
       preventDefaultContextMenu: false,
       grid: true
     });
@@ -77,6 +94,44 @@ export class Canvas extends LitElement {
     this.graph = this.graph!.fromJSON(Canvas.layout.layout(nodes as any));
     this.graph.centerContent();
     return vertex;
+  }
+
+
+  @Remote
+  public addListener(@Receive(Dynamic) definition: ListenerDefinition): void {
+    const handler = (e: any) => {
+      console.log("CLICKED");
+          this.dispatchEvent(new CustomEvent(definition.category, {
+            detail: {
+              source: {
+                id: e.cell.id,
+                type: definition.targetEventType
+              }
+            }
+          }))
+        },
+        handlers = this.registeredHandlers,
+        hlist = handlers.get(definition.key) || [];
+    if (!handlers.has(definition.key)) {
+      handlers.set(definition.key, hlist)
+    }
+    hlist.push([definition.id, handler]);
+    this.graph!.on(definition.key, handler);
+  }
+
+  @Remote
+  public removeListener(@Receive(Dynamic) definition: ListenerRegistration): boolean {
+    const handlers = this.registeredHandlers,
+        handlersOfType = handlers.get(definition.key),
+        handler = handlersOfType && handlersOfType
+            .find(([id, _]) => id === definition.id);
+
+    if (handler) {
+      const [_, h] = handler!;
+      delete handlersOfType[handlersOfType.indexOf(handler)];
+      this.graph!.off(definition.key, h);
+    }
+    return !!handler;
   }
 
   @Remote
@@ -130,18 +185,19 @@ export class Canvas extends LitElement {
   }
 
 
-  protected render(): unknown {
-    return html`
-      <div class="container">
-      </div>
-    `;
-  }
+  // protected render(): unknown {
+  //   return html`
+  //     <div class="container">
+  //     </div>
+  //   `;
+  // }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.createGraph();
     this.dispatchEvent(new CustomEvent('canvas-ready'));
   }
+
 
   private registerListeners(graph: Graph) {
     graph.on('blank:click', (event) => {

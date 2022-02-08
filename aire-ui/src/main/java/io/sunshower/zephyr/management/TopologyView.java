@@ -17,6 +17,7 @@ import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
@@ -47,6 +48,7 @@ public class TopologyView extends VerticalLayout
   private final Model model;
   private final Zephyr zephyr;
   private final Registration onCanvasReadyRegistration;
+  private Registration onVertexClickedRegistration;
   private Canvas canvas;
 
   @Inject
@@ -74,6 +76,11 @@ public class TopologyView extends VerticalLayout
         .invoke(AddVertexTemplateAction.class, defaultVertexTemplate)
         .toFuture()
         .thenAccept(this::configureModuleNodes);
+
+    onVertexClickedRegistration = canvas.addVertexListener(Type.Clicked, vertex -> {
+      System.out.println(vertex);
+    });
+
   }
 
   private void configureModuleNodes(VertexTemplate t) {
