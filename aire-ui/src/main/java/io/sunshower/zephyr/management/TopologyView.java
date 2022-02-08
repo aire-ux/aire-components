@@ -45,18 +45,14 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
+
   private final Zephyr zephyr;
   private final Registration onCanvasReadyRegistration;
   private final Registration onVertexClickedRegistration;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   @Inject

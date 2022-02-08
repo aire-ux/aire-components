@@ -3,24 +3,20 @@ package io.sunshower.zephyr.ui.canvas;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.EventListener;
 import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
-import io.sunshower.zephyr.ui.canvas.listeners.CellListener;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.NonNull;
 
 class PendingVertexEventListenerDescriptor implements Registration {
 
-
-  @Getter
-  private final Type type;
+  @Getter private final Type type;
   private final Canvas canvas;
-  @Getter
-  private final EventListener<VertexDefinition> delegate;
+  @Getter private final EventListener<VertexDefinition> delegate;
 
   private Registration registration;
 
-  public PendingVertexEventListenerDescriptor(@NonNull Type type,
+  public PendingVertexEventListenerDescriptor(
+      @NonNull Type type,
       @NonNull EventListener<VertexDefinition> delegate,
       @NonNull Canvas canvas) {
     this.type = type;

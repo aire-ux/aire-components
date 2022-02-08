@@ -22,19 +22,15 @@ public class AddListenersAction extends AbstractClientMethodBoundAction<List<Lis
   }
 
   @Override
-  public void undo(Model model) {
-
-  }
+  public void undo(Model model) {}
 
   @Override
-  public void redo(Model model) {
-
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<List<ListenerDefinition>> apply(Model model) {
     model.getCommandManager().apply(this);
-    return ClientResult.createList(ListenerDefinition.class,
-        method.invoke(model.getHost(), listeners));
+    return ClientResult.createList(
+        ListenerDefinition.class, method.invoke(model.getHost(), listeners));
   }
 }

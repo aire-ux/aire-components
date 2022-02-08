@@ -3,7 +3,6 @@ package io.sunshower.zephyr.ui.canvas;
 import com.vaadin.flow.component.ComponentEventListener;
 import io.sunshower.lang.events.EventSource;
 import io.sunshower.persistence.id.Identifier;
-import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +68,6 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
   void connectAll(List<Edge> edges);
 
   Set<Edge> getEdges();
-
 
   Optional<Vertex> findVertex(Predicate<Vertex> filter);
 }

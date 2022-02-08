@@ -19,19 +19,15 @@ public class AddListenerAction extends AbstractClientMethodBoundAction<ListenerD
   }
 
   @Override
-  public void undo(Model model) {
-
-  }
+  public void undo(Model model) {}
 
   @Override
-  public void redo(Model model) {
-
-  }
+  public void redo(Model model) {}
 
   @Override
   public ClientResult<ListenerDefinition> apply(Model model) {
     model.getCommandManager().apply(this);
-    return ClientResult.create(ListenerDefinition.class,
-        method.invoke(model.getHost(), definition));
+    return ClientResult.create(
+        ListenerDefinition.class, method.invoke(model.getHost(), definition));
   }
 }
