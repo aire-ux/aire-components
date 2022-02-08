@@ -17,7 +17,8 @@ import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
-import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
+import io.sunshower.zephyr.ui.components.ContextMenu;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
@@ -45,14 +46,19 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Model model;
 
   private final Zephyr zephyr;
   private final Registration onCanvasReadyRegistration;
   private final Registration onVertexClickedRegistration;
+  private final ContextMenu<Vertex> canvasContextMenu;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
   @Inject
@@ -64,16 +70,11 @@ public class TopologyView extends VerticalLayout
     this.setHeightFull();
     //    model.addNodeTemplate(new ResourceNodeTemplate(""));
     add(canvas);
+    canvasContextMenu = createCanvasContextMenu();
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
-    onVertexClickedRegistration = canvas.addVertexListener(Type.Clicked, System.out::println);
+    onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked, System.out::println);
   }
 
-  private void configureStyles() {
-    val style = this.getStyle();
-    style.set("display", "flex");
-    style.set("justify-content", "center");
-    style.set("align-items", "center");
-  }
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
@@ -115,5 +116,18 @@ public class TopologyView extends VerticalLayout
     super.onDetach(detachEvent);
     onCanvasReadyRegistration.remove();
     onVertexClickedRegistration.remove();
+  }
+
+  private ContextMenu<Vertex> createCanvasContextMenu() {
+    return canvas.createVertexContextMenu(EventType.ContextMenu);
+  }
+
+
+
+  private void configureStyles() {
+    val style = this.getStyle();
+    style.set("display", "flex");
+    style.set("justify-content", "center");
+    style.set("align-items", "center");
   }
 }

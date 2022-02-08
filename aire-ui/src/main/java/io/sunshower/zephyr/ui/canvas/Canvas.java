@@ -10,17 +10,18 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.EventListener;
-import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
 import io.sunshower.zephyr.ui.canvas.actions.AddListenerAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddListenersAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CellListener;
 import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent;
-import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
+import io.sunshower.zephyr.ui.components.ContextMenu;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import lombok.NonNull;
 import lombok.val;
@@ -69,12 +70,13 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     model.detach(this);
   }
 
-  public Registration addVertexListener(VertexEvent.Type type, CellListener<Vertex> listener) {
+  public Registration addVertexListener(EventType type,
+      CellListener<Vertex, VertexEvent> listener) {
     return addVertexListener(type, listener, v -> true);
   }
 
   public Registration addVertexListener(
-      VertexEvent.Type type, CellListener<Vertex> listener, Predicate<Vertex> vertexFilter) {
+      EventType type, CellListener<Vertex, VertexEvent> listener, Predicate<Vertex> vertexFilter) {
 
     if (!ready) {
       return registerPendingVertexListener(type, listener, vertexFilter);
@@ -84,8 +86,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   private Registration registerPendingVertexListener(
-      Type type, CellListener<Vertex> listener, Predicate<Vertex> vertexFilter) {
-    val delegate = getEventListener(vertexFilter, listener);
+      EventType type, CellListener<Vertex, VertexEvent> listener, Predicate<Vertex> vertexFilter) {
+    val delegate = getEventListener(listener);
     val pending = new PendingVertexEventListenerDescriptor(type, delegate, this);
     pendingVertexEventListeners.add(pending);
     return pending;
@@ -104,7 +106,9 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /** @return the canvas model for this canvas */
+  /**
+   * @return the canvas model for this canvas
+   */
   @NonNull
   public final Model getModel() {
     return model;
@@ -114,6 +118,62 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   public void onComponentEvent(CanvasReadyEvent event) {
     ready = true;
     bulkRegisterPendingVertexListeners();
+  }
+
+  @SuppressWarnings("unchecked")
+  public ContextMenu<Vertex> createVertexContextMenu(EventType eventType,
+      Predicate<Vertex> filter) {
+    val menu = new ContextMenu<Vertex>(this);
+    val registration = addVertexListener(eventType, vertex -> {
+//      menu.open(ve);
+    }, filter);
+    return menu;
+  }
+
+  @SuppressWarnings("unchecked")
+  public ContextMenu<Vertex> createVertexContextMenu(EventType eventType) {
+    return createVertexContextMenu(eventType, vertex -> true);
+  }
+
+
+  @NonNull
+  private EventListener<VertexEvent> getEventListener(
+      CellListener<Vertex, VertexEvent> listener) {
+    return (eventType, event) -> listener.on(event.getTarget());
+  }
+
+  private Registration doRegisterVertexListener(
+      EventType type, CellListener<Vertex, VertexEvent> listener, Predicate<Vertex> vertexFilter) {
+    val definition =
+        new ListenerDefinition(
+            SharedGraphModel.identifierSequence.next(),
+            type.getMappedName(),
+            CanvasVertexEventListener.CATEGORY,
+            type.getType());
+    val delegate = getEventListener(listener);
+    invoke(AddListenerAction.class, definition);
+    model.addEventListener(delegate, type::ordinal);
+
+    val registration = getRegistration(type);
+    return () -> {
+      registration.remove();
+      model.removeEventListener(delegate);
+    };
+  }
+
+  private Registration getRegistration(EventType type) {
+    val registration =
+        addListener(
+            CanvasVertexEventListener.class,
+            event -> {
+              val vertexDefinition = event.getValue();
+              model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
+                  .ifPresent(v -> {
+                    model.dispatchEvent(type::ordinal,
+                        new VertexEvent(v, this, vertexDefinition.getLocation()));
+                  });
+            });
+    return registration;
   }
 
   private void bulkRegisterPendingVertexListeners() {
@@ -129,47 +189,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
               type.getType());
       definitions.add(definition);
       model.addEventListener(pendingVertexListener.getDelegate(), type::ordinal);
-      val registration =
-          addListener(
-              CanvasVertexEventListener.class,
-              event -> {
-                model.dispatchEvent(type::ordinal, event::getValue);
-              });
+      val registration = getRegistration(type);
       pendingVertexListener.setRegistration(registration);
     }
     invoke(AddListenersAction.class, definitions);
   }
 
-  @NonNull
-  private EventListener<VertexDefinition> getEventListener(
-      Predicate<Vertex> vertexFilter, CellListener<Vertex> listener) {
-    return (eventType, event) ->
-        model
-            .findVertex(vertexFilter.and(v -> event.getTarget().getId().equals(v.getId())))
-            .ifPresent(listener::on);
-  }
-
-  private Registration doRegisterVertexListener(
-      VertexEvent.Type type, CellListener<Vertex> listener, Predicate<Vertex> vertexFilter) {
-    val definition =
-        new ListenerDefinition(
-            SharedGraphModel.identifierSequence.next(),
-            type.getMappedName(),
-            CanvasVertexEventListener.CATEGORY,
-            type.getType());
-    val delegate = getEventListener(vertexFilter, listener);
-    invoke(AddListenerAction.class, definition);
-    model.addEventListener(delegate, type::ordinal);
-
-    val registration =
-        addListener(
-            CanvasVertexEventListener.class,
-            event -> {
-              model.dispatchEvent(type::ordinal, event::getValue);
-            });
-    return () -> {
-      registration.remove();
-      model.removeEventListener(delegate);
-    };
-  }
 }

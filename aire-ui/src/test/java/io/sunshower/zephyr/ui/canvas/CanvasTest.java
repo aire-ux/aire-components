@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,7 +19,7 @@ import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
-import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.IOException;
 import java.util.List;
@@ -31,11 +32,22 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 class CanvasTest extends AbstractCanvasTest {
 
   @ViewTest
-  void ensureCanvasDispatchesVertexEventProperly(@View Canvas canvas) {
+  void ensureCanvasContextMenuApiMakesSense(@View Canvas canvas) {
+    val menu = canvas.createVertexContextMenu(EventType.ContextMenu,  vertex -> true);
+  }
+
+  @ViewTest
+  void ensureAddingVertexListenerWorks(@View Canvas canvas) {
+    assertEquals(0, canvas.getModel().getListenerCount());
     val registration =
         canvas.addVertexListener(
-            Type.Clicked, vertex -> {}, vertex -> vertex.getProperties().containsKey("hello"));
+            EventType.Clicked, vertex -> {}, vertex -> vertex.getProperties().containsKey("hello"));
+    canvas.onComponentEvent(mock(CanvasReadyEvent.class));
+    assertEquals(1, canvas.getModel().getListenerCount());
+    registration.remove();
+    assertEquals(0, canvas.getModel().getListenerCount());
   }
+
 
   @ViewTest
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
