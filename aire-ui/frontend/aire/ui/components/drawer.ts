@@ -7,6 +7,7 @@ export enum State {
 
 @customElement('aire-drawer')
 export class Drawer extends LitElement {
+  // language=CSS
   static styles = css`
     
     div.gutter {

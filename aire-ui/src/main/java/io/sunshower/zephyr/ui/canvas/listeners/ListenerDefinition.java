@@ -9,33 +9,24 @@ import lombok.NonNull;
 @RootElement
 public final class ListenerDefinition {
 
-  @Getter
-  @Attribute
-  private String key;
+  @Getter @Attribute private String key;
 
-  @Getter
+  @Getter @Attribute private String category;
 
-  @Attribute
-  private String category;
+  @Getter @Attribute private Identifier id;
 
-  @Getter
-  @Attribute
-  private Identifier id;
+  @Getter @Attribute private String targetEventType;
 
-  @Getter
-  @Attribute
-  private String targetEventType;
+  public ListenerDefinition() {}
 
-  public ListenerDefinition() {
-
-  }
-
-  public ListenerDefinition(@NonNull Identifier id, @NonNull String key, @NonNull String category,
+  public ListenerDefinition(
+      @NonNull Identifier id,
+      @NonNull String key,
+      @NonNull String category,
       @NonNull String targetEventType) {
     this.id = id;
     this.key = key;
     this.category = category;
     this.targetEventType = targetEventType;
   }
-
 }

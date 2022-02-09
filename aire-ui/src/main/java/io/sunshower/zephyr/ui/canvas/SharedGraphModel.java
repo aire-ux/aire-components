@@ -14,7 +14,6 @@ import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
-import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -236,5 +235,4 @@ class SharedGraphModel extends AbstractEventSource
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
   }
-
 }
