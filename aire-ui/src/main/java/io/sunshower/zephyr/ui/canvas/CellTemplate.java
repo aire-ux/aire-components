@@ -1,10 +1,12 @@
 package io.sunshower.zephyr.ui.canvas;
 
+import com.aire.ux.condensation.RootElement;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
 
+@RootElement
 public interface CellTemplate {
 
   @NonNull

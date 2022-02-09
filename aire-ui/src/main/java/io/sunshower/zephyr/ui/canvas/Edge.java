@@ -1,6 +1,7 @@
 package io.sunshower.zephyr.ui.canvas;
 
 import com.aire.ux.condensation.Attribute;
+import com.aire.ux.condensation.Element;
 import com.aire.ux.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import lombok.Getter;
@@ -14,6 +15,8 @@ public class Edge extends AbstractCell {
 
   @Getter @Setter @Attribute private Identifier source;
 
+  @Element private EdgeTemplate template;
+
   public Edge() {
     this(SharedGraphModel.identifierSequence.next());
   }
@@ -23,8 +26,23 @@ public class Edge extends AbstractCell {
   }
 
   public Edge(@NonNull Identifier source, @NonNull Identifier target) {
+    this(source, target, null);
+  }
+
+  public Edge(Identifier source, Identifier target, EdgeTemplate template) {
     this();
     setSource(source);
     setTarget(target);
+    setCellTemplate(template);
+  }
+
+  @Override
+  public EdgeTemplate getCellTemplate() {
+    return template;
+  }
+
+  @Override
+  public void setCellTemplate(CellTemplate template) {
+    this.template = (EdgeTemplate) template;
   }
 }

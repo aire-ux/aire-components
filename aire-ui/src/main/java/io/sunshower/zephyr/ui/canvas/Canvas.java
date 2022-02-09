@@ -9,8 +9,17 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
+import io.sunshower.lang.events.Event;
+import io.sunshower.lang.events.EventListener;
+import io.sunshower.lang.events.EventType;
+import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
+import io.sunshower.zephyr.ui.canvas.actions.AddListenerAction;
+import io.sunshower.zephyr.ui.canvas.listeners.CellListener;
+import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import io.sunshower.zephyr.ui.rmi.ClientResult;
+import java.util.function.Predicate;
 import lombok.NonNull;
 import lombok.val;
 
@@ -54,15 +63,34 @@ public class Canvas extends HtmlContainer {
     model.detach(this);
   }
 
-  public <T> T invoke(Class<? extends Action<T>> action, Object... arguments) {
-    return ClientMethods.withUiSupplier(this)
-        .construct(action, arguments)
-        .apply(getModel())
-        .block();
+  public Registration addVertexListener(VertexEvent.Type type, CellListener<Vertex> listener) {
+    return addVertexListener(type, listener, v -> true);
   }
 
-  public <T> ClientResult<T> invokeAsynchronously(
-      Class<? extends Action<T>> action, Object... arguments) {
+  public Registration addVertexListener(
+      VertexEvent.Type type, CellListener<Vertex> listener, Predicate<Vertex> vertexFilter) {
+    val definition = new ListenerDefinition(SharedGraphModel.identifierSequence.next(),
+        type.getMappedName(), CanvasVertexEventListener.CATEGORY, type.getType());
+    invoke(AddListenerAction.class, definition);
+    val delegate = new EventListener<VertexDefinition>() {
+      @Override
+      public void onEvent(EventType eventType, Event<VertexDefinition> event) {
+        model.findVertex(vertexFilter.and(v -> event.getTarget().getId().equals(v.getId())))
+            .ifPresent(listener::on);
+      }
+    };
+    model.addEventListener(delegate, type::ordinal);
+
+    val registration = addListener(CanvasVertexEventListener.class, event -> {
+      model.dispatchEvent(type::ordinal, event::getValue);
+    });
+    return () -> {
+      registration.remove();
+      model.removeEventListener(delegate);
+    };
+  }
+
+  public <T> ClientResult<T> invoke(Class<? extends Action<T>> action, Object... arguments) {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 
@@ -75,9 +103,13 @@ public class Canvas extends HtmlContainer {
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /** @return the canvas model for this canvas */
+  /**
+   * @return the canvas model for this canvas
+   */
   @NonNull
   public final Model getModel() {
     return model;
   }
+
+
 }

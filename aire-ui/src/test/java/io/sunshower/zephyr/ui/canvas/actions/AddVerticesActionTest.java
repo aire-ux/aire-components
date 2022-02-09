@@ -22,11 +22,10 @@ class AddVerticesActionTest extends AbstractCanvasTest {
   void ensureConnectingNodesWorks(@View Canvas canvas) {
     val source = new Vertex();
     val target = new Vertex();
-    canvas.invokeAsynchronously(AddVerticesAction.class, List.of(source, target));
+    canvas.invoke(AddVerticesAction.class, List.of(source, target));
     assertEquals(2, canvas.getModel().getVertices().size());
     assertTrue(canvas.getModel().getEdges().isEmpty());
-    canvas.invokeAsynchronously(
-        ConnectVerticesAction.class, List.of(new Edge(source.getId(), target.getId())));
+    canvas.invoke(ConnectVerticesAction.class, List.of(new Edge(source.getId(), target.getId())));
     assertEquals(1, canvas.getModel().getEdges().size());
   }
 }

@@ -10,6 +10,15 @@
       "fill": "rgba(0,0,0,0)",
       "refPoints": "0.000000,25.000000 21.650635,12.500000 21.650635,-12.500000 0.000000,-25.000000 -21.650635,-12.500000 -21.650635,12.500000"
     },
+    "label": {
+      "refX": 0.5,
+      "refY": -4,
+      "fontSize": 12,
+      "fontFamily": "monospace",
+      "stroke": "#2C2C2C",
+      "textAnchor": "middle",
+      "textVerticalAnchor": "bottom"
+    },
     "image": {
       "xlink:href": "images/zephyr.svg",
       "width": 25,
@@ -26,6 +35,11 @@
     {
       "tagName": "image",
       "selector": "image"
+    },
+
+    {
+      "tagName": "text",
+      "selector": "label"
     }
   ]
 }

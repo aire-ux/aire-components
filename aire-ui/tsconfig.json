@@ -19,6 +19,10 @@
     "noUnusedParameters": false,
     "experimentalDecorators": true,
     "baseUrl": "frontend",
+    "lib": [
+      "dom",
+      "es2019"
+    ],
     "paths": {
       "Frontend/*": [
         "*"

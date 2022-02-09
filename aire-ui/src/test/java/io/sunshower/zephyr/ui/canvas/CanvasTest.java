@@ -16,6 +16,7 @@ import com.aire.ux.test.View;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.AireUITest;
+import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.Type;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
@@ -30,17 +31,24 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 class CanvasTest extends AbstractCanvasTest {
 
   @ViewTest
+  void ensureCanvasDispatchesVertexEventProperly(@View Canvas canvas) {
+    val registration =
+        canvas.addVertexListener(
+            Type.Clicked, vertex -> {}, vertex -> vertex.getProperties().containsKey("hello"));
+  }
+
+  @ViewTest
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertices().isEmpty());
     val vertices = List.of(new Vertex());
-    canvas.invokeAsynchronously(AddVerticesAction.class, vertices);
+    canvas.invoke(AddVerticesAction.class, vertices);
     assertEquals(1, canvas.getModel().getVertices().size());
   }
 
   @ViewTest
   void ensureCanvasIsInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertexTemplates().isEmpty());
-    canvas.invokeAsynchronously(AddVertexTemplateAction.class, template);
+    canvas.invoke(AddVertexTemplateAction.class, template);
     assertFalse(canvas.getModel().getVertexTemplates().isEmpty());
   }
 
