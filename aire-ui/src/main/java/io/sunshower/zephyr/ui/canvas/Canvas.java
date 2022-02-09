@@ -17,11 +17,14 @@ import io.sunshower.zephyr.ui.canvas.listeners.ListenerDefinition;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
+import io.sunshower.zephyr.ui.components.ContextMenuEvent;
+import io.sunshower.zephyr.ui.components.ContextMenuEvent.Type;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import lombok.NonNull;
 import lombok.val;
@@ -39,7 +42,14 @@ import lombok.val;
 @NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.5")
 public class Canvas extends HtmlContainer implements ComponentEventListener<CanvasReadyEvent> {
 
+  /**
+   * registering multiple CanvasVertexEventListeners causes an explosion in the number of cellevents
+   * dispatched.  This will prevent that
+   */
+  private final AtomicReference<CountdownRegistration> vertexEventCountdownRegistration;
   private final List<PendingVertexEventListenerDescriptor> pendingVertexEventListeners;
+
+
   private Model model;
   private volatile boolean ready;
   private CommandManager commandManager;
@@ -48,6 +58,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     setModel(new SharedGraphModel());
     addOnCanvasReadyListener(this);
     pendingVertexEventListeners = new ArrayList<>();
+    vertexEventCountdownRegistration = new AtomicReference<>();
   }
 
   public Model setModel(@NonNull final Model model) {
@@ -125,7 +136,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
       Predicate<Vertex> filter) {
     val menu = new ContextMenu<Vertex>(this);
     val registration = addVertexListener(eventType, vertex -> {
-//      menu.open(ve);
+      menu.open(
+          new ContextMenuEvent<>(vertex.getTarget(), Type.Opened, vertex.getLocation()));
     }, filter);
     return menu;
   }
@@ -154,22 +166,28 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     invoke(AddListenerAction.class, definition);
     model.addEventListener(delegate, type::ordinal);
 
-    val registration = getRegistration(type);
+    val registration = getRegistration();
     return () -> {
-      registration.remove();
       model.removeEventListener(delegate);
+      registration.remove();
     };
   }
 
-  private Registration getRegistration(EventType type) {
-    return addListener(
-        CanvasVertexEventListener.class,
-        event -> {
-          val vertexDefinition = event.getValue();
-          model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
-              .ifPresent(v -> model.dispatchEvent(type::ordinal,
-                  () -> (new VertexEvent(v, this, vertexDefinition.getLocation()))));
-        });
+  private Registration getRegistration() {
+    var registration = vertexEventCountdownRegistration.get();
+    if (registration == null) {
+      vertexEventCountdownRegistration.set(registration = new CountdownRegistration(addListener(
+          CanvasVertexEventListener.class,
+          event -> {
+            val vertexDefinition = event.getValue();
+            val mappedEventType = VertexEvent.EventType.resolve(
+                vertexDefinition.getTargetEventType());
+            model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
+                .ifPresent(v -> model.dispatchEvent(mappedEventType::ordinal,
+                    () -> (new VertexEvent(v, this, vertexDefinition.getLocation()))));
+          })));
+    }
+    return registration;
   }
 
   private void bulkRegisterPendingVertexListeners() {
@@ -185,10 +203,25 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
               type.getType());
       definitions.add(definition);
       model.addEventListener(pendingVertexListener.getDelegate(), type::ordinal);
-      val registration = getRegistration(type);
+      val registration = getRegistration();
       pendingVertexListener.setRegistration(registration);
     }
     invoke(AddListenersAction.class, definitions);
   }
 
+  private class CountdownRegistration implements Registration {
+
+    private final Registration delegate;
+
+    private CountdownRegistration(Registration delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public void remove() {
+      if (model != null && model.getListenerCount() == 0) {
+        delegate.remove();
+      }
+    }
+  }
 }

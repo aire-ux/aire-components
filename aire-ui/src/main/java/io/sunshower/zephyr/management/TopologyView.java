@@ -119,7 +119,20 @@ public class TopologyView extends VerticalLayout
   }
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
-    return canvas.createVertexContextMenu(EventType.ContextMenu);
+    val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
+    val plan = menu.getMenuBar().addItem("Plan");
+    val execute = menu.getMenuBar().addItem("Execute");
+
+    execute.getSubMenu().addItem("Stop");
+    execute.getSubMenu().addItem("Start");
+    execute.getSubMenu().addItem("Restart");
+
+    plan.getSubMenu().addItem("Stop");
+    plan.getSubMenu().addItem("Start");
+    plan.getSubMenu().addItem("Restart");
+
+
+    return menu;
   }
 
 

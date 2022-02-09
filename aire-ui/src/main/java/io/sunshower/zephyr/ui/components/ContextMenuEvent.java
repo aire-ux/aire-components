@@ -1,25 +1,29 @@
 package io.sunshower.zephyr.ui.components;
 
-public interface ContextMenuEvent<T> {
+import io.sunshower.zephyr.ui.canvas.listeners.Location;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-  /**
-   * @return whatever triggered this
-   */
-  T getSource();
+@Getter
+@ToString
+@EqualsAndHashCode
+public class ContextMenuEvent<T> {
 
-  /**
-   * @return the x coordinate of this event
-   */
-  double getX();
+  public final T source;
+  public final Location location;
+  private final Type type;
 
-  /**
-   * @return
-   */
-  double getY();
+  public ContextMenuEvent(T source, Type type, Location location) {
+    this.type = type;
+    this.source = source;
+    this.location = location;
+  }
 
-  enum Type {
+  public enum Type {
     Opened,
     Closed
   }
+
 
 }

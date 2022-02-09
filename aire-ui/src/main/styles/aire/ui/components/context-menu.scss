@@ -1,4 +1,6 @@
 aire-context-menu {
-  display: flex;
-  flex-direction: column;
+
+  & > nav {
+    border: 1px solid blue;
+  }
 }

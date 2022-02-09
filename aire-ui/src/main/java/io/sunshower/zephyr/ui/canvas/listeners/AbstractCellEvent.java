@@ -3,7 +3,9 @@ package io.sunshower.zephyr.ui.canvas.listeners;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.Cell;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
 public class AbstractCellEvent<T extends Cell> implements CellEvent<T> {
 
   private final T target;

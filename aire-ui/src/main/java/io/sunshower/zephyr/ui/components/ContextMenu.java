@@ -1,14 +1,15 @@
 package io.sunshower.zephyr.ui.components;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.RootElement;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.shared.Registration;
 import io.sunshower.zephyr.ui.canvas.Canvas;
+import io.sunshower.zephyr.ui.canvas.listeners.Location;
 import io.sunshower.zephyr.ui.rmi.ClientMethod;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.Serializable;
@@ -21,24 +22,32 @@ import lombok.val;
 @Tag("aire-context-menu")
 @JsModule("./aire/ui/components/context-menu.ts")
 @CssImport("./styles/aire/ui/components/context-menu.css")
-public class ContextMenu<T> extends HtmlContainer {
+@CssImport(themeFor = "vaadin-menu-bar", value = "./styles/aire/ui/components/vertical-menu.css")
+public class ContextMenu<T> extends HtmlContainer implements
+    ComponentEventListener<ContextMenuStateChangedEvent> {
+
 
   private final Component host;
   private final MenuBar menuBar;
   private final ClientMethod<Serializable> openMethod;
 
-
   public ContextMenu(Component host, MenuBar menuBar) {
     this.host = host;
     this.menuBar = menuBar;
+    configureMenubar(menuBar);
     this.openMethod = ClientMethods.withUiSupplier(this).get("open", Location.class);
-    getElement().appendChild(menuBar.getElement());
   }
 
   public ContextMenu(Canvas host) {
     this(host, new MenuBar());
+    addContextMenuStateChangedEventListener(this);
   }
 
+
+  public Registration addContextMenuStateChangedEventListener(
+      ComponentEventListener<ContextMenuStateChangedEvent> listener) {
+    return addListener(ContextMenuStateChangedEvent.class, listener);
+  }
 
   public MenuBar getMenuBar() {
     return menuBar;
@@ -46,8 +55,9 @@ public class ContextMenu<T> extends HtmlContainer {
 
   public void open(ContextMenuEvent<T> event) {
     val element = getElement();
+    val location = event.getLocation();
+    openMethod.invoke(this, location);
     host.getElement().appendChild(element);
-    openMethod.invoke(this, new Location(event.getX(), event.getY()));
   }
 
   public void close() {
@@ -55,22 +65,23 @@ public class ContextMenu<T> extends HtmlContainer {
     host.getElement().removeChild(element);
   }
 
-  @RootElement
-  static final class Location {
+  protected void configureMenubar(MenuBar menuBar) {
+    configureMenubarElement(menuBar);
+    getElement().setAttribute("slot", "context-menu");
+    getElement().appendChild(menuBar.getElement());
+  }
 
-    @Attribute
-    double x;
-    @Attribute
-    double y;
+  private void configureMenubarElement(MenuBar menuBar) {
+    menuBar.setOpenOnHover(true);
+    val mbel = menuBar.getElement();
+    mbel.setAttribute("theme", "menu-vertical");
+    mbel.setAttribute("exportparts", "container");
+  }
 
-    public Location() {
-      x = 0;
-      y = 0;
-    }
-
-    public Location(double x, double y) {
-      this.x = x;
-      this.y = y;
+  @Override
+  public void onComponentEvent(ContextMenuStateChangedEvent event) {
+    if (event.isClosed()) {
+      close();
     }
   }
 }

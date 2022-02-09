@@ -72,9 +72,8 @@ export class Canvas extends LitElement {
     }
     const container = this.container;
     const graph = new Graph({
-      container: container,
-      preventDefaultContextMenu: false,
-      grid: true
+      grid: true,
+      container: container
     });
     this.graph = graph;
   }
@@ -187,6 +186,7 @@ export class Canvas extends LitElement {
     return html`
       <div class="container">
       </div>
+      <slot name="context-menu"></slotn>
     `;
   }
 
