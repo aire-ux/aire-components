@@ -33,7 +33,7 @@ class CanvasTest extends AbstractCanvasTest {
 
   @ViewTest
   void ensureCanvasContextMenuApiMakesSense(@View Canvas canvas) {
-    val menu = canvas.createVertexContextMenu(EventType.ContextMenu,  vertex -> true);
+    val menu = canvas.createVertexContextMenu(EventType.ContextMenu, vertex -> true);
   }
 
   @ViewTest
@@ -47,7 +47,6 @@ class CanvasTest extends AbstractCanvasTest {
     registration.remove();
     assertEquals(0, canvas.getModel().getListenerCount());
   }
-
 
   @ViewTest
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {

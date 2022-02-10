@@ -24,6 +24,4 @@ public class ContextMenuEvent<T> {
     Opened,
     Closed
   }
-
-
 }

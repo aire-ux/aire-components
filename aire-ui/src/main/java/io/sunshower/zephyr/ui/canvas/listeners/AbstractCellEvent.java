@@ -12,8 +12,8 @@ public class AbstractCellEvent<T extends Cell> implements CellEvent<T> {
   private final Canvas source;
   private final Location location;
 
-  protected AbstractCellEvent(@NonNull T target, @NonNull Canvas source,
-      @NonNull Location location) {
+  protected AbstractCellEvent(
+      @NonNull T target, @NonNull Canvas source, @NonNull Location location) {
     this.target = target;
     this.source = source;
     this.location = location;

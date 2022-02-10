@@ -8,11 +8,10 @@ import lombok.Getter;
 @DomEvent("context-menu-state-changed")
 public class ContextMenuStateChangedEvent extends ComponentEvent<ContextMenu> {
 
-  @Getter
-  private final boolean closed;
+  @Getter private final boolean closed;
 
-  public ContextMenuStateChangedEvent(ContextMenu source, boolean fromClient,
-      @EventData("event.detail.state") boolean closed) {
+  public ContextMenuStateChangedEvent(
+      ContextMenu source, boolean fromClient, @EventData("event.detail.state") boolean closed) {
     super(source, fromClient);
     this.closed = closed;
   }

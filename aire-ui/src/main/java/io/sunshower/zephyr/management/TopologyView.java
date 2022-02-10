@@ -46,9 +46,7 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
   private final Zephyr zephyr;
@@ -56,9 +54,7 @@ public class TopologyView extends VerticalLayout
   private final Registration onVertexClickedRegistration;
   private final ContextMenu<Vertex> canvasContextMenu;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   @Inject
@@ -74,7 +70,6 @@ public class TopologyView extends VerticalLayout
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
     onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked, System.out::println);
   }
-
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
@@ -120,22 +115,19 @@ public class TopologyView extends VerticalLayout
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
-    val plan = menu.getMenuBar().addItem("Plan");
-    val execute = menu.getMenuBar().addItem("Execute");
-
-    execute.getSubMenu().addItem("Stop");
-    execute.getSubMenu().addItem("Start");
-    execute.getSubMenu().addItem("Restart");
-
-    plan.getSubMenu().addItem("Stop");
-    plan.getSubMenu().addItem("Start");
-    plan.getSubMenu().addItem("Restart");
-
+    //    val plan = menu.getMenuBar().addItem("Plan");
+    //    val execute = menu.getMenuBar().addItem("Execute");
+    //
+    //    execute.getSubMenu().addItem("Stop");
+    //    execute.getSubMenu().addItem("Start");
+    //    execute.getSubMenu().addItem("Restart");
+    //
+    //    plan.getSubMenu().addItem("Stop");
+    //    plan.getSubMenu().addItem("Start");
+    //    plan.getSubMenu().addItem("Restart");
 
     return menu;
   }
-
-
 
   private void configureStyles() {
     val style = this.getStyle();

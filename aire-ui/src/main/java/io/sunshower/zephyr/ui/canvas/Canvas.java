@@ -44,11 +44,11 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
 
   /**
    * registering multiple CanvasVertexEventListeners causes an explosion in the number of cellevents
-   * dispatched.  This will prevent that
+   * dispatched. This will prevent that
    */
   private final AtomicReference<CountdownRegistration> vertexEventCountdownRegistration;
-  private final List<PendingVertexEventListenerDescriptor> pendingVertexEventListeners;
 
+  private final List<PendingVertexEventListenerDescriptor> pendingVertexEventListeners;
 
   private Model model;
   private volatile boolean ready;
@@ -81,8 +81,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     model.detach(this);
   }
 
-  public Registration addVertexListener(EventType type,
-      CellListener<Vertex, VertexEvent> listener) {
+  public Registration addVertexListener(
+      EventType type, CellListener<Vertex, VertexEvent> listener) {
     return addVertexListener(type, listener, v -> true);
   }
 
@@ -117,9 +117,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return addListener(CanvasClickedEvent.class, listener);
   }
 
-  /**
-   * @return the canvas model for this canvas
-   */
+  /** @return the canvas model for this canvas */
   @NonNull
   public final Model getModel() {
     return model;
@@ -132,13 +130,17 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   @SuppressWarnings("unchecked")
-  public ContextMenu<Vertex> createVertexContextMenu(EventType eventType,
-      Predicate<Vertex> filter) {
+  public ContextMenu<Vertex> createVertexContextMenu(
+      EventType eventType, Predicate<Vertex> filter) {
     val menu = new ContextMenu<Vertex>(this);
-    val registration = addVertexListener(eventType, vertex -> {
-      menu.open(
-          new ContextMenuEvent<>(vertex.getTarget(), Type.Opened, vertex.getLocation()));
-    }, filter);
+    val registration =
+        addVertexListener(
+            eventType,
+            vertex -> {
+              menu.open(
+                  new ContextMenuEvent<>(vertex.getTarget(), Type.Opened, vertex.getLocation()));
+            },
+            filter);
     return menu;
   }
 
@@ -147,10 +149,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return createVertexContextMenu(eventType, vertex -> true);
   }
 
-
   @NonNull
-  private EventListener<VertexEvent> getEventListener(
-      CellListener<Vertex, VertexEvent> listener) {
+  private EventListener<VertexEvent> getEventListener(CellListener<Vertex, VertexEvent> listener) {
     return (eventType, event) -> listener.on(event.getTarget());
   }
 
@@ -176,16 +176,25 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   private Registration getRegistration() {
     var registration = vertexEventCountdownRegistration.get();
     if (registration == null) {
-      vertexEventCountdownRegistration.set(registration = new CountdownRegistration(addListener(
-          CanvasVertexEventListener.class,
-          event -> {
-            val vertexDefinition = event.getValue();
-            val mappedEventType = VertexEvent.EventType.resolve(
-                vertexDefinition.getTargetEventType());
-            model.findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
-                .ifPresent(v -> model.dispatchEvent(mappedEventType::ordinal,
-                    () -> (new VertexEvent(v, this, vertexDefinition.getLocation()))));
-          })));
+      vertexEventCountdownRegistration.set(
+          registration =
+              new CountdownRegistration(
+                  addListener(
+                      CanvasVertexEventListener.class,
+                      event -> {
+                        val vertexDefinition = event.getValue();
+                        val mappedEventType =
+                            VertexEvent.EventType.resolve(vertexDefinition.getTargetEventType());
+                        model
+                            .findVertex(v -> Objects.equals(vertexDefinition.getId(), v.getId()))
+                            .ifPresent(
+                                v ->
+                                    model.dispatchEvent(
+                                        mappedEventType::ordinal,
+                                        () ->
+                                            (new VertexEvent(
+                                                v, this, vertexDefinition.getLocation()))));
+                      })));
     }
     return registration;
   }

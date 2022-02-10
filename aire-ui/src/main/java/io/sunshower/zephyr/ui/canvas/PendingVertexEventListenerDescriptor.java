@@ -9,11 +9,9 @@ import lombok.NonNull;
 
 class PendingVertexEventListenerDescriptor implements Registration {
 
-  @Getter
-  private final EventType type;
+  @Getter private final EventType type;
   private final Canvas canvas;
-  @Getter
-  private final EventListener<VertexEvent> delegate;
+  @Getter private final EventListener<VertexEvent> delegate;
 
   private Registration registration;
 
