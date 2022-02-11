@@ -49,9 +49,7 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
   private final Zephyr zephyr;
@@ -59,9 +57,7 @@ public class TopologyView extends VerticalLayout
   private final Registration onVertexClickedRegistration;
   private final ContextMenu<Vertex> canvasContextMenu;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   @Inject
@@ -143,7 +139,6 @@ public class TopologyView extends VerticalLayout
     restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
     root.add(start, stop, restart);
-
   }
 
   private void createExecuteSubmenu(ContextMenu<Vertex> menu) {

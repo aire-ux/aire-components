@@ -20,7 +20,6 @@ import lombok.val;
 
 public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
 
-
   private final LRUCache<Class<?>, Map<String, PropertyDescriptor>> attributeCache;
 
   public ComponentHierarchyNodeAdapter() {
@@ -34,7 +33,6 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
     } catch (IntrospectionException e) {
       return Collections.emptyList();
     }
-
   }
 
   /**
@@ -116,8 +114,7 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
         .getAttributeNames()
         .forEach(
             attribute -> {
-              result
-                  .setAttribute(attribute, value.getAttribute(attribute));
+              result.setAttribute(attribute, value.getAttribute(attribute));
             });
     return result;
   }
@@ -176,7 +173,9 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
   }
 
   @Nullable
-  private String getAttributeFrom(@NonNull Object current, @NonNull String key,
+  private String getAttributeFrom(
+      @NonNull Object current,
+      @NonNull String key,
       Class<?> componentType,
       Map<String, PropertyDescriptor> componentProperties) {
     if (componentProperties.containsKey(key)) {
@@ -185,8 +184,9 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
       if (result != null) {
         return result;
       } else {
-        result = readDirectly(descriptor.getName(), descriptor.getPropertyType(),
-            componentType, current);
+        result =
+            readDirectly(
+                descriptor.getName(), descriptor.getPropertyType(), componentType, current);
         if (result != null) {
           return result;
         }
@@ -195,8 +195,8 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
     return null;
   }
 
-  private String readDirectly(String name, Class<?> propertyType,
-      Class<?> componentType, Object value) {
+  private String readDirectly(
+      String name, Class<?> propertyType, Class<?> componentType, Object value) {
     val getterName = methodNameFrom(name, propertyType);
     try {
       val method = componentType.getMethod(getterName);
@@ -218,23 +218,27 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
     try {
       return String.valueOf(method.invoke(descriptor, current));
     } catch (IllegalAccessException | InvocationTargetException e) {
-      //todo idk when/if this is going to be a problem
+      // todo idk when/if this is going to be a problem
       throw new IllegalStateException(e);
     }
   }
 
   private Map<String, PropertyDescriptor> readAndCacheProperties(Class<?> elementType) {
-    return attributeCache.computeIfAbsent(elementType, (k) -> getPropertyDescriptors(elementType)
-        .stream().reduce(new HashMap<>(),
-            (result, descriptor) -> {
-              result.put(descriptor.getName(), descriptor);
-              return result;
-            }, (acc, v) -> {
-              acc.putAll(v);
-              return acc;
-            }));
+    return attributeCache.computeIfAbsent(
+        elementType,
+        (k) ->
+            getPropertyDescriptors(elementType).stream()
+                .reduce(
+                    new HashMap<>(),
+                    (result, descriptor) -> {
+                      result.put(descriptor.getName(), descriptor);
+                      return result;
+                    },
+                    (acc, v) -> {
+                      acc.putAll(v);
+                      return acc;
+                    }));
   }
-
 }
 
 final class ElementList extends AbstractList<Element> {

@@ -32,7 +32,6 @@ import lombok.val;
 @CssImport(themeFor = "vaadin-button", value = "./styles/aire/ui/controls/vaadin-button.css")
 public class MenuForest extends HtmlContainer {
 
-
   private static final PlanContext planContext;
   private static final CssSelectorParser selectorParser;
   private static final NodeAdapter<Element> componentNodeAdapter;
@@ -50,7 +49,6 @@ public class MenuForest extends HtmlContainer {
   private MenuForest currentChild;
   private DomListenerRegistration mouseLeaveRegistration;
 
-
   public MenuForest(Mode mode) {
     this(mode, null);
   }
@@ -66,11 +64,9 @@ public class MenuForest extends HtmlContainer {
     this(Mode.OpenOnHover, null);
   }
 
-
   public MenuForest locate(String selector) {
     val result = selectSingle(selector);
-    if (result.isPresent()) {
-    }
+    if (result.isPresent()) {}
     return null;
   }
 
@@ -86,31 +82,40 @@ public class MenuForest extends HtmlContainer {
 
   @Override
   protected void onAttach(AttachEvent attachEvent) {
-    this.mouseLeaveRegistration = getElement()
-        .addEventListener("mouseleave", event -> {
-          if (currentChild != null) {
-            closeChild(currentChild);
-          }
-        });
+    this.mouseLeaveRegistration =
+        getElement()
+            .addEventListener(
+                "mouseleave",
+                event -> {
+                  if (currentChild != null) {
+                    closeChild(currentChild);
+                  }
+                });
     val cfg = getListenerConfigurer();
-    getUI().ifPresent(ui -> {
-      ui.access(() -> {
-        for (val tree : children) {
-          registrations.add(cfg.get().apply(tree));
-        }
-      });
-    });
+    getUI()
+        .ifPresent(
+            ui -> {
+              ui.access(
+                  () -> {
+                    for (val tree : children) {
+                      registrations.add(cfg.get().apply(tree));
+                    }
+                  });
+            });
   }
 
   @Override
   protected void onDetach(DetachEvent detachEvent) {
-    getUI().ifPresent(ui -> {
-      ui.access(() -> {
-        for (val registration : registrations) {
-          registration.remove();
-        }
-      });
-    });
+    getUI()
+        .ifPresent(
+            ui -> {
+              ui.access(
+                  () -> {
+                    for (val registration : registrations) {
+                      registration.remove();
+                    }
+                  });
+            });
     registrations.clear();
     mouseLeaveRegistration.remove();
     if (currentChild != null) {
@@ -127,7 +132,9 @@ public class MenuForest extends HtmlContainer {
         .parse(selector)
         .plan(planContext)
         .evaluate(this.getElement(), componentNodeAdapter)
-        .results().stream().flatMap(c -> c.getComponent().stream())
+        .results()
+        .stream()
+        .flatMap(c -> c.getComponent().stream())
         .collect(Collectors.toUnmodifiableSet());
   }
 
@@ -139,32 +146,34 @@ public class MenuForest extends HtmlContainer {
   }
 
   private void closeChild(MenuForest child) {
-    UI.getCurrent().access(() -> {
-      child.getElement().removeAttribute("slot");
-      if(child.component != null) {
-        child.component.getElement().removeAttribute("host");
-      }
-      remove(child);
-      child.getElement().getNode().removeFromTree();
-      currentChild = null;
-    });
+    UI.getCurrent()
+        .access(
+            () -> {
+              child.getElement().removeAttribute("slot");
+              if (child.component != null) {
+                child.component.getElement().removeAttribute("host");
+              }
+              remove(child);
+              child.getElement().getNode().removeFromTree();
+              currentChild = null;
+            });
   }
 
   private void openChild(MenuForest tree) {
     if (currentChild != null) {
       closeChild(currentChild);
     }
-    UI.getCurrent().access(() -> {
-          tree.getElement().setAttribute("slot", "active");
-          if(tree.component != null) {
-            tree.component.getElement().setAttribute("host", true);
-          }
-          add(tree);
-          currentChild = tree;
-        }
-    );
+    UI.getCurrent()
+        .access(
+            () -> {
+              tree.getElement().setAttribute("slot", "active");
+              if (tree.component != null) {
+                tree.component.getElement().setAttribute("host", true);
+              }
+              add(tree);
+              currentChild = tree;
+            });
   }
-
 
   public enum Mode {
     OpenOnClick,
@@ -176,10 +185,12 @@ public class MenuForest extends HtmlContainer {
     @Override
     public Registration apply(final MenuForest forest) {
       val element = forest.component.getElement();
-      return element.addEventListener("mouseover",
-          (DomEventListener) event -> {
-            MenuForest.this.openChild(forest);
-          });
+      return element.addEventListener(
+          "mouseover",
+          (DomEventListener)
+              event -> {
+                MenuForest.this.openChild(forest);
+              });
     }
   }
 }
