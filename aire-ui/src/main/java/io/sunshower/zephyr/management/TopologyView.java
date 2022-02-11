@@ -2,6 +2,7 @@ package io.sunshower.zephyr.management;
 
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -46,7 +47,9 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Model model;
 
   private final Zephyr zephyr;
@@ -54,7 +57,9 @@ public class TopologyView extends VerticalLayout
   private final Registration onVertexClickedRegistration;
   private final ContextMenu<Vertex> canvasContextMenu;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
   @Inject
@@ -115,17 +120,11 @@ public class TopologyView extends VerticalLayout
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
-    //    val plan = menu.getMenuBar().addItem("Plan");
-    //    val execute = menu.getMenuBar().addItem("Execute");
-    //
-    //    execute.getSubMenu().addItem("Stop");
-    //    execute.getSubMenu().addItem("Start");
-    //    execute.getSubMenu().addItem("Restart");
-    //
-    //    plan.getSubMenu().addItem("Stop");
-    //    plan.getSubMenu().addItem("Start");
-    //    plan.getSubMenu().addItem("Restart");
-
+    val root1 = menu.getMenu().createRoot(new Button("Hello"));
+    val root2 = menu.getMenu().createRoot(new Button("World"));
+    root1.add(new Button("Child"));
+    root1.createRoot(new Button("CHild2")).createRoot(new Button("Gchild"));
+    root2.add(new Button("Child2"));
     return menu;
   }
 
