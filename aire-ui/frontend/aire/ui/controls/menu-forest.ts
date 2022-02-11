@@ -18,7 +18,19 @@ export class MenuForest extends LitElement {
       flex-direction: column;
     }
     
-    div.active-container {
+    ::slotted(vaadin-button[subcontent])::after {
+      display: inline-block;
+      width:10px;
+      background-repeat: no-repeat;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' preserveAspectRatio='xMidYMid meet' aria-hidden='true' viewBox='0 0 16 16'%3E%3C!----%3E%3C!--%3Flit$6191637496$--%3E%3Cpath d='M13.1 8l-8 8-2.2-2.1 5.9-5.9-5.9-5.9 2.2-2.1z' style='&%2310; fill: %234D5E7c;&%2310;'/%3E%3C!--%3F--%3E%3C/svg%3E");
+      filter: unset;
+      transition: unset;
+      opacity: 100%;
+      background-color: unset;
+      vertical-align: middle;
+      line-height: 100%;
+      margin: 0 2px 0 calc(100% - 20px);
+      top: calc(50% - 4px);
     }
   `;
 

@@ -3,6 +3,8 @@ package io.sunshower.zephyr.management;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -120,12 +122,46 @@ public class TopologyView extends VerticalLayout
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
-    val root1 = menu.getMenu().createRoot(new Button("Hello"));
-    val root2 = menu.getMenu().createRoot(new Button("World"));
-    root1.add(new Button("Child"));
-    root1.createRoot(new Button("CHild2")).createRoot(new Button("Gchild"));
-    root2.add(new Button("Child2"));
+    createPlanSubmenu(menu);
+    createExecuteSubmenu(menu);
     return menu;
+  }
+
+  private void createPlanSubmenu(ContextMenu<Vertex> menu) {
+
+    val rootButton = new Button("Plan", VaadinIcon.TASKS.create());
+    rootButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    val root = menu.getMenu().createRoot(rootButton);
+    val start = new Button("Start", VaadinIcon.PLAY.create());
+    start.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
+    root.add(start);
+
+    val stop = new Button("Stop", VaadinIcon.STOP.create());
+    stop.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
+
+    val restart = new Button("Restart", VaadinIcon.REFRESH.create());
+    restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+    root.add(start, stop, restart);
+
+  }
+
+  private void createExecuteSubmenu(ContextMenu<Vertex> menu) {
+
+    val rootButton = new Button("Execute", VaadinIcon.CURLY_BRACKETS.create());
+    rootButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    val root = menu.getMenu().createRoot(rootButton);
+    val start = new Button("Start", VaadinIcon.PLAY.create());
+    start.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
+    root.add(start);
+
+    val stop = new Button("Stop", VaadinIcon.STOP.create());
+    stop.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
+
+    val restart = new Button("Restart", VaadinIcon.REFRESH.create());
+    restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+    root.add(start, stop, restart);
   }
 
   private void configureStyles() {

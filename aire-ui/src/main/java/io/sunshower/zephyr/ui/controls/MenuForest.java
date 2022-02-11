@@ -29,6 +29,7 @@ import lombok.val;
 @Tag("aire-menu-forest")
 @JsModule("./aire/ui/controls/menu-forest.ts")
 @CssImport("./styles/aire/ui/controls/menu-forest.css")
+@CssImport(themeFor = "vaadin-button", value = "./styles/aire/ui/controls/vaadin-button.css")
 public class MenuForest extends HtmlContainer {
 
 
@@ -74,6 +75,8 @@ public class MenuForest extends HtmlContainer {
   }
 
   public MenuForest createRoot(Component component) {
+    getElement().setAttribute("exportparts", "primary");
+    component.getElement().setAttribute("subcontent", true);
     add(component);
     val tree = new MenuForest(mode, component);
     children.add(tree);
