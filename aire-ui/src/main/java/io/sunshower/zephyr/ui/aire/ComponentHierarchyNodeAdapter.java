@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 import lombok.NonNull;
@@ -49,7 +50,7 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
     } else {
       prefix = "get";
     }
-    return prefix + name.substring(0, 1).toUpperCase() + name.substring(1);
+    return prefix + name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
   }
 
   @NonNull

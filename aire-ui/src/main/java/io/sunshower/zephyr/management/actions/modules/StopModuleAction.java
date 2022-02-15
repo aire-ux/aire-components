@@ -1,6 +1,3 @@
 package io.sunshower.zephyr.management.actions.modules;
 
-
-public class StopModuleAction {
-
-}
+public class StopModuleAction {}

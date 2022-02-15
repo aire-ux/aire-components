@@ -17,7 +17,6 @@ public class ZephyrApplication {
     context = new AtomicReference<>();
   }
 
-
   public static void main(String[] args) {
     context.set(SpringApplication.run(ZephyrApplication.class, args));
   }

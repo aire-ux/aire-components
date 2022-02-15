@@ -14,10 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @AireTest
 @Inherited
 @EnableSpring
-@SpringBootTest(classes = {AireVaadinOverrideAutoConfiguration.class,
-    EmbeddedZephyrConfiguration.class, AireUITestConfiguration.class})
+@SpringBootTest(
+    classes = {
+      AireVaadinOverrideAutoConfiguration.class,
+      EmbeddedZephyrConfiguration.class,
+      AireUITestConfiguration.class
+    })
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AireUITest {
-
-}
+public @interface AireUITest {}

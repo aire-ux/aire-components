@@ -15,8 +15,10 @@ public class VaadinSpringServletService extends SpringVaadinServletService {
 
   private final WebApplicationContext context;
 
-  public VaadinSpringServletService(AireVaadinServlet servlet,
-      DeploymentConfiguration deploymentConfiguration, WebApplicationContext context) {
+  public VaadinSpringServletService(
+      AireVaadinServlet servlet,
+      DeploymentConfiguration deploymentConfiguration,
+      WebApplicationContext context) {
     super(servlet, deploymentConfiguration, context);
     this.context = context;
   }
@@ -24,9 +26,11 @@ public class VaadinSpringServletService extends SpringVaadinServletService {
   @Override
   protected Optional<Instantiator> loadInstantiators() throws ServiceException {
     val delegate = new SpringInstantiator(this, context);
-    val instantiator = new BaseAireInstantiator(delegate,
-        new ServiceLoaderComponentDecorator(() -> Thread.currentThread()
-            .getContextClassLoader()));
+    val instantiator =
+        new BaseAireInstantiator(
+            delegate,
+            new ServiceLoaderComponentDecorator(
+                () -> Thread.currentThread().getContextClassLoader()));
     return Optional.of(instantiator);
   }
 }

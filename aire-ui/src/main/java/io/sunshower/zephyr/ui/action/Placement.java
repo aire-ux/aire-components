@@ -1,5 +1,3 @@
 package io.sunshower.zephyr.ui.action;
 
-public class Placement {
-
-}
+public class Placement {}

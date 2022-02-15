@@ -56,7 +56,8 @@ public final class ClientMethods {
                     argumentTypes));
   }
 
-  public <R, T> CanvasAction<T> construct(Class<? extends CanvasAction<T>> action, Object... arguments) {
+  public <R, T> CanvasAction<T> construct(
+      Class<? extends CanvasAction<T>> action, Object... arguments) {
     try {
       val argumentTypes =
           collectAnnotatedArguments(action).orElseGet(() -> collectArgumentTypes(arguments));
@@ -70,7 +71,8 @@ public final class ClientMethods {
     }
   }
 
-  private <T> Optional<Class<?>[]> collectAnnotatedArguments(Class<? extends CanvasAction<T>> action) {
+  private <T> Optional<Class<?>[]> collectAnnotatedArguments(
+      Class<? extends CanvasAction<T>> action) {
 
     val arguments = action.getDeclaredAnnotationsByType(Argument.class);
     if (arguments.length == 0) {

@@ -64,12 +64,6 @@ public class MenuForest extends HtmlContainer {
     this(Mode.OpenOnHover, null);
   }
 
-  public MenuForest locate(String selector) {
-    val result = selectSingle(selector);
-    if (result.isPresent()) {}
-    return null;
-  }
-
   public MenuForest createRoot(Component component) {
     getElement().setAttribute("exportparts", "primary");
     component.getElement().setAttribute("subcontent", true);
@@ -145,6 +139,7 @@ public class MenuForest extends HtmlContainer {
     throw new UnsupportedOperationException();
   }
 
+  @SuppressWarnings("PMD.NullAssignment")
   private void closeChild(MenuForest child) {
     UI.getCurrent()
         .access(

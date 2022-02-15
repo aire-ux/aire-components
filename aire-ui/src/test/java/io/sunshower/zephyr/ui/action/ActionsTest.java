@@ -1,5 +1,5 @@
 package io.sunshower.zephyr.ui.action;
-import com.aire.ux.core.test.ComponentDecoratingInstantiatorFactory;
+
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.View;
 import com.aire.ux.test.ViewTest;
@@ -11,8 +11,5 @@ import io.sunshower.zephyr.ui.action.views.TestActionView;
 class ActionsTest {
 
   @ViewTest
-  void ensureActionCanBeRegisteredWithCorrectComponents(@View TestActionView view) {
-
-  }
-
+  void ensureActionCanBeRegisteredWithCorrectComponents(@View TestActionView view) {}
 }

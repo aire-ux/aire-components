@@ -6,8 +6,6 @@ import lombok.NonNull;
 
 public class ActionDecoratingComponentDecorator implements ComponentDecorator {
 
-
-
   public ActionDecoratingComponentDecorator() {
 
     System.out.println("Inss");
@@ -15,13 +13,13 @@ public class ActionDecoratingComponentDecorator implements ComponentDecorator {
 
   @Override
   public void onComponentEntered(@NonNull HasElement component) {
-//    ComponentDecorator.super.onComponentEntered(component);
+    //    ComponentDecorator.super.onComponentEntered(component);
     System.out.println("Entered" + component);
   }
 
   @Override
   public void onComponentExited(@NonNull HasElement component) {
     System.out.println("Exited" + component);
-//    ComponentDecorator.super.onComponentExited(component);
+    //    ComponentDecorator.super.onComponentExited(component);
   }
 }

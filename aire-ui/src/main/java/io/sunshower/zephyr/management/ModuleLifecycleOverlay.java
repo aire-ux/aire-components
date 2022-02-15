@@ -1,5 +1,3 @@
 package io.sunshower.zephyr.management;
 
-public class ModuleLifecycleOverlay {
-
-}
+public class ModuleLifecycleOverlay {}

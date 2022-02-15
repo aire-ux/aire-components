@@ -11,8 +11,8 @@ import com.vaadin.flow.spring.SpringServlet;
 import lombok.val;
 import org.springframework.web.context.WebApplicationContext;
 
-public class AireVaadinServlet extends SpringServlet implements SessionInitListener,
-    SessionDestroyListener {
+public class AireVaadinServlet extends SpringServlet
+    implements SessionInitListener, SessionDestroyListener {
 
   private final WebApplicationContext context;
 
@@ -23,20 +23,15 @@ public class AireVaadinServlet extends SpringServlet implements SessionInitListe
 
   @Override
   protected VaadinServletService createServletService(
-      DeploymentConfiguration deploymentConfiguration)
-      throws ServiceException {
+      DeploymentConfiguration deploymentConfiguration) throws ServiceException {
     val service = new VaadinSpringServletService(this, deploymentConfiguration, context);
     service.init();
     return service;
   }
 
   @Override
-  public void sessionDestroy(SessionDestroyEvent event) {
-
-  }
+  public void sessionDestroy(SessionDestroyEvent event) {}
 
   @Override
-  public void sessionInit(SessionInitEvent event) throws ServiceException {
-
-  }
+  public void sessionInit(SessionInitEvent event) throws ServiceException {}
 }

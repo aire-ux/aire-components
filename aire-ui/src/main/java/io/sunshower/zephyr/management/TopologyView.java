@@ -50,9 +50,7 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
   private final Zephyr zephyr;
@@ -61,9 +59,7 @@ public class TopologyView extends VerticalLayout
   private final Registration onCanvasReadyRegistration;
   private final Registration onVertexClickedRegistration;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   @Inject
@@ -78,14 +74,13 @@ public class TopologyView extends VerticalLayout
     canvasContextMenu = createCanvasContextMenu();
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
     onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked, System.out::println);
-//    this.actionMap = ActionMap.read(TopologyView.class);
-//    canvas.addVertexListener(EventType.ContextMenu)
+    //    this.actionMap = ActionMap.read(TopologyView.class);
+    //    canvas.addVertexListener(EventType.ContextMenu)
   }
 
   private MenuBar createMenubar() {
     return new MenuBar();
   }
-
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
@@ -116,8 +111,7 @@ public class TopologyView extends VerticalLayout
     }
     canvas
         .invoke(AddVerticesAction.class, new ArrayList<>(vertices.values()))
-        .then(
-            result -> canvas.invoke(ConnectVerticesAction.class, edges));
+        .then(result -> canvas.invoke(ConnectVerticesAction.class, edges));
   }
 
   @Override
