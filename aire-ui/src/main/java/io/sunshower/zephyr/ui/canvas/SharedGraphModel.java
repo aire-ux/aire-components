@@ -106,36 +106,13 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   @SuppressWarnings("PMD")
   public Edge connect(@NonNull Identifier source, @NonNull Identifier target) {
-    val ids = Set.of(source, target);
-    val vertices =
-        graph.vertexSet().stream()
-            .filter(vertex -> ids.contains(vertex.getId()))
-            .collect(Collectors.toList());
-    if (ids.size() != vertices.size()) {
-      val existingIds = vertices.stream().map(Vertex::getId).collect(Collectors.toSet());
-      throw new IllegalStateException(
-          String.format(
-              "Error: expected ids to be present ('%s'), actual ids: '%s'", ids, existingIds));
-    }
-    val sv = vertices.get(0);
-    val tv = vertices.get(1);
-    return connect(sv, tv);
+    return doConnect(identifierSequence.next(), source, target);
   }
+
 
   @Override
   public Edge connect(@NonNull Vertex source, @NonNull Vertex target) {
-    val vertices = graph.vertexSet();
-    if (!vertices.contains(source)) {
-      addVertex(source);
-    }
-    if (!vertices.contains(target)) {
-      addVertex(target);
-    }
-    val edge =
-        new DirectedGraph.DirectedEdge<>(
-            new Edge(source.getId(), target.getId()), Direction.Outgoing);
-    graph.connect(source, target, edge);
-    return edge.getLabel();
+    return doConnect(identifierSequence.next(), source, target);
   }
 
   @Override
@@ -219,9 +196,10 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public void connectAll(List<Edge> edges) {
     for (val edge : edges) {
-      connect(edge.getSource(), edge.getTarget());
+      doConnect(edge.getId(), edge.getSource(), edge.getTarget());
     }
   }
+
 
   public Set<Edge> getEdges() {
     return requireNonNull(graph).edgeSet().stream()
@@ -242,7 +220,7 @@ class SharedGraphModel extends AbstractEventSource
       default:
         return graph.edgeSet().stream()
             .map(DirectedGraph.Edge::getLabel)
-            .filter(filter::test)
+            .filter(filter)
             .map(e -> (Cell) e).findAny();
     }
   }
@@ -251,5 +229,38 @@ class SharedGraphModel extends AbstractEventSource
   public void onComponentEvent(CanvasReadyEvent event) {
     commandManager.applyPendingActions(false);
     commandManager.clearPendingActions();
+  }
+
+  private Edge doConnect(Identifier id, Identifier source, Identifier target) {
+    val ids = Set.of(source, target);
+    val vertices =
+        graph.vertexSet().stream()
+            .filter(vertex -> ids.contains(vertex.getId()))
+            .collect(Collectors.toList());
+    if (ids.size() != vertices.size()) {
+      val existingIds = vertices.stream().map(Vertex::getId).collect(Collectors.toSet());
+      throw new IllegalStateException(
+          String.format(
+              "Error: expected ids to be present ('%s'), actual ids: '%s'", ids, existingIds));
+    }
+    val sv = vertices.get(0);
+    val tv = vertices.get(1);
+    return doConnect(id, sv, tv);
+  }
+
+
+  private Edge doConnect(Identifier edgeId, Vertex source, Vertex target) {
+    val vertices = graph.vertexSet();
+    if (!vertices.contains(source)) {
+      addVertex(source);
+    }
+    if (!vertices.contains(target)) {
+      addVertex(target);
+    }
+    val edge =
+        new DirectedGraph.DirectedEdge<>(
+            new Edge(edgeId, source.getId(), target.getId()), Direction.Outgoing);
+    graph.connect(source, target, edge);
+    return edge.getLabel();
   }
 }

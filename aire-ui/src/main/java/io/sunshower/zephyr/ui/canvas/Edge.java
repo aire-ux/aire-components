@@ -11,11 +11,18 @@ import lombok.Setter;
 @RootElement
 public class Edge extends AbstractCell {
 
-  @Getter @Setter @Attribute private Identifier target;
+  @Getter
+  @Setter
+  @Attribute
+  private Identifier target;
 
-  @Getter @Setter @Attribute private Identifier source;
+  @Getter
+  @Setter
+  @Attribute
+  private Identifier source;
 
-  @Element private EdgeTemplate template;
+  @Element
+  private EdgeTemplate template;
 
   public Edge() {
     this(SharedGraphModel.identifierSequence.next());
@@ -26,7 +33,13 @@ public class Edge extends AbstractCell {
   }
 
   public Edge(@NonNull Identifier source, @NonNull Identifier target) {
-    this(source, target, null);
+    this(source, target, (EdgeTemplate) null);
+  }
+
+  public Edge(Identifier id, Identifier source, Identifier target) {
+    this(id);
+    this.source = source;
+    this.target = target;
   }
 
   public Edge(Identifier source, Identifier target, EdgeTemplate template) {
