@@ -70,7 +70,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   /**
-   * @param model the model to set.  Retargets the model's host to this
+   * @param model the model to set. Retargets the model's host to this
    * @return the model
    */
   public Model setModel(@NonNull final Model model) {
@@ -80,7 +80,6 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     this.commandManager = model.getCommandManager();
     return m;
   }
-
 
   /**
    * @param type     the type of the event to listen for
@@ -99,11 +98,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
    * @param listener the listener
    * @param <T>      the type of cell
    * @param <U>      the type of cell event
-   * @param filter   the cell filter apply.  An event is not dispatched if no cell matches the
+   * @param filter   the cell filter apply. An event is not dispatched if no cell matches the
    *                 filter
    * @return a registration that will dispose of the listener
    */
-
   public <T extends Cell, U extends CellEvent<T>> Registration addCellListener(
       CanvasEventType type, CellListener<T, U> listener, Predicate<? super T> filter) {
     if (ready) {
@@ -112,6 +110,15 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
       return registerPendingCellListener(type, listener, filter);
     }
   }
+
+  /**
+   * add a listener for canvas events.  A canvas event is an event that is fired by the canvas
+   * (rather than a cell).
+   *
+   * @param type     the type of the event to listen for
+   * @param listener the listener to add
+   * @return a registration disposing of the listener
+   */
 
   public Registration addCanvasListener(
       CanvasEventType type, CanvasListener<CanvasEvent> listener) {
@@ -122,17 +129,27 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     }
   }
 
+  /**
+   * The canvas is intended to be dynamically extended, and we don't want to add hundreds of methods
+   * to the canvas.
+   *
+   * @param action    the action to invoke
+   * @param arguments the arguments to supply to the action
+   * @param <T>       the type of the response
+   * @return a client-result containing the response
+   */
   public <T> ClientResult<T> invoke(Class<? extends CanvasAction<T>> action, Object... arguments) {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 
+  /**
+   * dispatched when the canvas is ready
+   *
+   * @param listener
+   * @return the registration to dispose of the listener
+   */
   public Registration addOnCanvasReadyListener(ComponentEventListener<CanvasReadyEvent> listener) {
     return addListener(CanvasReadyEvent.class, listener);
-  }
-
-  public Registration addOnCanvasClickedEventListener(
-      ComponentEventListener<CanvasClickedEvent> listener) {
-    return addListener(CanvasClickedEvent.class, listener);
   }
 
   /**
@@ -222,15 +239,35 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     invoke(AddListenersAction.class, definitions);
   }
 
+  /**
+   * register a listener before the canvas is ready
+   *
+   * @param type     the type of the cell event
+   * @param listener the event
+   * @param filter   the filter to search for matching cells
+   * @param <T>      the type of the cell
+   * @param <U>      the type of the cell Event
+   * @return a registration to dispose of the listener with
+   */
   private <T extends Cell, U extends CellEvent<T>> Registration registerPendingCellListener(
       CanvasEventType type, CellListener<T, U> listener, Predicate<? super T> filter) {
-    val delegate = getEventListener(listener);
+    val delegate = createCellEventListener(listener);
     val pending =
         new PendingCanvasEventListenerDescriptor<>(type, type.getCellType(), delegate, this);
     pendingListeners.add(pending);
     return pending;
   }
 
+  /**
+   * register a cell listener
+   *
+   * @param type     the event type to listen for
+   * @param listener the listener to apply upon a matching event
+   * @param filter   a cell filter to apply
+   * @param <T>      the type of the cell
+   * @param <U>      the type of the cell event
+   * @return a registration to dispose of this listener with
+   */
   private <T extends Cell, U extends CellEvent<T>> Registration registerCellListener(
       CanvasEventType type, CellListener<T, U> listener, Predicate<? super T> filter) {
 
@@ -241,7 +278,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
             type.getCellType(),
             type.getCategory(),
             type.getType());
-    val delegate = getEventListener(listener);
+    val delegate = createCellEventListener(listener);
     invoke(AddListenerAction.class, definition);
     model.addEventListener(delegate, type::getKey);
 
@@ -252,6 +289,13 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     };
   }
 
+  /**
+   * synchronously register a canvas listener
+   *
+   * @param type
+   * @param listener
+   * @return a registration to dispose of the listener
+   */
   private Registration registerCanvasListener(
       CanvasEventType type, CanvasListener<CanvasEvent> listener) {
     val definition =
@@ -261,7 +305,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
             type.getCellType(),
             type.getCategory(),
             type.getType());
-    val delegate = getCanvasEventListener(listener);
+    val delegate = createCanvasEventListener(listener);
     invoke(AddListenerAction.class, definition);
     model.addEventListener(delegate, type::getKey);
     val registration = getRegistration();
@@ -271,24 +315,47 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     };
   }
 
+  /**
+   * register a listener before the canvas is ready.  When the canvas is ready, the listener will be
+   * added
+   *
+   * @param type     the type of the canvas event to add
+   * @param listener the listener
+   * @return a registration that will dispose of the listener
+   */
   private Registration registerPendingCanvasListener(
       CanvasEventType type, CanvasListener<CanvasEvent> listener) {
 
-    val delegate = getCanvasEventListener(listener);
+    val delegate = createCanvasEventListener(listener);
     val pending =
         new PendingCanvasEventListenerDescriptor<>(type, type.getCellType(), delegate, this);
     pendingListeners.add(pending);
     return pending;
   }
 
+  /**
+   * convenience method for creating a cell event listener
+   *
+   * @param listener the listener to delegate to
+   * @param <T>      the type of the cell
+   * @param <U>      the type of the cell event
+   * @return a delegated listener
+   */
   @NonNull
-  private <T extends Cell, U extends CellEvent<T>> EventListener<U> getEventListener(
+  private <T extends Cell, U extends CellEvent<T>> EventListener<U> createCellEventListener(
       CellListener<T, U> listener) {
     return (eventType, event) -> listener.on(event.getTarget());
   }
 
+  /**
+   * convenience method for creating a canvas event listener
+   *
+   * @param listener the listener to delegate to
+   * @return a delegated listener
+   */
   @NonNull
-  private EventListener<CanvasEvent> getCanvasEventListener(CanvasListener<CanvasEvent> listener) {
+  private EventListener<CanvasEvent> createCanvasEventListener(
+      CanvasListener<CanvasEvent> listener) {
     return (eventType, event) -> listener.on((CanvasEvent) event);
   }
 

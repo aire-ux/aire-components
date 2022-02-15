@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -23,7 +24,6 @@ import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
-import io.sunshower.zephyr.ui.canvas.listeners.EdgeEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
@@ -57,15 +57,21 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Model model;
 
   private final Zephyr zephyr;
-  @Getter private final MenuBar menubar;
-  @Getter private final ContextMenu<Vertex> canvasContextMenu;
+  @Getter
+  private final MenuBar menubar;
+  @Getter
+  private final ContextMenu<Vertex> canvasContextMenu;
   private final Registration onCanvasReadyRegistration;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
   private Map<State, List<Button>> actions;
@@ -79,61 +85,67 @@ public class TopologyView extends VerticalLayout
     this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
-    this.menubar = new MenuBar();
-    menubar.getStyle().set("align-self", "flex-start");
+    this.menubar = createMenuBar();
     this.canvasContextMenu = createCanvasContextMenu();
     this.onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
-    //    this.onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked,
-    //        System.out::println);
 
     configureActions();
-
-    //    canvas.addOnCanvasClickedEventListener(click -> {
-    //      actions.get(State.VertexSelected).forEach(item -> {
-    //            item.setEnabled(false);
-    //          }
-    //      );
-    //    });
 
     canvas.addCanvasListener(
         CanvasEvent.CanvasInteractionEventType.Clicked,
         click -> {
-          System.out.println(click);
+          setEnabled(State.VertexSelected, false);
         });
-    //
     canvas.addCellListener(
         EventType.Clicked,
         click -> {
-          System.out.println("CLICKED" + click.getSource());
+          System.out.println("CLICK");
+          setEnabled(State.VertexSelected, true);
         });
-
-    canvas.addCellListener(EdgeEvent.EventType.ContextMenu, System.out::println);
-
-    //    canvas.addCellListener(EventType.Clicked, click -> {
-    //      actions.get(State.VertexSelected).forEach(item -> {
-    //            item.setEnabled(true);
-    //          }
-    //      );
-    //    });
+    canvas.addCellListener(
+        EventType.ContextMenu,
+        click -> {
+          System.out.println("CONTEXT");
+          setEnabled(State.VertexSelected, true);
+        });
 
     /** configure component */
     configureStyles();
     setHeightFull();
     add(menubar);
     add(canvas);
+    setEnabled(State.VertexSelected, false);
   }
 
+  private MenuBar createMenuBar() {
+    val result = new MenuBar();
+    result.getStyle().set("align-self", "flex-start");
+    result.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+    return result;
+  }
 
   private void configureActions() {
     createPlanMenus();
   }
 
+  private void setEnabled(State state, boolean enabled) {
+    val items = actions.get(state);
+    getUI().ifPresent(ui -> {
+      ui.access(() -> {
+        for (val item : items) {
+          item.setEnabled(enabled);
+        }
+
+      });
+    });
+  }
+
   private void createPlanMenus() {
     val menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
-    menuPlanAction.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
+    menuPlanAction.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
     val action = menubar.addItem(menuPlanAction);
     val item = createStartMenuButton();
-    action.add(item);
+    action.getSubMenu().add(item);
     item.addClickListener(new PlanLifecycleEventListener());
     registerAction(State.VertexSelected, item);
   }
@@ -144,7 +156,7 @@ public class TopologyView extends VerticalLayout
 
   private Button createStartMenuButton() {
     val button = new Button("Start", VaadinIcon.PLAY.create());
-    button.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_TERTIARY);
+    button.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
     return button;
   }
 
@@ -209,6 +221,7 @@ public class TopologyView extends VerticalLayout
       implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
 
     @Override
-    public void onComponentEvent(ClickEvent<Button> event) {}
+    public void onComponentEvent(ClickEvent<Button> event) {
+    }
   }
 }
