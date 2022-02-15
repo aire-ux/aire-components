@@ -41,7 +41,7 @@ class CanvasTest extends AbstractCanvasTest {
   void ensureAddingVertexListenerWorks(@View Canvas canvas) {
     assertEquals(0, canvas.getModel().getListenerCount());
     val registration =
-        canvas.addVertexListener(
+        canvas.addCellListener(
             EventType.Clicked, vertex -> {}, vertex -> vertex.getProperties().containsKey("hello"));
     canvas.onComponentEvent(mock(CanvasReadyEvent.class));
     assertEquals(1, canvas.getModel().getListenerCount());

@@ -226,6 +226,7 @@ class SharedGraphModel extends AbstractEventSource
     commandManager.clearPendingActions();
   }
 
+  @SuppressWarnings("PMD.CompareObjectsWithEquals")
   private Edge doConnect(Identifier id, Identifier source, Identifier target) {
     val ids = Set.of(source, target);
     val vertices =

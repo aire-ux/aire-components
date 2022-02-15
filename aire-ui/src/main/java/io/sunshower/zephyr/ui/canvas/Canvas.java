@@ -82,10 +82,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   /**
-   * @param type     the type of the event to listen for
+   * @param type the type of the event to listen for
    * @param listener the listener
-   * @param <T>      the type of cell
-   * @param <U>      the type of cell event
+   * @param <T> the type of cell
+   * @param <U> the type of cell event
    * @return a registration that will dispose of the listener
    */
   public <T extends Cell, U extends CellEvent<T>> Registration addCellListener(
@@ -94,12 +94,11 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   /**
-   * @param type     the type of the event to listen for
+   * @param type the type of the event to listen for
    * @param listener the listener
-   * @param <T>      the type of cell
-   * @param <U>      the type of cell event
-   * @param filter   the cell filter apply. An event is not dispatched if no cell matches the
-   *                 filter
+   * @param <T> the type of cell
+   * @param <U> the type of cell event
+   * @param filter the cell filter apply. An event is not dispatched if no cell matches the filter
    * @return a registration that will dispose of the listener
    */
   public <T extends Cell, U extends CellEvent<T>> Registration addCellListener(
@@ -112,14 +111,13 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   /**
-   * add a listener for canvas events.  A canvas event is an event that is fired by the canvas
+   * add a listener for canvas events. A canvas event is an event that is fired by the canvas
    * (rather than a cell).
    *
-   * @param type     the type of the event to listen for
+   * @param type the type of the event to listen for
    * @param listener the listener to add
    * @return a registration disposing of the listener
    */
-
   public Registration addCanvasListener(
       CanvasEventType type, CanvasListener<CanvasEvent> listener) {
     if (ready) {
@@ -133,9 +131,9 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
    * The canvas is intended to be dynamically extended, and we don't want to add hundreds of methods
    * to the canvas.
    *
-   * @param action    the action to invoke
+   * @param action the action to invoke
    * @param arguments the arguments to supply to the action
-   * @param <T>       the type of the response
+   * @param <T> the type of the response
    * @return a client-result containing the response
    */
   public <T> ClientResult<T> invoke(Class<? extends CanvasAction<T>> action, Object... arguments) {
@@ -152,9 +150,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return addListener(CanvasReadyEvent.class, listener);
   }
 
-  /**
-   * @return the canvas model for this canvas
-   */
+  /** @return the canvas model for this canvas */
   @NonNull
   public final Model getModel() {
     return model;
@@ -242,11 +238,11 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   /**
    * register a listener before the canvas is ready
    *
-   * @param type     the type of the cell event
+   * @param type the type of the cell event
    * @param listener the event
-   * @param filter   the filter to search for matching cells
-   * @param <T>      the type of the cell
-   * @param <U>      the type of the cell Event
+   * @param filter the filter to search for matching cells
+   * @param <T> the type of the cell
+   * @param <U> the type of the cell Event
    * @return a registration to dispose of the listener with
    */
   private <T extends Cell, U extends CellEvent<T>> Registration registerPendingCellListener(
@@ -261,11 +257,11 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   /**
    * register a cell listener
    *
-   * @param type     the event type to listen for
+   * @param type the event type to listen for
    * @param listener the listener to apply upon a matching event
-   * @param filter   a cell filter to apply
-   * @param <T>      the type of the cell
-   * @param <U>      the type of the cell event
+   * @param filter a cell filter to apply
+   * @param <T> the type of the cell
+   * @param <U> the type of the cell event
    * @return a registration to dispose of this listener with
    */
   private <T extends Cell, U extends CellEvent<T>> Registration registerCellListener(
@@ -316,10 +312,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
   }
 
   /**
-   * register a listener before the canvas is ready.  When the canvas is ready, the listener will be
+   * register a listener before the canvas is ready. When the canvas is ready, the listener will be
    * added
    *
-   * @param type     the type of the canvas event to add
+   * @param type the type of the canvas event to add
    * @param listener the listener
    * @return a registration that will dispose of the listener
    */
@@ -337,8 +333,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
    * convenience method for creating a cell event listener
    *
    * @param listener the listener to delegate to
-   * @param <T>      the type of the cell
-   * @param <U>      the type of the cell event
+   * @param <T> the type of the cell
+   * @param <U> the type of the cell event
    * @return a delegated listener
    */
   @NonNull

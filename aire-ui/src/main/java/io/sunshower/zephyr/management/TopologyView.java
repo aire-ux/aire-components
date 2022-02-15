@@ -57,21 +57,15 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
   private final Zephyr zephyr;
-  @Getter
-  private final MenuBar menubar;
-  @Getter
-  private final ContextMenu<Vertex> canvasContextMenu;
+  @Getter private final MenuBar menubar;
+  @Getter private final ContextMenu<Vertex> canvasContextMenu;
   private final Registration onCanvasReadyRegistration;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   private Map<State, List<Button>> actions;
@@ -127,13 +121,16 @@ public class TopologyView extends VerticalLayout
 
   private void setEnabled(State state, boolean enabled) {
     val items = actions.get(state);
-    getUI().ifPresent(ui -> {
-      ui.access(() -> {
-        for (val item : items) {
-          item.setEnabled(enabled);
-        }
-      });
-    });
+    getUI()
+        .ifPresent(
+            ui -> {
+              ui.access(
+                  () -> {
+                    for (val item : items) {
+                      item.setEnabled(enabled);
+                    }
+                  });
+            });
   }
 
   private void createPlanMenus() {
@@ -224,7 +221,6 @@ public class TopologyView extends VerticalLayout
       implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
 
     @Override
-    public void onComponentEvent(ClickEvent<Button> event) {
-    }
+    public void onComponentEvent(ClickEvent<Button> event) {}
   }
 }
