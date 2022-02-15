@@ -104,7 +104,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return pending;
   }
 
-  public <T> ClientResult<T> invoke(Class<? extends Action<T>> action, Object... arguments) {
+  public <T> ClientResult<T> invoke(Class<? extends CanvasAction<T>> action, Object... arguments) {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 

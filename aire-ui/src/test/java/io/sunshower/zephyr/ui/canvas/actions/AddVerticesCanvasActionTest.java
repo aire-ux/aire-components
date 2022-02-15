@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @AireUITest
 @SpyBean(Canvas.class)
-class AddVerticesActionTest extends AbstractCanvasTest {
+class AddVerticesCanvasActionTest extends AbstractCanvasTest {
 
   @ViewTest
   void ensureConnectingNodesWorks(@View Canvas canvas) {

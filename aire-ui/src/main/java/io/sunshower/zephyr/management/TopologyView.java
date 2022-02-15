@@ -5,6 +5,7 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -49,15 +50,20 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Model model;
 
   private final Zephyr zephyr;
+  private final MenuBar menubar;
+  private final ContextMenu<Vertex> canvasContextMenu;
   private final Registration onCanvasReadyRegistration;
   private final Registration onVertexClickedRegistration;
-  private final ContextMenu<Vertex> canvasContextMenu;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
   @Inject
@@ -65,14 +71,21 @@ public class TopologyView extends VerticalLayout
     this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
-    this.configureStyles();
-    this.setHeightFull();
-    //    model.addNodeTemplate(new ResourceNodeTemplate(""));
+    this.menubar = createMenubar();
+    configureStyles();
+    setHeightFull();
     add(canvas);
     canvasContextMenu = createCanvasContextMenu();
     onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
     onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked, System.out::println);
+//    this.actionMap = ActionMap.read(TopologyView.class);
+//    canvas.addVertexListener(EventType.ContextMenu)
   }
+
+  private MenuBar createMenubar() {
+    return new MenuBar();
+  }
+
 
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
@@ -104,9 +117,7 @@ public class TopologyView extends VerticalLayout
     canvas
         .invoke(AddVerticesAction.class, new ArrayList<>(vertices.values()))
         .then(
-            result -> {
-              canvas.invoke(ConnectVerticesAction.class, edges);
-            });
+            result -> canvas.invoke(ConnectVerticesAction.class, edges));
   }
 
   @Override
@@ -138,7 +149,8 @@ public class TopologyView extends VerticalLayout
     val restart = new Button("Restart", VaadinIcon.REFRESH.create());
     restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-    root.add(start, stop, restart);
+    root.add(start, stop);
+    root.createRoot(restart).add(new Button("Sup"));
   }
 
   private void createExecuteSubmenu(ContextMenu<Vertex> menu) {

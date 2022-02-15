@@ -1,6 +1,7 @@
 package io.sunshower.zephyr.configuration;
 
 import io.sunshower.zephyr.ZephyrApplication;
+import io.sunshower.zephyr.spring.DynamicConstructorArgumentInstantiationAwareBeanPostProcessor;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
@@ -132,5 +133,10 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
     } catch (Exception ex) {
       log.error("Encountered an error attempting to start kernel: {}", ex.getMessage(), ex);
     }
+  }
+
+  @Bean
+  public static DynamicConstructorArgumentInstantiationAwareBeanPostProcessor dynamicConstructorArgumentInstantiationAwareBeanPostProcessor() {
+    return new DynamicConstructorArgumentInstantiationAwareBeanPostProcessor();
   }
 }
