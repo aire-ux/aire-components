@@ -2,7 +2,7 @@ package io.sunshower.zephyr.ui.canvas.listeners;
 
 import io.sunshower.lang.events.Event;
 import io.sunshower.zephyr.ui.canvas.Canvas;
-import io.sunshower.zephyr.ui.canvas.CanvasCellEventListener;
+import io.sunshower.zephyr.ui.canvas.CanvasEventListener;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
 import io.sunshower.zephyr.ui.canvas.Vertex;
 import java.util.NoSuchElementException;
@@ -51,7 +51,7 @@ public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vert
 
     @Override
     public String getCategory() {
-      return CanvasCellEventListener.CATEGORY;
+      return CanvasEventListener.CATEGORY;
     }
   }
 }

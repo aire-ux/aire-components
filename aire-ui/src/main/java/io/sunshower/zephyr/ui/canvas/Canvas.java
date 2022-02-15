@@ -10,11 +10,13 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.EventListener;
-import io.sunshower.zephyr.ui.canvas.CanvasCellEventListener.CellDefinition;
+import io.sunshower.zephyr.ui.canvas.CanvasEventListener.CellDefinition;
 import io.sunshower.zephyr.ui.canvas.actions.AddListenerAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddListenersAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
+import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent.CanvasInteractionEventType;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasEventType;
+import io.sunshower.zephyr.ui.canvas.listeners.CanvasInteractionEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasListener;
 import io.sunshower.zephyr.ui.canvas.listeners.CellEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.CellListener;
@@ -67,6 +69,10 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     cellEventCountdownRegistration = new AtomicReference<>();
   }
 
+  /**
+   * @param model the model to set.  Retargets the model's host to this
+   * @return the model
+   */
   public Model setModel(@NonNull final Model model) {
     val m = this.model;
     this.model = model;
@@ -75,22 +81,28 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return m;
   }
 
-  @Override
-  protected void onAttach(AttachEvent attachEvent) {
-    super.onAttach(attachEvent);
-    model.attach(this);
-  }
 
-  @Override
-  protected void onDetach(DetachEvent detachEvent) {
-    super.onDetach(detachEvent);
-    model.detach(this);
-  }
-
+  /**
+   * @param type     the type of the event to listen for
+   * @param listener the listener
+   * @param <T>      the type of cell
+   * @param <U>      the type of cell event
+   * @return a registration that will dispose of the listener
+   */
   public <T extends Cell, U extends CellEvent<T>> Registration addCellListener(
       CanvasEventType type, CellListener<T, U> listener) {
     return addCellListener(type, listener, e -> true);
   }
+
+  /**
+   * @param type     the type of the event to listen for
+   * @param listener the listener
+   * @param <T>      the type of cell
+   * @param <U>      the type of cell event
+   * @param filter   the cell filter apply.  An event is not dispatched if no cell matches the
+   *                 filter
+   * @return a registration that will dispose of the listener
+   */
 
   public <T extends Cell, U extends CellEvent<T>> Registration addCellListener(
       CanvasEventType type, CellListener<T, U> listener, Predicate<? super T> filter) {
@@ -108,16 +120,6 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     } else {
       return registerPendingCanvasListener(type, listener);
     }
-  }
-
-  private Registration registerPendingCanvasListener(
-      CanvasEventType type, CanvasListener<CanvasEvent> listener) {
-
-    val delegate = getCanvasEventListener(listener);
-    val pending =
-        new PendingCanvasEventListenerDescriptor<>(type, type.getCellType(), delegate, this);
-    pendingListeners.add(pending);
-    return pending;
   }
 
   public <T> ClientResult<T> invoke(Class<? extends CanvasAction<T>> action, Object... arguments) {
@@ -167,47 +169,24 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
     return createVertexContextMenu(eventType, vertex -> true);
   }
 
-  @NonNull
-  private <T extends Cell, U extends CellEvent<T>> EventListener<U> getEventListener(
-      CellListener<T, U> listener) {
-    return (eventType, event) -> listener.on(event.getTarget());
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    super.onAttach(attachEvent);
+    model.attach(this);
   }
 
-  @NonNull
-  private EventListener<CanvasEvent> getCanvasEventListener(CanvasListener<CanvasEvent> listener) {
-    return (eventType, event) -> listener.on(event.getTarget());
-  }
-
-  private Registration getRegistration() {
-    var registration = cellEventCountdownRegistration.get();
-    if (registration == null) {
-      cellEventCountdownRegistration.set(
-          registration =
-              new CountdownRegistration(
-                  addListener(
-                      CanvasCellEventListener.class,
-                      event -> {
-                        val cellDefinition = event.getValue();
-                        val mappedEventType = resolveEventFor(cellDefinition);
-//                        val mappedEventType =
-//                            VertexEvent.EventType.resolve(cellDefinition.getTargetEventType());
-                        model
-                            .findCell(cellDefinition.getType(),
-                                v -> Objects.equals(cellDefinition.getId(), v.getId()))
-                            .ifPresent(
-                                v ->
-                                    model.dispatchEvent(
-                                        mappedEventType::getKey,
-                                        () -> createEvent(v, cellDefinition)));
-                      })));
-    }
-    return registration;
+  @Override
+  protected void onDetach(DetachEvent detachEvent) {
+    super.onDetach(detachEvent);
+    model.detach(this);
   }
 
   private CanvasEventType resolveEventFor(CellDefinition cellDefinition) {
     switch (cellDefinition.getType()) {
       case Vertex:
         return VertexEvent.EventType.resolve(cellDefinition.getTargetEventType());
+      case None:
+        return CanvasInteractionEventType.resolve(cellDefinition.getTargetEventType());
       default:
         return EdgeEvent.EventType.resolve(cellDefinition.getTargetEventType());
     }
@@ -233,7 +212,7 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
               SharedGraphModel.identifierSequence.next(),
               type.getMappedName(),
               cellType,
-              CanvasCellEventListener.CATEGORY,
+              CanvasEventListener.CATEGORY,
               type.getType());
       definitions.add(definition);
       model.addEventListener(pendingListener.getDelegate(), type::getKey);
@@ -290,6 +269,66 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
       model.removeEventListener(delegate);
       registration.remove();
     };
+  }
+
+  private Registration registerPendingCanvasListener(
+      CanvasEventType type, CanvasListener<CanvasEvent> listener) {
+
+    val delegate = getCanvasEventListener(listener);
+    val pending =
+        new PendingCanvasEventListenerDescriptor<>(type, type.getCellType(), delegate, this);
+    pendingListeners.add(pending);
+    return pending;
+  }
+
+  @NonNull
+  private <T extends Cell, U extends CellEvent<T>> EventListener<U> getEventListener(
+      CellListener<T, U> listener) {
+    return (eventType, event) -> listener.on(event.getTarget());
+  }
+
+  @NonNull
+  private EventListener<CanvasEvent> getCanvasEventListener(CanvasListener<CanvasEvent> listener) {
+    return (eventType, event) -> listener.on((CanvasEvent) event);
+  }
+
+  /**
+   * all events are multiplexted through the canvas event listener
+   *
+   * @return the registration associated with the canvas event listener
+   */
+  private Registration getRegistration() {
+    var registration = cellEventCountdownRegistration.get();
+    if (registration == null) {
+      cellEventCountdownRegistration.set(
+          registration =
+              new CountdownRegistration(
+                  addListener(
+                      CanvasEventListener.class,
+                      event -> {
+                        val cellDefinition = event.getValue();
+                        val mappedEventType = resolveEventFor(cellDefinition);
+                        if (mappedEventType.getCellType() == Cell.Type.None) {
+                          model.dispatchEvent(
+                              mappedEventType::getKey, createCanvasEvent(cellDefinition));
+                        } else {
+                          fireCellEvent(cellDefinition, mappedEventType);
+                        }
+                      })));
+    }
+    return registration;
+  }
+
+  private CanvasInteractionEvent createCanvasEvent(CellDefinition cellDefinition) {
+    return new CanvasInteractionEvent(this, cellDefinition.getLocation());
+  }
+
+  private void fireCellEvent(CellDefinition cellDefinition, CanvasEventType mappedEventType) {
+    model
+        .findCell(cellDefinition.getType(), v -> Objects.equals(cellDefinition.getId(), v.getId()))
+        .ifPresent(
+            v ->
+                model.dispatchEvent(mappedEventType::getKey, () -> createEvent(v, cellDefinition)));
   }
 
   private class CountdownRegistration implements Registration {

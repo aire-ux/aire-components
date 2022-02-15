@@ -22,6 +22,7 @@ import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
+import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.EdgeEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
@@ -94,9 +95,11 @@ public class TopologyView extends VerticalLayout
     //      );
     //    });
 
-    //    canvas.addCanvasListener(CanvasEvent.EventType.Clicked, click -> {
-    //
-    //    });
+    canvas.addCanvasListener(
+        CanvasEvent.CanvasInteractionEventType.Clicked,
+        click -> {
+          System.out.println(click);
+        });
     //
     canvas.addCellListener(
         EventType.Clicked,
@@ -119,6 +122,7 @@ public class TopologyView extends VerticalLayout
     add(menubar);
     add(canvas);
   }
+
 
   private void configureActions() {
     createPlanMenus();

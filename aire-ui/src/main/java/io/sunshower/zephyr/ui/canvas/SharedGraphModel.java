@@ -29,9 +29,7 @@ import lombok.val;
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /**
-   * constants
-   */
+  /** constants */
   static final String format = "json";
 
   static final Sequence<Identifier> identifierSequence;
@@ -40,9 +38,7 @@ class SharedGraphModel extends AbstractEventSource
     identifierSequence = Identifiers.newSequence();
   }
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas host;
 
   private CommandManager commandManager;
@@ -108,7 +104,6 @@ class SharedGraphModel extends AbstractEventSource
   public Edge connect(@NonNull Identifier source, @NonNull Identifier target) {
     return doConnect(identifierSequence.next(), source, target);
   }
-
 
   @Override
   public Edge connect(@NonNull Vertex source, @NonNull Vertex target) {
@@ -200,7 +195,6 @@ class SharedGraphModel extends AbstractEventSource
     }
   }
 
-
   public Set<Edge> getEdges() {
     return requireNonNull(graph).edgeSet().stream()
         .map(DirectedGraph.Edge::getLabel)
@@ -221,7 +215,8 @@ class SharedGraphModel extends AbstractEventSource
         return graph.edgeSet().stream()
             .map(DirectedGraph.Edge::getLabel)
             .filter(filter)
-            .map(e -> (Cell) e).findAny();
+            .map(e -> (Cell) e)
+            .findAny();
     }
   }
 
@@ -247,7 +242,6 @@ class SharedGraphModel extends AbstractEventSource
     val tv = vertices.get(1);
     return doConnect(id, sv, tv);
   }
-
 
   private Edge doConnect(Identifier edgeId, Vertex source, Vertex target) {
     val vertices = graph.vertexSet();

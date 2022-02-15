@@ -230,7 +230,7 @@ export class Canvas extends LitElement {
 
             detail: {
               source: {
-                id: cell.id,
+                id: cell?.id,
                 type: definition.type,
                 targetEventType: definition.targetEventType,
                 location: {

@@ -70,8 +70,6 @@ public interface Model extends EventSource, ComponentEventListener<CanvasReadyEv
 
   Set<Edge> getEdges();
 
-
-
   Optional<Vertex> findVertex(Predicate<Vertex> filter);
 
   Optional<Cell> findCell(Type type, Predicate<Cell> filter);
