@@ -13,12 +13,14 @@ import io.sunshower.zephyr.ui.canvas.Vertex;
 import java.util.List;
 import lombok.val;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 @AireUITest
 @SpyBean(Canvas.class)
 class AddVerticesCanvasActionTest extends AbstractCanvasTest {
 
   @ViewTest
+  @DirtiesContext
   void ensureConnectingNodesWorks(@View Canvas canvas) {
     val source = new Vertex();
     val target = new Vertex();

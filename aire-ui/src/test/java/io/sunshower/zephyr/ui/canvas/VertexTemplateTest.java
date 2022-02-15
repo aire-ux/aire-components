@@ -35,7 +35,8 @@ class VertexTemplateTest {
         CondensationUtilities.read(
             VertexTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-node-template.json");
-    assertEquals(List.of("body", "image"), new ArrayList<>(result.getAttributes().keySet()));
+    assertEquals(
+        List.of("body", "label", "image"), new ArrayList<>(result.getAttributes().keySet()));
   }
 
   @Test

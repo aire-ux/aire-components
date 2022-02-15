@@ -9,8 +9,8 @@ public class ComponentDecoratingInstantiatorFactory implements InstantiatorFacto
 
   @Override
   public Instantiator create(Instantiator delegate) {
-    return new BaseAireInstantiator(delegate,
-        new ServiceLoaderComponentDecorator(() -> Thread.currentThread()
-            .getContextClassLoader()));
+    return new BaseAireInstantiator(
+        delegate,
+        new ServiceLoaderComponentDecorator(() -> Thread.currentThread().getContextClassLoader()));
   }
 }

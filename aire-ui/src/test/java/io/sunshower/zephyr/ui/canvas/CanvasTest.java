@@ -26,6 +26,7 @@ import java.util.List;
 import lombok.val;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 @AireUITest
 @SpyBean(Canvas.class)
@@ -49,6 +50,7 @@ class CanvasTest extends AbstractCanvasTest {
   }
 
   @ViewTest
+  @DirtiesContext
   void ensureAddVerticesActionisInvokable(@View Canvas canvas) {
     assertTrue(canvas.getModel().getVertices().isEmpty());
     val vertices = List.of(new Vertex());
@@ -84,7 +86,7 @@ class CanvasTest extends AbstractCanvasTest {
     doReturn(spiedElement).when(canvas).getElement();
 
     method.invoke(canvas, result);
-    verify(canvas, times(2)).getElement();
+    verify(canvas, times(3)).getElement();
     verify(spiedElement)
         .callJsFunction(eq("addVertexTemplate"), eq(writer.write(VertexTemplate.class, result)));
     Mockito.reset(ui);
