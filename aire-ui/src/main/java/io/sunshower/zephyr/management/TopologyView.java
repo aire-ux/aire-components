@@ -91,6 +91,17 @@ public class TopologyView extends VerticalLayout
 
     configureActions();
 
+    registerListeners();
+
+    /** configure component */
+    configureStyles();
+    setHeightFull();
+    add(menubar);
+    add(canvas);
+    setEnabled(State.VertexSelected, false);
+  }
+
+  private void registerListeners() {
     canvas.addCanvasListener(
         CanvasEvent.CanvasInteractionEventType.Clicked,
         click -> {
@@ -99,22 +110,8 @@ public class TopologyView extends VerticalLayout
     canvas.addCellListener(
         EventType.Clicked,
         click -> {
-          System.out.println("CLICK");
           setEnabled(State.VertexSelected, true);
         });
-    canvas.addCellListener(
-        EventType.ContextMenu,
-        click -> {
-          System.out.println("CONTEXT");
-          setEnabled(State.VertexSelected, true);
-        });
-
-    /** configure component */
-    configureStyles();
-    setHeightFull();
-    add(menubar);
-    add(canvas);
-    setEnabled(State.VertexSelected, false);
   }
 
   private MenuBar createMenuBar() {
@@ -135,18 +132,25 @@ public class TopologyView extends VerticalLayout
         for (val item : items) {
           item.setEnabled(enabled);
         }
-
       });
     });
   }
 
   private void createPlanMenus() {
-    val menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
+    var menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
     menuPlanAction.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
     val action = menubar.addItem(menuPlanAction);
-    val item = createStartMenuButton();
+    var item = createStartMenuButton();
     action.getSubMenu().add(item);
     item.addClickListener(new PlanLifecycleEventListener());
+    registerAction(State.VertexSelected, item);
+
+    menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
+    menuPlanAction.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    var root = canvasContextMenu.getMenu().createRoot(menuPlanAction);
+    item = createStartMenuButton();
+    root.add(item);
+
     registerAction(State.VertexSelected, item);
   }
 
@@ -196,7 +200,6 @@ public class TopologyView extends VerticalLayout
   protected void onDetach(DetachEvent detachEvent) {
     super.onDetach(detachEvent);
     onCanvasReadyRegistration.remove();
-    //    onVertexClickedRegistration.remove();
   }
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
