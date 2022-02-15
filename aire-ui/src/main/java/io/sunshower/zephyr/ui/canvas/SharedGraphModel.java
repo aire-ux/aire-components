@@ -29,7 +29,9 @@ import lombok.val;
 class SharedGraphModel extends AbstractEventSource
     implements Model, ComponentEventListener<CanvasReadyEvent> {
 
-  /** constants */
+  /**
+   * constants
+   */
   static final String format = "json";
 
   static final Sequence<Identifier> identifierSequence;
@@ -38,7 +40,9 @@ class SharedGraphModel extends AbstractEventSource
     identifierSequence = Identifiers.newSequence();
   }
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas host;
 
   private CommandManager commandManager;
@@ -168,7 +172,7 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public void setVertices(Collection<Vertex> vertices) {
     if (graph == null) {
-      graph = new AbstractDirectedGraph<Edge, Vertex>();
+      graph = new AbstractDirectedGraph<>();
     }
   }
 
@@ -228,6 +232,19 @@ class SharedGraphModel extends AbstractEventSource
   @Override
   public Optional<Vertex> findVertex(Predicate<Vertex> filter) {
     return requireNonNull(graph).vertexSet().stream().filter(filter).findAny();
+  }
+
+  @Override
+  public Optional<Cell> findCell(Type type, Predicate<Cell> filter) {
+    switch (type) {
+      case Vertex:
+        return graph.vertexSet().stream().filter(filter).map(c -> (Cell) c).findAny();
+      default:
+        return graph.edgeSet().stream()
+            .map(DirectedGraph.Edge::getLabel)
+            .filter(filter::test)
+            .map(e -> (Cell) e).findAny();
+    }
   }
 
   @Override

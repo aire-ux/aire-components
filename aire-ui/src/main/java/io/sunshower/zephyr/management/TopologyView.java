@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.management;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
@@ -21,14 +22,19 @@ import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
+import io.sunshower.zephyr.ui.canvas.listeners.EdgeEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.val;
 
 @Breadcrumb(name = "Topology", host = MainView.class)
@@ -54,32 +60,88 @@ public class TopologyView extends VerticalLayout
   private final Model model;
 
   private final Zephyr zephyr;
-  private final MenuBar menubar;
-  private final ContextMenu<Vertex> canvasContextMenu;
+  @Getter private final MenuBar menubar;
+  @Getter private final ContextMenu<Vertex> canvasContextMenu;
   private final Registration onCanvasReadyRegistration;
-  private final Registration onVertexClickedRegistration;
 
   /** mutable state */
   private Canvas canvas;
 
+  private Map<State, List<Button>> actions;
+
   @Inject
   public TopologyView(final Zephyr zephyr) {
+
+    actions = new EnumMap<>(State.class);
+
+    /** initialize state */
     this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
-    this.menubar = createMenubar();
+    this.menubar = new MenuBar();
+    menubar.getStyle().set("align-self", "flex-start");
+    this.canvasContextMenu = createCanvasContextMenu();
+    this.onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
+    //    this.onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked,
+    //        System.out::println);
+
+    configureActions();
+
+    //    canvas.addOnCanvasClickedEventListener(click -> {
+    //      actions.get(State.VertexSelected).forEach(item -> {
+    //            item.setEnabled(false);
+    //          }
+    //      );
+    //    });
+
+    //    canvas.addCanvasListener(CanvasEvent.EventType.Clicked, click -> {
+    //
+    //    });
+    //
+    canvas.addCellListener(
+        EventType.Clicked,
+        click -> {
+          System.out.println("CLICKED" + click.getSource());
+        });
+
+    canvas.addCellListener(EdgeEvent.EventType.ContextMenu, System.out::println);
+
+    //    canvas.addCellListener(EventType.Clicked, click -> {
+    //      actions.get(State.VertexSelected).forEach(item -> {
+    //            item.setEnabled(true);
+    //          }
+    //      );
+    //    });
+
+    /** configure component */
     configureStyles();
     setHeightFull();
+    add(menubar);
     add(canvas);
-    canvasContextMenu = createCanvasContextMenu();
-    onCanvasReadyRegistration = canvas.addOnCanvasReadyListener(this);
-    onVertexClickedRegistration = canvas.addVertexListener(EventType.Clicked, System.out::println);
-    //    this.actionMap = ActionMap.read(TopologyView.class);
-    //    canvas.addVertexListener(EventType.ContextMenu)
   }
 
-  private MenuBar createMenubar() {
-    return new MenuBar();
+  private void configureActions() {
+    createPlanMenus();
+  }
+
+  private void createPlanMenus() {
+    val menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
+    menuPlanAction.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
+    val action = menubar.addItem(menuPlanAction);
+    val item = createStartMenuButton();
+    action.add(item);
+    item.addClickListener(new PlanLifecycleEventListener());
+    registerAction(State.VertexSelected, item);
+  }
+
+  private void registerAction(State state, Button item) {
+    actions.computeIfAbsent(state, (k) -> new ArrayList<>()).add(item);
+  }
+
+  private Button createStartMenuButton() {
+    val button = new Button("Start", VaadinIcon.PLAY.create());
+    button.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_TERTIARY);
+    return button;
   }
 
   @Override
@@ -118,51 +180,12 @@ public class TopologyView extends VerticalLayout
   protected void onDetach(DetachEvent detachEvent) {
     super.onDetach(detachEvent);
     onCanvasReadyRegistration.remove();
-    onVertexClickedRegistration.remove();
+    //    onVertexClickedRegistration.remove();
   }
 
   private ContextMenu<Vertex> createCanvasContextMenu() {
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
-    createPlanSubmenu(menu);
-    createExecuteSubmenu(menu);
     return menu;
-  }
-
-  private void createPlanSubmenu(ContextMenu<Vertex> menu) {
-
-    val rootButton = new Button("Plan", VaadinIcon.TASKS.create());
-    rootButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-    val root = menu.getMenu().createRoot(rootButton);
-    val start = new Button("Start", VaadinIcon.PLAY.create());
-    start.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
-    root.add(start);
-
-    val stop = new Button("Stop", VaadinIcon.STOP.create());
-    stop.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
-
-    val restart = new Button("Restart", VaadinIcon.REFRESH.create());
-    restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-    root.add(start, stop);
-    root.createRoot(restart).add(new Button("Sup"));
-  }
-
-  private void createExecuteSubmenu(ContextMenu<Vertex> menu) {
-
-    val rootButton = new Button("Execute", VaadinIcon.CURLY_BRACKETS.create());
-    rootButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-    val root = menu.getMenu().createRoot(rootButton);
-    val start = new Button("Start", VaadinIcon.PLAY.create());
-    start.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
-    root.add(start);
-
-    val stop = new Button("Stop", VaadinIcon.STOP.create());
-    stop.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
-
-    val restart = new Button("Restart", VaadinIcon.REFRESH.create());
-    restart.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-    root.add(start, stop, restart);
   }
 
   private void configureStyles() {
@@ -170,5 +193,18 @@ public class TopologyView extends VerticalLayout
     style.set("display", "flex");
     style.set("justify-content", "center");
     style.set("align-items", "center");
+  }
+
+  public enum State {
+    CanvasClicked,
+    VertexSelected,
+    EdgeSelected
+  }
+
+  private class PlanLifecycleEventListener
+      implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
+
+    @Override
+    public void onComponentEvent(ClickEvent<Button> event) {}
   }
 }

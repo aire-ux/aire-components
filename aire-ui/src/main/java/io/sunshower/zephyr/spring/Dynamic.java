@@ -7,6 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER, ElementType.CONSTRUCTOR})
 public @interface Dynamic {}

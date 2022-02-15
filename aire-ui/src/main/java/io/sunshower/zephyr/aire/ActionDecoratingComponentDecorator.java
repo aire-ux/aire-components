@@ -6,12 +6,9 @@ import lombok.NonNull;
 
 public class ActionDecoratingComponentDecorator implements ComponentDecorator {
 
+  @Override
+  public void onComponentEntered(@NonNull HasElement component) {}
 
   @Override
-  public void onComponentEntered(@NonNull HasElement component) {
-  }
-
-  @Override
-  public void onComponentExited(@NonNull HasElement component) {
-  }
+  public void onComponentExited(@NonNull HasElement component) {}
 }

@@ -161,6 +161,7 @@ export class Canvas extends LitElement {
   public connectVertices(@Receive(Dynamic) edges: Array<EdgeDefinition>): void {
     const edgeMetadata: Array<Edge.Metadata> = edges.map(edge => {
       return {
+        id: edge.id,
         source: edge.source,
         target: edge.target,
         attrs: edge.template.attrs,
@@ -230,6 +231,7 @@ export class Canvas extends LitElement {
             detail: {
               source: {
                 id: cell.id,
+                type: definition.type,
                 targetEventType: definition.targetEventType,
                 location: {
                   x: e?.originalEvent.clientX,
@@ -245,7 +247,8 @@ export class Canvas extends LitElement {
       handlers.set(definition.key, hlist)
     }
     hlist.push([definition.id, handler]);
-    this.graph!.on(definition.key, handler);
+    console.log(definition.key);
+   this.graph!.on(definition.key, handler);
   }
 
 

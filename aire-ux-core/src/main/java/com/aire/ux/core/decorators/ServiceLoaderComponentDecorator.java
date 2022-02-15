@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 
 public class ServiceLoaderComponentDecorator extends AbstractCompositeComponentDecorator {
 
-
   private final List<? super ComponentDecorator> cache;
   private final Supplier<ClassLoader> classLoaderSupplier;
 
@@ -19,7 +18,6 @@ public class ServiceLoaderComponentDecorator extends AbstractCompositeComponentD
     super(null);
     this.cache = new ArrayList<>();
     this.classLoaderSupplier = classloader;
-
   }
 
   public ServiceLoaderComponentDecorator(ClassLoader classloader) {
@@ -35,10 +33,10 @@ public class ServiceLoaderComponentDecorator extends AbstractCompositeComponentD
   @SuppressWarnings("unchecked")
   protected Stream<? extends ComponentDecorator> delegates() {
     if (cache.isEmpty()) {
-      cache.addAll(ServiceLoader.load(ComponentDecorator.class, classLoaderSupplier.get()).stream()
-          .map(Provider::get)
-          .collect(
-              Collectors.toList()));
+      cache.addAll(
+          ServiceLoader.load(ComponentDecorator.class, classLoaderSupplier.get()).stream()
+              .map(Provider::get)
+              .collect(Collectors.toList()));
     }
     return (Stream<? extends ComponentDecorator>) cache.stream();
   }

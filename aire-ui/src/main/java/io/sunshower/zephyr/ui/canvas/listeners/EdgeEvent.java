@@ -4,23 +4,23 @@ import io.sunshower.lang.events.Event;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasCellEventListener;
 import io.sunshower.zephyr.ui.canvas.Cell.Type;
-import io.sunshower.zephyr.ui.canvas.Vertex;
+import io.sunshower.zephyr.ui.canvas.Edge;
 import java.util.NoSuchElementException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
-public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vertex> {
+public class EdgeEvent extends AbstractCellEvent<Edge> implements Event<Edge> {
 
-  public VertexEvent(Vertex target, Canvas source, Location location) {
+  public EdgeEvent(Edge target, Canvas source, Location location) {
     super(target, source, location);
   }
 
   public enum EventType implements CanvasEventType {
-    Clicked("vertex:clicked", "node:click"),
-    ContextMenu("vertex:context-menu", "node:contextmenu");
+    Clicked("edge:clicked", "edge:click"),
+    ContextMenu("edge:context-menu", "edge:contextmenu");
 
-    private final int key;
+    final int key;
     @Getter private final String type;
     @Getter private final String mappedName;
 
@@ -30,8 +30,8 @@ public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vert
       this.key = CanvasEventType.nextKey();
     }
 
-    public static EventType resolve(@NonNull String type) {
-      for (val v : EventType.values()) {
+    public static EdgeEvent.EventType resolve(@NonNull String type) {
+      for (val v : EdgeEvent.EventType.values()) {
         if (v.type.equals(type)) {
           return v;
         }
@@ -41,7 +41,7 @@ public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vert
 
     @Override
     public Type getCellType() {
-      return Type.Vertex;
+      return Type.Edge;
     }
 
     @Override

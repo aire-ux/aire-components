@@ -8,16 +8,16 @@ import com.vaadin.flow.component.EventData;
 import elemental.json.JsonValue;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.aire.AireComponentEvent;
-import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
+import io.sunshower.zephyr.ui.canvas.CanvasCellEventListener.CellDefinition;
 import io.sunshower.zephyr.ui.canvas.listeners.Location;
 import lombok.Getter;
 import lombok.Setter;
 
 /** this class is required to translate between CanvasEvents and VertexEvents */
-@DomEvent(CanvasVertexEventListener.CATEGORY)
-public class CanvasVertexEventListener extends AireComponentEvent<Canvas, VertexDefinition> {
+@DomEvent(CanvasCellEventListener.CATEGORY)
+public class CanvasCellEventListener extends AireComponentEvent<Canvas, CellDefinition> {
 
-  public static final String CATEGORY = "vertex-event";
+  public static final String CATEGORY = "cell-event";
 
   /**
    * Creates a new event using the given source and indicator whether the event originated from the
@@ -26,7 +26,7 @@ public class CanvasVertexEventListener extends AireComponentEvent<Canvas, Vertex
    * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
-  public CanvasVertexEventListener(
+  public CanvasCellEventListener(
       Canvas source, boolean fromClient, @EventData("event.detail.source") JsonValue target) {
     super(source, fromClient, target);
   }
@@ -34,7 +34,9 @@ public class CanvasVertexEventListener extends AireComponentEvent<Canvas, Vertex
   @Getter
   @Setter
   @RootElement
-  public static final class VertexDefinition {
+  public static final class CellDefinition {
+
+    @Attribute private Cell.Type type;
 
     @Attribute private Identifier id;
 
