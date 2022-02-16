@@ -79,6 +79,7 @@ export class Canvas extends LitElement {
     const container = this.container;
     const graph = new Graph({
       grid: true,
+      panning: true,
       container: container
     });
     this.graph = graph;
