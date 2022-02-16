@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
+import io.sunshower.zephyr.management.ModuleScheduleOverlay.Mode;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
 import io.sunshower.zephyr.ui.canvas.Edge;
@@ -24,6 +25,7 @@ import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
+import io.sunshower.zephyr.ui.components.Overlays;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
@@ -76,7 +78,6 @@ public class TopologyView extends AbstractModuleView
    */
   private Canvas canvas;
 
-  private Module selectedModule;
   private Map<State, List<Button>> actions;
 
   @Inject
@@ -114,7 +115,6 @@ public class TopologyView extends AbstractModuleView
     return new ModuleLifecycleDelegate() {
       @Override
       public void select(Module module) {
-//        selectedModule = module;
       }
 
       @Override
@@ -195,6 +195,10 @@ public class TopologyView extends AbstractModuleView
   private Button createStartMenuButton() {
     val button = new Button("Start", VaadinIcon.PLAY.create());
     button.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
+    button.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> {
+      Overlays.open(this, ModuleScheduleOverlay.class, Mode.Scheduling, getZephyr().getKernel(),
+          getSelectedModule());
+    });
     return button;
   }
 
@@ -234,7 +238,6 @@ public class TopologyView extends AbstractModuleView
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
     return menu;
   }
-
 
 
   public enum State {

@@ -83,6 +83,17 @@ export class Canvas extends LitElement {
       container: container
     });
     this.graph = graph;
+    // setTimeout(() => {
+    //   graph.getNodes().forEach(node => {
+    //     node.setAttrs({
+    //       body: {
+    //         stroke: 'red',
+    //         strokeWidth: '2'
+    //       }
+    //     });
+    //     console.log(node);
+    //   });
+    // }, 3000)
   }
 
   disconnectedCallback() {
@@ -165,8 +176,8 @@ export class Canvas extends LitElement {
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        attrs: edge.template.attrs,
-        connector: edge.template.connector
+        attrs: edge?.template?.attrs,
+        connector: edge?.template?.connector
       }
     });
     this.graph?.addEdges(edgeMetadata);

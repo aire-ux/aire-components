@@ -143,6 +143,7 @@ public abstract class AbstractModuleView extends VerticalLayout {
   protected abstract Module getSelectedModule();
 
   protected void setSelectedModule(Module module) {
+    this.selectedModule = module;
     val drawer = getDrawer();
     if (module != null) {
       drawer.open();
@@ -152,7 +153,6 @@ public abstract class AbstractModuleView extends VerticalLayout {
       drawer.removeAll();
       drawer.close();
     }
-    selectedModule = module;
   }
 
   /**
