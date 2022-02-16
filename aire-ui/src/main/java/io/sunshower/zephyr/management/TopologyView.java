@@ -2,13 +2,11 @@ package io.sunshower.zephyr.management;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.zephyr.MainView;
@@ -29,18 +27,21 @@ import io.sunshower.zephyr.ui.components.ContextMenu;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
+import io.zephyr.kernel.Module;
+import io.zephyr.kernel.core.ModuleCoordinate;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.val;
 
 @Breadcrumb(name = "Topology", host = MainView.class)
 @Route(value = "modules/topology", layout = PluginTabView.class)
-public class TopologyView extends VerticalLayout
+public class TopologyView extends AbstractModuleView
     implements ComponentEventListener<CanvasReadyEvent> {
 
   static final EdgeTemplate defaultEdgeTemplate;
@@ -57,26 +58,33 @@ public class TopologyView extends VerticalLayout
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Model model;
 
-  private final Zephyr zephyr;
-  @Getter private final MenuBar menubar;
-  @Getter private final ContextMenu<Vertex> canvasContextMenu;
+
+  @Getter
+  private final MenuBar menubar;
+  @Getter
+  private final ContextMenu<Vertex> canvasContextMenu;
+
   private final Registration onCanvasReadyRegistration;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private Canvas canvas;
 
+  private Module selectedModule;
   private Map<State, List<Button>> actions;
 
   @Inject
   public TopologyView(final Zephyr zephyr) {
+    super(zephyr);
 
     actions = new EnumMap<>(State.class);
 
-    /** initialize state */
-    this.zephyr = zephyr;
     this.canvas = new Canvas();
     this.model = Model.create(canvas);
     this.menubar = createMenuBar();
@@ -95,15 +103,44 @@ public class TopologyView extends VerticalLayout
     setEnabled(State.VertexSelected, false);
   }
 
+  @Override
+  protected Module getSelectedModule() {
+    return selectedModule;
+  }
+
+
+  @Override
+  protected ModuleLifecycleDelegate getModuleLifecycleDelegate() {
+    return new ModuleLifecycleDelegate() {
+      @Override
+      public void select(Module module) {
+//        selectedModule = module;
+      }
+
+      @Override
+      public void refresh() {
+
+      }
+    };
+  }
+
   private void registerListeners() {
     canvas.addCanvasListener(
         CanvasEvent.CanvasInteractionEventType.Clicked,
         click -> {
+          setSelectedModule(null);
           setEnabled(State.VertexSelected, false);
         });
     canvas.addCellListener(
         EventType.Clicked,
         click -> {
+          if (click.getTarget() instanceof Vertex) {
+            val target = (Vertex) click.getTarget();
+            val coordinate = ModuleCoordinate.parse(target.getLabel());
+            setSelectedModule(getZephyr().getPlugins().stream()
+                .filter(module -> Objects.equals(coordinate, module.getCoordinate())).findAny()
+                .orElse(null));
+          }
           setEnabled(State.VertexSelected, true);
         });
   }
@@ -173,14 +210,14 @@ public class TopologyView extends VerticalLayout
     val edges = new ArrayList<Edge>();
     val vertices = new HashMap<Coordinate, Vertex>();
 
-    for (val module : zephyr.getPlugins()) {
+    for (val module : getZephyr().getPlugins()) {
       val vertex = new Vertex();
       vertex.setLabel(module.getCoordinate().toCanonicalForm());
       vertex.setTemplate(t);
       vertices.put(module.getCoordinate(), vertex);
     }
 
-    for (val module : zephyr.getPlugins()) {
+    for (val module : getZephyr().getPlugins()) {
       for (val dependency : module.getDependencies()) {
         val target = vertices.get(dependency.getCoordinate());
         val source = vertices.get(module.getCoordinate());
@@ -193,23 +230,12 @@ public class TopologyView extends VerticalLayout
         .then(result -> canvas.invoke(ConnectVerticesAction.class, edges));
   }
 
-  @Override
-  protected void onDetach(DetachEvent detachEvent) {
-    super.onDetach(detachEvent);
-    onCanvasReadyRegistration.remove();
-  }
-
   private ContextMenu<Vertex> createCanvasContextMenu() {
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
     return menu;
   }
 
-  private void configureStyles() {
-    val style = this.getStyle();
-    style.set("display", "flex");
-    style.set("justify-content", "center");
-    style.set("align-items", "center");
-  }
+
 
   public enum State {
     CanvasClicked,
@@ -221,6 +247,7 @@ public class TopologyView extends VerticalLayout
       implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
 
     @Override
-    public void onComponentEvent(ClickEvent<Button> event) {}
+    public void onComponentEvent(ClickEvent<Button> event) {
+    }
   }
 }

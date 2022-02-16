@@ -1,9 +1,7 @@
 package io.sunshower.zephyr.management;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -17,7 +15,6 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -27,14 +24,8 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.ui.components.Drawer;
-import io.sunshower.zephyr.ui.components.Drawer.Direction;
 import io.sunshower.zephyr.ui.components.Overlays;
-import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
-import io.sunshower.zephyr.ui.controls.DrawerNavigationBarButton;
-import io.sunshower.zephyr.ui.layout.Layouts;
-import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Module;
 import java.util.stream.Collectors;
@@ -46,62 +37,41 @@ import lombok.val;
 @CssImport(value = "./styles/shared-styles.css", include = "lumo-badge")
 @Route(value = "modules/list", layout = PluginTabView.class)
 @Breadcrumb(name = "Modules", icon = "vaadin:plug", host = MainView.class)
-public class ModuleGrid extends VerticalLayout
+public class ModuleGrid extends AbstractModuleView
     implements ValueChangeListener<ComponentValueChangeEvent<TextField, String>> {
 
-  private final Zephyr zephyr;
-  private final Drawer drawer;
+  /**
+   * immutable state
+   */
   private final Grid<Module> grid;
-  private final NavigationBar navigationBar;
-  private final DrawerNavigationBarButton moduleOpenAction;
+
+  /**
+   * mutable state
+   */
   private TextField textField;
 
   @Inject
   @SuppressFBWarnings(justification = "Access pattern is safe")
   public ModuleGrid(@NonNull Zephyr zephyr) {
-    this.zephyr = zephyr;
-    this.setHeight("100%");
+    super(zephyr);
     add(createMenubar());
     add(grid = populateGrid());
-    this.drawer = createDrawer();
-    this.navigationBar = createNavigationBar();
-    this.moduleOpenAction = createModuleOpenAction();
   }
 
   @Override
   public void valueChanged(ComponentValueChangeEvent<TextField, String> event) {
     val text = textField.getValue();
     val matches =
-        zephyr.getPlugins().stream()
+        getZephyr().getPlugins().stream()
             .filter(
                 module ->
                     module.getCoordinate().getName().contains(text)
-                        || module.getCoordinate().getGroup().contains(text)
-                        || module.getCoordinate().getVersion().toString().contains(text))
+                    || module.getCoordinate().getGroup().contains(text)
+                    || module.getCoordinate().getVersion().toString().contains(text))
             .collect(Collectors.toList());
     grid.setItems(new ListDataProvider<>(matches));
   }
 
-  protected void onAttach(AttachEvent event) {
-    Layouts.locateFirst(event, Panel.class).ifPresent(this::addNavigation);
-  }
-
-  protected void onDetach(DetachEvent event) {
-
-    Layouts.locateFirst(event, Panel.class)
-        .ifPresent(panel -> panel.removeNavigationBar(navigationBar));
-  }
-
-  private DrawerNavigationBarButton createModuleOpenAction() {
-    var button =
-        new DrawerNavigationBarButton(
-            VaadinIcon.INFO.create(),
-            "Module Info",
-            drawer,
-            () -> new ModuleInfoPanel(zephyr, this::getSelectedModule, grid));
-    navigationBar.add(button);
-    return button;
-  }
 
   protected Module getSelectedModule() {
     val items = grid.getSelectedItems();
@@ -111,19 +81,17 @@ public class ModuleGrid extends VerticalLayout
     return items.iterator().next();
   }
 
-  private Drawer createDrawer() {
-    return new Drawer(Direction.VerticalRight);
+  @Override
+  protected ModuleLifecycleDelegate getModuleLifecycleDelegate() {
+    return new GridModuleLifecycleDelegate(grid);
   }
 
-  private NavigationBar createNavigationBar() {
-    val navigationBar = new NavigationBar(NavigationBar.Direction.Vertical);
-    navigationBar.setDrawer(drawer);
-    return navigationBar;
+  @SuppressWarnings("RefusedBequest")
+  protected void configureStyles() {
+    getStyle().set("display", "flex");
+    setHeight("100%");
   }
 
-  private void addNavigation(Panel panel) {
-    panel.setNavigationBar(navigationBar);
-  }
 
   private Component createMenubar() {
     val result = new MenuBar();
@@ -161,8 +129,7 @@ public class ModuleGrid extends VerticalLayout
     grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
     grid.addItemClickListener(
         event -> {
-          drawer.open();
-          drawer.setContent(new ModuleInfoPanel(zephyr, event::getItem, grid));
+          setSelectedModule(event.getItem());
         });
 
     grid.setMultiSort(true);
@@ -171,7 +138,8 @@ public class ModuleGrid extends VerticalLayout
 
     grid.addComponentColumn(
             (ValueProvider<Module, ModuleLifecycleButtonBar>)
-                module -> new ModuleLifecycleButtonBar(grid, zephyr, module))
+                module -> new ModuleLifecycleButtonBar(getModuleLifecycleDelegate(), getZephyr(),
+                    module))
         .setResizable(true)
         .setHeader("Lifecycle");
     grid.addColumn((ValueProvider<Module, String>) module -> module.getCoordinate().getGroup())
@@ -188,7 +156,7 @@ public class ModuleGrid extends VerticalLayout
         .setHeader("Version");
     grid.addColumn(new ComponentRenderer<>(Span::new, new StatusComponentUpdater()))
         .setHeader("Status");
-    grid.setItems(new ListDataProvider<>(zephyr.getPlugins()));
+    grid.setItems(new ListDataProvider<>(getZephyr().getPlugins()));
     return grid;
   }
 
@@ -200,7 +168,7 @@ public class ModuleGrid extends VerticalLayout
           overlay.addOverlayClosedEventListener(
               closed -> {
                 if (!closed.isCancelled()) {
-                  grid.setItems(new ListDataProvider<>(zephyr.getPlugins()));
+                  grid.setItems(new ListDataProvider<>(getZephyr().getPlugins()));
                   notifySuccess();
                 } else {
                   notifyCancel();
