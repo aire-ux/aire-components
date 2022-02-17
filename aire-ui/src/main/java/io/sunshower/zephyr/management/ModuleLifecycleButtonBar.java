@@ -42,7 +42,7 @@ public class ModuleLifecycleButtonBar extends MenuBar {
 
   @SuppressWarnings("PMD.MissingBreakInSwitch")
   private void updateStatus(Module module) {
-    if(module == null) {
+    if (module == null) {
       return;
     }
     val lifecycle = module.getLifecycle();
@@ -69,8 +69,8 @@ public class ModuleLifecycleButtonBar extends MenuBar {
         });
   }
 
-  private Registration configureStopRegistration(ModuleLifecycleDelegate delegate, Zephyr zephyr,
-      Module module) {
+  private Registration configureStopRegistration(
+      ModuleLifecycleDelegate delegate, Zephyr zephyr, Module module) {
     return stopButton.addClickListener(
         click -> {
           delegate.select(module);
@@ -83,8 +83,8 @@ public class ModuleLifecycleButtonBar extends MenuBar {
         });
   }
 
-  private Registration configureStartAction(ModuleLifecycleDelegate delegate, Zephyr zephyr,
-      Module module) {
+  private Registration configureStartAction(
+      ModuleLifecycleDelegate delegate, Zephyr zephyr, Module module) {
     return startButton.addClickListener(
         click -> {
           delegate.select(module);
@@ -94,7 +94,7 @@ public class ModuleLifecycleButtonBar extends MenuBar {
           startButton.setEnabled(false);
           restartButton.setEnabled(false);
           delegate.refresh();
-//          grid.getDataProvider().refreshAll();
+          //          grid.getDataProvider().refreshAll();
         });
   }
 
@@ -113,7 +113,7 @@ public class ModuleLifecycleButtonBar extends MenuBar {
      * Creates a new event using the given source and indicator whether the event originated from
      * the client side or the server side.
      *
-     * @param source     the source component
+     * @param source the source component
      * @param fromClient <code>true</code> if the event originated from the client
      */
     public ModuleLifecycleChangedEvent(ModuleLifecycleButtonBar source, boolean fromClient) {

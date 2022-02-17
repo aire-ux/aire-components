@@ -35,6 +35,7 @@ dependencies {
             'kernel-api',
             'kernel-lib@jar',
             'kernel-core',
+            'sunshower-spring@jar',
             'synchronous-api@jar',
             'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'

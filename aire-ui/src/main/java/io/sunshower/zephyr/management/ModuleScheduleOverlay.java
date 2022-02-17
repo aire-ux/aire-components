@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
 
-public class ModuleScheduleOverlay extends Overlay implements
-    ComponentEventListener<CanvasReadyEvent> {
+public class ModuleScheduleOverlay extends Overlay
+    implements ComponentEventListener<CanvasReadyEvent> {
 
   private final Mode mode;
   private final Kernel kernel;
@@ -32,11 +32,7 @@ public class ModuleScheduleOverlay extends Overlay implements
   private final Registration onReadyRegistration;
 
   @Dynamic
-  public ModuleScheduleOverlay(
-      @Dynamic Mode mode,
-      @Dynamic Kernel kernel,
-      @Dynamic Module module
-  ) {
+  public ModuleScheduleOverlay(@Dynamic Mode mode, @Dynamic Kernel kernel, @Dynamic Module module) {
     this.mode = mode;
     this.kernel = kernel;
     this.module = module;
@@ -66,12 +62,13 @@ public class ModuleScheduleOverlay extends Overlay implements
     val iterator = tasks.iterator();
     val vertices = new ArrayList<Vertex>();
     val edges = new ArrayList<io.sunshower.zephyr.ui.canvas.Edge>();
+    val joinPoints = new ArrayList<Vertex>();
     while (iterator.hasNext()) {
       val taskSet = iterator.next();
       val joinPoint = new Vertex();
-      joinPoint.setShape("rect");
-      joinPoint.setWidth(40d);
-      joinPoint.setHeight(40d);
+      joinPoint.setShape("circle");
+      joinPoint.setWidth(20d);
+      joinPoint.setHeight(20d);
       joinPoint.setX(20d);
       joinPoint.setY(20d);
       vertices.add(joinPoint);
@@ -83,19 +80,29 @@ public class ModuleScheduleOverlay extends Overlay implements
         taskVertex.setY(20d);
         taskVertex.setShape("rect");
         vertices.add(taskVertex);
-        edges.add(model.connect(taskVertex, joinPoint));
+        val edge = model.connect(taskVertex, joinPoint);
+        edges.add(edge);
+        if(!joinPoints.isEmpty()) {
+          val pjp = joinPoints.get(joinPoints.size() - 1);
+          edges.add(model.connect(pjp.getId(), edge.getSource()));
+        }
+
       }
+      joinPoints.add(joinPoint);
     }
-    canvas.invoke(AddVerticesAction.class, vertices)
+    canvas
+        .invoke(AddVerticesAction.class, vertices)
         .then(e -> canvas.invoke(ConnectVerticesAction.class, edges));
   }
 
   private void addHeader() {
     val header = getHeader();
     header.add(
-        new H1(String.format("%s dependency graph for %s",
-            mode == Mode.Executing ? "Executing" : "Planning",
-            module.getCoordinate().toCanonicalForm())));
+        new H1(
+            String.format(
+                "%s dependency graph for %s",
+                mode == Mode.Executing ? "Executing" : "Planning",
+                module.getCoordinate().toCanonicalForm())));
     header.add(getCloseButton());
   }
 
@@ -108,5 +115,4 @@ public class ModuleScheduleOverlay extends Overlay implements
     Scheduling,
     Executing
   }
-
 }

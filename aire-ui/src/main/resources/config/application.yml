@@ -1,3 +1,14 @@
 spring:
+  jmx:
+    enabled: false
+    default-domain: com.aire.ux
   main:
     allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 400MB
+      max-request-size: 400MB
+  application:
+    admin:
+      jmx-name: org.springframework.boot:type=Admin,name=ZephyrCoreApplication
+      enabled: false

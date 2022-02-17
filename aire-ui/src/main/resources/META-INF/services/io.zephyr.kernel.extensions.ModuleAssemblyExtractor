@@ -1,0 +1,3 @@
+io.zephyr.spring.ext.SpringModuleAssemblyExtractor
+io.zephyr.kernel.module.WarModuleAssemblyExtractor
+io.zephyr.kernel.module.DefaultJarModuleAssemblyExtractor

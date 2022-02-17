@@ -51,7 +51,7 @@ public class DynamicInstantiator {
 
   private static Object resolveDynamicArgument(Parameter parameter, Object[] args) {
     for (Object arg : args) {
-      if(arg == null) {
+      if (arg == null) {
         return null;
       }
       if (parameter.getType().isAssignableFrom(AopUtils.getTargetClass(arg))) {

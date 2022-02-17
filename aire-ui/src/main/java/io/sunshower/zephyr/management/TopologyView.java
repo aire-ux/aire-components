@@ -14,6 +14,7 @@ import io.sunshower.zephyr.condensation.CondensationUtilities;
 import io.sunshower.zephyr.management.ModuleScheduleOverlay.Mode;
 import io.sunshower.zephyr.ui.canvas.Canvas;
 import io.sunshower.zephyr.ui.canvas.CanvasReadyEvent;
+import io.sunshower.zephyr.ui.canvas.CellAttributes;
 import io.sunshower.zephyr.ui.canvas.Edge;
 import io.sunshower.zephyr.ui.canvas.EdgeTemplate;
 import io.sunshower.zephyr.ui.canvas.Model;
@@ -22,6 +23,7 @@ import io.sunshower.zephyr.ui.canvas.VertexTemplate;
 import io.sunshower.zephyr.ui.canvas.actions.AddVertexTemplateAction;
 import io.sunshower.zephyr.ui.canvas.actions.AddVerticesAction;
 import io.sunshower.zephyr.ui.canvas.actions.ConnectVerticesAction;
+import io.sunshower.zephyr.ui.canvas.actions.SetAllCellAttributesAction;
 import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
 import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
 import io.sunshower.zephyr.ui.components.ContextMenu;
@@ -31,6 +33,7 @@ import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.ModuleCoordinate;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -64,7 +67,6 @@ public class TopologyView extends AbstractModuleView
    * immutable state
    */
   private final Model model;
-
 
   @Getter
   private final MenuBar menubar;
@@ -109,7 +111,6 @@ public class TopologyView extends AbstractModuleView
     return selectedModule;
   }
 
-
   @Override
   protected ModuleLifecycleDelegate getModuleLifecycleDelegate() {
     return new ModuleLifecycleDelegate() {
@@ -119,7 +120,6 @@ public class TopologyView extends AbstractModuleView
 
       @Override
       public void refresh() {
-
       }
     };
   }
@@ -131,15 +131,38 @@ public class TopologyView extends AbstractModuleView
           setSelectedModule(null);
           setEnabled(State.VertexSelected, false);
         });
+
+    val highlightAttributes = new CellAttributes();
+    val body = highlightAttributes.addAttribute("body", new HashMap<String, Serializable>());
+    body.put("strokeWidth", 3);
+    body.put("stroke", "#a366a3");
+
+    val normalAttributes = new CellAttributes();
+    val normalbody = normalAttributes.addAttribute("body", new HashMap<String, Serializable>());
+    normalbody.put("strokeWidth", 1);
+    normalbody.put("stroke", "#660066");
+
+    canvas.addCellListener(EventType.MouseEnter, event -> {
+      highlightAttributes.setId(event.getTarget().getId());
+      canvas.invoke(SetAllCellAttributesAction.class, List.of(highlightAttributes));
+    });
+
+    canvas.addCellListener(EventType.MouseLeave, event -> {
+      normalAttributes.setId(event.getTarget().getId());
+      canvas.invoke(SetAllCellAttributesAction.class, List.of(normalAttributes));
+    });
+
     canvas.addCellListener(
         EventType.Clicked,
         click -> {
           if (click.getTarget() instanceof Vertex) {
             val target = (Vertex) click.getTarget();
-            val coordinate = ModuleCoordinate.parse(target.getLabel());
-            setSelectedModule(getZephyr().getPlugins().stream()
-                .filter(module -> Objects.equals(coordinate, module.getCoordinate())).findAny()
-                .orElse(null));
+            val coordinate = ModuleCoordinate.parse(target.getKey());
+            setSelectedModule(
+                getZephyr().getPlugins().stream()
+                    .filter(module -> Objects.equals(coordinate, module.getCoordinate()))
+                    .findAny()
+                    .orElse(null));
           }
           setEnabled(State.VertexSelected, true);
         });
@@ -195,10 +218,16 @@ public class TopologyView extends AbstractModuleView
   private Button createStartMenuButton() {
     val button = new Button("Start", VaadinIcon.PLAY.create());
     button.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS);
-    button.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> {
-      Overlays.open(this, ModuleScheduleOverlay.class, Mode.Scheduling, getZephyr().getKernel(),
-          getSelectedModule());
-    });
+    button.addClickListener(
+        (ComponentEventListener<ClickEvent<Button>>)
+            event -> {
+              Overlays.open(
+                  this,
+                  ModuleScheduleOverlay.class,
+                  Mode.Scheduling,
+                  getZephyr().getKernel(),
+                  getSelectedModule());
+            });
     return button;
   }
 
@@ -216,7 +245,8 @@ public class TopologyView extends AbstractModuleView
 
     for (val module : getZephyr().getPlugins()) {
       val vertex = new Vertex();
-      vertex.setLabel(module.getCoordinate().toCanonicalForm());
+      vertex.setLabel(module.getCoordinate().getName());
+      vertex.setKey(module.getCoordinate().toCanonicalForm());
       vertex.setTemplate(t);
       vertices.put(module.getCoordinate(), vertex);
     }
@@ -238,7 +268,6 @@ public class TopologyView extends AbstractModuleView
     val menu = canvas.createVertexContextMenu(EventType.ContextMenu);
     return menu;
   }
-
 
   public enum State {
     CanvasClicked,
