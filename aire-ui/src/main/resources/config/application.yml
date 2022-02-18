@@ -1,3 +1,4 @@
+
 spring:
   jmx:
     enabled: false
@@ -12,3 +13,5 @@ spring:
     admin:
       jmx-name: org.springframework.boot:type=Admin,name=ZephyrCoreApplication
       enabled: false
+logging:
+  config: classpath:config/logback-spring.xml

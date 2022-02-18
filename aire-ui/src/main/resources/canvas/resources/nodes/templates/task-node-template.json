@@ -1,0 +1,44 @@
+{
+  "name": "task",
+  "inherit": "polygon",
+  "width": 50,
+  "height": 50,
+  "attrs": {
+    "body": {
+      "strokeWidth": 1,
+      "stroke": "#660066",
+      "fill": "rgba(0,0,0,0)",
+      "refPoints": "0,10 10,0 20,10 10,20"
+    },
+    "label": {
+      "refX": 0.5,
+      "refY": -4,
+      "fontSize": 12,
+      "fontFamily": "monospace",
+      "stroke": "#2C2C2C",
+      "textAnchor": "middle",
+      "textVerticalAnchor": "bottom"
+    },
+    "image": {
+      "xlink:href": "images/zephyr.svg",
+      "width": 25,
+      "height": 25,
+      "x": 12.5,
+      "y": 12.5
+    }
+  },
+  "markup": [
+    {
+      "tagName": "polygon",
+      "selector": "body"
+    },
+    {
+      "tagName": "image",
+      "selector": "image"
+    },
+    {
+      "tagName": "text",
+      "selector": "label"
+    }
+  ]
+}

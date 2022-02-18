@@ -17,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @AireUITest
 @SpyBean(Canvas.class)
-class AddVerticesCanvasActionTest extends AbstractCanvasTest {
+class AddVerticesRemoteActionTest extends AbstractCanvasTest {
 
   @ViewTest
   @DirtiesContext

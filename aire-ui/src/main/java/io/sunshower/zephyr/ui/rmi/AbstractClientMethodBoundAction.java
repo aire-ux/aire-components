@@ -1,14 +1,12 @@
-package io.sunshower.zephyr.ui.canvas.actions;
+package io.sunshower.zephyr.ui.rmi;
 
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.canvas.CanvasAction;
-import io.sunshower.zephyr.ui.rmi.ClientMethod;
-import io.sunshower.zephyr.ui.rmi.ClientMethods;
+import io.sunshower.zephyr.ui.canvas.RemoteAction;
 import java.io.Serializable;
 import java.util.function.Supplier;
 import lombok.NonNull;
 
-public abstract class AbstractClientMethodBoundAction<T> implements CanvasAction<T> {
+public abstract class AbstractClientMethodBoundAction<T, U> implements RemoteAction<T, U> {
 
   protected @NonNull final ClientMethod<Serializable> method;
   @NonNull private final String name;

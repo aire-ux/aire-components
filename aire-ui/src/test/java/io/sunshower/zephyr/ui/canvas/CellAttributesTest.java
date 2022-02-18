@@ -10,9 +10,7 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-
 class CellAttributesTest {
-
 
   @Test
   @SneakyThrows
@@ -30,8 +28,5 @@ class CellAttributesTest {
     assertEquals(id, newValue.getId());
     assertEquals("red", newValue.getAttributes().get("stroke"));
     assertEquals(2d, newValue.getAttributes().get("strokeWidth"));
-
   }
-
-
 }

@@ -33,6 +33,7 @@ import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Coordinate;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.ModuleCoordinate;
+import io.zephyr.kernel.module.ModuleLifecycle.Actions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -51,33 +52,37 @@ public class TopologyView extends AbstractModuleView
 
   static final EdgeTemplate defaultEdgeTemplate;
   static final VertexTemplate defaultVertexTemplate;
+  static final VertexTemplate defaultTaskTemplate;
 
   static {
+    /** the default vertex template */
     defaultVertexTemplate =
         CondensationUtilities.read(
             VertexTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-node-template.json");
+
+    /** the default task template */
+    defaultTaskTemplate =
+        CondensationUtilities.read(
+            VertexTemplate.class,
+            "classpath:canvas/resources/nodes/templates/task-node-template.json");
+
+    /** the default edge template */
     defaultEdgeTemplate =
         CondensationUtilities.read(
             EdgeTemplate.class,
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
-  @Getter
-  private final MenuBar menubar;
-  @Getter
-  private final ContextMenu<Vertex> canvasContextMenu;
+  @Getter private final MenuBar menubar;
+  @Getter private final ContextMenu<Vertex> canvasContextMenu;
 
   private final Registration onCanvasReadyRegistration;
 
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   private Map<State, List<Button>> actions;
@@ -115,12 +120,10 @@ public class TopologyView extends AbstractModuleView
   protected ModuleLifecycleDelegate getModuleLifecycleDelegate() {
     return new ModuleLifecycleDelegate() {
       @Override
-      public void select(Module module) {
-      }
+      public void select(Module module) {}
 
       @Override
-      public void refresh() {
-      }
+      public void refresh() {}
     };
   }
 
@@ -142,15 +145,19 @@ public class TopologyView extends AbstractModuleView
     normalbody.put("strokeWidth", 1);
     normalbody.put("stroke", "#660066");
 
-    canvas.addCellListener(EventType.MouseEnter, event -> {
-      highlightAttributes.setId(event.getTarget().getId());
-      canvas.invoke(SetAllCellAttributesAction.class, List.of(highlightAttributes));
-    });
+    canvas.addCellListener(
+        EventType.MouseEnter,
+        event -> {
+          highlightAttributes.setId(event.getTarget().getId());
+          canvas.invoke(SetAllCellAttributesAction.class, List.of(highlightAttributes));
+        });
 
-    canvas.addCellListener(EventType.MouseLeave, event -> {
-      normalAttributes.setId(event.getTarget().getId());
-      canvas.invoke(SetAllCellAttributesAction.class, List.of(normalAttributes));
-    });
+    canvas.addCellListener(
+        EventType.MouseLeave,
+        event -> {
+          normalAttributes.setId(event.getTarget().getId());
+          canvas.invoke(SetAllCellAttributesAction.class, List.of(normalAttributes));
+        });
 
     canvas.addCellListener(
         EventType.Clicked,
@@ -199,7 +206,12 @@ public class TopologyView extends AbstractModuleView
     val action = menubar.addItem(menuPlanAction);
     var item = createStartMenuButton();
     action.getSubMenu().add(item);
-    item.addClickListener(new PlanLifecycleEventListener());
+    registerAction(State.VertexSelected, item);
+    item = createStopButtonMenu();
+    action.getSubMenu().add(item);
+    registerAction(State.VertexSelected, item);
+    item = createRestartButtonMenu();
+    action.getSubMenu().add(item);
     registerAction(State.VertexSelected, item);
 
     menuPlanAction = new Button("Plan", VaadinIcon.TASKS.create());
@@ -207,7 +219,12 @@ public class TopologyView extends AbstractModuleView
     var root = canvasContextMenu.getMenu().createRoot(menuPlanAction);
     item = createStartMenuButton();
     root.add(item);
-
+    registerAction(State.VertexSelected, item);
+    item = createStopButtonMenu();
+    root.add(item);
+    registerAction(State.VertexSelected, item);
+    item = createRestartButtonMenu();
+    root.add(item);
     registerAction(State.VertexSelected, item);
   }
 
@@ -226,7 +243,42 @@ public class TopologyView extends AbstractModuleView
                   ModuleScheduleOverlay.class,
                   Mode.Scheduling,
                   getZephyr().getKernel(),
-                  getSelectedModule());
+                  getSelectedModule(),
+                  Actions.Activate);
+            });
+    return button;
+  }
+
+  private Button createRestartButtonMenu() {
+    val button = new Button("Restart", VaadinIcon.REFRESH.create());
+    button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    button.addClickListener(
+        (ComponentEventListener<ClickEvent<Button>>)
+            event -> {
+              Overlays.open(
+                  this,
+                  ModuleScheduleOverlay.class,
+                  Mode.Scheduling,
+                  getZephyr().getKernel(),
+                  getSelectedModule(),
+                  Actions.Stop);
+            });
+    return button;
+  }
+
+  private Button createStopButtonMenu() {
+    val button = new Button("Stop", VaadinIcon.STOP.create());
+    button.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
+    button.addClickListener(
+        (ComponentEventListener<ClickEvent<Button>>)
+            event -> {
+              Overlays.open(
+                  this,
+                  ModuleScheduleOverlay.class,
+                  Mode.Scheduling,
+                  getZephyr().getKernel(),
+                  getSelectedModule(),
+                  Actions.Stop);
             });
     return button;
   }
@@ -279,7 +331,6 @@ public class TopologyView extends AbstractModuleView
       implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
 
     @Override
-    public void onComponentEvent(ClickEvent<Button> event) {
-    }
+    public void onComponentEvent(ClickEvent<Button> event) {}
   }
 }

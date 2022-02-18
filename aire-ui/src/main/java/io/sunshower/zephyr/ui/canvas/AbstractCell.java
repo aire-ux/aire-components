@@ -20,25 +20,16 @@ import lombok.ToString;
 @EqualsAndHashCode
 public abstract class AbstractCell implements Cell {
 
-  @NonNull
-  @Attribute
-  private final Type type;
+  @NonNull @Attribute private final Type type;
 
   @NonNull
   @Attribute(alias = @Alias(read = "id", write = "id"))
   private final Identifier identifier;
 
-  /**
-   * a context-dependent identifier for this node
-   */
-  @Getter
-  @Setter
-  @Attribute
-  private String key;
+  /** a context-dependent identifier for this node */
+  @Getter @Setter @Attribute private String key;
 
-  @NonNull
-  @Element
-  private Map<String, String> properties;
+  @NonNull @Element private Map<String, String> properties;
 
   protected AbstractCell(final Type type, final @NonNull Identifier identifier) {
     this.type = type;

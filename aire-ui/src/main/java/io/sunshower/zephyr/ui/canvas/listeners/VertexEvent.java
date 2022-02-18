@@ -23,10 +23,8 @@ public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vert
     ContextMenu("vertex:context-menu", "node:contextmenu");
 
     private final int key;
-    @Getter
-    private final String type;
-    @Getter
-    private final String mappedName;
+    @Getter private final String type;
+    @Getter private final String mappedName;
 
     EventType(@NonNull String type, @NonNull String mappedName) {
       this.type = type;
@@ -57,5 +55,5 @@ public class VertexEvent extends AbstractCellEvent<Vertex> implements Event<Vert
     public String getCategory() {
       return CanvasEventListener.CATEGORY;
     }
-    }
+  }
 }

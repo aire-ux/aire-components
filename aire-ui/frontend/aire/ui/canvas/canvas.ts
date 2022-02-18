@@ -34,8 +34,10 @@ export class Canvas extends LitElement {
   // language=CSS
   static styles = css`
     :host {
-      width: 100%;
-      height: 100%;
+      /*width: 100%;*/
+      /*height: 100%;*/
+      flex: 1;
+      width:100%;
       display: flex;
       align-items: center;
       justify-items: center;

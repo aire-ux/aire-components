@@ -13,9 +13,7 @@ import io.sunshower.zephyr.ui.canvas.listeners.Location;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * this class is required to translate between CanvasEvents and VertexEvents
- */
+/** this class is required to translate between CanvasEvents and VertexEvents */
 @DomEvent(CanvasEventListener.CATEGORY)
 public class CanvasEventListener extends AireComponentEvent<Canvas, CellDefinition> {
 
@@ -25,7 +23,7 @@ public class CanvasEventListener extends AireComponentEvent<Canvas, CellDefiniti
    * Creates a new event using the given source and indicator whether the event originated from the
    * client side or the server side.
    *
-   * @param source     the source component
+   * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
   public CanvasEventListener(
@@ -38,36 +36,19 @@ public class CanvasEventListener extends AireComponentEvent<Canvas, CellDefiniti
   @RootElement
   public static final class CellDefinition {
 
-    /**
-     * the type of the event
-     */
-    @Attribute
-    private Cell.Type type;
+    /** the type of the event */
+    @Attribute private Cell.Type type;
 
+    /** corresponds to cell:key */
+    @Attribute private String key;
 
-    /**
-     * corresponds to cell:key
-     */
-    @Attribute
-    private String key;
+    /** corresponds to cell:id */
+    @Attribute private Identifier id;
 
-    /**
-     * corresponds to cell:id
-     */
-    @Attribute
-    private Identifier id;
+    /** the client location of the event */
+    @Element private Location location;
 
-
-    /**
-     * the client location of the event
-     */
-    @Element
-    private Location location;
-
-    /**
-     * the target event type
-     */
-    @Attribute
-    private String targetEventType;
+    /** the target event type */
+    @Attribute private String targetEventType;
   }
 }

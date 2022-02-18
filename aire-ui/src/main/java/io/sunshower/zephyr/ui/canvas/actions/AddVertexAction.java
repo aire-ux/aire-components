@@ -3,11 +3,12 @@ package io.sunshower.zephyr.ui.canvas.actions;
 import com.vaadin.flow.component.UI;
 import io.sunshower.zephyr.ui.canvas.Model;
 import io.sunshower.zephyr.ui.canvas.Vertex;
+import io.sunshower.zephyr.ui.rmi.AbstractClientMethodBoundAction;
 import io.sunshower.zephyr.ui.rmi.ClientResult;
 import java.util.function.Supplier;
 import lombok.NonNull;
 
-public class AddVertexAction extends AbstractClientMethodBoundAction<Vertex> {
+public class AddVertexAction extends AbstractClientMethodBoundAction<Vertex, Model> {
 
   static final String NAME = "actions:cells:vertex:add";
   static final String METHOD_NAME = "addVertex";
