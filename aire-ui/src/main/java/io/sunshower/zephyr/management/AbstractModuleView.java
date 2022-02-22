@@ -124,6 +124,7 @@ public abstract class AbstractModuleView extends VerticalLayout {
     this.selectedModule = module;
     val drawer = getDrawer();
     if (module != null) {
+      updateMenuState();
       drawer.open();
       drawer.setContent(
           new ModuleInfoPanel(getZephyr(), () -> module, getModuleLifecycleDelegate()));
@@ -131,6 +132,11 @@ public abstract class AbstractModuleView extends VerticalLayout {
       drawer.removeAll();
       drawer.close();
     }
+  }
+
+  protected void updateMenuState() {
+
+    // no op
   }
 
   /** @return the module lifecycle delegate for the menu */
