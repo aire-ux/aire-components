@@ -40,5 +40,6 @@ public class Terminal extends HtmlContainer {
     ClientMethods.withUiSupplier(() -> getUI().orElse(UI.getCurrent()))
         .construct(FlushTerminalAction.class, buffer)
         .apply(this);
+    buffer.flush();
   }
 }

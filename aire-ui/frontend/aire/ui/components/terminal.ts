@@ -1,4 +1,4 @@
-import {css, customElement, html, LitElement, PropertyValues, query} from "lit-element";
+import {css, customElement, html, LitElement, property, PropertyValues, query} from "lit-element";
 import {Terminal as XTerm} from 'xterm';
 import {FitAddon} from 'xterm-addon-fit';
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
@@ -164,13 +164,32 @@ export class Terminal extends LitElement {
   private fit: FitAddon | undefined;
   private terminal: XTerm | undefined;
 
+  /**
+   * the number of rows in the terminal
+   * @private
+   */
+  @property()
+  private rows: number = 600;
+
+  /**
+   * @private the number of columns
+   */
+  @property()
+  private columns: number = 48;
+
+
   @query('div.terminal-container')
   private terminalContainer: HTMLDivElement | undefined;
 
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    const terminal = new XTerm(),
+    const terminal = new XTerm({
+          rows: this.rows,
+          fontSize: 12,
+          cols: this.columns,
+          fontFamily: 'Lucida Console',
+        }),
         fit = new FitAddon(),
         container = this.terminalContainer;
     terminal.loadAddon(fit);
@@ -190,10 +209,10 @@ export class Terminal extends LitElement {
   }
 
   @Remote
-  public write(@Receive(Dynamic) buffer: TerminalBuffer) : void {
+  public write(@Receive(Dynamic) buffer: TerminalBuffer): void {
     const terminal = this.terminal!;
-    for(const data of buffer.values) {
-      terminal!.writeln(data );
+    for (const data of buffer.values) {
+      terminal!.writeln(data);
     }
   }
 

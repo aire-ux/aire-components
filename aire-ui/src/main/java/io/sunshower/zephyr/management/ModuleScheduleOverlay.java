@@ -270,6 +270,7 @@ public class ModuleScheduleOverlay extends Overlay
         Logger.ROOT_LOGGER_NAME);
     if (appender != null) {
       rootLogger.detachAppender(appender);
+      appender.stop();
     }
   }
 
@@ -278,6 +279,7 @@ public class ModuleScheduleOverlay extends Overlay
         Logger.ROOT_LOGGER_NAME);
     appender = new LogbackRemoteAppender(terminal, rootLogger.getLoggerContext());
     rootLogger.addAppender(appender);
+    appender.start();
   }
 
   public enum Mode {
