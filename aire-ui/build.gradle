@@ -69,8 +69,21 @@ dependencies {
     }
 
 
-    testImplementation project(':aire-test-spring')
+    [
+            ':aire-test-spring',
+            ':aire-ux-annotations:annotations',
+            ':aire-ux-annotations:annotations-core',
+            ':aire-ux-annotations:annotations-spring',
+    ].each {
+        testImplementation project(it)
+    }
+
+    implementation project(':aire-ux-annotations:annotations-core')
+    implementation project(':aire-ux-annotations:annotations-spring')
+
     testImplementation(testFixtures(project(":aire-ux-core")))
+
+    testImplementation(testFixtures(project(":aire-ux-annotations:annotations")))
 
     /**
      * general test libraries

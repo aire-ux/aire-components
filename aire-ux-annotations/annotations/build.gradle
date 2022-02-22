@@ -1,0 +1,10 @@
+
+plugins {
+    id 'java-test-fixtures'
+}
+dependencies {
+    api 'com.vaadin:flow-server'
+    api project(':aire-ux-core')
+
+    testFixturesApi project(':aire-test-vaadin')
+}

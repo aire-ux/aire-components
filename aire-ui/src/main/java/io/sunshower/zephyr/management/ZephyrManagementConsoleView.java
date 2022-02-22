@@ -8,7 +8,6 @@ import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.ui.Home;
 import io.sunshower.zephyr.ui.components.Overlays;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
@@ -47,10 +46,7 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
             MatchMode.Suffix,
             VaadinIcon.PLUG.create());
 
-    val infoButton = new NavigationBarButton(Home.class, VaadinIcon.HOME.create());
-
     layout.getNavigation().add(homeButton);
-    layout.getNavigation().add(infoButton);
     layout.getTop().add(new BreadcrumbNavigation());
   }
 

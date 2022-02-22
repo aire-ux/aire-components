@@ -7,4 +7,7 @@ dependencies {
 
 //    testImplementation project(':aire-ux-core')
     testImplementation project(':aire-test-spring')
+
+    testImplementation testFixtures(project(':aire-ux-annotations:annotations'))
+
 }
