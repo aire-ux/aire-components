@@ -2,6 +2,7 @@ package io.sunshower.zephyr;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.spring.EnableSpring;
+import io.sunshower.zephyr.aire.AireVaadinOverrideAutoConfiguration;
 import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -13,7 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @AireTest
 @Inherited
 @EnableSpring
-@SpringBootTest(classes = {EmbeddedZephyrConfiguration.class, AireUITestConfiguration.class})
+@SpringBootTest(
+    classes = {
+      AireVaadinOverrideAutoConfiguration.class,
+      EmbeddedZephyrConfiguration.class,
+      AireUITestConfiguration.class
+    })
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AireUITest {}

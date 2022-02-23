@@ -58,6 +58,10 @@ public class BaseAireInstantiator implements Instantiator {
   public <T> T getOrCreate(Class<T> type) {
     val result = delegate.getOrCreate(type);
     preDecorateResult(type, result);
+    if (HasElement.class.isAssignableFrom(type)) {
+      decorate((HasElement) result);
+    }
+    postDecorateResult(type, result);
     return result;
   }
 

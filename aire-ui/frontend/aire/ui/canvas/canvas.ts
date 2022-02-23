@@ -2,7 +2,13 @@ import {css, customElement, html, LitElement, PropertyValues, query} from "lit-e
 import {Edge, Events, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
-import {CircularLayout, Edge as LayoutEdge, Model, Node as LayoutNode} from "@antv/layout";
+import {
+  CircularLayout,
+  DagreLayout,
+  Edge as LayoutEdge,
+  Model,
+  Node as LayoutNode
+} from "@antv/layout";
 import {
   EdgeDefinition,
   ListenerDefinition,
@@ -17,7 +23,7 @@ import EventArgs = Events.EventArgs;
 @customElement('aire-canvas')
 export class Canvas extends LitElement {
 
-  static layout = new CircularLayout();
+  static layout = new DagreLayout();
   private graph: Graph | undefined;
 
   @query('div.container')
@@ -155,6 +161,7 @@ export class Canvas extends LitElement {
   public connectVertices(@Receive(Dynamic) edges: Array<EdgeDefinition>): void {
     const edgeMetadata: Array<Edge.Metadata> = edges.map(edge => {
       return {
+        id: edge.id,
         source: edge.source,
         target: edge.target,
         attrs: edge.template.attrs,
@@ -223,7 +230,8 @@ export class Canvas extends LitElement {
 
             detail: {
               source: {
-                id: cell.id,
+                id: cell?.id,
+                type: definition.type,
                 targetEventType: definition.targetEventType,
                 location: {
                   x: e?.originalEvent.clientX,
@@ -239,7 +247,8 @@ export class Canvas extends LitElement {
       handlers.set(definition.key, hlist)
     }
     hlist.push([definition.id, handler]);
-    this.graph!.on(definition.key, handler);
+    console.log(definition.key);
+   this.graph!.on(definition.key, handler);
   }
 
 

@@ -23,6 +23,7 @@ public interface Cell {
 
   enum Type {
     Edge,
-    Vertex
+    None,
+    Vertex;
   }
 }

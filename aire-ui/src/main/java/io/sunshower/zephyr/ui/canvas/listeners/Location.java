@@ -18,10 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Location {
 
-  @Attribute
-  private Double x;
+  @Attribute private Double x;
 
-  @Attribute
-  private Double y;
-
+  @Attribute private Double y;
 }

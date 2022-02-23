@@ -10,7 +10,7 @@ public interface CommandManager {
 
   Canvas getCanvas();
 
-  Optional<Action> getPrevious();
+  Optional<CanvasAction> getPrevious();
 
   boolean hasPrevious();
 
@@ -20,13 +20,13 @@ public interface CommandManager {
 
   void redo();
 
-  void apply(Action action);
+  void apply(CanvasAction canvasAction);
 
-  void addPendingAction(Action action);
+  void addPendingAction(CanvasAction canvasAction);
 
-  List<Action> getPendingActions();
+  List<CanvasAction> getPendingActions();
 
-  void setPendingActions(Collection<? extends Action> actions);
+  void setPendingActions(Collection<? extends CanvasAction> actions);
 
   void applyPendingActions(boolean makeUndoable);
 

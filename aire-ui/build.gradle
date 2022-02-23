@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.vaadin'
+    id 'java-test-fixtures'
     id 'org.springframework.boot'
     id "com.github.node-gradle.node"
 }
@@ -15,6 +16,7 @@ configurations {
 
 dependencies {
 
+    implementation "io.sunshower.arcus:arcus-ast"
     implementation "io.sunshower.arcus:arcus-lang"
     implementation "io.sunshower.arcus:arcus-reflect"
     implementation "io.sunshower.arcus.persist:persist-api"
@@ -39,6 +41,7 @@ dependencies {
     ].each {
         implementation "io.zephyr:$it"
     }
+    implementation project(':aire-ux-core')
 
 
     /**
@@ -64,7 +67,9 @@ dependencies {
         testImplementation "io.zephyr:$it"
     }
 
+
     testImplementation project(':aire-test-spring')
+    testImplementation(testFixtures(project(":aire-ux-core")))
 
     /**
      * general test libraries
@@ -72,7 +77,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+//    developmentOnly "org.springframework.boot:spring-boot-devtools"
 }
 
 dependencyManagement {

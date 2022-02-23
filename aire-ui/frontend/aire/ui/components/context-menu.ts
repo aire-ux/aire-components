@@ -1,7 +1,6 @@
 import {css, customElement, html, LitElement, PropertyValues} from "lit-element";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 
-const OVERLAY_NAME = 'VAADIN-CONTEXT-MENU-OVERLAY';
 
 @Remotable
 @customElement('aire-context-menu')
@@ -13,7 +12,6 @@ export class ContextMenu extends LitElement {
     :host {
       background-color: white;
       box-shadow: var(--lumo-box-shadow-m);
-      padding: 4px;
     }
   `;
 

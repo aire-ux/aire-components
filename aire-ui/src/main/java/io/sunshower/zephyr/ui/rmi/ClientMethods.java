@@ -4,7 +4,7 @@ import com.aire.ux.condensation.Condensation;
 import com.aire.ux.condensation.DocumentWriter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.canvas.Action;
+import io.sunshower.zephyr.ui.canvas.CanvasAction;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +56,8 @@ public final class ClientMethods {
                     argumentTypes));
   }
 
-  public <R, T> Action<T> construct(Class<? extends Action<T>> action, Object... arguments) {
+  public <R, T> CanvasAction<T> construct(
+      Class<? extends CanvasAction<T>> action, Object... arguments) {
     try {
       val argumentTypes =
           collectAnnotatedArguments(action).orElseGet(() -> collectArgumentTypes(arguments));
@@ -70,7 +71,8 @@ public final class ClientMethods {
     }
   }
 
-  private <T> Optional<Class<?>[]> collectAnnotatedArguments(Class<? extends Action<T>> action) {
+  private <T> Optional<Class<?>[]> collectAnnotatedArguments(
+      Class<? extends CanvasAction<T>> action) {
 
     val arguments = action.getDeclaredAnnotationsByType(Argument.class);
     if (arguments.length == 0) {

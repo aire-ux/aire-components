@@ -1,14 +1,14 @@
 package io.sunshower.zephyr.ui.canvas.actions;
 
 import com.vaadin.flow.component.UI;
-import io.sunshower.zephyr.ui.canvas.Action;
+import io.sunshower.zephyr.ui.canvas.CanvasAction;
 import io.sunshower.zephyr.ui.rmi.ClientMethod;
 import io.sunshower.zephyr.ui.rmi.ClientMethods;
 import java.io.Serializable;
 import java.util.function.Supplier;
 import lombok.NonNull;
 
-public abstract class AbstractClientMethodBoundAction<T> implements Action<T> {
+public abstract class AbstractClientMethodBoundAction<T> implements CanvasAction<T> {
 
   protected @NonNull final ClientMethod<Serializable> method;
   @NonNull private final String name;

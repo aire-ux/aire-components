@@ -26,7 +26,13 @@ public class Edge extends AbstractCell {
   }
 
   public Edge(@NonNull Identifier source, @NonNull Identifier target) {
-    this(source, target, null);
+    this(source, target, (EdgeTemplate) null);
+  }
+
+  public Edge(Identifier id, Identifier source, Identifier target) {
+    this(id);
+    this.source = source;
+    this.target = target;
   }
 
   public Edge(Identifier source, Identifier target, EdgeTemplate template) {

@@ -2,28 +2,31 @@ package io.sunshower.zephyr.ui.canvas;
 
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.lang.events.EventListener;
-import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent;
-import io.sunshower.zephyr.ui.canvas.listeners.VertexEvent.EventType;
+import io.sunshower.zephyr.ui.canvas.listeners.CanvasEvent;
+import io.sunshower.zephyr.ui.canvas.listeners.CanvasEventType;
 import lombok.Getter;
 import lombok.NonNull;
 
-class PendingVertexEventListenerDescriptor implements Registration {
+class PendingCanvasEventListenerDescriptor<T extends CanvasEvent, U extends CanvasEventType>
+    implements Registration {
 
-  @Getter
-  private final EventType type;
   private final Canvas canvas;
-  @Getter
-  private final EventListener<VertexEvent> delegate;
+  @Getter private final Cell.Type cellType;
+  @Getter private final CanvasEventType type;
+
+  @Getter private final EventListener<T> delegate;
 
   private Registration registration;
 
-  public PendingVertexEventListenerDescriptor(
-      @NonNull VertexEvent.EventType type,
-      @NonNull EventListener<VertexEvent> delegate,
+  public PendingCanvasEventListenerDescriptor(
+      @NonNull U type,
+      @NonNull Cell.Type cellType,
+      @NonNull EventListener<T> delegate,
       @NonNull Canvas canvas) {
     this.type = type;
     this.canvas = canvas;
     this.delegate = delegate;
+    this.cellType = cellType;
   }
 
   @Override

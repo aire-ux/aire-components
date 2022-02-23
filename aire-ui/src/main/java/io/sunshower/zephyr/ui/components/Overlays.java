@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.components;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.di.Instantiator;
+import io.sunshower.zephyr.aire.DynamicInstantiator;
 import lombok.val;
 
 public class Overlays {
@@ -14,15 +14,18 @@ public class Overlays {
     host.getElement().setAttribute("aire-overlay-host", "true");
   }
 
-  public static Overlay open(Component host, Class<? extends Overlay> content) {
+  public static Overlay open(
+      Component host, Class<? extends Overlay> content, Object... additionalArgs) {
     val actualHost = getActualHost(host);
-    val result =
-        host.getUI()
-            .map(Instantiator::get)
-            .map(instantiator -> instantiator.createComponent(content));
-    result.ifPresent(overlay -> actualHost.getElement().appendChild(overlay.getElement()));
-    return result.orElseThrow(
-        () -> new IllegalArgumentException("Failed to create overlay--did you set a host?"));
+    return host.getUI()
+        .flatMap(ui -> DynamicInstantiator.create(ui, content, additionalArgs))
+        .map(
+            overlay -> {
+              actualHost.getElement().appendChild(overlay.getElement());
+              return overlay;
+            })
+        .orElseThrow(
+            () -> new IllegalArgumentException("Failed to create overlay--did you set a host?"));
   }
 
   private static Component getActualHost(Component host) {

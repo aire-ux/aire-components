@@ -54,14 +54,16 @@ public interface NodeAdapter<T> {
    */
   default <U> U reduce(
       @Nonnull final T current, @Nonnull final U initial, @Nonnull final BiFunction<T, U, U> f) {
+    var result = initial;
     val stack = new ArrayDeque<T>();
     stack.add(current);
-    var result = initial;
     while (!stack.isEmpty()) {
       val c = stack.poll();
       result = f.apply(c, result);
       for (val child : getChildren(c)) {
-        stack.add(child);
+        if (child != null) {
+          stack.add(child);
+        }
       }
     }
     return result;
@@ -85,7 +87,9 @@ public interface NodeAdapter<T> {
       val c = stack.poll();
       result = f.apply(c, result);
       for (val child : getChildren(c)) {
-        stack.add(child);
+        if (child != null) {
+          stack.add(child);
+        }
       }
     }
     return result;

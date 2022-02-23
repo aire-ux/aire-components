@@ -1,0 +1,8 @@
+:host {
+  & [part="label"] {
+
+  }
+  .vaadin-button-container {
+    width: unset;
+  }
+}

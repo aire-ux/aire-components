@@ -1,5 +1,11 @@
+plugins {
+    id "java-library"
+    id "java-test-fixtures"
+}
+
 dependencies {
     api 'com.vaadin:flow-server'
 
+    testFixturesApi project(':aire-test-spring')
     testImplementation project(':aire-test-spring')
 }

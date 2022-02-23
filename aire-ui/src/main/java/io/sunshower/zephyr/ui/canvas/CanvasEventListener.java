@@ -8,27 +8,25 @@ import com.vaadin.flow.component.EventData;
 import elemental.json.JsonValue;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.aire.AireComponentEvent;
-import io.sunshower.zephyr.ui.canvas.CanvasVertexEventListener.VertexDefinition;
+import io.sunshower.zephyr.ui.canvas.CanvasEventListener.CellDefinition;
 import io.sunshower.zephyr.ui.canvas.listeners.Location;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * this class is required to translate between CanvasEvents and VertexEvents
- */
-@DomEvent(CanvasVertexEventListener.CATEGORY)
-public class CanvasVertexEventListener extends AireComponentEvent<Canvas, VertexDefinition> {
+/** this class is required to translate between CanvasEvents and VertexEvents */
+@DomEvent(CanvasEventListener.CATEGORY)
+public class CanvasEventListener extends AireComponentEvent<Canvas, CellDefinition> {
 
-  public static final String CATEGORY = "vertex-event";
+  public static final String CATEGORY = "cell-event";
 
   /**
    * Creates a new event using the given source and indicator whether the event originated from the
    * client side or the server side.
    *
-   * @param source     the source component
+   * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
-  public CanvasVertexEventListener(
+  public CanvasEventListener(
       Canvas source, boolean fromClient, @EventData("event.detail.source") JsonValue target) {
     super(source, fromClient, target);
   }
@@ -36,14 +34,13 @@ public class CanvasVertexEventListener extends AireComponentEvent<Canvas, Vertex
   @Getter
   @Setter
   @RootElement
-  public static final class VertexDefinition {
+  public static final class CellDefinition {
 
-    @Attribute
-    private Identifier id;
+    @Attribute private Cell.Type type;
 
-    @Element
-    private Location location;
-    @Attribute
-    private String targetEventType;
+    @Attribute private Identifier id;
+
+    @Element private Location location;
+    @Attribute private String targetEventType;
   }
 }
