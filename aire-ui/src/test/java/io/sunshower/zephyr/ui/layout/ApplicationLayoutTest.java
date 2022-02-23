@@ -16,10 +16,10 @@ import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 
+@Navigate
 @AireUITest
 @RegisterExtension(MainNavigationComponent.class)
 @Routes(scanClassPackage = MainView.class)
-@Navigate
 class ApplicationLayoutTest {
 
   @ViewTest

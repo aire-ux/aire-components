@@ -18,11 +18,6 @@ import org.springframework.context.annotation.Primary;
 public class AireUITestConfiguration {
 
   @Bean
-  public static ExtensionRegistry extensionRegistry() {
-    return new SpringExtensionRegistry();
-  }
-
-  @Bean
   @Primary
   public static FileProvider fileProvider() {
     return Tests::createTemp;

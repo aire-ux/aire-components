@@ -38,6 +38,7 @@
     <java-semver.version>0.9.0</java-semver.version>
     <picocli.version>4.6.2</picocli.version>
     <jboss-modules.version>2.0.0.Final</jboss-modules.version>
+    <reflections.version>0.10.2</reflections.version>
   </properties>
 
   <dependencyManagement>
@@ -72,6 +73,11 @@
         <groupId>org.jboss.modules</groupId>
         <artifactId>jboss-modules</artifactId>
         <version>${jboss-modules.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>${reflections.version}</version>
       </dependency>
 
 

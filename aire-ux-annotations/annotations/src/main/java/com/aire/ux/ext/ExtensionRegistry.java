@@ -11,6 +11,8 @@ public interface ExtensionRegistry {
 
   boolean defineExtension(Class<? extends HasElement> value);
 
+  boolean removeExtension(Class<? extends HasElement> value);
+
   int getExtensionCount();
 
   void bind(ExtensionTree r, HasElement component);

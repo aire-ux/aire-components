@@ -51,6 +51,7 @@ dependencies {
     [
             'info.picocli:picocli',
             'javax.inject:javax.inject:1',
+            'org.reflections:reflections',
             'org.jboss.modules:jboss-modules',
             'com.github.zafarkhaja:java-semver',
             'com.vaadin:vaadin-spring-boot-starter'

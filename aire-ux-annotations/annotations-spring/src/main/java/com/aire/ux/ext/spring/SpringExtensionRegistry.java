@@ -44,32 +44,51 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
   @Override
   @SuppressWarnings("unchecked")
   public boolean defineExtension(Class<? extends HasElement> value) {
-    val extDefinition = value.getAnnotation(UIExtension.class);
-    if (extDefinition == null) {
-      return false;
+    synchronized (extensionDefinitions) {
+      val extDefinition = value.getAnnotation(UIExtension.class);
+      if (extDefinition == null) {
+        return false;
+      }
+      val control = extDefinition.control();
+      val controlTarget = control.target();
+      val definition =
+          new ExtensionDefinition(
+              controlTarget, (Supplier<Component>) instantiate(control.factory()), value);
+      extensionDefinitions.put(controlTarget, definition);
+      return true;
     }
-    val control = extDefinition.control();
-    val controlTarget = control.target();
-    val definition =
-        new ExtensionDefinition(
-            controlTarget, (Supplier<Component>) instantiate(control.factory()), value);
-    extensionDefinitions.put(controlTarget, definition);
-    return true;
+  }
+
+  @Override
+  public boolean removeExtension(Class<? extends HasElement> value) {
+    synchronized (extensionDefinitions) {
+      val extDefinition = value.getAnnotation(UIExtension.class);
+      if (extDefinition == null) {
+        return false;
+      }
+      val control = extDefinition.control();
+      val controlTarget = control.target();
+      return extensionDefinitions.remove(controlTarget) != null;
+    }
   }
 
   @Override
   public int getExtensionCount() {
-    return extensionDefinitions.size();
+    synchronized (extensionDefinitions) {
+      return extensionDefinitions.size();
+    }
   }
 
   @Override
   public void bind(ExtensionTree tree, HasElement component) {
-    for (val definition : extensionDefinitions.values()) {
-      tree.componentAt(definition.getPath(), component)
-          .ifPresent(
-              c -> {
-                insert(c, definition);
-              });
+    synchronized (extensionDefinitions) {
+      for (val definition : extensionDefinitions.values()) {
+        tree.componentAt(definition.getPath(), component)
+            .ifPresent(
+                c -> {
+                  insert(c, definition);
+                });
+      }
     }
   }
 
