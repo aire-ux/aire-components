@@ -82,8 +82,8 @@ dependencies {
     implementation project(':aire-ux-annotations:annotations-spring')
 
     testImplementation(testFixtures(project(":aire-ux-core")))
-
     testImplementation(testFixtures(project(":aire-ux-annotations:annotations")))
+    testImplementation(testFixtures(project(":aire-ux-annotations:annotations-spring")))
 
     /**
      * general test libraries

@@ -1,6 +1,7 @@
 package com.aire.ux.annotations.ext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,7 +20,7 @@ import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
-import java.util.Objects;
+import com.vaadin.flow.component.button.Button;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,12 +52,12 @@ public class ExtensionRegistryTypeAnnotationTest {
 
   @ViewTest
   @Navigate("home")
-  void ensureAppendedItemIsSelectable(@Select TestExtensionPoint parent,
-      @Select TestExtension extension, @Context TestContext $) {
-    assertNotNull(parent);
-    assertNotNull(extension);
-    assertTrue(parent.getContent().getChildren().anyMatch(c -> Objects.equals(c, extension)));
-    assertEquals(1, $.selectComponents("article").size());
+  void ensureAppendedItemIsSelectable(@Select("vaadin-button") Button button,
+      @Context TestContext ctx) {
+    assertNotNull(button);
+    assertFalse(ctx.selectFirst(TestExtension.class).isPresent());
+    button.click();
+    assertTrue(ctx.selectFirst(TestExtension.class).isPresent());
   }
 
 

@@ -109,9 +109,12 @@ public class ExtensionTree {
   }
 
   private HasElement search(String slotName, Class<?> type, HasElement instance) {
-    for (var c = type; !Objects.class.equals(c); c = c.getSuperclass()) {
-      for (val property : type.getDeclaredFields()) {
+    for (var c = type; !(c == null || Objects.equals(c, Object.class)); c = c.getSuperclass()) {
+      for (val property : c.getDeclaredFields()) {
         val slot = property.getAnnotation(Slot.class);
+        if(slot == null) {
+          continue;
+        }
         if (Objects.equals(normalize(slotName), slot.value())) {
           try {
             if (property.trySetAccessible()) {

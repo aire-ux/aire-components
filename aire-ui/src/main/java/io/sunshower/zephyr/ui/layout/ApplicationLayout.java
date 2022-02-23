@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.layout;
 
+import com.aire.ux.Slot;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.Tag;
@@ -29,7 +30,9 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
   /** */
   @Getter private HasComponents content;
 
-  @Getter private HasComponents navigation;
+  @Slot(":navigation")
+  @Getter
+  private HasComponents navigation;
 
   public ApplicationLayout() {
     top = createTop();

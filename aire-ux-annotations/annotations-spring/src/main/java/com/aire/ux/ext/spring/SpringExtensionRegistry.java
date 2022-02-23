@@ -7,10 +7,13 @@ import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.ExtensionTree;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinServlet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
 
@@ -38,13 +41,17 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public boolean defineExtension(Class<? extends HasElement> value) {
     val extDefinition = value.getAnnotation(UIExtension.class);
     if (extDefinition == null) {
       return false;
     }
-    val definition = new ExtensionDefinition(extDefinition.target(), value);
-    extensionDefinitions.put(extDefinition.target(), definition);
+    val control = extDefinition.control();
+    val controlTarget = control.target();
+    val definition = new ExtensionDefinition(controlTarget,
+        (Supplier<Component>) instantiate(control.factory()), value);
+    extensionDefinitions.put(controlTarget, definition);
     return true;
   }
 
@@ -65,19 +72,25 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
   @SuppressWarnings("unchecked")
   private void insert(HasElement c, ExtensionDefinition definition) {
     if (c instanceof Component) {
-      val component = (Component) c;
-      val child = instantiate(definition.getType());
-      c.getElement().appendChild(child.getElement());
+      if (definition.getType().isAnnotationPresent(Route.class)) {
+        registerRoute(definition.getType());
+      }
+      c.getElement().appendChild(definition.create().getElement());
     }
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private HasElement instantiate(Class<? extends HasElement> type) {
-    return (HasElement) VaadinServlet
+  private void registerRoute(Class<? extends HasElement> type) {
+    RouteConfiguration.forApplicationScope().setAnnotatedRoute((Class) type);
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private <T> T instantiate(Class<T> type) {
+    return VaadinServlet
         .getCurrent()
         .getService()
         .getInstantiator()
-        .createComponent((Class) type);
+        .getOrCreate(type);
   }
 
   @Override

@@ -11,6 +11,7 @@ import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -30,13 +31,13 @@ public class SpringInstantiatorAnnotationTest {
   @ViewTest
   @Navigate("front-page")
   void ensureFrontPageIsSelectable(@Select FrontPage page) {
-    assertNotNull(page);
+    Assertions.assertNotNull(page);
   }
 
   @ViewTest
   @Navigate("front-page")
   void ensureFrontPageIsSelectableById(@Select("#my-id") FrontPage page) {
-    assertNotNull(page);
-    assertNotNull(page.bean);
+    Assertions.assertNotNull(page);
+    Assertions.assertNotNull(page.bean);
   }
 }

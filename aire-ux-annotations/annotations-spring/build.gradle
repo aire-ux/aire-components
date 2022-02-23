@@ -1,4 +1,8 @@
 
+plugins {
+    id 'java-test-fixtures'
+}
+
 dependencies {
     api project(':aire-ux-annotations:annotations')
     api project(':aire-ux-annotations:annotations-core')
@@ -7,6 +11,9 @@ dependencies {
     api 'javax.servlet:javax.servlet-api'
     api 'org.springframework:spring-aop'
     api 'org.springframework:spring-beans'
+
+    testFixturesApi project(':aire-test-spring')
+    testFixturesApi project(':aire-ux-annotations:annotations')
 
 //    testImplementation project(':aire-ux-core')
     testImplementation project(':aire-test-spring')
