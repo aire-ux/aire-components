@@ -7,10 +7,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Article;
 import java.util.function.Supplier;
 
-@UIExtension(control = @Control(
-    factory = ButtonFactory.class,
-    target = ":test-extension-point:head"
-))
+@UIExtension(
+    target = ":test-extension-point:content",
+    control = @Control(
+        factory = ButtonFactory.class,
+        target = ":test-extension-point:head"
+    ))
 public class TestExtension extends Article {
 
   public static class ButtonFactory implements Supplier<Button> {

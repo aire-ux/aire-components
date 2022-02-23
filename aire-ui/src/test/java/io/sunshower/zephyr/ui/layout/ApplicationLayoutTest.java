@@ -17,5 +17,4 @@ class ApplicationLayoutTest {
   void ensureMainNavigationIsNotSelectable(@Context TestContext $) {
     assertFalse($.selectFirst(MainNavigationComponent.class).isPresent());
   }
-
 }

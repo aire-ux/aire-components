@@ -12,7 +12,8 @@ import lombok.val;
 public class LogbackRemoteAppender extends AppenderBase<ILoggingEvent>
     implements Appender<ILoggingEvent> {
 
-  public static final String PATTERN = "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(gyre-worker){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(:){faint} %m%n%wEx";
+  public static final String PATTERN =
+      "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(gyre-worker){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(:){faint} %m%n%wEx";
   private final Terminal terminal;
   private final PatternLayoutEncoder encoder;
 

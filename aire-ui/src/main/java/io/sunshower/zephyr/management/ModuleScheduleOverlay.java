@@ -93,29 +93,27 @@ public class ModuleScheduleOverlay extends Overlay
     this.stopWatch = new StopWatch();
   }
 
-
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     this.configureAppender();
   }
-
 
   @Override
   protected void onDetach(DetachEvent detachEvent) {
     this.removeAppender();
   }
 
-
   @Override
   public void onComponentEvent(CanvasReadyEvent event) {
     computeSchedule(canvas)
-        .thenAccept(v -> {
-          log.info(
-              "Computed reduction schedule in {} milliseconds",
-              stopWatch.getLastTaskTimeMillis());
-          log.info("Gyre quiesced");
-          terminal.flush();
-        });
+        .thenAccept(
+            v -> {
+              log.info(
+                  "Computed reduction schedule in {} milliseconds",
+                  stopWatch.getLastTaskTimeMillis());
+              log.info("Gyre quiesced");
+              terminal.flush();
+            });
   }
 
   private Pair<Canvas, Terminal> addBody() {
@@ -141,25 +139,26 @@ public class ModuleScheduleOverlay extends Overlay
     return canvas
         .invoke(AddVertexTemplateAction.class, TopologyView.defaultTaskTemplate)
         .toCompletableFuture()
-        .thenAccept(v -> {
-          log.info("Computing reduction schedule...");
-          stopWatch.start();
-          val descriptor =
-              LifecycleTasks.createProcess(
-                  kernel,
-                  canvas.getModel(),
-                  TopologyView.defaultEdgeTemplate,
-                  TopologyView.defaultTaskTemplate,
-                  action,
-                  module.getCoordinate());
-          process = descriptor.getProcess();
-          process.setMode(Process.Mode.UserspaceAllocated);
-          stopWatch.stop();
-          log.info("Successfully computed reduction schedule...");
-          canvas
-              .invoke(AddVerticesAction.class, descriptor.getVertices())
-              .then(e -> canvas.invoke(ConnectVerticesAction.class, descriptor.getEdges()));
-        });
+        .thenAccept(
+            v -> {
+              log.info("Computing reduction schedule...");
+              stopWatch.start();
+              val descriptor =
+                  LifecycleTasks.createProcess(
+                      kernel,
+                      canvas.getModel(),
+                      TopologyView.defaultEdgeTemplate,
+                      TopologyView.defaultTaskTemplate,
+                      action,
+                      module.getCoordinate());
+              process = descriptor.getProcess();
+              process.setMode(Process.Mode.UserspaceAllocated);
+              stopWatch.stop();
+              log.info("Successfully computed reduction schedule...");
+              canvas
+                  .invoke(AddVerticesAction.class, descriptor.getVertices())
+                  .then(e -> canvas.invoke(ConnectVerticesAction.class, descriptor.getEdges()));
+            });
   }
 
   private void addHeader() {
@@ -216,10 +215,12 @@ public class ModuleScheduleOverlay extends Overlay
                         }
                       });
 
-              val completeReg = process.addEventListener(TaskEvents.TASK_COMPLETE,
-                  (type, event) -> {
-                    log.info("Task {} completed", event);
-                  });
+              val completeReg =
+                  process.addEventListener(
+                      TaskEvents.TASK_COMPLETE,
+                      (type, event) -> {
+                        log.info("Task {} completed", event);
+                      });
 
               kernel
                   .getScheduler()
@@ -266,8 +267,7 @@ public class ModuleScheduleOverlay extends Overlay
   }
 
   private void removeAppender() {
-    val rootLogger = (Logger) LoggerFactory.getLogger(
-        Logger.ROOT_LOGGER_NAME);
+    val rootLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     if (appender != null) {
       rootLogger.detachAppender(appender);
       appender.stop();
@@ -275,8 +275,7 @@ public class ModuleScheduleOverlay extends Overlay
   }
 
   private void configureAppender() {
-    val rootLogger = (Logger) LoggerFactory.getLogger(
-        Logger.ROOT_LOGGER_NAME);
+    val rootLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     appender = new LogbackRemoteAppender(terminal, rootLogger.getLoggerContext());
     rootLogger.addAppender(appender);
     appender.start();

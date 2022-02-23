@@ -20,25 +20,16 @@ import lombok.val;
 @CssImport("./styles/aire/ui/layout/application-layout.css")
 public class ApplicationLayout extends Main implements ThemableLayout, RouterLayout {
 
-  /**
-   * the top of this application layout
-   */
-  @Getter
-  private HasComponents top;
+  /** the top of this application layout */
+  @Getter private HasComponents top;
 
-  /**
-   * the bottom of this application layout
-   */
-  @Getter
-  private HasComponents bottom;
+  /** the bottom of this application layout */
+  @Getter private HasComponents bottom;
 
-  /**
-   */
-  @Getter
-  private HasComponents content;
+  /** */
+  @Getter private HasComponents content;
 
-  @Getter
-  private HasComponents navigation;
+  @Getter private HasComponents navigation;
 
   public ApplicationLayout() {
     top = createTop();
@@ -65,16 +56,12 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
     set(ElementSlot.Bottom, bottom);
   }
 
-  /**
-   * @param top the component to add to the {@code top} slot
-   */
+  /** @param top the component to add to the {@code top} slot */
   public void setTop(HasComponents top) {
     set(ElementSlot.Top, top);
   }
 
-  /**
-   * @param navigation the component to add to the {@code navigation} slot
-   */
+  /** @param navigation the component to add to the {@code navigation} slot */
   public void setNavigation(HasComponents navigation) {
     set(ElementSlot.Navigation, navigation);
   }
@@ -132,9 +119,7 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
 
   public enum ElementSlot {
 
-    /**
-     * top-slot
-     */
+    /** top-slot */
     Top("top"),
     Bottom("bottom"),
     Content("content"),

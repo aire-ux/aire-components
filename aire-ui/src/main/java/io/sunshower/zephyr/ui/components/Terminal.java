@@ -31,8 +31,7 @@ public class Terminal extends HtmlContainer {
 
   public void write(String... lines) {
     this.buffer.write(lines);
-    if (buffer.capacityReached()) {
-    }
+    if (buffer.capacityReached()) {}
     flush();
   }
 

@@ -3,6 +3,9 @@ dependencies {
     api project(':aire-ux-annotations:annotations')
     api project(':aire-ux-annotations:annotations-core')
 
+    api 'io.zephyr:gyre-api'
+    api 'javax.servlet:javax.servlet-api'
+    api 'org.springframework:spring-aop'
     api 'org.springframework:spring-beans'
 
 //    testImplementation project(':aire-ux-core')

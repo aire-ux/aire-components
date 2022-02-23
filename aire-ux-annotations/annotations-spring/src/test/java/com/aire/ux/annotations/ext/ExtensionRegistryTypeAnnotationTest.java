@@ -2,18 +2,24 @@ package com.aire.ux.annotations.ext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.annotations.ext.ExtensionRegistryTypeAnnotationTest.Cfg;
 import com.aire.ux.annotations.ext.scenario1.TestExtension;
+import com.aire.ux.annotations.ext.scenario1.TestExtensionPoint;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Context;
+import com.aire.ux.test.Navigate;
 import com.aire.ux.test.RegisterComponentExtension;
 import com.aire.ux.test.RegisterExtension;
 import com.aire.ux.test.Routes;
+import com.aire.ux.test.Select;
+import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
+import java.util.Objects;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +30,8 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = Cfg.class)
 @ExtendWith(RegisterComponentExtension.class)
 @RegisterExtension(TestExtension.class)
-@Routes(scanClassPackage = TestExtension.class)
+@Routes(scanClassPackage = TestExtensionPoint.class)
+@Navigate("home")
 public class ExtensionRegistryTypeAnnotationTest {
 
   @ViewTest
@@ -33,8 +40,23 @@ public class ExtensionRegistryTypeAnnotationTest {
   }
 
   @ViewTest
+  void ensureRegistryHasCorrectHostCount(@Context ExtensionRegistry registry) {
+    assertEquals(1, registry.getHostCount());
+  }
+
+  @ViewTest
   void ensureRegistryHasCorrectExtensionCount(@Context ExtensionRegistry registry) {
-    assertEquals(1, registry.getDefinitions().size());
+    assertEquals(1, registry.getExtensionCount());
+  }
+
+  @ViewTest
+  @Navigate("home")
+  void ensureAppendedItemIsSelectable(@Select TestExtensionPoint parent,
+      @Select TestExtension extension, @Context TestContext $) {
+    assertNotNull(parent);
+    assertNotNull(extension);
+    assertTrue(parent.getContent().getChildren().anyMatch(c -> Objects.equals(c, extension)));
+    assertEquals(1, $.selectComponents("article").size());
   }
 
 

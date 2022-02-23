@@ -8,14 +8,12 @@ import com.vaadin.flow.component.html.Main;
 import java.util.function.Supplier;
 
 @UIExtension(
-    control = @Control(
-        target = ":main:navigation",
-        selectorMode = SelectorMode.Path,
-        factory = MainNavigationComponent.ControlFactory.class
-    )
-)
+    control =
+        @Control(
+            target = ":main:navigation",
+            selectorMode = SelectorMode.Path,
+            factory = MainNavigationComponent.ControlFactory.class))
 public class MainNavigationComponent extends Main {
-
 
   public static class ControlFactory implements Supplier<Button> {
 
@@ -24,5 +22,4 @@ public class MainNavigationComponent extends Main {
       return null;
     }
   }
-
 }

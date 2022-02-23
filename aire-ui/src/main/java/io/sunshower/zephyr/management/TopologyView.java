@@ -75,22 +75,16 @@ public class TopologyView extends AbstractModuleView
             "classpath:canvas/resources/nodes/templates/module-edge-template.json");
   }
 
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Model model;
 
-  @Getter
-  private final MenuBar menubar;
-  @Getter
-  private final ContextMenu<Vertex> canvasContextMenu;
+  @Getter private final MenuBar menubar;
+  @Getter private final ContextMenu<Vertex> canvasContextMenu;
 
   private final Registration onCanvasReadyRegistration;
   private final Map<State, List<Button>> actions;
   private final Map<Lifecycle.State, List<Button>> lifecycleGroups;
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Canvas canvas;
 
   @Inject
@@ -127,12 +121,10 @@ public class TopologyView extends AbstractModuleView
   protected ModuleLifecycleDelegate getModuleLifecycleDelegate() {
     return new ModuleLifecycleDelegate() {
       @Override
-      public void select(Module module) {
-      }
+      public void select(Module module) {}
 
       @Override
-      public void refresh() {
-      }
+      public void refresh() {}
     };
   }
 
@@ -140,28 +132,31 @@ public class TopologyView extends AbstractModuleView
     val currentModule = getSelectedModule();
     val state = currentModule.getLifecycle().getState();
     val disabledStates = lifecycleGroups.get(state);
-    getUI().ifPresent(ui -> {
-      ui.access(() -> {
-        enableAll();
-        if(disabledStates != null) {
-          disable(disabledStates);
-        }
-        ui.push();
-      });
-    });
+    getUI()
+        .ifPresent(
+            ui -> {
+              ui.access(
+                  () -> {
+                    enableAll();
+                    if (disabledStates != null) {
+                      disable(disabledStates);
+                    }
+                    ui.push();
+                  });
+            });
   }
 
   private void disable(List<Button> toEnable) {
-    for(val button : toEnable) {
+    for (val button : toEnable) {
       button.setEnabled(false);
     }
   }
 
   private void enableAll() {
-    for(val state : Lifecycle.State.values()) {
+    for (val state : Lifecycle.State.values()) {
       val toDisable = lifecycleGroups.get(state);
-      if(toDisable != null) {
-        for(val component : toDisable) {
+      if (toDisable != null) {
+        for (val component : toDisable) {
           component.setEnabled(true);
         }
       }
@@ -212,10 +207,9 @@ public class TopologyView extends AbstractModuleView
                     .findAny()
                     .orElse(null));
           }
-//          setEnabled(State.VertexSelected, true);
+          //          setEnabled(State.VertexSelected, true);
         });
   }
-
 
   private MenuBar createMenuBar() {
     val result = new MenuBar();
@@ -312,6 +306,7 @@ public class TopologyView extends AbstractModuleView
 
   /**
    * when the selected module has one of the inactive states, then the button should be disabled
+   *
    * @param button
    * @param inactiveStates
    */
@@ -324,8 +319,8 @@ public class TopologyView extends AbstractModuleView
   private Button createStopButtonMenu() {
     val button = new Button("Stop", VaadinIcon.STOP.create());
     button.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
-    registerLifecycleItem(button, Lifecycle.State.Resolved, Lifecycle.State.Installed,
-        Lifecycle.State.Uninstalled);
+    registerLifecycleItem(
+        button, Lifecycle.State.Resolved, Lifecycle.State.Installed, Lifecycle.State.Uninstalled);
     button.addClickListener(
         (ComponentEventListener<ClickEvent<Button>>)
             event -> {
@@ -388,7 +383,6 @@ public class TopologyView extends AbstractModuleView
       implements ComponentEventListener<com.vaadin.flow.component.ClickEvent<Button>> {
 
     @Override
-    public void onComponentEvent(ClickEvent<Button> event) {
-    }
+    public void onComponentEvent(ClickEvent<Button> event) {}
   }
 }

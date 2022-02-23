@@ -1,17 +1,20 @@
 package com.aire.ux.ext;
 
+
 import com.vaadin.flow.component.HasElement;
-import java.util.List;
+import java.util.Optional;
 
 public interface ExtensionRegistry {
 
-  void register(ExtensionDefinition definition);
+  int getHostCount();
 
-  boolean isRegistered(ExtensionDefinition definition);
+  Optional<ExtensionTree> defineHost(Class<? extends HasElement> host);
 
-  ExtensionDefinition unregister(ExtensionDefinition definition);
+  boolean defineExtension(Class<? extends HasElement> value);
 
-  List<ExtensionDefinition> getDefinitions();
+  int getExtensionCount();
 
-  boolean isRegistered(Class<? extends HasElement> value);
+  void bind(ExtensionTree r, HasElement component);
+
+  Class<?> typeOf(HasElement type);
 }

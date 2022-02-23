@@ -1,6 +1,5 @@
 package com.aire.ux.test;
 
-import com.aire.ux.ext.ExtensionDefinition;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -42,7 +41,7 @@ public class RegisterComponentExtension implements
     val instantiator = getInstantiator();
     val registry = instantiator.getOrCreate(ExtensionRegistry.class);
     for (val extension : extensions) {
-      registry.register(new ExtensionDefinition((Class<? extends Component>) extension.value()));
+      registry.defineExtension(extension.value());
     }
   }
 

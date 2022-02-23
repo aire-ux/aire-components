@@ -1,6 +1,7 @@
 package com.aire.ux.ext;
 
 import com.aire.ux.core.decorators.ComponentDecorator;
+import com.vaadin.flow.component.HasElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,5 +16,12 @@ public class ExtensionComponentDecorator implements ComponentDecorator {
     this.registry = registry;
   }
 
+  @Override
+  public void onComponentEntered(@NonNull HasElement component) {
+    registry.defineHost(component.getClass()).ifPresent(r -> registry.bind(r, component));
+  }
 
+  @Override
+  public void onComponentExited(@NonNull HasElement component) {
+  }
 }
