@@ -14,11 +14,11 @@ public class TestInstantiatorFactory implements InstantiatorFactory {
 
   public Instantiator create(Instantiator delegate) {
 
-    val delegates = new CompositeComponentDecorator(
-        List.of(
-            new ExtensionComponentDecorator(delegate.getOrCreate(ExtensionRegistry.class)),
-            new ServiceLoaderComponentDecorator()
-        ));
+    val delegates =
+        new CompositeComponentDecorator(
+            List.of(
+                new ExtensionComponentDecorator(delegate.getOrCreate(ExtensionRegistry.class)),
+                new ServiceLoaderComponentDecorator()));
     return new BaseAireInstantiator(delegate, delegates);
   }
 }

@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SpringExtensionRegistry implements ExtensionRegistry {
 
   private final Map<String, ExtensionDefinition> extensionDefinitions;
@@ -49,8 +50,9 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
     }
     val control = extDefinition.control();
     val controlTarget = control.target();
-    val definition = new ExtensionDefinition(controlTarget,
-        (Supplier<Component>) instantiate(control.factory()), value);
+    val definition =
+        new ExtensionDefinition(
+            controlTarget, (Supplier<Component>) instantiate(control.factory()), value);
     extensionDefinitions.put(controlTarget, definition);
     return true;
   }
@@ -63,9 +65,11 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
   @Override
   public void bind(ExtensionTree tree, HasElement component) {
     for (val definition : extensionDefinitions.values()) {
-      tree.componentAt(definition.getPath(), component).ifPresent(c -> {
-        insert(c, definition);
-      });
+      tree.componentAt(definition.getPath(), component)
+          .ifPresent(
+              c -> {
+                insert(c, definition);
+              });
     }
   }
 
@@ -86,11 +90,7 @@ public class SpringExtensionRegistry implements ExtensionRegistry {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   private <T> T instantiate(Class<T> type) {
-    return VaadinServlet
-        .getCurrent()
-        .getService()
-        .getInstantiator()
-        .getOrCreate(type);
+    return VaadinServlet.getCurrent().getService().getInstantiator().getOrCreate(type);
   }
 
   @Override

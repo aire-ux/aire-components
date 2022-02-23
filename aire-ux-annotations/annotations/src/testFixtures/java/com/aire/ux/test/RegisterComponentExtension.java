@@ -1,7 +1,6 @@
 package com.aire.ux.test;
 
 import com.aire.ux.ext.ExtensionRegistry;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.server.VaadinServlet;
@@ -15,24 +14,22 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class RegisterComponentExtension implements
-    Extension, BeforeAllCallback, AfterAllCallback,
-    BeforeEachCallback, AfterEachCallback {
+public class RegisterComponentExtension
+    implements Extension,
+        BeforeAllCallback,
+        AfterAllCallback,
+        BeforeEachCallback,
+        AfterEachCallback {
 
   @Override
-  public void afterAll(ExtensionContext context) throws Exception {
-
-  }
+  public void afterAll(ExtensionContext context) throws Exception {}
 
   @Override
-  public void afterEach(ExtensionContext context) throws Exception {
-
-  }
+  public void afterEach(ExtensionContext context) throws Exception {}
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
-    context.getTestClass()
-        .ifPresent(this::defineExtensions);
+    context.getTestClass().ifPresent(this::defineExtensions);
   }
 
   @SuppressWarnings("unchecked")
@@ -46,8 +43,9 @@ public class RegisterComponentExtension implements
   }
 
   private Instantiator getInstantiator() {
-    val instantiator = Optional.ofNullable(Instantiator.get(UI.getCurrent()))
-        .orElseGet(() -> VaadinServlet.getCurrent().getService().getInstantiator());
+    val instantiator =
+        Optional.ofNullable(Instantiator.get(UI.getCurrent()))
+            .orElseGet(() -> VaadinServlet.getCurrent().getService().getInstantiator());
     if (instantiator == null) {
       throw new IllegalStateException(
           "AireTest is probably misconfigured--could not locate an instantiator");
@@ -56,7 +54,5 @@ public class RegisterComponentExtension implements
   }
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
-
-  }
+  public void beforeEach(ExtensionContext context) throws Exception {}
 }

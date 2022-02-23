@@ -13,7 +13,5 @@ public class SlotDefinition {
     this.property = property;
   }
 
-  public void set(HasElement component) {
-
-  }
+  public void set(HasElement component) {}
 }

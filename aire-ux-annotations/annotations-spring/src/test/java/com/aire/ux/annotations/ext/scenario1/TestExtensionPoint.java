@@ -18,7 +18,6 @@ public class TestExtensionPoint extends VerticalLayout implements RouterLayout {
   @Slot(":head")
   private Header header;
 
-
   @Getter
   @Slot(":content")
   private Section content;
@@ -32,13 +31,11 @@ public class TestExtensionPoint extends VerticalLayout implements RouterLayout {
 
   public void showRouterLayoutContent(HasElement content) {
     if (content != null) {
-      content.getElement()
-          .appendChild(Objects.requireNonNull(content.getElement()));
+      content.getElement().appendChild(Objects.requireNonNull(content.getElement()));
     }
   }
 
   public void removeRouterLayoutContent(HasElement oldContent) {
     oldContent.getElement().removeFromParent();
   }
-
 }

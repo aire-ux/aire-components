@@ -14,7 +14,6 @@ public class ServiceLoaderComponentDecorator extends AbstractCompositeComponentD
   private final List<? super ComponentDecorator> cache;
   private final Supplier<ClassLoader> classLoaderSupplier;
 
-
   public ServiceLoaderComponentDecorator() {
     this(() -> Thread.currentThread().getContextClassLoader());
   }

@@ -1,6 +1,5 @@
 package com.aire.ux.ext;
 
-
 import com.vaadin.flow.component.HasElement;
 import java.util.Optional;
 

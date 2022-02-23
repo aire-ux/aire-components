@@ -52,14 +52,13 @@ public class ExtensionRegistryTypeAnnotationTest {
 
   @ViewTest
   @Navigate("home")
-  void ensureAppendedItemIsSelectable(@Select("vaadin-button") Button button,
-      @Context TestContext ctx) {
+  void ensureAppendedItemIsSelectable(
+      @Select("vaadin-button") Button button, @Context TestContext ctx) {
     assertNotNull(button);
     assertFalse(ctx.selectFirst(TestExtension.class).isPresent());
     button.click();
     assertTrue(ctx.selectFirst(TestExtension.class).isPresent());
   }
-
 
   @Configuration
   public static class Cfg {
@@ -69,5 +68,4 @@ public class ExtensionRegistryTypeAnnotationTest {
       return new SpringExtensionRegistry();
     }
   }
-
 }

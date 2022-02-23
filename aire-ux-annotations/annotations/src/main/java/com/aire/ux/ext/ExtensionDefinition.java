@@ -9,10 +9,8 @@ import lombok.NonNull;
 
 public class ExtensionDefinition {
 
-
   private final String path;
-  @Getter
-  private final Class<? extends HasElement> type;
+  @Getter private final Class<? extends HasElement> type;
   private final Supplier<Component> supplier;
 
   public ExtensionDefinition(
@@ -24,7 +22,6 @@ public class ExtensionDefinition {
     this.supplier = supplier;
     check(type);
   }
-
 
   public String getPath() {
     return path;

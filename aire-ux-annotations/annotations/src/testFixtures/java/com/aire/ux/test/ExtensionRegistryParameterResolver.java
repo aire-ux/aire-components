@@ -21,11 +21,12 @@ public class ExtensionRegistryParameterResolver implements ElementResolverFactor
     return new ElementResolver() {
       @Override
       public <T> T resolve() {
-        return (T) VaadinServlet.getCurrent().getService().getInstantiator()
-            .getOrCreate(ExtensionRegistry.class);
+        return (T)
+            VaadinServlet.getCurrent()
+                .getService()
+                .getInstantiator()
+                .getOrCreate(ExtensionRegistry.class);
       }
     };
   }
-
-
 }

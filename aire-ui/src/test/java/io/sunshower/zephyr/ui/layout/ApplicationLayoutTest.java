@@ -23,7 +23,8 @@ import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 class ApplicationLayoutTest {
 
   @ViewTest
-  void ensureButtonIsInjectable(@Select("vaadin-button[text=Sup]") Button button, @Context TestContext $) {
+  void ensureButtonIsInjectable(
+      @Select("vaadin-button[text=Sup]") Button button, @Context TestContext $) {
     assertNotNull(button);
     assertTrue($.select(MainNavigationComponent.class).isEmpty());
     button.click();

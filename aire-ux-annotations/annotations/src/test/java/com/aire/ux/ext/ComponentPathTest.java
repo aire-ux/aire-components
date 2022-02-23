@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 class ComponentPathTest {
 
-
   @Test
   void ensureComponentPathIsConstructable() {
     val component = new ExtensionTree(HostComponent.class, mock(ExtensionRegistry.class));
@@ -25,10 +24,7 @@ class ComponentPathTest {
     assertEquals(2, children.size());
   }
 
-
-  static class ChildComponent extends Component {
-
-  }
+  static class ChildComponent extends Component {}
 
   @Host("host")
   static class HostComponent extends Component {
@@ -39,5 +35,4 @@ class ComponentPathTest {
     @Slot(":child2")
     private ChildComponent child2;
   }
-
 }

@@ -11,10 +11,7 @@ import java.util.function.Supplier;
 import lombok.val;
 
 @UIExtension(
-    control = @Control(
-        factory = ButtonFactory.class,
-        target = ":test-extension-point:head"
-    ))
+    control = @Control(factory = ButtonFactory.class, target = ":test-extension-point:head"))
 @Route(value = "test-extension", registerAtStartup = false)
 public class TestExtension extends Article {
 
@@ -23,11 +20,11 @@ public class TestExtension extends Article {
     @Override
     public Button get() {
       val button = new Button("hello");
-      button.addClickListener(click -> {
-        UI.getCurrent().navigate(TestExtension.class);
-      });
+      button.addClickListener(
+          click -> {
+            UI.getCurrent().navigate(TestExtension.class);
+          });
       return button;
     }
   }
-
 }

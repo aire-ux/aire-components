@@ -63,7 +63,6 @@ public class ExtensionTree {
     }
   }
 
-
   private String getRoot(Class<?> type) {
     val result = type.getAnnotation(Host.class);
     if (result == null) {
@@ -72,7 +71,6 @@ public class ExtensionTree {
     }
     return normalize(result.value());
   }
-
 
   private String normalize(String value) {
     if (value.charAt(0) != ':') {
@@ -112,7 +110,7 @@ public class ExtensionTree {
     for (var c = type; !(c == null || Objects.equals(c, Object.class)); c = c.getSuperclass()) {
       for (val property : c.getDeclaredFields()) {
         val slot = property.getAnnotation(Slot.class);
-        if(slot == null) {
+        if (slot == null) {
           continue;
         }
         if (Objects.equals(normalize(slotName), slot.value())) {
@@ -136,8 +134,9 @@ public class ExtensionTree {
     val host = type.getAnnotation(Host.class);
     if (!Objects.equals(host.value(), next)) {
       throw new IllegalArgumentException(
-          String.format("Error: expected '%s', but got '%s' (component-type: '%s')", host.value(),
-              next, type));
+          String.format(
+              "Error: expected '%s', but got '%s' (component-type: '%s')",
+              host.value(), next, type));
     }
   }
 
@@ -151,5 +150,4 @@ public class ExtensionTree {
     }
     return result;
   }
-
 }
