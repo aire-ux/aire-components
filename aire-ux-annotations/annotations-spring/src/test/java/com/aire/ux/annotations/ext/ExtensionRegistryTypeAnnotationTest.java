@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aire.ux.annotations.ext.ExtensionRegistryTypeAnnotationTest.Cfg;
 import com.aire.ux.annotations.ext.scenario1.TestExtension;
 import com.aire.ux.annotations.ext.scenario1.TestExtensionPoint;
+import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.aire.ux.test.AireTest;
@@ -20,7 +21,9 @@ import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.server.Command;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,12 +63,21 @@ public class ExtensionRegistryTypeAnnotationTest {
     assertTrue(ctx.selectFirst(TestExtension.class).isPresent());
   }
 
+  static class DefaultAccessQueue implements AccessQueue {
+
+    @Override
+    public void enqueue(Command command) {
+      UI.getCurrent().access(command);
+    }
+  }
+
   @Configuration
   public static class Cfg {
 
+
     @Bean
     public static ExtensionRegistry extensionRegistry() {
-      return new SpringExtensionRegistry();
+      return new SpringExtensionRegistry(new DefaultAccessQueue());
     }
   }
 }

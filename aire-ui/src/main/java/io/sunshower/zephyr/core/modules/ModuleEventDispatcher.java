@@ -17,10 +17,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ModuleEventDispatcher
-    implements
-    DisposableBean,
-    ApplicationEventPublisherAware,
-    io.zephyr.kernel.events.EventListener<Module> {
+    implements DisposableBean,
+        ApplicationEventPublisherAware,
+        io.zephyr.kernel.events.EventListener<Module> {
 
   private final Kernel kernel;
   private ApplicationEventPublisher publisher;
@@ -29,7 +28,6 @@ public class ModuleEventDispatcher
   public ModuleEventDispatcher(@NonNull Kernel kernel) {
     this.kernel = kernel;
   }
-
 
   @Override
   public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
@@ -45,7 +43,6 @@ public class ModuleEventDispatcher
   public void onApplicationReady(ApplicationReadyEvent event) {
     kernel.addEventListener(this, ModuleEvents.STARTED, ModuleEvents.STOPPED);
   }
-
 
   @Override
   public void onEvent(EventType type, Event<Module> event) {

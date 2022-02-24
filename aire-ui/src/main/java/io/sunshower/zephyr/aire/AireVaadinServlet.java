@@ -15,9 +15,12 @@ public class AireVaadinServlet extends SpringServlet
     implements SessionInitListener, SessionDestroyListener {
 
   private final WebApplicationContext context;
+  private final AsynchronousSessionQueue queue;
 
-  public AireVaadinServlet(WebApplicationContext context, boolean rootMapping) {
+  public AireVaadinServlet(
+      AsynchronousSessionQueue queue, WebApplicationContext context, boolean rootMapping) {
     super(context, rootMapping);
+    this.queue = queue;
     this.context = context;
   }
 
@@ -33,5 +36,7 @@ public class AireVaadinServlet extends SpringServlet
   public void sessionDestroy(SessionDestroyEvent event) {}
 
   @Override
-  public void sessionInit(SessionInitEvent event) throws ServiceException {}
+  public void sessionInit(SessionInitEvent event) throws ServiceException {
+    queue.drain(event.getSession());
+  }
 }

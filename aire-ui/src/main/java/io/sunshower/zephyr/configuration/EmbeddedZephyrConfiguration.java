@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.configuration;
 
+import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import io.sunshower.zephyr.ZephyrApplication;
@@ -125,8 +126,8 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   }
 
   @Bean
-  public static ExtensionRegistry extensionRegistry() {
-    return new SpringExtensionRegistry();
+  public static ExtensionRegistry extensionRegistry(AccessQueue queue) {
+    return new SpringExtensionRegistry(queue);
   }
 
   @Bean(name = "applicationEventMulticaster")
@@ -153,5 +154,4 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
       log.error("Encountered an error attempting to start kernel: {}", ex.getMessage(), ex);
     }
   }
-
 }

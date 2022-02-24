@@ -17,7 +17,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class AireComponentModuleScannerListener {
 
@@ -27,9 +26,7 @@ public class AireComponentModuleScannerListener {
 
   @Inject
   public AireComponentModuleScannerListener(
-      final ThreadPoolTaskExecutor executor,
-      final ExtensionRegistry extensionRegistry
-  ) {
+      final ThreadPoolTaskExecutor executor, final ExtensionRegistry extensionRegistry) {
     this.executor = executor;
     this.contexts = new HashMap<>();
     this.extensionRegistry = extensionRegistry;
@@ -37,13 +34,9 @@ public class AireComponentModuleScannerListener {
 
   @EventListener
   public void onModuleStarted(ModuleStartedEvent event) {
-    CompletableFuture
-        .supplyAsync(
-            new AireComponentScanner(event.getSource()
-            ), executor)
+    CompletableFuture.supplyAsync(new AireComponentScanner(event.getSource()), executor)
         .thenAccept(types -> registerComponents(event.getSource(), types));
   }
-
 
   @EventListener
   public void onModuleStopped(ModuleStoppedEvent event) {
@@ -73,20 +66,21 @@ public class AireComponentModuleScannerListener {
       val coordinate = source.getCoordinate();
       if (contexts.containsKey(coordinate)) {
         throw new IllegalStateException(
-            "Error: Attempting to re-register module '%s' somehow".formatted(
-                coordinate.toCanonicalForm()));
+            "Error: Attempting to re-register module '%s' somehow"
+                .formatted(coordinate.toCanonicalForm()));
       }
       val context = new ComponentContext();
       for (val type : types) {
         if (!HasElement.class.isAssignableFrom(type)) {
           throw new IllegalStateException(
-              "Error: type '%s' from module '%s' is not an instance of a component".formatted(type,
-                  coordinate));
+              "Error: type '%s' from module '%s' is not an instance of a component"
+                  .formatted(type, coordinate));
         }
         extensionRegistry.defineExtension((Class<? extends HasElement>) type);
-        context.addRegistration(() -> {
-          extensionRegistry.removeExtension((Class<? extends HasElement>) type);
-        });
+        context.addRegistration(
+            () -> {
+              extensionRegistry.removeExtension((Class<? extends HasElement>) type);
+            });
       }
       contexts.put(coordinate, context);
     }
@@ -104,5 +98,4 @@ public class AireComponentModuleScannerListener {
       componentRegistrations.add(o);
     }
   }
-
 }

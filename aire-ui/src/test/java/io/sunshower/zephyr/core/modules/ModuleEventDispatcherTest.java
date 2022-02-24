@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.core.modules;
 
-
 import io.sunshower.zephyr.AireUITest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,5 @@ import org.springframework.beans.factory.annotation.Autowired;
 class ModuleEventDispatcherTest {
 
   @Test
-  void ensureContextStartsCorrectly(@Autowired ModuleEventDispatcher dispatcher) {
-
-  }
-
+  void ensureContextStartsCorrectly(@Autowired ModuleEventDispatcher dispatcher) {}
 }

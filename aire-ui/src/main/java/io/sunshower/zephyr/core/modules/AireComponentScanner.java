@@ -12,6 +12,7 @@ import lombok.val;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
+@SuppressWarnings("PMD")
 public class AireComponentScanner implements Callable<Set<Class<?>>>, Supplier<Set<Class<?>>> {
 
   private final Module module;
@@ -23,16 +24,18 @@ public class AireComponentScanner implements Callable<Set<Class<?>>>, Supplier<S
   @Override
   public Set<Class<?>> call() {
     val scanner = createScanner();
-    return scanner.get(TypesAnnotated
-        .with(UIExtension.class).asClass(module.getClassLoader()));
+    return scanner.get(TypesAnnotated.with(UIExtension.class).asClass(module.getClassLoader()));
   }
 
   private Reflections createScanner() {
-    val configuration = new ConfigurationBuilder()
-        .setClassLoaders(new ClassLoader[]{module.getClassLoader()});
+    val classloader = module.getClassLoader();
+    val configuration = new ConfigurationBuilder().setClassLoaders(new ClassLoader[] {classloader});
+
+    for (val pkg : classloader.getDefinedPackages()) {
+      configuration.forPackage(pkg.getName(), classloader);
+    }
     return new Reflections(configuration);
   }
-
 
   @Override
   public Set<Class<?>> get() {

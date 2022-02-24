@@ -1,7 +1,5 @@
 package io.sunshower.zephyr;
 
-import com.aire.ux.ext.ExtensionRegistry;
-import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import io.sunshower.test.common.Tests;
 import io.sunshower.zephyr.configuration.FileProvider;
 import io.zephyr.kernel.Module.Type;

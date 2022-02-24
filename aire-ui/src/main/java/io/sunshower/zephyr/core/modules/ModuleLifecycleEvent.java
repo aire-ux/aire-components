@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationEvent;
 
 public class ModuleLifecycleEvent extends ApplicationEvent {
 
-
   public ModuleLifecycleEvent(Module source) {
     super(source);
   }

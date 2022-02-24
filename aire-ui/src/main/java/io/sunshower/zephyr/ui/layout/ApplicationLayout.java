@@ -30,8 +30,8 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
   /** */
   @Getter private HasComponents content;
 
-  @Slot(":navigation")
   @Getter
+  @Slot(":navigation")
   private HasComponents navigation;
 
   public ApplicationLayout() {
@@ -46,12 +46,13 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
   }
 
   public void showRouterLayoutContent(HasElement content) {
-    Objects.requireNonNull(content);
-    content.getElement().setAttribute("slot", "content");
-    getElement().appendChild(content.getElement());
+    if (content != null) {
+      content.getElement().setAttribute("slot", "content");
+      getElement().appendChild(content.getElement());
 
-    if (content instanceof ApplicationLayoutDecorator) {
-      ((ApplicationLayoutDecorator) content).decorate(this);
+      if (content instanceof ApplicationLayoutDecorator) {
+        ((ApplicationLayoutDecorator) content).decorate(this);
+      }
     }
   }
 

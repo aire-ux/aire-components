@@ -14,7 +14,12 @@ public class AireKernelPackageReexportConstraintSetProvider
 
   @Override
   public Set<String> getPackages() {
-    return Set.of("com.vaadin.*", "com.aire.ux.*", "io.sunshower.zephyr.aire.*");
+    return Set.of(
+        "com.vaadin.*",
+        "com.aire.ux.*",
+        "io.sunshower.zephyr.aire.*",
+        "io.sunshower.zephyr.ui.*",
+        "io.sunshower.zephyr");
   }
 
   @Override

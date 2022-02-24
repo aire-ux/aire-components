@@ -9,8 +9,8 @@ dependencies {
 
     api 'io.zephyr:gyre-api'
     api 'javax.servlet:javax.servlet-api'
-    api 'org.springframework:spring-aop'
     api 'org.springframework:spring-beans'
+    api 'org.springframework:spring-context'
 
     testFixturesApi project(':aire-test-spring')
     testFixturesApi project(':aire-ux-annotations:annotations')
