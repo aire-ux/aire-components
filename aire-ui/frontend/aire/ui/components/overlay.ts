@@ -48,7 +48,7 @@ export class Overlay extends LitElement {
     const host = this.parentElement;
     if (host) {
       this.style.width = `${host.clientWidth}px`;
-      this.style.height = `${host.clientHeight}px`;
+      this.style.height = `${host.clientHeight - 2}px`;
     }
   };
 
@@ -60,7 +60,7 @@ export class Overlay extends LitElement {
           top: 0px;
           left: 0px;
           width: ${host?.clientWidth}px;
-          height: ${host?.clientHeight}px;
+          height: ${(host?.clientHeight || 0) - 2}px;
         }
       </style>
       <slot name="header" part="header"></slot>

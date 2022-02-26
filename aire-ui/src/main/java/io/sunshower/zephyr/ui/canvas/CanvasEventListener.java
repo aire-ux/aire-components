@@ -36,11 +36,19 @@ public class CanvasEventListener extends AireComponentEvent<Canvas, CellDefiniti
   @RootElement
   public static final class CellDefinition {
 
+    /** the type of the event */
     @Attribute private Cell.Type type;
 
+    /** corresponds to cell:key */
+    @Attribute private String key;
+
+    /** corresponds to cell:id */
     @Attribute private Identifier id;
 
+    /** the client location of the event */
     @Element private Location location;
+
+    /** the target event type */
     @Attribute private String targetEventType;
   }
 }

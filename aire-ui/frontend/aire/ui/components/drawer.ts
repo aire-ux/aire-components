@@ -67,7 +67,7 @@ export class Drawer extends LitElement {
     
     :host(.verticalright) div.content.open {
       display: flex;
-      width:250px;
+      width:350px;
       background-color: #f3f3f3;
       border-right: 1px solid #AAAAAA;
       right:30px;

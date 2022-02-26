@@ -94,7 +94,9 @@
       "@vaadin/virtual-list": "22.0.2",
       "construct-style-sheets-polyfill": "3.0.4",
       "date-fns": "2.23.0",
-      "lit": "2.0.0"
+      "lit": "2.0.0",
+      "xterm": "4.17.0",
+      "xterm-addon-fit": "0.5.0"
     },
     "devDependencies": {
       "chokidar": "^3.5.0",
@@ -118,7 +120,7 @@
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "569473861adc8bd0e4207abe93983d5d36aaff66518c640943b9ca5011fb3d21"
+    "hash": "349e09eed6350376798a5c5a82efdb863f013f3e6cef4b0b2d75462576adb889"
   },
   "dependencies": {
     "@aire-ux/aire-condensation": "0.1.5",
@@ -215,7 +217,9 @@
     "date-fns": "2.23.0",
     "gulp": "^4.0.2",
     "gulp-sass": "^5.1.0",
-    "lit": "2.0.0"
+    "lit": "2.0.0",
+    "xterm": "4.17.0",
+    "xterm-addon-fit": "0.5.0"
   },
   "devDependencies": {
     "@vaadin/application-theme-plugin": "./build/plugins/application-theme-plugin",

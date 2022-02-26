@@ -2,14 +2,9 @@ import {css, customElement, html, LitElement, PropertyValues, query} from "lit-e
 import {Edge, Events, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
+import {CircularLayout, Edge as LayoutEdge, Model, Node as LayoutNode} from "@antv/layout";
 import {
-  CircularLayout,
-  DagreLayout,
-  Edge as LayoutEdge,
-  Model,
-  Node as LayoutNode
-} from "@antv/layout";
-import {
+  CellAttributes,
   EdgeDefinition,
   ListenerDefinition,
   ListenerRegistration
@@ -23,7 +18,7 @@ import EventArgs = Events.EventArgs;
 @customElement('aire-canvas')
 export class Canvas extends LitElement {
 
-  static layout = new DagreLayout();
+  static layout = new CircularLayout();
   private graph: Graph | undefined;
 
   @query('div.container')
@@ -39,8 +34,10 @@ export class Canvas extends LitElement {
   // language=CSS
   static styles = css`
     :host {
-      width: 100%;
-      height: 100%;
+      /*width: 100%;*/
+      /*height: 100%;*/
+      flex: 1;
+      width:100%;
       display: flex;
       align-items: center;
       justify-items: center;
@@ -79,6 +76,7 @@ export class Canvas extends LitElement {
     const container = this.container;
     const graph = new Graph({
       grid: true,
+      panning: true,
       container: container
     });
     this.graph = graph;
@@ -107,6 +105,26 @@ export class Canvas extends LitElement {
     this.graph = this.graph!.fromJSON(Canvas.layout.layout(nodes as any));
     this.graph.centerContent();
     return vertex;
+  }
+
+
+  @Remote
+  public setCellAttributes(@Receive(Dynamic) attributes: CellAttributes): void {
+    const cell = this.graph?.getCellById(attributes.id);
+    if (cell) {
+      cell.setAttrs(attributes.attributes);
+    }
+  }
+
+  @Remote
+  public setAllCellAttributes(@Receive(Dynamic) attributes: Array<CellAttributes>): void {
+    const graph = this.graph!;
+    for (let attribute of attributes) {
+      const cell = graph.getCellById(attribute.id);
+      if (cell) {
+        cell.setAttrs(attribute.attributes);
+      }
+    }
   }
 
 
@@ -164,8 +182,8 @@ export class Canvas extends LitElement {
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        attrs: edge.template.attrs,
-        connector: edge.template.connector
+        attrs: edge?.template?.attrs,
+        connector: edge?.template?.connector
       }
     });
     this.graph?.addEdges(edgeMetadata);
@@ -248,7 +266,7 @@ export class Canvas extends LitElement {
     }
     hlist.push([definition.id, handler]);
     console.log(definition.key);
-   this.graph!.on(definition.key, handler);
+    this.graph!.on(definition.key, handler);
   }
 
 

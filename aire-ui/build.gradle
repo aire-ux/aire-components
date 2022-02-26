@@ -35,6 +35,7 @@ dependencies {
             'kernel-api',
             'kernel-lib@jar',
             'kernel-core',
+            'sunshower-spring@jar',
             'synchronous-api@jar',
             'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'
@@ -50,6 +51,7 @@ dependencies {
     [
             'info.picocli:picocli',
             'javax.inject:javax.inject:1',
+            'org.reflections:reflections',
             'org.jboss.modules:jboss-modules',
             'com.github.zafarkhaja:java-semver',
             'com.vaadin:vaadin-spring-boot-starter'
@@ -68,8 +70,21 @@ dependencies {
     }
 
 
-    testImplementation project(':aire-test-spring')
+    [
+            ':aire-test-spring',
+            ':aire-ux-annotations:annotations',
+            ':aire-ux-annotations:annotations-core',
+            ':aire-ux-annotations:annotations-spring',
+    ].each {
+        testImplementation project(it)
+    }
+
+    implementation project(':aire-ux-annotations:annotations-core')
+    implementation project(':aire-ux-annotations:annotations-spring')
+
     testImplementation(testFixtures(project(":aire-ux-core")))
+    testImplementation(testFixtures(project(":aire-ux-annotations:annotations")))
+    testImplementation(testFixtures(project(":aire-ux-annotations:annotations-spring")))
 
     /**
      * general test libraries

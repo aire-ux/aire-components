@@ -14,9 +14,9 @@ public class StackCommandManager implements CommandManager {
 
   private final Canvas host;
   private final Model model;
-  private final List<CanvasAction> pending;
-  private final Deque<CanvasAction> undoStack;
-  private final Deque<CanvasAction> redoStack;
+  private final List<RemoteAction> pending;
+  private final Deque<RemoteAction> undoStack;
+  private final Deque<RemoteAction> redoStack;
 
   public StackCommandManager(@NonNull Model model, @NonNull Canvas host) {
     this.host = host;
@@ -37,7 +37,7 @@ public class StackCommandManager implements CommandManager {
   }
 
   @Override
-  public Optional<CanvasAction> getPrevious() {
+  public Optional<RemoteAction> getPrevious() {
     if (undoStack.isEmpty()) {
       return Optional.empty();
     }
@@ -74,22 +74,22 @@ public class StackCommandManager implements CommandManager {
   }
 
   @Override
-  public void apply(CanvasAction canvasAction) {
+  public void apply(RemoteAction canvasAction) {
     undoStack.push(canvasAction);
   }
 
   @Override
-  public void addPendingAction(CanvasAction canvasAction) {
+  public void addPendingAction(RemoteAction canvasAction) {
     pending.add(canvasAction);
   }
 
   @Override
-  public List<CanvasAction> getPendingActions() {
+  public List<RemoteAction> getPendingActions() {
     return Collections.unmodifiableList(pending);
   }
 
   @Override
-  public void setPendingActions(Collection<? extends CanvasAction> actions) {
+  public void setPendingActions(Collection<? extends RemoteAction> actions) {
     clearPendingActions();
     for (val action : actions) {
       addPendingAction(action);

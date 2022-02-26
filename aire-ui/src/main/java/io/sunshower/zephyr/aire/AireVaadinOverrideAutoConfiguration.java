@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.aire;
 
+import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.server.InitParameters;
 import com.vaadin.flow.spring.RootMappedCondition;
 import com.vaadin.flow.spring.SpringServlet;
@@ -52,13 +53,18 @@ public class AireVaadinOverrideAutoConfiguration {
     return "context://" + url;
   }
 
+  @Bean
+  public static AccessQueue accessQueue() {
+    return new AsynchronousSessionQueue();
+  }
+
   /**
    * Creates a {@link ServletRegistrationBean} instance with Spring aware Vaadin servlet.
    *
    * @return a custom ServletRegistrationBean instance
    */
   @Bean
-  public ServletRegistrationBean<SpringServlet> servletRegistrationBean() {
+  public ServletRegistrationBean<SpringServlet> servletRegistrationBean(AccessQueue queue) {
     String mapping = configurationProperties.getUrlMapping();
     Map<String, String> initParameters = new HashMap<>();
     boolean rootMapping = RootMappedCondition.isRootMapping(mapping);
@@ -68,7 +74,8 @@ public class AireVaadinOverrideAutoConfiguration {
           InitParameters.SERVLET_PARAMETER_PUSH_URL, makeContextRelative(mapping.replace("*", "")));
     }
     ServletRegistrationBean<SpringServlet> registration =
-        new ServletRegistrationBean<>(new AireVaadinServlet(context, rootMapping), mapping);
+        new ServletRegistrationBean<>(
+            new AireVaadinServlet((AsynchronousSessionQueue) queue, context, rootMapping), mapping);
     registration.setInitParameters(initParameters);
     registration.setAsyncSupported(configurationProperties.isAsyncSupported());
     registration.setName(ClassUtils.getShortNameAsProperty(SpringServlet.class));

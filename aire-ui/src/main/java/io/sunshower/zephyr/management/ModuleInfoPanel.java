@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.management;
 
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,29 +17,32 @@ public class ModuleInfoPanel extends VerticalLayout {
   private final Zephyr zephyr;
 
   public ModuleInfoPanel(
-      final Zephyr zephyr, final Supplier<Module> module, final Grid<Module> grid) {
+      final Zephyr zephyr, final Supplier<Module> module, ModuleLifecycleDelegate delegate) {
     this.zephyr = zephyr;
     setPadding(false);
     setModuleInfo(module);
     setModuleDependencies(module);
-    setModuleLifecycle(module, grid);
+    setModuleLifecycle(module, delegate);
   }
 
-  private void setModuleLifecycle(Supplier<Module> module, Grid<Module> grid) {
-    add(new ModuleLifecycleButtonBar(grid, zephyr, module.get()));
+  private void setModuleLifecycle(Supplier<Module> module, ModuleLifecycleDelegate delegate) {
+    add(new ModuleLifecycleButtonBar(delegate, zephyr, module.get()));
   }
 
   private void setModuleDependencies(Supplier<Module> module) {
     val propertyPanel = new PropertyPanel(VaadinIcon.LINES_LIST.create(), "Dependencies");
-    val dependencies =
-        module.get().getDependencies().stream()
-            .map(
-                dependency ->
-                    new Property(
-                        dependency.getCoordinate().toString(), dependency.getType().name()))
-            .collect(Collectors.toList());
-    propertyPanel.setProperties(dependencies);
-    add(propertyPanel);
+    val m = module.get();
+    if (m != null) {
+      val dependencies =
+          m.getDependencies().stream()
+              .map(
+                  dependency ->
+                      new Property(
+                          dependency.getCoordinate().toString(), dependency.getType().name()))
+              .collect(Collectors.toList());
+      propertyPanel.setProperties(dependencies);
+      add(propertyPanel);
+    }
   }
 
   private void setModuleInfo(Supplier<Module> coordinate) {

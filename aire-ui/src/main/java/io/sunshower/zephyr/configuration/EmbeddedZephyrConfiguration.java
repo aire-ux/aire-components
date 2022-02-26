@@ -1,5 +1,8 @@
 package io.sunshower.zephyr.configuration;
 
+import com.aire.ux.concurrency.AccessQueue;
+import com.aire.ux.ext.ExtensionRegistry;
+import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
@@ -32,14 +35,20 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Slf4j
+@EnableAsync
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
+@ComponentScan(basePackages = "io.sunshower.zephyr.core")
 public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   @Bean
@@ -65,7 +74,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
         executor.getThreadPoolExecutor(), Executors.newFixedThreadPool(2));
   }
 
-  @Bean
+  @Bean(name = "threadPoolTaskExecutor")
   public static ThreadPoolTaskExecutor executor() {
     val executor = new ThreadPoolTaskExecutor();
     executor.setCorePoolSize(2);
@@ -88,10 +97,10 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
           0,
           kernelRootDirectory,
           Type.Plugin,
-          ModuleCoordinate.create("aire-ui", "com.aire.ux", "1.0.0"),
+          ModuleCoordinate.create("com.aire.ux", "aire-ui", "1.0.0"),
           List.of(),
           List.of(),
-          "test module descriptor");
+          "Management UI for Zephyr");
     } catch (Exception ex) {
       throw new IllegalStateException("Unable to create module descriptor");
     }
@@ -114,6 +123,18 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
         .flatMap(Optional::stream)
         .findAny()
         .orElseGet(() -> defaultModuleDescriptor(kernelRootDirectory));
+  }
+
+  @Bean
+  public static ExtensionRegistry extensionRegistry(AccessQueue queue) {
+    return new SpringExtensionRegistry(queue);
+  }
+
+  @Bean(name = "applicationEventMulticaster")
+  public ApplicationEventMulticaster applicationEventMulticaster(ThreadPoolTaskExecutor executor) {
+    val result = new SimpleApplicationEventMulticaster();
+    result.setTaskExecutor(executor);
+    return result;
   }
 
   @Override

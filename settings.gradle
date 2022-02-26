@@ -43,5 +43,7 @@ include(
         'aire-ux-annotations:annotations',
         'aire-ux-annotations:annotations-core',
         'aire-ux-annotations:annotations-spring',
+
+        'tests:test-modules:primary-component'
 )
 

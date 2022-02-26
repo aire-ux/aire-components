@@ -1,0 +1,11 @@
+
+plugins {
+    id 'java-test-fixtures'
+}
+dependencies {
+    api "io.zephyr:gyre-api"
+    api 'com.vaadin:flow-server'
+    api project(':aire-ux-core')
+
+    testFixturesApi project(':aire-test-vaadin')
+}

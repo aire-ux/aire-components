@@ -61,7 +61,7 @@ public class UploadPluginOverlay extends Overlay implements ComponentEventListen
     buffer = new MultiFileMemoryBuffer();
     upload = new Upload(buffer);
     upload.getStyle().set("height", "100%");
-    upload.setAutoUpload(false);
+    upload.setAutoUpload(true);
     upload.addSucceededListener(this);
     addContent(upload);
   }

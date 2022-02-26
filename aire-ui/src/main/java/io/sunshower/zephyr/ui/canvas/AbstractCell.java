@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
@@ -23,6 +25,9 @@ public abstract class AbstractCell implements Cell {
   @NonNull
   @Attribute(alias = @Alias(read = "id", write = "id"))
   private final Identifier identifier;
+
+  /** a context-dependent identifier for this node */
+  @Getter @Setter @Attribute private String key;
 
   @NonNull @Element private Map<String, String> properties;
 

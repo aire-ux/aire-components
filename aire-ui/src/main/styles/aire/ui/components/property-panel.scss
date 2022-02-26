@@ -3,11 +3,14 @@ aire-property-panel {
   width: 100%;
   header {
     color: white;
-    background-color: #660066;
-    h1 {
-      color: white;
-      margin: 0px;
+    vaadin-icon {
+      margin-right: 8px;
+    }
+    h1, vaadin-icon {
+      color: var(--lumo-header-text-color);
       font-size: var(--lumo-font-xl);
+      margin-top:0;
+      margin-bottom: 0;
     }
   }
 }

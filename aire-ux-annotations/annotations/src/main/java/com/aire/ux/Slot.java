@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * underlying element will be located and add() or addChild() or addChildren will be called
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.FIELD})
 public @interface Slot {
 
   String value() default Constants.DEFAULT;

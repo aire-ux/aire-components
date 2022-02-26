@@ -136,7 +136,8 @@ public class Canvas extends HtmlContainer implements ComponentEventListener<Canv
    * @param <T> the type of the response
    * @return a client-result containing the response
    */
-  public <T> ClientResult<T> invoke(Class<? extends CanvasAction<T>> action, Object... arguments) {
+  public <T> ClientResult<T> invoke(
+      Class<? extends RemoteAction<T, Model>> action, Object... arguments) {
     return ClientMethods.withUiSupplier(this).construct(action, arguments).apply(getModel());
   }
 

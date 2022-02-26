@@ -1,5 +1,6 @@
 package io.sunshower.zephyr;
 
+import com.aire.ux.Host;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,6 +16,7 @@ import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import lombok.val;
 
 @Route("")
+@Host("main")
 @Breadcrumb(name = "Home", icon = "vaadin:home")
 public class MainView extends ApplicationLayout {
 
