@@ -18,7 +18,7 @@ public class AsynchronousSessionQueue implements AccessQueue {
   @Override
   public void enqueue(Command command) {
     val vaadinSession = VaadinSession.getCurrent();
-    if(vaadinSession != null) {
+    if (vaadinSession != null) {
       vaadinSession.access(command);
     } else {
       commands.add(command);

@@ -116,7 +116,7 @@ task buildScss(type: NpmTask) {
 build.dependsOn buildScss
 
 vaadin {
-    pnpmEnable = true
+    pnpmEnable = false
 }
 defaultTasks("clean", "build")
 

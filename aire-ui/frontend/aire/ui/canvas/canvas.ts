@@ -34,11 +34,10 @@ export class Canvas extends LitElement {
   // language=CSS
   static styles = css`
     :host {
-      /*width: 100%;*/
-      /*height: 100%;*/
+      width: 100%;
+      height: 100%;
       flex: 1;
-      width:100%;
-      display: flex;
+      display: block;
       align-items: center;
       justify-items: center;
       position: relative;
@@ -46,9 +45,9 @@ export class Canvas extends LitElement {
 
     div.container {
       flex: 1 1 auto;
-      height: 100%;
       max-width: 100%;
       max-height: 100%;
+      height: 100%;
       z-index: 100;
     }
 
@@ -92,6 +91,10 @@ export class Canvas extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    const observer = this.canvasResizeObserver;
+    if (observer) {
+      observer.observe(this);
+    }
   }
 
   @Remote
@@ -226,22 +229,18 @@ export class Canvas extends LitElement {
     const observer = new ResizeObserver((value: Array<ResizeObserverEntry>) => {
       const host = this,
           container = this.container!;
-      if (!(Array.isArray(value) && value.length)) {
-        // required to prevent ResizeObserver loop limit exceeded
-        window.requestAnimationFrame(() => {
-          for (const entry of value) {
-            container.style.width = `${host.clientWidth}px`;
-            container.style.height = `${host.clientHeight}px`;
-          }
-        });
-      }
+      // required to prevent ResizeObserver loop limit exceeded
+      window.requestAnimationFrame(() => {
+        container.style.width = `${host.clientWidth}px`;
+        container.style.height = `${host.clientHeight - 4}px`;
+      });
     });
     observer.observe(this);
     this.canvasResizeObserver = observer;
   }
 
-  private doAddListener(definition: ListenerDefinition): void {
 
+  private doAddListener(definition: ListenerDefinition): void {
     const handler = (o: any) => {
           const {e, cell} = o;
           this.dispatchEvent(new CustomEvent(definition.category, {
@@ -265,7 +264,6 @@ export class Canvas extends LitElement {
       handlers.set(definition.key, hlist)
     }
     hlist.push([definition.id, handler]);
-    console.log(definition.key);
     this.graph!.on(definition.key, handler);
   }
 

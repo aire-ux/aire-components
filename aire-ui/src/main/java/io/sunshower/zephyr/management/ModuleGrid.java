@@ -151,6 +151,7 @@ public class ModuleGrid extends AbstractModuleView
     grid.addColumn(new ComponentRenderer<>(Span::new, new StatusComponentUpdater()))
         .setHeader("Status");
     grid.setItems(new ListDataProvider<>(getZephyr().getPlugins()));
+    grid.getStyle().set("overflow-y", "auto");
     return grid;
   }
 

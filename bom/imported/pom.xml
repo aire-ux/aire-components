@@ -24,7 +24,7 @@
     <vaadin-bom.version>22.0.2</vaadin-bom.version>
     <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
     <!--    <vaadin-bom.version>17.0.11</vaadin-bom.version>-->
-    <arcus.version>1.0.38-SNAPSHOT</arcus.version>
+    <arcus.version>1.0.40-SNAPSHOT</arcus.version>
     <smoothie-map.version>2.0.2</smoothie-map.version>
     <junit-pioneer.version>1.3.8</junit-pioneer.version>
     <spring.version>5.3.14</spring.version>
