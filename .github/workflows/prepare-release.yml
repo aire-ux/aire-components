@@ -47,8 +47,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
+          distribution: zulu
           java-version: 17
 
       - name: Generate Build Number
@@ -97,7 +98,7 @@ jobs:
         env:
           JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US
         with:
-          grad4
+          gradle-version: 7.4
           arguments: >-
             setVersion -DzephyrRelease=true
             -PmavenRepositoryUsername=${{secrets.MAVEN_REPOSITORY_USERNAME}}
