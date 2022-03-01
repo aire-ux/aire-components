@@ -102,12 +102,12 @@ dependencyManagement {
 }
 
 task watchScss(type: NpmTask) {
-//    dependsOn npmInstall
+    dependsOn npmInstall
     args = ['run', 'develop']
 }
 
 task buildScss(type: NpmTask) {
-//    dependsOn npmInstall
+    dependsOn npmInstall
     args = ['run', 'build']
 }
 
