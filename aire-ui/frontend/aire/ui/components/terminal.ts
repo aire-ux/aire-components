@@ -185,10 +185,10 @@ export class Terminal extends LitElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     const terminal = new XTerm({
-          rows: this.rows,
-          fontSize: 12,
-          cols: this.columns,
-          fontFamily: 'Lucida Console',
+          // rows: this.rows,
+          // fontSize: 12,
+          // cols: this.columns,
+          // fontFamily: 'Lucida Console',
         }),
         fit = new FitAddon(),
         container = this.terminalContainer;
@@ -212,7 +212,9 @@ export class Terminal extends LitElement {
   public write(@Receive(Dynamic) buffer: TerminalBuffer): void {
     const terminal = this.terminal!;
     for (const data of buffer.values) {
-      terminal!.writeln(data);
+      terminal.writeln(data);
+      console.log("DATA");
+      console.log(data);
     }
   }
 

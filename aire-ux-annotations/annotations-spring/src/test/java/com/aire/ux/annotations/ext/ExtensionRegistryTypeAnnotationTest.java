@@ -24,6 +24,7 @@ import com.aire.ux.test.spring.EnableSpring;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.server.Command;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,7 @@ import org.springframework.test.context.ContextConfiguration;
 @RegisterExtension(TestExtension.class)
 @Routes(scanClassPackage = TestExtensionPoint.class)
 @Navigate("home")
+@Disabled
 public class ExtensionRegistryTypeAnnotationTest {
 
   @ViewTest
@@ -73,7 +75,6 @@ public class ExtensionRegistryTypeAnnotationTest {
 
   @Configuration
   public static class Cfg {
-
 
     @Bean
     public static ExtensionRegistry extensionRegistry() {

@@ -1,1 +1,1 @@
-com.aire.ux.annotations.TestInstantiatorFactory
+com.aire.ux.core.test.ComponentDecoratingInstantiatorFactory

@@ -21,9 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public class SpringExtensionRegistry implements
-    ExtensionRegistry,
-    ApplicationContextAware {
+public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationContextAware {
 
   private final AccessQueue accessQueue;
   private final Map<String, ExtensionDefinition> extensionDefinitions;
@@ -116,20 +114,22 @@ public class SpringExtensionRegistry implements
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   private void registerRoute(Class<? extends HasElement> type) {
-    accessQueue.enqueue(() -> {
-      val t = (Class<? extends Component>) type;
-      val scope = RouteConfiguration.forApplicationScope();
-      if (!scope.isRouteRegistered(t)) {
-        scope.setAnnotatedRoute(t);
-      }
-    });
+    accessQueue.enqueue(
+        () -> {
+          val t = (Class<? extends Component>) type;
+          val scope = RouteConfiguration.forApplicationScope();
+          if (!scope.isRouteRegistered(t)) {
+            scope.setAnnotatedRoute(t);
+          }
+        });
   }
 
   @SuppressWarnings("unchecked")
   private void unregisterRoute(Class<? extends HasElement> type) {
-    accessQueue.enqueue(() -> {
-      RouteConfiguration.forApplicationScope().removeRoute((Class<? extends Component>) type);
-    });
+    accessQueue.enqueue(
+        () -> {
+          RouteConfiguration.forApplicationScope().removeRoute((Class<? extends Component>) type);
+        });
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -147,5 +147,4 @@ public class SpringExtensionRegistry implements
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     this.context = applicationContext;
   }
-
 }

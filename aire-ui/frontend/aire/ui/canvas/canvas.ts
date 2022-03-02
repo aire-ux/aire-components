@@ -2,7 +2,14 @@ import {css, customElement, html, LitElement, PropertyValues, query} from "lit-e
 import {Edge, Events, Graph, Node} from "@antv/x6";
 import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 import {VertexTemplate} from "Frontend/aire/ui/canvas/template";
-import {CircularLayout, Edge as LayoutEdge, Model, Node as LayoutNode} from "@antv/layout";
+import {
+  CircularLayout,
+  DagreLayout,
+    ForceLayout,
+  Edge as LayoutEdge, GridLayout,
+  Model,
+  Node as LayoutNode
+} from "@antv/layout";
 import {
   CellAttributes,
   EdgeDefinition,
@@ -18,7 +25,11 @@ import EventArgs = Events.EventArgs;
 @customElement('aire-canvas')
 export class Canvas extends LitElement {
 
-  static layout = new CircularLayout();
+  static layout = new GridLayout({
+    type: 'grid',
+    condense:false,
+    preventOverlapPadding: 100
+  });
   private graph: Graph | undefined;
 
   @query('div.container')

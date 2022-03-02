@@ -1,5 +1,9 @@
 
 spring:
+
+  output:
+    ansi:
+      enabled: always
   jmx:
     enabled: false
     default-domain: com.aire.ux
