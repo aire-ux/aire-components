@@ -51,7 +51,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @ComponentScan(basePackages = "io.sunshower.zephyr.core")
 public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
-
   @Bean
   public static FileProvider fileProvider(ApplicationArguments arguments) {
     return new ApplicationArgumentsFileProvider(arguments);
@@ -130,7 +129,6 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   public static ExtensionRegistry extensionRegistry(AccessQueue queue) {
     return new SpringExtensionRegistry(queue);
   }
-
 
   @Bean(name = "applicationEventMulticaster")
   public ApplicationEventMulticaster applicationEventMulticaster(ThreadPoolTaskExecutor executor) {

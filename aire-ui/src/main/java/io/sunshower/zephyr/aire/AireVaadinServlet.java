@@ -18,8 +18,7 @@ public class AireVaadinServlet extends SpringServlet
   private final AccessQueue queue;
   private final WebApplicationContext context;
 
-  public AireVaadinServlet(
-      AccessQueue queue, WebApplicationContext context, boolean rootMapping) {
+  public AireVaadinServlet(AccessQueue queue, WebApplicationContext context, boolean rootMapping) {
     super(context, rootMapping);
     this.queue = queue;
     this.context = context;
@@ -34,8 +33,7 @@ public class AireVaadinServlet extends SpringServlet
   }
 
   @Override
-  public void sessionDestroy(SessionDestroyEvent event) {
-  }
+  public void sessionDestroy(SessionDestroyEvent event) {}
 
   @Override
   public void sessionInit(SessionInitEvent event) throws ServiceException {

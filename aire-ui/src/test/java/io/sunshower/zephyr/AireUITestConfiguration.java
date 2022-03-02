@@ -1,7 +1,6 @@
 package io.sunshower.zephyr;
 
 import com.aire.ux.concurrency.AccessQueue;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.Command;
 import com.vaadin.flow.server.VaadinSession;
 import io.sunshower.test.common.Tests;
@@ -30,7 +29,6 @@ public class AireUITestConfiguration {
     return Memento.loadProvider(AireUITest.class.getClassLoader()).newMemento();
   }
 
-
   @Bean
   @Primary
   public static AccessQueue accessQueue() {
@@ -41,10 +39,7 @@ public class AireUITestConfiguration {
       }
 
       @Override
-      public void drain(VaadinSession session) {
-
-
-      }
+      public void drain(VaadinSession session) {}
     };
   }
 
