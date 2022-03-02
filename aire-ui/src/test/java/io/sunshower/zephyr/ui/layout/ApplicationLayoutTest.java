@@ -15,7 +15,9 @@ import com.vaadin.flow.component.button.Button;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @Navigate
 @AireUITest
 @RegisterExtension(MainNavigationComponent.class)

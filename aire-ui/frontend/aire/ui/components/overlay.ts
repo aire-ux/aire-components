@@ -24,6 +24,8 @@ export class Overlay extends LitElement {
       flex-grow: 1;
       display: flex;
       flex-direction: column;
+      max-height: 100%;
+      overflow-y: auto;
     }
     ::slotted(footer) {
       height:32px;
