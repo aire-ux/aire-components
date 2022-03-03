@@ -30,7 +30,7 @@ public class DefaultUserInterface implements UserInterface {
   }
 
   @Override
-  public <T extends HasElement> ExtensionRegistration register(
+  public <T extends HasElement> Registration register(
       PartialSelection<T> path, Extension<T> extension) {
     return registry.register(path, extension);
     //    return registry.register(path, () -> path.select(this, UI::getCurrent)

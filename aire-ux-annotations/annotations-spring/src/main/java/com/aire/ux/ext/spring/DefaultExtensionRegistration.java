@@ -1,10 +1,10 @@
 package com.aire.ux.ext.spring;
 
 import com.aire.ux.Extension;
-import com.aire.ux.ExtensionRegistration;
+import com.aire.ux.Registration;
 import com.aire.ux.PartialSelection;
 
-public class DefaultExtensionRegistration<T> implements ExtensionRegistration {
+public class DefaultExtensionRegistration<T> implements Registration {
 
   private final Extension<T> extension;
   private final PartialSelection<?> selection;

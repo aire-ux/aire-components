@@ -1,6 +1,6 @@
 package com.aire.ux;
 
-public interface ExtensionRegistration extends AutoCloseable {
+public interface Registration extends AutoCloseable {
 
   void remove();
 

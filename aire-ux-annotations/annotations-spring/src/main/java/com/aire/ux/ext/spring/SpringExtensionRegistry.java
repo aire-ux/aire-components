@@ -1,7 +1,7 @@
 package com.aire.ux.ext.spring;
 
 import com.aire.ux.Extension;
-import com.aire.ux.ExtensionRegistration;
+import com.aire.ux.Registration;
 import com.aire.ux.PartialSelection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
@@ -55,7 +55,7 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   }
 
   @Override
-  public <T extends HasElement> ExtensionRegistration register(
+  public <T extends HasElement> Registration register(
       PartialSelection<T> select, Extension<T> extension) {
     val registration =
         new DefaultExtensionRegistration<>(select, extension, () -> extensions.remove(select));
