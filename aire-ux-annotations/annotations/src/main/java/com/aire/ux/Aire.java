@@ -1,10 +1,8 @@
 package com.aire.ux;
 
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Aire {
-
 
   private static final AtomicReference<UserInterface> userinterface;
 

@@ -4,5 +4,4 @@ package com.aire.ux;
 public interface UserInterfaceProvider {
 
   UserInterface get();
-
 }

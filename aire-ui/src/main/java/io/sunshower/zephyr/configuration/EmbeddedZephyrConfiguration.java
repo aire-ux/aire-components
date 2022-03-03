@@ -136,9 +136,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   @Bean
   public static UserInterface userInterface(
       ExtensionRegistry extensionRegistry, AccessQueue accessQueue) {
-    return Aire.setUserInterface(
-        new DefaultUserInterface(extensionRegistry, accessQueue)
-    );
+    return Aire.setUserInterface(new DefaultUserInterface(extensionRegistry, accessQueue));
   }
 
   @Bean(name = "applicationEventMulticaster")

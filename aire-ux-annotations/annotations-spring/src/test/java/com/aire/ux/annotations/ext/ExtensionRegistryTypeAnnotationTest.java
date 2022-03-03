@@ -24,6 +24,7 @@ import com.aire.ux.test.spring.EnableSpring;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.server.Command;
+import com.vaadin.flow.server.VaadinSession;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +72,9 @@ public class ExtensionRegistryTypeAnnotationTest {
     public void enqueue(Command command) {
       UI.getCurrent().access(command);
     }
+
+    @Override
+    public void drain(VaadinSession session) {}
   }
 
   @Configuration

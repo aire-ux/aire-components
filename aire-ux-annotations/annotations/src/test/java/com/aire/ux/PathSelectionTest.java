@@ -8,9 +8,7 @@ import java.util.Random;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-
 class PathSelectionTest {
-
 
   @Test
   void ensurePathSplitWorksForSinglePath() {
@@ -23,7 +21,6 @@ class PathSelectionTest {
     val expected = List.of(":hello", ":world", ":how", ":are", ":you");
     assertEquals(result, expected);
   }
-
 
   @Test
   void ensurePathSplitWorksForMultipleComponents_timed() {
@@ -42,7 +39,6 @@ class PathSelectionTest {
       val r2 = PathSelection.split(path);
       long st2 = System.nanoTime();
       average = average + (st2 - st1) / i;
-
     }
     System.out.println("Average: " + average);
     System.out.println("Average2: " + average2);
@@ -55,7 +51,6 @@ class PathSelectionTest {
       result.append(":").append(generateWord(10));
     }
     return result.toString();
-
   }
 
   private String generateWord(int i) {
@@ -67,5 +62,4 @@ class PathSelectionTest {
     }
     return result.toString();
   }
-
 }

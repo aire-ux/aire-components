@@ -7,5 +7,4 @@ public interface ExtensionRegistration extends AutoCloseable {
   default void close() {
     remove();
   }
-
 }

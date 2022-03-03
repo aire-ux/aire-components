@@ -10,11 +10,9 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
@@ -29,8 +27,6 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   private final Map<String, ExtensionDefinition> extensionDefinitions;
   private final Map<Class<? extends HasElement>, ExtensionTree> componentPaths;
   private ApplicationContext context;
-
-
 
   public SpringExtensionRegistry(AccessQueue accessQueue) {
     this.accessQueue = accessQueue;

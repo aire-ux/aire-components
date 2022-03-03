@@ -42,7 +42,6 @@ class ApplicationLayoutTest {
     assertFalse($.selectFirst(MainNavigationComponent.class).isPresent());
   }
 
-
   @ViewTest
   void ensureUserInterfaceIsInjectable(@Autowired UserInterface ui) {
     assertNotNull(ui);
@@ -76,23 +75,23 @@ class ApplicationLayoutTest {
     assertNotNull(layout);
   }
 
-//  @Disabled
-//  @ViewTest
-//  void ensureExtensionRegistryComponentDefinitionMakesSense(@Autowired UserInterface ui,
-//      @Context TestContext context) {
-//    val extension = new DefaultComponentExtension<>(":management-menu",
-//        (NavigationBar parent) -> {
-//          val button = spy(new Button("Hello"));
-//          parent.add(button);
-//        });
-//
-//    val registration = ui.register(Selection.path(":main:navigation"), extension);
-//    context.flush();
-//    val button = context.selectFirst("vaadin-button[text=Hello]", Button.class);
-//    assertTrue(button.isPresent());
-//    registration.close();
-//    context.flush();
-//    val buttons = context.selectFirst("vaadin-button[text=Hello]", Button.class);
-//    assertTrue(buttons.isEmpty());
-//  }
+  //  @Disabled
+  //  @ViewTest
+  //  void ensureExtensionRegistryComponentDefinitionMakesSense(@Autowired UserInterface ui,
+  //      @Context TestContext context) {
+  //    val extension = new DefaultComponentExtension<>(":management-menu",
+  //        (NavigationBar parent) -> {
+  //          val button = spy(new Button("Hello"));
+  //          parent.add(button);
+  //        });
+  //
+  //    val registration = ui.register(Selection.path(":main:navigation"), extension);
+  //    context.flush();
+  //    val button = context.selectFirst("vaadin-button[text=Hello]", Button.class);
+  //    assertTrue(button.isPresent());
+  //    registration.close();
+  //    context.flush();
+  //    val buttons = context.selectFirst("vaadin-button[text=Hello]", Button.class);
+  //    assertTrue(buttons.isEmpty());
+  //  }
 }

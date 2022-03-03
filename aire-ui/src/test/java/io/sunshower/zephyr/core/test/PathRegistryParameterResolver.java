@@ -13,7 +13,6 @@ import lombok.val;
 
 public class PathRegistryParameterResolver implements ElementResolverFactory {
 
-
   @Override
   public boolean appliesTo(AnnotatedElement element) {
     if (!(element instanceof Parameter)) {
@@ -34,11 +33,11 @@ public class PathRegistryParameterResolver implements ElementResolverFactory {
       @SuppressWarnings("unchecked")
       public <T> T resolve() {
         val selector = element.getAnnotation(Select.class);
-        return (T) Selection.path(Utilities.firstNonDefault(
-            selector.value(),
-            selector.selector())).select(Aire.getUserInterface(), UI::getCurrent).get();
+        return (T)
+            Selection.path(Utilities.firstNonDefault(selector.value(), selector.selector()))
+                .select(Aire.getUserInterface(), UI::getCurrent)
+                .get();
       }
     };
-
   }
 }

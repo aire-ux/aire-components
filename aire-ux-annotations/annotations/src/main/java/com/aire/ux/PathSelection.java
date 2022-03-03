@@ -44,18 +44,16 @@ public class PathSelection<T> implements Selection<T> {
     return result;
   }
 
-
   @Override
   public Optional<T> select(Supplier<UI> supplier) {
-    return Optional.ofNullable(supplier.get())
-        .map(this::locate);
+    return Optional.ofNullable(supplier.get()).map(this::locate);
   }
 
   private static String normalize(String other) {
-    if(other == null) {
+    if (other == null) {
       return null;
     }
-    if(other.charAt(0) == ':') {
+    if (other.charAt(0) == ':') {
       return other;
     }
     return ":" + other;
@@ -71,20 +69,18 @@ public class PathSelection<T> implements Selection<T> {
     val segments = split(path);
     while (!stack.isEmpty()) {
       val comp = stack.pop();
-      for (
-          var type = registry.typeOf(comp);
+      for (var type = registry.typeOf(comp);
           !Objects.equals(type, Object.class);
-          type = type.getSuperclass()
-      ) {
+          type = type.getSuperclass()) {
         val host = type.getAnnotation(Host.class);
         if (host != null && Objects.equals(normalize(host.value()), segments.peekFirst())) {
           segments.pop();
-          if(segments.isEmpty()) {
+          if (segments.isEmpty()) {
             return (T) comp;
           }
           try {
             var result = searchFor(registry.typeOf(comp), comp, segments);
-            if(result != null) {
+            if (result != null) {
               return (T) result;
             }
           } catch (Exception ex) {
@@ -109,7 +105,8 @@ public class PathSelection<T> implements Selection<T> {
           if (slotAnnotation != null && Objects.equals(slotAnnotation.value(), slotValue)) {
             if (!field.trySetAccessible()) {
               throw new IllegalStateException(
-                  String.format("Error: field '%s' on type '%s' for slot '%s' is not accessible!",
+                  String.format(
+                      "Error: field '%s' on type '%s' for slot '%s' is not accessible!",
                       field, c, slotValue));
             }
             return (T) field.get(instance);
@@ -125,17 +122,22 @@ public class PathSelection<T> implements Selection<T> {
             } else {
               val propertyName = ReflectTools.getPropertyName(method);
               val f = c;
-              getter = ReflectTools.getGetterMethods(c)
-                  .filter(m -> Objects.equals(propertyName, getPropertyName(m))).findFirst()
-                  .orElseThrow(() -> new IllegalStateException(
-                      String.format(
-                          "Error: method '%s' on type '%s' for slot '%s' does not have a corresponding getter method!",
-                          method, f, slotValue)));
+              getter =
+                  ReflectTools.getGetterMethods(c)
+                      .filter(m -> Objects.equals(propertyName, getPropertyName(m)))
+                      .findFirst()
+                      .orElseThrow(
+                          () ->
+                              new IllegalStateException(
+                                  String.format(
+                                      "Error: method '%s' on type '%s' for slot '%s' does not have a corresponding getter method!",
+                                      method, f, slotValue)));
             }
 
             if (!getter.trySetAccessible()) {
               throw new IllegalStateException(
-                  String.format("Error: method '%s' on type '%s' for slot '%s' is not accessible!",
+                  String.format(
+                      "Error: method '%s' on type '%s' for slot '%s' is not accessible!",
                       method, c, slotValue));
             }
             return (T) getter.invoke(instance);
@@ -144,8 +146,5 @@ public class PathSelection<T> implements Selection<T> {
       }
     }
     return null;
-
   }
-
-
 }

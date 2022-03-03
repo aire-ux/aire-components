@@ -18,17 +18,16 @@ public class Scenario1 {
   @Bean
   @Scope("singleton")
   public static ExtensionRegistry extensionRegistry() {
-    return new SpringExtensionRegistry(new AccessQueue() {
-      @Override
-      public void enqueue(Command command) {
-        UI.getCurrent().access(command);
-      }
+    return new SpringExtensionRegistry(
+        new AccessQueue() {
+          @Override
+          public void enqueue(Command command) {
+            UI.getCurrent().access(command);
+          }
 
-      @Override
-      public void drain(VaadinSession session) {
-
-      }
-    });
-//    return new SpringExtensionRegistry(command -> UI.getCurrent().access(command));
+          @Override
+          public void drain(VaadinSession session) {}
+        });
+    //    return new SpringExtensionRegistry(command -> UI.getCurrent().access(command));
   }
 }

@@ -6,6 +6,5 @@ import java.util.function.Supplier;
 
 public interface PartialSelection<T> {
 
-
   Optional<T> select(UserInterface ui, Supplier<UI> supplier);
 }
