@@ -8,9 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 
 import com.aire.ux.DefaultComponentExtension;
+import com.aire.ux.Extensions;
 import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
+import com.aire.ux.actions.ActionEvent.Type;
 import com.aire.ux.actions.ActionManager;
+import com.aire.ux.actions.Actions;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
@@ -24,7 +27,6 @@ import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -101,16 +103,28 @@ class ApplicationLayoutTest {
     assertEquals(0, ui.getExtensionRegistry().getExtensionCount());
   }
 
-  @Test
+  @ViewTest
   @DirtiesContext
   void ensureActionManagerCanEnableAndDisableButtons(
       @Autowired UserInterface ui, @Context TestContext $, @Autowired ActionManager actionManager) {
-    val extension =
-        new DefaultComponentExtension<>(
-            ":management-menu",
-            (NavigationBar parent) -> {
-              val button = spy(new Button("Hello"));
-              parent.add(button);
-            });
+    val action = spy(Actions.create("ui.module.stop", (self) -> {
+
+    }));
+    ui.register(Selection.path(":main:navigation"),
+        Extensions.create(":management-menu", (NavigationBar p) -> {
+          val button = new Button("hello");
+          action.addActionEventListener(Type.ActionEnabled, (eventType, event) -> {
+            button.setEnabled(true);
+          });
+          action.addActionEventListener(Type.ActionDisabled, (eventType, event) -> {
+            button.setEnabled(true);
+          });
+          p.add(button);
+        }));
+    action.enable();
+    $.flush();
+    assertTrue($.selectFirst("vaadin-button[enabled]", Button.class).isPresent());
+    action.dispose();
+
   }
 }

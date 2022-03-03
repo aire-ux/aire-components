@@ -18,14 +18,14 @@ class DefaultActionMapTest {
 
   @Test
   void ensureRetrievingKeyInMapWorks() {
-    val action = new AbstractAction(Key.of("hello.world"), true);
+    val action = new AbstractAction(Key.of("hello.world"), true) {};
     actionMap.add(action);
     assertEquals(action, actionMap.get(Key.of("hello.world")));
   }
 
   @Test
   void ensureRetrievingKeyLevelInMapWorks() {
-    val action = new AbstractAction(Key.of("hello.world"), true);
+    val action = new AbstractAction(Key.of("hello.world"), true){};
     actionMap.add(action);
     assertEquals(List.of(action), actionMap.getKeysIn(Key.of("hello")));
   }

@@ -217,7 +217,7 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
       return null;
     }
     try {
-      return String.valueOf(method.invoke(descriptor, current));
+      return String.valueOf(method.invoke(current));
     } catch (IllegalAccessException | InvocationTargetException e) {
       // todo idk when/if this is going to be a problem
       throw new IllegalStateException(e);

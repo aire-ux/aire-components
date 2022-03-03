@@ -1,13 +1,17 @@
 package com.aire.ux.actions;
 
+import com.aire.ux.Registration;
+import io.sunshower.lang.events.EventListener;
 import io.sunshower.lang.events.EventSource;
+import io.sunshower.lang.events.EventType;
 
-public interface Action extends EventSource {
+public interface Action extends EventSource, AutoCloseable {
 
 
   Key getKey();
 
   boolean isEnabled();
+
   void setEnabled(boolean enabled);
 
   default void enable() {
@@ -20,7 +24,7 @@ public interface Action extends EventSource {
   }
 
   default void toggle() {
-    if(isEnabled()) {
+    if (isEnabled()) {
       disable();
     } else {
       enable();
@@ -28,5 +32,14 @@ public interface Action extends EventSource {
   }
 
 
+  void perform();
 
+  Registration addActionEventListener(EventType type,
+      EventListener<ActionEvent<?>> listener);
+
+  void dispose();
+
+  default void close() {
+    dispose();
+  }
 }
