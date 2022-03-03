@@ -2,13 +2,13 @@ package com.aire.ux.actions;
 
 import io.sunshower.lang.events.EventType;
 
-public class AbstractActionEvent implements ActionEvent {
+public class AbstractActionEvent<E> implements ActionEvent<E> {
 
   final Key targetKey;
-  final Action target;
+  final E target;
   final EventType eventType;
 
-  protected AbstractActionEvent(Key targetKey, Action target,
+  protected AbstractActionEvent(Key targetKey, E target,
       EventType eventType) {
     this.targetKey = targetKey;
     this.target = target;
@@ -27,7 +27,7 @@ public class AbstractActionEvent implements ActionEvent {
   }
 
   @Override
-  public Action getTarget() {
+  public E getTarget() {
     return target;
   }
 }

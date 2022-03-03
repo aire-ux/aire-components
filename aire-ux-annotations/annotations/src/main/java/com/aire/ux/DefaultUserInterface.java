@@ -1,5 +1,6 @@
 package com.aire.ux;
 
+import com.aire.ux.actions.ActionManager;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.HasElement;
@@ -11,12 +12,20 @@ import lombok.NonNull;
 public class DefaultUserInterface implements UserInterface {
 
   private final AccessQueue accessQueue;
+  private final ActionManager actionManager;
   private final ExtensionRegistry registry;
 
   public DefaultUserInterface(
-      @NonNull final ExtensionRegistry registry, @NonNull AccessQueue accessQueue) {
+      @NonNull final ExtensionRegistry registry, @NonNull AccessQueue accessQueue,
+      @NonNull ActionManager actionManager) {
     this.registry = registry;
     this.accessQueue = accessQueue;
+    this.actionManager = actionManager;
+  }
+
+  @Override
+  public ActionManager getActionManager() {
+    return actionManager;
   }
 
   @Override

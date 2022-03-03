@@ -2,16 +2,23 @@ package com.aire.ux.actions;
 
 import com.aire.ux.actions.ActionEvent.Type;
 import io.sunshower.lang.events.EventSource;
+import java.util.List;
 import lombok.NonNull;
 import lombok.val;
 
-public interface ActionManager extends EventSource {
+public interface ActionManager extends EventSource, AutoCloseable {
+
+  Action get(Key key);
+
+  List<Action> getAll(Key... path);
 
   boolean enable(Key key);
+
   boolean disable(Key key);
 
-  boolean enableAll(Key...path);
-  boolean disableAll(Key...path);
+  boolean enableAll(Key... path);
+
+  boolean disableAll(Key... path);
 
   default boolean enable(@NonNull Action action) {
     return enable(action.getKey());

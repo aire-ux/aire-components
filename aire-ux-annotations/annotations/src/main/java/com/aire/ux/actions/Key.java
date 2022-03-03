@@ -9,6 +9,8 @@ import lombok.val;
 
 public interface Key extends Comparable<Key> {
 
+  Key BULK = of("BULK_ACTION_EVENT");
+
   static Key of(String s) {
     return new DefaultKey(s);
   }

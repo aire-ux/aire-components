@@ -10,6 +10,7 @@ import static org.mockito.Mockito.spy;
 import com.aire.ux.DefaultComponentExtension;
 import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
+import com.aire.ux.actions.ActionManager;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
@@ -23,6 +24,7 @@ import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -97,5 +99,18 @@ class ApplicationLayoutTest {
     registration.close();
     $.flush();
     assertEquals(0, ui.getExtensionRegistry().getExtensionCount());
+  }
+
+  @Test
+  @DirtiesContext
+  void ensureActionManagerCanEnableAndDisableButtons(
+      @Autowired UserInterface ui, @Context TestContext $, @Autowired ActionManager actionManager) {
+    val extension =
+        new DefaultComponentExtension<>(
+            ":management-menu",
+            (NavigationBar parent) -> {
+              val button = spy(new Button("Hello"));
+              parent.add(button);
+            });
   }
 }

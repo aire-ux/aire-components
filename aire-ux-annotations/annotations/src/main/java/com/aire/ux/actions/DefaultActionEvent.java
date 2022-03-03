@@ -2,7 +2,7 @@ package com.aire.ux.actions;
 
 import io.sunshower.lang.events.EventType;
 
-class DefaultActionEvent extends AbstractActionEvent {
+class DefaultActionEvent extends AbstractActionEvent<Action> {
 
   public DefaultActionEvent(Key targetKey, Action target,
       EventType eventType) {
