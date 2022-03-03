@@ -30,12 +30,13 @@ public class DefaultUserInterface implements UserInterface {
   }
 
   @Override
-  public <T extends HasElement> ExtensionRegistration register(PartialSelection<T> path,
-      Extension<T> extension) {
+  public <T extends HasElement> ExtensionRegistration register(
+      PartialSelection<T> path, Extension<T> extension) {
     return registry.register(path, extension);
-//    return registry.register(path, () -> path.select(this, UI::getCurrent)
-//            .orElseThrow(
-//                () -> new NoSuchElementException(format("Could not find element at path: %s", path))),
-//        extension);
+    //    return registry.register(path, () -> path.select(this, UI::getCurrent)
+    //            .orElseThrow(
+    //                () -> new NoSuchElementException(format("Could not find element at path: %s",
+    // path))),
+    //        extension);
   }
 }

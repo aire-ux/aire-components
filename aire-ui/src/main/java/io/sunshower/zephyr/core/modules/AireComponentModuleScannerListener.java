@@ -76,11 +76,11 @@ public class AireComponentModuleScannerListener {
               "Error: type '%s' from module '%s' is not an instance of a component"
                   .formatted(type, coordinate));
         }
-//        extensionRegistry.defineExtension((Class<? extends HasElement>) type);
-//        context.addRegistration(
-//            () -> {
-//              extensionRegistry.removeExtension((Class<? extends HasElement>) type);
-//            });
+        //        extensionRegistry.defineExtension((Class<? extends HasElement>) type);
+        //        context.addRegistration(
+        //            () -> {
+        //              extensionRegistry.removeExtension((Class<? extends HasElement>) type);
+        //            });
       }
       contexts.put(coordinate, context);
     }

@@ -30,14 +30,13 @@ public class PathSelection<T> implements Selection<T> {
     this.component = null;
   }
 
-  public PathSelection(UserInterface ui, HasElement component, @NonNull String path,
-      @NonNull Class<T> type) {
+  public PathSelection(
+      UserInterface ui, HasElement component, @NonNull String path, @NonNull Class<T> type) {
     this.ui = ui;
     this.type = type;
     this.path = path;
     this.component = component;
   }
-
 
   static ArrayDeque<String> split(String path) {
     val result = new ArrayDeque<String>();
@@ -76,8 +75,8 @@ public class PathSelection<T> implements Selection<T> {
     val stack = new ArrayDeque<Component>();
     val registry = this.ui.getExtensionRegistry();
 
-    val component = Optional.ofNullable((Component) this.component)
-        .or(ui.getElement()::getComponent);
+    val component =
+        Optional.ofNullable((Component) this.component).or(ui.getElement()::getComponent);
     component.ifPresent(stack::push);
     val segments = split(path);
     while (!stack.isEmpty()) {

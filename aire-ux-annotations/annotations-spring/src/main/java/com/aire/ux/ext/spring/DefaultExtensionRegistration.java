@@ -10,9 +10,8 @@ public class DefaultExtensionRegistration<T> implements ExtensionRegistration {
   private final PartialSelection<?> selection;
   private final Runnable finalizer;
 
-  public DefaultExtensionRegistration(PartialSelection<T> select,
-      Extension<T> extension,
-      Runnable finalizer) {
+  public DefaultExtensionRegistration(
+      PartialSelection<T> select, Extension<T> extension, Runnable finalizer) {
     this.selection = select;
     this.extension = extension;
     this.finalizer = finalizer;

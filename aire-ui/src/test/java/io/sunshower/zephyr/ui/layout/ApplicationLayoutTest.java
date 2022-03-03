@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.layout;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,7 +12,6 @@ import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.RegisterExtension;
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
@@ -22,21 +22,22 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import lombok.val;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 
 @AireUITest
 @Navigate("")
 @Routes(scanClassPackage = MainView.class)
 class ApplicationLayoutTest {
 
-  @ViewTest
-  void ensureButtonIsInjectable(
-      @Select("vaadin-button[text=Sup]") Button button, @Context TestContext $) {
-    assertNotNull(button);
-    assertTrue($.select(MainNavigationComponent.class).isEmpty());
-    button.click();
-    assertFalse($.select(MainNavigationComponent.class).isEmpty());
+  @BeforeEach
+  void setUp(@Context TestContext $) {
+    val button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
+    assertTrue(button.isEmpty());
   }
+
 
   @ViewTest
   void ensureMainNavigationIsNotSelectable(@Context TestContext $) {
@@ -58,6 +59,7 @@ class ApplicationLayoutTest {
   @ViewTest
   void ensureSelectionWorksWithNoAuxClass(@Autowired UserInterface ui) {
     val result = ui.selectFirst(Selection.path(":main:navigation"));
+    assertTrue(result.isPresent());
   }
 
   @ViewTest
@@ -76,16 +78,18 @@ class ApplicationLayoutTest {
     assertNotNull(layout);
   }
 
+
+
   @ViewTest
-  void ensureRegisteringSimpleComponentWorks(
-      @Autowired UserInterface ui,
-      @Context TestContext $
-  ) {
-    val extension = new DefaultComponentExtension<>(":management-menu",
-        (NavigationBar parent) -> {
-          val button = spy(new Button("Hello"));
-          parent.add(button);
-        });
+  @DirtiesContext
+  void ensureRegisteringSimpleComponentWorks(@Autowired UserInterface ui, @Context TestContext $) {
+    val extension =
+        new DefaultComponentExtension<>(
+            ":management-menu",
+            (NavigationBar parent) -> {
+              val button = spy(new Button("Hello"));
+              parent.add(button);
+            });
     var button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
     assertFalse(button.isPresent());
     val registration = ui.register(Selection.path(":main:navigation"), extension);
@@ -95,6 +99,12 @@ class ApplicationLayoutTest {
     button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
     assertTrue(button.isPresent());
     registration.close();
+    $.flush();
+    assertEquals(0, ui.getExtensionRegistry().getExtensionCount());
   }
+
+
+
+
 
 }

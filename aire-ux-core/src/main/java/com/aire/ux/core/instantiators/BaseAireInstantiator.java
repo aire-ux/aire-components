@@ -15,7 +15,6 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.Flushable;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
   /**
    * Creates a new instantiator for the given service.
    *
-   * @param delegate  the base instantiator to use
+   * @param delegate the base instantiator to use
    * @param decorator the decorator to use
    */
   public BaseAireInstantiator(
@@ -42,9 +41,7 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
     this.decorator = Objects.requireNonNull(decorator);
   }
 
-  /**
-   * @param delegate
-   */
+  /** @param delegate */
   public BaseAireInstantiator(@Nonnull Instantiator delegate) {
     this(
         delegate,
@@ -55,7 +52,8 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
   public void flush() {
     Optional.ofNullable(UI.getCurrent())
         .map(UI::getElement)
-        .flatMap(Element::getComponent).ifPresent(this::decorate);
+        .flatMap(Element::getComponent)
+        .ifPresent(this::decorate);
   }
 
   @Override
@@ -118,24 +116,21 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result         the result
-   * @param <T>            the type parameter
+   * @param result the result
+   * @param <T> the type parameter
    */
-  protected <T> void preDecorateResult(Class<T> componentClass, T result) {
-  }
+  protected <T> void preDecorateResult(Class<T> componentClass, T result) {}
 
   /**
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result         the result
-   * @param <T>            the type parameter
+   * @param result the result
+   * @param <T> the type parameter
    */
-  protected <T> void postDecorateResult(Class<T> componentClass, T result) {
-  }
+  protected <T> void postDecorateResult(Class<T> componentClass, T result) {}
 
-  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {
-  }
+  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {}
 
   @SuppressFBWarnings
   private <T extends HasElement> void decorate(T result) {
@@ -147,26 +142,27 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
       current = stack.pop();
       val c = current.current;
       switch (current.stage) {
-        case 0: {
-          decorator.onComponentEntered(c);
-          decorator.decorate(c);
-          current.stage = 1;
-          stack.push(current);
-          val el = c.getElement();
-          for (int i = 0; i < el.getChildCount(); i++) {
-            val childOpt = el.getChild(i).getComponent();
-            childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
+        case 0:
+          {
+            decorator.onComponentEntered(c);
+            decorator.decorate(c);
+            current.stage = 1;
+            stack.push(current);
+            val el = c.getElement();
+            for (int i = 0; i < el.getChildCount(); i++) {
+              val childOpt = el.getChild(i).getComponent();
+              childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
+            }
+            continue;
           }
-          continue;
-        }
-        case 1: {
-          decorator.onComponentExited(c);
-          break;
-        }
+        case 1:
+          {
+            decorator.onComponentExited(c);
+            break;
+          }
       }
     }
   }
-
 
   /**
    * not sure if we're at risk for stack overflow errors here but this should really be an inline

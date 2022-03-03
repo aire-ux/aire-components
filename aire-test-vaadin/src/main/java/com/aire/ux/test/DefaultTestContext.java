@@ -6,6 +6,7 @@ import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.Context.Mode;
 import com.aire.ux.test.vaadin.Frames;
+import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
@@ -137,13 +138,15 @@ public class DefaultTestContext implements TestContext {
   @Override
   public List<?> selectComponents(String selector) {
     return new CssSelectorParser()
-        .parse(selector)
-        .plan(DefaultPlanContext.getInstance())
-        .evaluate(supplier.get(), Optional.ofNullable(Frames.getCurrentNodeAdapter())
-            .orElse(new ComponentHierarchyNodeAdapter()))
-        .stream()
-        .flatMap(t -> t.getComponent().stream())
-        .collect(Collectors.toList());
+            .parse(selector)
+            .plan(DefaultPlanContext.getInstance())
+            .evaluate(
+                supplier.get(),
+                Optional.ofNullable(Frames.getCurrentNodeAdapter())
+                    .orElse(new ComponentHierarchyNodeAdapter()))
+            .stream()
+            .flatMap(t -> t.getComponent().stream())
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -168,16 +171,22 @@ public class DefaultTestContext implements TestContext {
   @Override
   public void flush() {
     Optional.ofNullable(UI.getCurrent())
+        .map(ui -> {
+          ui.push();
+          return ui;
+        })
         .map(Instantiator::get)
-        .ifPresent(instantiator -> {
-          if (instantiator instanceof Flushable) {
-            try {
-              ((Flushable) instantiator).flush();
-            } catch (IOException ex) {
-              log.warning("Failed to flush instantiator");
-            }
-          }
-        });
+        .ifPresent(
+            instantiator -> {
+              if (instantiator instanceof Flushable) {
+                try {
+                  ((Flushable) instantiator).flush();
+                } catch (IOException ex) {
+                  log.warning("Failed to flush instantiator");
+                }
+              }
+            });
+    Frames.reload();
   }
 
   private Predicate<Element> elementTypePredicate(Class<?>... types) {

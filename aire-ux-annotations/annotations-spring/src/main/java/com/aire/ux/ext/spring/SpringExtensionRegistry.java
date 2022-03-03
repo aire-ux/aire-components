@@ -33,14 +33,15 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   public SpringExtensionRegistry(AccessQueue accessQueue) {
     this.accessQueue = accessQueue;
     this.extensions = new HashMap<>();
-    extensionCache = new LinkedHashMap<>() {
-      @Override
-      protected boolean removeEldestEntry(Entry<Class<?>, DefaultExtensionRegistration<?>> eldest) {
-        return size() >= CACHE_SIZE;
-      }
-    };
+    extensionCache =
+        new LinkedHashMap<>() {
+          @Override
+          protected boolean removeEldestEntry(
+              Entry<Class<?>, DefaultExtensionRegistration<?>> eldest) {
+            return size() >= CACHE_SIZE;
+          }
+        };
   }
-
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   private <T> T instantiate(Class<T> type) {
@@ -54,10 +55,10 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   }
 
   @Override
-  public <T extends HasElement> ExtensionRegistration register(PartialSelection<T> select,
-      Extension<T> extension) {
-    val registration = new DefaultExtensionRegistration<>(select, extension,
-        () -> extensions.remove(select));
+  public <T extends HasElement> ExtensionRegistration register(
+      PartialSelection<T> select, Extension<T> extension) {
+    val registration =
+        new DefaultExtensionRegistration<>(select, extension, () -> extensions.remove(select));
     extensions.put(select, registration);
     return registration;
   }
@@ -73,23 +74,28 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
     return resolve(type).map(ext -> (Extension<T>) ext.getExtension());
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
   public void decorate(Class<?> type, HasElement component) {
-    resolve(type).ifPresent(ext -> {
-      val selection = ext.getSelection();
-      selection.select(component, getUserInterface()).ifPresent(ext::decorate);
-    });
+    resolve(type)
+        .ifPresent(
+            ext -> {
+              val selection = ext.getSelection();
+              selection.select(component, getUserInterface()).ifPresent(ext::decorate);
+            });
+  }
+
+  @Override
+  public int getExtensionCount() {
+    return extensions.size();
   }
 
   private UserInterface getUserInterface() {
-    if(userInterface != null) {
+    if (userInterface != null) {
       return userInterface;
     }
     return (userInterface = context.getBean(UserInterface.class));
   }
-
 
   @Override
   public void setApplicationContext(@NonNull ApplicationContext applicationContext)

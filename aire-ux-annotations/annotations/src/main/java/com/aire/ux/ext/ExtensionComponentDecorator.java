@@ -25,6 +25,5 @@ public class ExtensionComponentDecorator implements ComponentDecorator {
   }
 
   @Override
-  public void onComponentExited(@NonNull HasElement component) {
-  }
+  public void onComponentExited(@NonNull HasElement component) {}
 }

@@ -75,7 +75,9 @@ class PartialPathSelection<T> implements PartialSelection<T> {
         } else {
           referent = cache.get();
         }
-        assert referent != null;
+        if(referent == null) {
+          return false;
+        }
         referent.value = (Class<T>) c;
         return true;
       }
@@ -90,8 +92,8 @@ class PartialPathSelection<T> implements PartialSelection<T> {
 
   @Override
   public Optional<T> select(HasElement component, UserInterface userInterface) {
-    return new PathSelection<>(userInterface, component, path, type).select(
-        () -> supplierFor(component));
+    return new PathSelection<>(userInterface, component, path, type)
+        .select(() -> supplierFor(component));
   }
 
   private UI supplierFor(HasElement component) {

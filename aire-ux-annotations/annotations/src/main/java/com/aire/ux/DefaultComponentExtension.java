@@ -15,5 +15,4 @@ public class DefaultComponentExtension<T> implements Extension<T> {
   public void decorate(T value) {
     consumer.accept(value);
   }
-
 }
