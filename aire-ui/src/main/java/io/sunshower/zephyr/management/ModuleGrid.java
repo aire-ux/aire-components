@@ -40,10 +40,14 @@ import lombok.val;
 public class ModuleGrid extends AbstractModuleView
     implements ValueChangeListener<ComponentValueChangeEvent<TextField, String>> {
 
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Grid<Module> grid;
 
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private TextField textField;
 
   @Inject
@@ -62,8 +66,8 @@ public class ModuleGrid extends AbstractModuleView
             .filter(
                 module ->
                     module.getCoordinate().getName().contains(text)
-                        || module.getCoordinate().getGroup().contains(text)
-                        || module.getCoordinate().getVersion().toString().contains(text))
+                    || module.getCoordinate().getGroup().contains(text)
+                    || module.getCoordinate().getVersion().toString().contains(text))
             .collect(Collectors.toList());
     grid.setItems(new ListDataProvider<>(matches));
   }
@@ -99,6 +103,7 @@ public class ModuleGrid extends AbstractModuleView
     textField.addValueChangeListener(this);
     result.addItem(textField);
     addButtonsToMenubar(result);
+
     return result;
   }
 
