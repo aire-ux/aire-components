@@ -159,6 +159,11 @@ public class DefaultTestContext implements TestContext {
     return new DefaultTestContext(type::getElement);
   }
 
+  @Override
+  public void flush() {
+    UI.getCurrent().push();
+  }
+
   private Predicate<Element> elementTypePredicate(Class<?>... types) {
     if (types == null || types.length == 0) {
       return element -> true;

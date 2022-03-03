@@ -67,4 +67,6 @@ public interface TestContext {
   <T extends Component> TestContext downTo(Class<T> contextClass);
 
   <T extends Component> TestContext downTo(T value);
+
+  void flush();
 }

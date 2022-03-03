@@ -1,5 +1,8 @@
 package io.sunshower.zephyr.configuration;
 
+import com.aire.ux.Aire;
+import com.aire.ux.DefaultUserInterface;
+import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
@@ -128,6 +131,14 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   @Bean
   public static ExtensionRegistry extensionRegistry(AccessQueue queue) {
     return new SpringExtensionRegistry(queue);
+  }
+
+  @Bean
+  public static UserInterface userInterface(
+      ExtensionRegistry extensionRegistry, AccessQueue accessQueue) {
+    return Aire.setUserInterface(
+        new DefaultUserInterface(extensionRegistry, accessQueue)
+    );
   }
 
   @Bean(name = "applicationEventMulticaster")

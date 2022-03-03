@@ -17,5 +17,5 @@ public interface ExtensionRegistry {
 
   void bind(ExtensionTree r, HasElement component);
 
-  Class<?> typeOf(HasElement type);
+  Class<?> typeOf(Object type);
 }
