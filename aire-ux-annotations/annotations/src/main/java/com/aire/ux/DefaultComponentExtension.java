@@ -11,4 +11,9 @@ public class DefaultComponentExtension<T> implements Extension<T> {
     this.segment = segment;
     this.consumer = consumer;
   }
+
+  public void decorate(T value) {
+    consumer.accept(value);
+  }
+
 }

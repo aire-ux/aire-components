@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
       EmbeddedZephyrConfiguration.class,
       AireUITestConfiguration.class
     })
-@ExtendWith(RegisterComponentExtension.class)
+//@ExtendWith(RegisterComponentExtension.class)
 @Adapter(ComponentHierarchyNodeAdapter.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

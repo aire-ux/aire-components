@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.spy;
 
+import com.aire.ux.DefaultComponentExtension;
 import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.test.Context;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @AireUITest
 @Navigate("")
-@RegisterExtension(MainNavigationComponent.class)
 @Routes(scanClassPackage = MainView.class)
 class ApplicationLayoutTest {
 
@@ -75,23 +76,25 @@ class ApplicationLayoutTest {
     assertNotNull(layout);
   }
 
-  //  @Disabled
-  //  @ViewTest
-  //  void ensureExtensionRegistryComponentDefinitionMakesSense(@Autowired UserInterface ui,
-  //      @Context TestContext context) {
-  //    val extension = new DefaultComponentExtension<>(":management-menu",
-  //        (NavigationBar parent) -> {
-  //          val button = spy(new Button("Hello"));
-  //          parent.add(button);
-  //        });
-  //
-  //    val registration = ui.register(Selection.path(":main:navigation"), extension);
-  //    context.flush();
-  //    val button = context.selectFirst("vaadin-button[text=Hello]", Button.class);
-  //    assertTrue(button.isPresent());
-  //    registration.close();
-  //    context.flush();
-  //    val buttons = context.selectFirst("vaadin-button[text=Hello]", Button.class);
-  //    assertTrue(buttons.isEmpty());
-  //  }
+  @ViewTest
+  void ensureRegisteringSimpleComponentWorks(
+      @Autowired UserInterface ui,
+      @Context TestContext $
+  ) {
+    val extension = new DefaultComponentExtension<>(":management-menu",
+        (NavigationBar parent) -> {
+          val button = spy(new Button("Hello"));
+          parent.add(button);
+        });
+    var button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
+    assertFalse(button.isPresent());
+    val registration = ui.register(Selection.path(":main:navigation"), extension);
+    $.flush();
+    val menu = ui.selectFirst(Selection.path(":main:navigation:management-menu"));
+    assertNotNull(menu);
+    button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
+    assertTrue(button.isPresent());
+    registration.close();
+  }
+
 }

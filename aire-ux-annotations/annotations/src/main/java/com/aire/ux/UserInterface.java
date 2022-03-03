@@ -1,6 +1,7 @@
 package com.aire.ux;
 
 import com.aire.ux.ext.ExtensionRegistry;
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -30,6 +31,9 @@ public interface UserInterface {
   }
 
   <T> Optional<T> selectFirst(PartialSelection<T> path, Supplier<UI> uiSupplier);
+
+  <T extends HasElement> ExtensionRegistration register(PartialSelection<T> path, Extension<T> extension);
+
 }
 
 class Holder {

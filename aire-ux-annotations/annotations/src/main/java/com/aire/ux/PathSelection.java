@@ -4,6 +4,7 @@ import static com.vaadin.flow.internal.ReflectTools.getPropertyName;
 import static com.vaadin.flow.internal.ReflectTools.isGetter;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.internal.ReflectTools;
 import java.lang.reflect.InvocationTargetException;
@@ -20,12 +21,23 @@ public class PathSelection<T> implements Selection<T> {
   private final String path;
   private final Class<T> type;
   private final UserInterface ui;
+  private final HasElement component;
 
   public PathSelection(UserInterface ui, @NonNull String path, @NonNull Class<T> type) {
     this.ui = ui;
     this.type = type;
     this.path = path;
+    this.component = null;
   }
+
+  public PathSelection(UserInterface ui, HasElement component, @NonNull String path,
+      @NonNull Class<T> type) {
+    this.ui = ui;
+    this.type = type;
+    this.path = path;
+    this.component = component;
+  }
+
 
   static ArrayDeque<String> split(String path) {
     val result = new ArrayDeque<String>();
@@ -44,11 +56,6 @@ public class PathSelection<T> implements Selection<T> {
     return result;
   }
 
-  @Override
-  public Optional<T> select(Supplier<UI> supplier) {
-    return Optional.ofNullable(supplier.get()).map(this::locate);
-  }
-
   private static String normalize(String other) {
     if (other == null) {
       return null;
@@ -59,12 +66,18 @@ public class PathSelection<T> implements Selection<T> {
     return ":" + other;
   }
 
+  @Override
+  public Optional<T> select(Supplier<UI> supplier) {
+    return Optional.ofNullable(supplier.get()).map(this::locate);
+  }
+
   @SuppressWarnings("unchecked")
   private T locate(UI ui) {
     val stack = new ArrayDeque<Component>();
     val registry = this.ui.getExtensionRegistry();
 
-    val component = ui.getElement().getComponent();
+    val component = Optional.ofNullable((Component) this.component)
+        .or(ui.getElement()::getComponent);
     component.ifPresent(stack::push);
     val segments = split(path);
     while (!stack.isEmpty()) {

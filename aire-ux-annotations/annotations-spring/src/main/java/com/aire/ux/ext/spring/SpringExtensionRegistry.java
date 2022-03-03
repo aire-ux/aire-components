@@ -1,19 +1,18 @@
 package com.aire.ux.ext.spring;
 
-import com.aire.ux.Host;
-import com.aire.ux.UIExtension;
+import com.aire.ux.Extension;
+import com.aire.ux.ExtensionRegistration;
+import com.aire.ux.PartialSelection;
+import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
-import com.aire.ux.ext.ExtensionDefinition;
 import com.aire.ux.ext.ExtensionRegistry;
-import com.aire.ux.ext.ExtensionTree;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteConfiguration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Supplier;
+import lombok.NonNull;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
@@ -23,114 +22,25 @@ import org.springframework.context.ApplicationContextAware;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationContextAware {
 
+  public static final int CACHE_SIZE = 100;
   private final AccessQueue accessQueue;
-  private final Map<String, ExtensionDefinition> extensionDefinitions;
-  private final Map<Class<? extends HasElement>, ExtensionTree> componentPaths;
+  private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
+  private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
+
   private ApplicationContext context;
+  private UserInterface userInterface;
 
   public SpringExtensionRegistry(AccessQueue accessQueue) {
     this.accessQueue = accessQueue;
-    componentPaths = new HashMap<>();
-    extensionDefinitions = new HashMap<>();
-  }
-
-  @Override
-  public int getHostCount() {
-    return componentPaths.size();
-  }
-
-  @Override
-  public Optional<ExtensionTree> defineHost(Class<? extends HasElement> host) {
-    if (host.isAnnotationPresent(Host.class)) {
-      return Optional.of(componentPaths.computeIfAbsent(host, k -> new ExtensionTree(k, this)));
-    }
-    return Optional.empty();
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public boolean defineExtension(Class<? extends HasElement> value) {
-    synchronized (extensionDefinitions) {
-      val extDefinition = value.getAnnotation(UIExtension.class);
-      if (extDefinition == null) {
-        return false;
+    this.extensions = new HashMap<>();
+    extensionCache = new LinkedHashMap<>() {
+      @Override
+      protected boolean removeEldestEntry(Entry<Class<?>, DefaultExtensionRegistration<?>> eldest) {
+        return size() >= CACHE_SIZE;
       }
-      val control = extDefinition.control();
-      val controlTarget = control.target();
-      val definition =
-          new ExtensionDefinition(
-              controlTarget, (Supplier<Component>) instantiate(control.factory()), value);
-      extensionDefinitions.put(controlTarget, definition);
-
-      return true;
-    }
+    };
   }
 
-  @Override
-  public boolean removeExtension(Class<? extends HasElement> value) {
-    synchronized (extensionDefinitions) {
-      val extDefinition = value.getAnnotation(UIExtension.class);
-      if (extDefinition == null) {
-        return false;
-      }
-      val control = extDefinition.control();
-      val controlTarget = control.target();
-      if (value.isAnnotationPresent(Route.class)) {
-        unregisterRoute(value);
-      }
-      return extensionDefinitions.remove(controlTarget) != null;
-    }
-  }
-
-  @Override
-  public int getExtensionCount() {
-    synchronized (extensionDefinitions) {
-      return extensionDefinitions.size();
-    }
-  }
-
-  @Override
-  public void bind(ExtensionTree tree, HasElement component) {
-    synchronized (extensionDefinitions) {
-      for (val definition : extensionDefinitions.values()) {
-        tree.componentAt(definition.getPath(), component)
-            .ifPresent(
-                c -> {
-                  insert(c, definition);
-                });
-      }
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private void insert(HasElement c, ExtensionDefinition definition) {
-    if (c instanceof Component) {
-      if (definition.getType().isAnnotationPresent(Route.class)) {
-        registerRoute(definition.getType());
-      }
-      c.getElement().appendChild(definition.create().getElement());
-    }
-  }
-
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  private void registerRoute(Class<? extends HasElement> type) {
-    accessQueue.enqueue(
-        () -> {
-          val t = (Class<? extends Component>) type;
-          val scope = RouteConfiguration.forApplicationScope();
-          if (!scope.isRouteRegistered(t)) {
-            scope.setAnnotatedRoute(t);
-          }
-        });
-  }
-
-  @SuppressWarnings("unchecked")
-  private void unregisterRoute(Class<? extends HasElement> type) {
-    accessQueue.enqueue(
-        () -> {
-          RouteConfiguration.forApplicationScope().removeRoute((Class<? extends Component>) type);
-        });
-  }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   private <T> T instantiate(Class<T> type) {
@@ -144,7 +54,61 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   }
 
   @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+  public <T extends HasElement> ExtensionRegistration register(PartialSelection<T> select,
+      Extension<T> extension) {
+    val registration = new DefaultExtensionRegistration<>(select, extension,
+        () -> extensions.remove(select));
+    extensions.put(select, registration);
+    return registration;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public boolean isRegistered(Class<?> type) {
+    return getExtension((Class) type).isPresent();
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends HasElement> Optional<Extension<T>> getExtension(Class<T> type) {
+    return resolve(type).map(ext -> (Extension<T>) ext.getExtension());
+  }
+
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public void decorate(Class<?> type, HasElement component) {
+    resolve(type).ifPresent(ext -> {
+      val selection = ext.getSelection();
+      selection.select(component, getUserInterface()).ifPresent(ext::decorate);
+    });
+  }
+
+  private UserInterface getUserInterface() {
+    if(userInterface != null) {
+      return userInterface;
+    }
+    return (userInterface = context.getBean(UserInterface.class));
+  }
+
+
+  @Override
+  public void setApplicationContext(@NonNull ApplicationContext applicationContext)
+      throws BeansException {
     this.context = applicationContext;
+  }
+
+  private Optional<DefaultExtensionRegistration> resolve(Class<?> type) {
+    DefaultExtensionRegistration result = null;
+    if (extensionCache.containsKey(type)) {
+      result = extensionCache.get(type);
+    }
+
+    for (val ext : extensions.entrySet()) {
+      if (ext.getKey().isHostedBy(type)) {
+        result = ext.getValue();
+        extensionCache.put(type, result);
+      }
+    }
+    return Optional.ofNullable(result);
   }
 }

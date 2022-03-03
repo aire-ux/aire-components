@@ -38,7 +38,7 @@ public class RegisterComponentExtension
     val instantiator = getInstantiator();
     val registry = instantiator.getOrCreate(ExtensionRegistry.class);
     for (val extension : extensions) {
-      registry.defineExtension(extension.value());
+//      registry.defineExtension(extension.value());
     }
   }
 
