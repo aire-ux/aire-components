@@ -108,6 +108,5 @@ public class Frames {
     val currentFrame = resolveCurrentFrame();
     currentFrame.deactivate();
     currentFrame.activate();
-
   }
 }

@@ -75,7 +75,7 @@ class PartialPathSelection<T> implements PartialSelection<T> {
         } else {
           referent = cache.get();
         }
-        if(referent == null) {
+        if (referent == null) {
           return false;
         }
         referent.value = (Class<T>) c;

@@ -6,7 +6,6 @@ import com.aire.ux.plan.DefaultPlanContext;
 import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.Context.Mode;
 import com.aire.ux.test.vaadin.Frames;
-import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
@@ -171,10 +170,11 @@ public class DefaultTestContext implements TestContext {
   @Override
   public void flush() {
     Optional.ofNullable(UI.getCurrent())
-        .map(ui -> {
-          ui.push();
-          return ui;
-        })
+        .map(
+            ui -> {
+              ui.push();
+              return ui;
+            })
         .map(Instantiator::get)
         .ifPresent(
             instantiator -> {

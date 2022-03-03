@@ -22,7 +22,6 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
 import lombok.val;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -37,7 +36,6 @@ class ApplicationLayoutTest {
     val button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
     assertTrue(button.isEmpty());
   }
-
 
   @ViewTest
   void ensureMainNavigationIsNotSelectable(@Context TestContext $) {
@@ -78,8 +76,6 @@ class ApplicationLayoutTest {
     assertNotNull(layout);
   }
 
-
-
   @ViewTest
   @DirtiesContext
   void ensureRegisteringSimpleComponentWorks(@Autowired UserInterface ui, @Context TestContext $) {
@@ -102,9 +98,4 @@ class ApplicationLayoutTest {
     $.flush();
     assertEquals(0, ui.getExtensionRegistry().getExtensionCount());
   }
-
-
-
-
-
 }
