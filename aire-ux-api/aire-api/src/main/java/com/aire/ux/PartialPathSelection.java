@@ -86,14 +86,21 @@ class PartialPathSelection<T> implements PartialSelection<T> {
   }
 
   @Override
-  public Optional<T> select(UserInterface ui, Supplier<UI> supplier) {
-    return new PathSelection<>(ui, path, type).select(supplier);
+  public Optional<ExtensionDefinition<T>> select(
+      UserInterface ui, Supplier<UI> supplier, Extension<T> extension) {
+    return new PathSelection<>(ui, path, type).select(supplier, extension);
   }
 
   @Override
-  public Optional<T> select(HasElement component, UserInterface userInterface) {
+  public Optional<ExtensionDefinition<T>> select(
+      HasElement component, UserInterface userInterface, Extension<T> extension) {
     return new PathSelection<>(userInterface, component, path, type)
-        .select(() -> supplierFor(component));
+        .select(() -> supplierFor(component), extension);
+  }
+
+  @Override
+  public String getSegment() {
+    return path;
   }
 
   private UI supplierFor(HasElement component) {

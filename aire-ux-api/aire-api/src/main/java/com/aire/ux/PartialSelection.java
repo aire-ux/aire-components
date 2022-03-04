@@ -9,7 +9,11 @@ public interface PartialSelection<T> {
 
   boolean isHostedBy(Class<?> type);
 
-  Optional<T> select(UserInterface ui, Supplier<UI> supplier);
+  Optional<ExtensionDefinition<T>> select(
+      UserInterface ui, Supplier<UI> supplier, Extension<T> extension);
 
-  Optional<T> select(HasElement component, UserInterface userInterface);
+  Optional<ExtensionDefinition<T>> select(
+      HasElement component, UserInterface userInterface, Extension<T> extension);
+
+  String getSegment();
 }

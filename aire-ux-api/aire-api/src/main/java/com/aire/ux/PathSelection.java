@@ -67,8 +67,15 @@ public class PathSelection<T> implements Selection<T> {
   }
 
   @Override
-  public Optional<T> select(Supplier<UI> supplier) {
-    return Optional.ofNullable(supplier.get()).map(this::locate);
+  public Class<T> getType() {
+    return type;
+  }
+
+  @Override
+  public Optional<ExtensionDefinition<T>> select(Supplier<UI> supplier, Extension<T> extension) {
+    return Optional.ofNullable(supplier.get())
+        .map(this::locate)
+        .map(t -> new DefaultComponentExtensionDefinition<>(path, extension, this, t));
   }
 
   @SuppressWarnings("unchecked")

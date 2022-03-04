@@ -38,7 +38,7 @@ public class DefaultUserInterface implements UserInterface {
 
   @Override
   public <T> Optional<T> selectFirst(PartialSelection<T> path, Supplier<UI> uiSupplier) {
-    return path.select(this, uiSupplier);
+    return path.select(this, uiSupplier, extensionFor(path)).map(ExtensionDefinition::getValue);
   }
 
   @Override
@@ -50,5 +50,9 @@ public class DefaultUserInterface implements UserInterface {
   @Override
   public <T extends Component> ExtensionRegistration register(Mode mode, Class<T> type) {
     return registry.register(new DefaultRouteDefinition(mode, type));
+  }
+
+  private <T> Extension<T> extensionFor(PartialSelection<T> path) {
+    return new DefaultComponentExtension<>(path.getSegment(), c -> {});
   }
 }

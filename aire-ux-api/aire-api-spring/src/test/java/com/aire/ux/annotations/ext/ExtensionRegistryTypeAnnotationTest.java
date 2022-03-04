@@ -10,6 +10,7 @@ import com.aire.ux.annotations.ext.scenario1.TestExtension;
 import com.aire.ux.annotations.ext.scenario1.TestExtensionPoint;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Context;
@@ -77,7 +78,8 @@ public class ExtensionRegistryTypeAnnotationTest {
 
     @Bean
     public static ExtensionRegistry extensionRegistry() {
-      return new SpringExtensionRegistry(new DefaultAccessQueue(), () -> null);
+      return new SpringExtensionRegistry(
+          new DefaultAccessQueue(), () -> null, new SpringComponentInclusionManager());
     }
   }
 }

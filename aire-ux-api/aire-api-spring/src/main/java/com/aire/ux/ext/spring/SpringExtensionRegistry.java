@@ -1,6 +1,8 @@
 package com.aire.ux.ext.spring;
 
+import com.aire.ux.ComponentInclusionManager;
 import com.aire.ux.Extension;
+import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.PartialSelection;
 import com.aire.ux.RouteDefinition;
@@ -30,20 +32,25 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringExtensionRegistry extends AbstractRouteRegistry
     implements ExtensionRegistry, ApplicationContextAware {
 
-  final Object lock = new Object();
   public static final int CACHE_SIZE = 100;
+  final Object lock = new Object();
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
   private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
+  private final ComponentInclusionManager inclusionManager;
 
   private ApplicationContext context;
   private UserInterface userInterface;
 
-  public SpringExtensionRegistry(AccessQueue accessQueue, Supplier<VaadinContext> context) {
+  public SpringExtensionRegistry(
+      AccessQueue accessQueue,
+      Supplier<VaadinContext> context,
+      ComponentInclusionManager inclusionManager) {
     this.accessQueue = accessQueue;
     this.extensions = new HashMap<>();
     this.vaadinContext = context;
+    this.inclusionManager = inclusionManager;
     extensionCache =
         new LinkedHashMap<>() {
           @Override
@@ -124,7 +131,14 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
           .ifPresent(
               ext -> {
                 val selection = ext.getSelection();
-                selection.select(component, getUserInterface()).ifPresent(ext::decorate);
+                val opt = selection.select(component, getUserInterface(), ext.getExtension());
+                opt.ifPresent(
+                    extDef -> {
+                      val definition = (ExtensionDefinition<?>) extDef;
+                      if (inclusionManager.decide(definition)) {
+                        ext.decorate(definition.getValue());
+                      }
+                    });
               });
     }
   }
@@ -134,6 +148,11 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
     synchronized (extensions) {
       return extensions.size();
     }
+  }
+
+  @Override
+  public @NonNull ComponentInclusionManager getComponentInclusionManager() {
+    return inclusionManager;
   }
 
   private UserInterface getUserInterface() {

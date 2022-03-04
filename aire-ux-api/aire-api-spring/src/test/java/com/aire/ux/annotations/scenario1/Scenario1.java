@@ -2,6 +2,7 @@ package com.aire.ux.annotations.scenario1;
 
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.Command;
@@ -28,7 +29,8 @@ public class Scenario1 {
           @Override
           public void drain(VaadinSession session) {}
         },
-        () -> null);
+        () -> null,
+        new SpringComponentInclusionManager());
     //    return new SpringExtensionRegistry(command -> UI.getCurrent().access(command));
   }
 }

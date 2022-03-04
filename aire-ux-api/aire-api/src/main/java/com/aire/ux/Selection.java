@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 public interface Selection<T> {
 
+  Class<T> getType();
+
   static <T> PartialSelection<T> path(String path, Class<T> type) {
     return new PartialPathSelection<>(path, type);
   }
@@ -15,5 +17,5 @@ public interface Selection<T> {
     return path(s, (Class<T>) Object.class);
   }
 
-  Optional<T> select(Supplier<UI> supplier);
+  Optional<ExtensionDefinition<T>> select(Supplier<UI> supplier, Extension<T> extension);
 }

@@ -1,6 +1,8 @@
 package io.sunshower.zephyr.core.test;
 
 import com.aire.ux.Aire;
+import com.aire.ux.DefaultComponentExtension;
+import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.Selection;
 import com.aire.ux.test.ElementResolver;
 import com.aire.ux.test.ElementResolverFactory;
@@ -33,9 +35,14 @@ public class PathRegistryParameterResolver implements ElementResolverFactory {
       @SuppressWarnings("unchecked")
       public <T> T resolve() {
         val selector = element.getAnnotation(Select.class);
+        val value = Utilities.firstNonDefault(selector.value(), selector.selector());
         return (T)
-            Selection.path(Utilities.firstNonDefault(selector.value(), selector.selector()))
-                .select(Aire.getUserInterface(), UI::getCurrent)
+            Selection.path(value)
+                .select(
+                    Aire.getUserInterface(),
+                    UI::getCurrent,
+                    new DefaultComponentExtension<>(value, c -> {}))
+                .map(ExtensionDefinition::getValue)
                 .get();
       }
     };
