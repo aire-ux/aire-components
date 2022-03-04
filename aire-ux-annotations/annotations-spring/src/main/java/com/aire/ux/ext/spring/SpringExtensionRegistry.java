@@ -1,17 +1,22 @@
 package com.aire.ux.ext.spring;
 
 import com.aire.ux.Extension;
-import com.aire.ux.Registration;
+import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.PartialSelection;
+import com.aire.ux.RouteDefinition;
 import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.internal.AbstractRouteRegistry;
+import com.vaadin.flow.server.VaadinContext;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.NonNull;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
@@ -20,19 +25,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationContextAware {
+public class SpringExtensionRegistry extends AbstractRouteRegistry implements ExtensionRegistry,
+    ApplicationContextAware {
 
   public static final int CACHE_SIZE = 100;
   private final AccessQueue accessQueue;
+  private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
   private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
 
   private ApplicationContext context;
   private UserInterface userInterface;
 
-  public SpringExtensionRegistry(AccessQueue accessQueue) {
+  public SpringExtensionRegistry(AccessQueue accessQueue, Supplier<VaadinContext> context) {
     this.accessQueue = accessQueue;
     this.extensions = new HashMap<>();
+    this.vaadinContext = context;
     extensionCache =
         new LinkedHashMap<>() {
           @Override
@@ -55,13 +63,29 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
   }
 
   @Override
-  public <T extends HasElement> Registration register(
+  public <T extends HasElement> ExtensionRegistration register(
       PartialSelection<T> select, Extension<T> extension) {
     val registration =
         new DefaultExtensionRegistration<>(select, extension, () -> extensions.remove(select));
     extensions.put(select, registration);
     return registration;
   }
+
+  @Override
+  public <T extends HasElement> ExtensionRegistration register(RouteDefinition routeDefinition) {
+    val configuration = locate(routeDefinition);
+    accessQueue.enqueue(() -> {
+      val type = routeDefinition.getComponent();
+      if (!configuration.isRouteRegistered(type)) {
+        configuration.setAnnotatedRoute(type);
+      }
+    });
+
+    return () -> {
+      configuration.removeRoute(routeDefinition.getComponent());
+    };
+  }
+
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -116,5 +140,28 @@ public class SpringExtensionRegistry implements ExtensionRegistry, ApplicationCo
       }
     }
     return Optional.ofNullable(result);
+  }
+
+  @Override
+  public VaadinContext getContext() {
+    return vaadinContext.get();
+  }
+
+  @NonNull
+  private RouteConfiguration locate(RouteDefinition routeDefinition) {
+
+    final RouteConfiguration configuration;
+    switch (routeDefinition.getMode()) {
+      case Global:
+        configuration = RouteConfiguration.forApplicationScope();
+        break;
+      case Session:
+        configuration = RouteConfiguration.forSessionScope();
+        break;
+      case Aire:
+      default:
+        configuration = RouteConfiguration.forRegistry(this);
+    }
+    return configuration;
   }
 }

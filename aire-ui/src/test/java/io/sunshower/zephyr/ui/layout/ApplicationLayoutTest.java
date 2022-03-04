@@ -14,6 +14,7 @@ import com.aire.ux.UserInterface;
 import com.aire.ux.actions.ActionEvent.Type;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.actions.Actions;
+import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
@@ -105,26 +106,38 @@ class ApplicationLayoutTest {
 
   @ViewTest
   @DirtiesContext
+  void ensureRegisteringRouteWorks(@Autowired ExtensionRegistry registry, @Context TestContext $) {
+
+
+  }
+
+  @ViewTest
+  @DirtiesContext
   void ensureActionManagerCanEnableAndDisableButtons(
       @Autowired UserInterface ui, @Context TestContext $, @Autowired ActionManager actionManager) {
-    val action = spy(Actions.create("ui.module.stop", (self) -> {
+    val action = spy(Actions.create("ui.module.stop", (self) -> {}));
 
-    }));
-    ui.register(Selection.path(":main:navigation"),
-        Extensions.create(":management-menu", (NavigationBar p) -> {
-          val button = new Button("hello");
-          action.addActionEventListener(Type.ActionEnabled, (eventType, event) -> {
-            button.setEnabled(true);
-          });
-          action.addActionEventListener(Type.ActionDisabled, (eventType, event) -> {
-            button.setEnabled(true);
-          });
-          p.add(button);
-        }));
+    ui.register(
+        Selection.path(":main:navigation"),
+        Extensions.create(
+            ":management-menu",
+            (NavigationBar p) -> {
+              val button = new Button("hello");
+              action.addActionEventListener(
+                  Type.ActionEnabled,
+                  (eventType, event) -> {
+                    button.setEnabled(true);
+                  });
+              action.addActionEventListener(
+                  Type.ActionDisabled,
+                  (eventType, event) -> {
+                    button.setEnabled(true);
+                  });
+              p.add(button);
+            }));
     action.enable();
     $.flush();
     assertTrue($.selectFirst("vaadin-button[enabled]", Button.class).isPresent());
     action.dispose();
-
   }
 }

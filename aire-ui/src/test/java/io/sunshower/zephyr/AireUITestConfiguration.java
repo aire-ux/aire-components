@@ -3,7 +3,9 @@ package io.sunshower.zephyr;
 import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.server.Command;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.RootMappedCondition;
 import io.sunshower.test.common.Tests;
+import io.sunshower.zephyr.aire.AireVaadinServlet;
 import io.sunshower.zephyr.configuration.FileProvider;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.core.ModuleCoordinate;
@@ -28,6 +30,7 @@ public class AireUITestConfiguration {
   public static Memento memento() {
     return Memento.loadProvider(AireUITest.class.getClassLoader()).newMemento();
   }
+
 
   @Bean
   @Primary

@@ -47,11 +47,6 @@ public class ExtensionRegistryTypeAnnotationTest {
   }
 
   @ViewTest
-  void ensureRegistryHasCorrectHostCount(@Context ExtensionRegistry registry) {
-    assertEquals(1, registry.getHostCount());
-  }
-
-  @ViewTest
   void ensureRegistryHasCorrectExtensionCount(@Context ExtensionRegistry registry) {
     assertEquals(1, registry.getExtensionCount());
   }
@@ -82,7 +77,7 @@ public class ExtensionRegistryTypeAnnotationTest {
 
     @Bean
     public static ExtensionRegistry extensionRegistry() {
-      return new SpringExtensionRegistry(new DefaultAccessQueue());
+      return new SpringExtensionRegistry(new DefaultAccessQueue(), () -> null);
     }
   }
 }
