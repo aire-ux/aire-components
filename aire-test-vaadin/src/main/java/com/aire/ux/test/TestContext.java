@@ -50,6 +50,8 @@ public interface TestContext {
 
   void navigate(String route);
 
+  void navigate(Class<? extends Component> route);
+
   /**
    * @param contextClass the context-class to resolve
    * @param mode the mode (mock, spy, none) to apply to the context variable
@@ -67,4 +69,6 @@ public interface TestContext {
   <T extends Component> TestContext downTo(Class<T> contextClass);
 
   <T extends Component> TestContext downTo(T value);
+
+  void flush();
 }

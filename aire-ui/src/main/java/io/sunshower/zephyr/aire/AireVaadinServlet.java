@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.aire;
 
+import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.function.DeploymentConfiguration;
 import com.vaadin.flow.server.ServiceException;
 import com.vaadin.flow.server.SessionDestroyEvent;
@@ -14,11 +15,10 @@ import org.springframework.web.context.WebApplicationContext;
 public class AireVaadinServlet extends SpringServlet
     implements SessionInitListener, SessionDestroyListener {
 
+  private final AccessQueue queue;
   private final WebApplicationContext context;
-  private final AsynchronousSessionQueue queue;
 
-  public AireVaadinServlet(
-      AsynchronousSessionQueue queue, WebApplicationContext context, boolean rootMapping) {
+  public AireVaadinServlet(AccessQueue queue, WebApplicationContext context, boolean rootMapping) {
     super(context, rootMapping);
     this.queue = queue;
     this.context = context;

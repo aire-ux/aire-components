@@ -6,6 +6,7 @@ dependencies {
     api "io.zephyr:gyre-api"
     api 'com.vaadin:flow-server'
     api project(':aire-ux-core')
+    api 'io.sunshower.arcus:arcus-lang'
 
     testFixturesApi project(':aire-test-vaadin')
 }

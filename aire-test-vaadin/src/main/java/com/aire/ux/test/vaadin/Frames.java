@@ -103,4 +103,10 @@ public class Frames {
   public static TestFrame resolveCurrentFrame() {
     return resolveCurrentFrame(currentContext());
   }
+
+  public static void reload() {
+    val currentFrame = resolveCurrentFrame();
+    currentFrame.deactivate();
+    currentFrame.activate();
+  }
 }

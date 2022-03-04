@@ -1,21 +1,26 @@
 package com.aire.ux.ext;
 
+import com.aire.ux.Extension;
+import com.aire.ux.ExtensionRegistration;
+import com.aire.ux.PartialSelection;
+import com.aire.ux.RouteDefinition;
 import com.vaadin.flow.component.HasElement;
-import java.util.Optional;
+import com.vaadin.flow.server.RouteRegistry;
+import javax.annotation.concurrent.ThreadSafe;
 
-public interface ExtensionRegistry {
+@ThreadSafe
+public interface ExtensionRegistry extends RouteRegistry {
 
-  int getHostCount();
+  Class<?> typeOf(Object type);
 
-  Optional<ExtensionTree> defineHost(Class<? extends HasElement> host);
+  <T extends HasElement> ExtensionRegistration register(
+      PartialSelection<T> path, Extension<T> extension);
 
-  boolean defineExtension(Class<? extends HasElement> value);
+  <T extends HasElement> ExtensionRegistration register(RouteDefinition routeDefinition);
 
-  boolean removeExtension(Class<? extends HasElement> value);
+  boolean isRegistered(Class<?> type);
+
+  void decorate(Class<?> type, HasElement component);
 
   int getExtensionCount();
-
-  void bind(ExtensionTree r, HasElement component);
-
-  Class<?> typeOf(HasElement type);
 }

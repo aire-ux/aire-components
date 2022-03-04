@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Select {
+  String mode() default "css";
 
   String default_value = "__default__";
   /** @return */

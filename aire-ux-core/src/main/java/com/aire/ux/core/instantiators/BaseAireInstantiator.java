@@ -4,7 +4,9 @@ import com.aire.ux.core.decorators.ComponentDecorator;
 import com.aire.ux.core.decorators.ServiceLoaderComponentDecorator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.i18n.I18NProvider;
 import com.vaadin.flow.router.NavigationEvent;
 import com.vaadin.flow.server.BootstrapListener;
@@ -12,15 +14,17 @@ import com.vaadin.flow.server.DependencyFilter;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.Flushable;
 import java.util.ArrayDeque;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.val;
 
-public class BaseAireInstantiator implements Instantiator {
+public class BaseAireInstantiator implements Instantiator, Flushable {
 
   private final Instantiator delegate;
   private final ComponentDecorator decorator;
@@ -42,6 +46,14 @@ public class BaseAireInstantiator implements Instantiator {
     this(
         delegate,
         new ServiceLoaderComponentDecorator(Thread.currentThread().getContextClassLoader()));
+  }
+
+  @Override
+  public void flush() {
+    Optional.ofNullable(UI.getCurrent())
+        .map(UI::getElement)
+        .flatMap(Element::getComponent)
+        .ifPresent(this::decorate);
   }
 
   @Override

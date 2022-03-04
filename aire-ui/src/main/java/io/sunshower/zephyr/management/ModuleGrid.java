@@ -99,6 +99,7 @@ public class ModuleGrid extends AbstractModuleView
     textField.addValueChangeListener(this);
     result.addItem(textField);
     addButtonsToMenubar(result);
+
     return result;
   }
 

@@ -5,6 +5,7 @@ import com.vaadin.flow.component.HasElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.val;
 
 public class ExtensionComponentDecorator implements ComponentDecorator {
 
@@ -17,7 +18,10 @@ public class ExtensionComponentDecorator implements ComponentDecorator {
 
   @Override
   public void onComponentEntered(@NonNull HasElement component) {
-    registry.defineHost(component.getClass()).ifPresent(r -> registry.bind(r, component));
+    val type = registry.typeOf(component);
+    if (registry.isRegistered(type)) {
+      registry.decorate(type, component);
+    }
   }
 
   @Override

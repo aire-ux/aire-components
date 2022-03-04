@@ -28,7 +28,7 @@ public class SelectorResolvingElementResolverFactory implements ElementResolverF
     if (selector == null) {
       return false;
     }
-    return !Utilities.isDefault(selector);
+    return !Utilities.isDefault(selector) && "css".equalsIgnoreCase(selector.mode());
   }
 
   @Override

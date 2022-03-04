@@ -1,8 +1,14 @@
 package io.sunshower.zephyr.configuration;
 
+import com.aire.ux.Aire;
+import com.aire.ux.DefaultUserInterface;
+import com.aire.ux.UserInterface;
+import com.aire.ux.actions.ActionManager;
+import com.aire.ux.actions.DefaultActionManager;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
+import com.vaadin.flow.server.VaadinService;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
@@ -127,7 +133,19 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
 
   @Bean
   public static ExtensionRegistry extensionRegistry(AccessQueue queue) {
-    return new SpringExtensionRegistry(queue);
+    return new SpringExtensionRegistry(queue, () -> VaadinService.getCurrent().getContext());
+  }
+
+  @Bean
+  public static ActionManager actionManager() {
+    return new DefaultActionManager();
+  }
+
+  @Bean
+  public static UserInterface userInterface(
+      ExtensionRegistry extensionRegistry, AccessQueue accessQueue, ActionManager actionManager) {
+    return Aire.setUserInterface(
+        new DefaultUserInterface(extensionRegistry, accessQueue, actionManager));
   }
 
   @Bean(name = "applicationEventMulticaster")

@@ -9,7 +9,7 @@ import com.vaadin.flow.spring.VaadinServletConfiguration;
 import com.vaadin.flow.spring.VaadinServletContextInitializer;
 import com.vaadin.flow.spring.VaadinWebsocketEndpointExporter;
 import java.util.HashMap;
-import java.util.Map;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -37,12 +37,6 @@ public class AireVaadinOverrideAutoConfiguration {
 
   @Autowired private VaadinConfigurationProperties configurationProperties;
 
-  //  public AireVaadinOverrideAutoConfiguration(
-  //      WebApplicationContext context, VaadinConfigurationProperties configurationProperties) {
-  //    this.context = context;
-  //    this.configurationProperties = configurationProperties;
-  //  }
-
   static String makeContextRelative(String url) {
     // / -> context://
     // foo -> context://foo
@@ -65,17 +59,17 @@ public class AireVaadinOverrideAutoConfiguration {
    */
   @Bean
   public ServletRegistrationBean<SpringServlet> servletRegistrationBean(AccessQueue queue) {
-    String mapping = configurationProperties.getUrlMapping();
-    Map<String, String> initParameters = new HashMap<>();
-    boolean rootMapping = RootMappedCondition.isRootMapping(mapping);
+    var mapping = configurationProperties.getUrlMapping();
+    val initParameters = new HashMap<String, String>();
+    var rootMapping = RootMappedCondition.isRootMapping(mapping);
     if (rootMapping) {
       mapping = VAADIN_SERVLET_MAPPING;
       initParameters.put(
           InitParameters.SERVLET_PARAMETER_PUSH_URL, makeContextRelative(mapping.replace("*", "")));
     }
-    ServletRegistrationBean<SpringServlet> registration =
-        new ServletRegistrationBean<>(
-            new AireVaadinServlet((AsynchronousSessionQueue) queue, context, rootMapping), mapping);
+    val registration =
+        new ServletRegistrationBean<SpringServlet>(
+            new AireVaadinServlet(queue, context, rootMapping), mapping);
     registration.setInitParameters(initParameters);
     registration.setAsyncSupported(configurationProperties.isAsyncSupported());
     registration.setName(ClassUtils.getShortNameAsProperty(SpringServlet.class));
