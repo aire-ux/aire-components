@@ -9,7 +9,9 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.function.Supplier;
+import javax.annotation.concurrent.ThreadSafe;
 
+@ThreadSafe
 public interface UserInterface {
 
   static Optional<UserInterface> getInstance() {

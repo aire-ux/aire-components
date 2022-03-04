@@ -6,7 +6,9 @@ import com.aire.ux.PartialSelection;
 import com.aire.ux.RouteDefinition;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.server.RouteRegistry;
+import javax.annotation.concurrent.ThreadSafe;
 
+@ThreadSafe
 public interface ExtensionRegistry extends RouteRegistry {
 
   Class<?> typeOf(Object type);
