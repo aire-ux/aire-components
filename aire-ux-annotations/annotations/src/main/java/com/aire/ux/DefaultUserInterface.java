@@ -1,8 +1,10 @@
 package com.aire.ux;
 
+import com.aire.ux.RouteDefinition.Mode;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import java.util.Optional;
@@ -47,5 +49,10 @@ public class DefaultUserInterface implements UserInterface {
     //                () -> new NoSuchElementException(format("Could not find element at path: %s",
     // path))),
     //        extension);
+  }
+
+  @Override
+  public <T extends Component> ExtensionRegistration register(Mode mode, Class<T> type) {
+    return registry.register(new DefaultRouteDefinition(mode, type));
   }
 }

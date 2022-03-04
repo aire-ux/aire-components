@@ -137,20 +137,26 @@ public class DefaultTestContext implements TestContext {
   @Override
   public List<?> selectComponents(String selector) {
     return new CssSelectorParser()
-            .parse(selector)
-            .plan(DefaultPlanContext.getInstance())
-            .evaluate(
-                supplier.get(),
-                Optional.ofNullable(Frames.getCurrentNodeAdapter())
-                    .orElse(new ComponentHierarchyNodeAdapter()))
-            .stream()
-            .flatMap(t -> t.getComponent().stream())
-            .collect(Collectors.toList());
+        .parse(selector)
+        .plan(DefaultPlanContext.getInstance())
+        .evaluate(
+            supplier.get(),
+            Optional.ofNullable(Frames.getCurrentNodeAdapter())
+                .orElse(new ComponentHierarchyNodeAdapter()))
+        .stream()
+        .flatMap(t -> t.getComponent().stream())
+        .collect(Collectors.toList());
   }
 
   @Override
   public void navigate(String route) {
     UI.getCurrent().navigate(route);
+  }
+
+  @Override
+  public void navigate(Class<? extends Component> route) {
+    UI.getCurrent().navigate(route);
+
   }
 
   @Override

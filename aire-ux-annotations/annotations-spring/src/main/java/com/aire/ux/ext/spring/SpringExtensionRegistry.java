@@ -66,7 +66,10 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry implements Ex
   public <T extends HasElement> ExtensionRegistration register(
       PartialSelection<T> select, Extension<T> extension) {
     val registration =
-        new DefaultExtensionRegistration<>(select, extension, () -> extensions.remove(select));
+        new DefaultExtensionRegistration<>(select, extension, () -> {
+          extensions.remove(select);
+          extensionCache.clear();
+        });
     extensions.put(select, registration);
     return registration;
   }

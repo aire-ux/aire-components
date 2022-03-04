@@ -2,6 +2,7 @@ package com.aire.ux;
 
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import java.util.Optional;
@@ -30,6 +31,8 @@ public interface UserInterface {
 
   <T extends HasElement> Registration register(
       PartialSelection<T> path, Extension<T> extension);
+
+  <T extends Component> ExtensionRegistration register(RouteDefinition.Mode mode, Class<T> type);
 }
 
 class Holder {

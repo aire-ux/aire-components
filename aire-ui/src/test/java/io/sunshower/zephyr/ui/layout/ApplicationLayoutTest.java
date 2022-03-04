@@ -4,15 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 
 import com.aire.ux.DefaultComponentExtension;
 import com.aire.ux.Extensions;
+import com.aire.ux.RouteDefinition;
+import com.aire.ux.RouteDefinition.Mode;
 import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.actions.ActionEvent.Type;
-import com.aire.ux.actions.ActionManager;
 import com.aire.ux.actions.Actions;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.test.Context;
@@ -21,11 +23,14 @@ import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.router.NotFoundException;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.layout.scenario1.MainNavigationComponent;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
+import lombok.NonNull;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,15 +112,41 @@ class ApplicationLayoutTest {
   @ViewTest
   @DirtiesContext
   void ensureRegisteringRouteWorks(@Autowired ExtensionRegistry registry, @Context TestContext $) {
+    assertThrows(NotFoundException.class,
+        () -> UI.getCurrent().navigate(MainNavigationComponent.class));
+    val reg = registry.register(RouteDefinition.global(MainNavigationComponent.class));
+    UI.getCurrent().navigate(MainNavigationComponent.class);
+    reg.remove();
+    assertThrows(NotFoundException.class,
+        () -> UI.getCurrent().navigate(MainNavigationComponent.class));
+  }
 
-
+  @ViewTest
+  @DirtiesContext
+  void ensureRegistrationWorksWithComponents(@Context TestContext $,
+      @Autowired UserInterface userInterface) {
+    val registration = userInterface.register(Selection.path(":main-2:navbar"),
+        Extensions.create(":sup", (@NonNull NavigationBar b) -> {
+          b.add(new Button("hello"));
+        }));
+    assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isEmpty());
+    val reg2 = userInterface.register(Mode.Global, MainNavigationComponent.class);
+    $.navigate(MainNavigationComponent.class);
+    assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isPresent());
+    registration.close();
+    $.navigate(MainView.class);
+    assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isEmpty());
+    $.navigate(MainNavigationComponent.class);
+    assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isEmpty());
+    reg2.remove();
   }
 
   @ViewTest
   @DirtiesContext
   void ensureActionManagerCanEnableAndDisableButtons(
-      @Autowired UserInterface ui, @Context TestContext $, @Autowired ActionManager actionManager) {
-    val action = spy(Actions.create("ui.module.stop", (self) -> {}));
+      @Autowired UserInterface ui, @Context TestContext $) {
+    val action = spy(Actions.create("ui.module.stop", (self) -> {
+    }));
 
     ui.register(
         Selection.path(":main:navigation"),
