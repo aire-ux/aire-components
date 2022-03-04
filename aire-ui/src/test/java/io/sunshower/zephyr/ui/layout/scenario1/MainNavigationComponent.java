@@ -11,7 +11,6 @@ import io.sunshower.zephyr.ui.navigation.NavigationBar;
 @Route(value = "main-navigation", layout = ApplicationLayout.class, registerAtStartup = false)
 public class MainNavigationComponent extends Main {
 
-
   @Slot(":navbar")
   private NavigationBar navigationBar;
 
@@ -19,5 +18,4 @@ public class MainNavigationComponent extends Main {
     navigationBar = new NavigationBar();
     add(navigationBar);
   }
-
 }

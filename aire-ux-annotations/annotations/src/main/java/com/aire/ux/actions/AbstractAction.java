@@ -20,7 +20,6 @@ public abstract class AbstractAction extends AbstractEventSource implements Acti
     this(key, false);
   }
 
-
   protected AbstractAction(final @NonNull Key key, boolean enabled) {
     this.key = key;
     setEnabled(enabled);
@@ -41,16 +40,13 @@ public abstract class AbstractAction extends AbstractEventSource implements Acti
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
     val type = enabled ? Type.ActionEnabled : Type.ActionDisabled;
-    dispatchEvent(type,
-        new DefaultActionEvent(key, this, type));
+    dispatchEvent(type, new DefaultActionEvent(key, this, type));
   }
 
-  public void perform() {
+  public void perform() {}
 
-  }
-
-  public Registration addActionEventListener(EventType type,
-      EventListener<ActionEvent<?>> listener) {
+  public Registration addActionEventListener(
+      EventType type, EventListener<ActionEvent<?>> listener) {
     addEventListener(listener, type);
     return () -> removeEventListener(listener);
   }

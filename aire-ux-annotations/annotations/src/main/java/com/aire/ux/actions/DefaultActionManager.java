@@ -1,6 +1,5 @@
 package com.aire.ux.actions;
 
-
 import com.aire.ux.Registration;
 import com.aire.ux.actions.ActionEvent.Type;
 import io.sunshower.lang.events.AbstractEventSource;
@@ -57,8 +56,8 @@ public class DefaultActionManager extends AbstractEventSource implements ActionM
     for (val result : results) {
       result.enable();
     }
-    dispatchEvent(Type.BulkActionsEnabled, new BulkActionEvent(Key.BULK, results,
-        Type.BulkActionsEnabled));
+    dispatchEvent(
+        Type.BulkActionsEnabled, new BulkActionEvent(Key.BULK, results, Type.BulkActionsEnabled));
     return true;
   }
 
@@ -68,8 +67,8 @@ public class DefaultActionManager extends AbstractEventSource implements ActionM
     for (val result : results) {
       result.disable();
     }
-    dispatchEvent(Type.BulkActionsDisabled, new BulkActionEvent(Key.BULK, results,
-        Type.BulkActionsDisabled));
+    dispatchEvent(
+        Type.BulkActionsDisabled, new BulkActionEvent(Key.BULK, results, Type.BulkActionsDisabled));
     return true;
   }
 

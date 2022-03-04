@@ -8,13 +8,11 @@ public class AbstractActionEvent<E> implements ActionEvent<E> {
   final E target;
   final EventType eventType;
 
-  protected AbstractActionEvent(Key targetKey, E target,
-      EventType eventType) {
+  protected AbstractActionEvent(Key targetKey, E target, EventType eventType) {
     this.targetKey = targetKey;
     this.target = target;
     this.eventType = eventType;
   }
-
 
   @Override
   public Key getTargetKey() {

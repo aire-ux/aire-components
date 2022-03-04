@@ -23,6 +23,7 @@ public class PathSelection<T> implements Selection<T> {
   private final UserInterface ui;
   private final HasElement component;
 
+  @SuppressWarnings("PMD.NullAssignment")
   public PathSelection(UserInterface ui, @NonNull String path, @NonNull Class<T> type) {
     this.ui = ui;
     this.type = type;

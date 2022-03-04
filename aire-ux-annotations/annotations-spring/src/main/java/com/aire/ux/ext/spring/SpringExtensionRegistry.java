@@ -25,8 +25,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public class SpringExtensionRegistry extends AbstractRouteRegistry implements ExtensionRegistry,
-    ApplicationContextAware {
+public class SpringExtensionRegistry extends AbstractRouteRegistry
+    implements ExtensionRegistry, ApplicationContextAware {
 
   public static final int CACHE_SIZE = 100;
   private final AccessQueue accessQueue;
@@ -66,10 +66,13 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry implements Ex
   public <T extends HasElement> ExtensionRegistration register(
       PartialSelection<T> select, Extension<T> extension) {
     val registration =
-        new DefaultExtensionRegistration<>(select, extension, () -> {
-          extensions.remove(select);
-          extensionCache.clear();
-        });
+        new DefaultExtensionRegistration<>(
+            select,
+            extension,
+            () -> {
+              extensions.remove(select);
+              extensionCache.clear();
+            });
     extensions.put(select, registration);
     return registration;
   }
@@ -77,18 +80,18 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry implements Ex
   @Override
   public <T extends HasElement> ExtensionRegistration register(RouteDefinition routeDefinition) {
     val configuration = locate(routeDefinition);
-    accessQueue.enqueue(() -> {
-      val type = routeDefinition.getComponent();
-      if (!configuration.isRouteRegistered(type)) {
-        configuration.setAnnotatedRoute(type);
-      }
-    });
+    accessQueue.enqueue(
+        () -> {
+          val type = routeDefinition.getComponent();
+          if (!configuration.isRouteRegistered(type)) {
+            configuration.setAnnotatedRoute(type);
+          }
+        });
 
     return () -> {
       configuration.removeRoute(routeDefinition.getComponent());
     };
   }
-
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -130,6 +133,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry implements Ex
     this.context = applicationContext;
   }
 
+  @SuppressWarnings("PMD.CloseResource")
   private Optional<DefaultExtensionRegistration> resolve(Class<?> type) {
     DefaultExtensionRegistration result = null;
     if (extensionCache.containsKey(type)) {
@@ -151,6 +155,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry implements Ex
   }
 
   @NonNull
+  @SuppressWarnings("PMD.MissingBreakInSwitch")
   private RouteConfiguration locate(RouteDefinition routeDefinition) {
 
     final RouteConfiguration configuration;

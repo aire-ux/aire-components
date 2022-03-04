@@ -25,7 +25,7 @@ class DefaultActionMapTest {
 
   @Test
   void ensureRetrievingKeyLevelInMapWorks() {
-    val action = new AbstractAction(Key.of("hello.world"), true){};
+    val action = new AbstractAction(Key.of("hello.world"), true) {};
     actionMap.add(action);
     assertEquals(List.of(action), actionMap.getKeysIn(Key.of("hello")));
   }

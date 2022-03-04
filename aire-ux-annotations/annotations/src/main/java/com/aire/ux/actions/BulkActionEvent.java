@@ -5,8 +5,7 @@ import java.util.List;
 
 public class BulkActionEvent extends AbstractActionEvent<List<Action>> {
 
-  public BulkActionEvent(Key targetKey, List<Action> target,
-      EventType eventType) {
+  public BulkActionEvent(Key targetKey, List<Action> target, EventType eventType) {
     super(targetKey, target, eventType);
   }
 }

@@ -7,5 +7,4 @@ public class Actions {
   public static Action create(String path, Consumer<Action> action) {
     return new DefaultDelegatingAction(Key.of(path), action);
   }
-
 }

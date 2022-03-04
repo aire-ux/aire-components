@@ -112,23 +112,27 @@ class ApplicationLayoutTest {
   @ViewTest
   @DirtiesContext
   void ensureRegisteringRouteWorks(@Autowired ExtensionRegistry registry, @Context TestContext $) {
-    assertThrows(NotFoundException.class,
-        () -> UI.getCurrent().navigate(MainNavigationComponent.class));
+    assertThrows(
+        NotFoundException.class, () -> UI.getCurrent().navigate(MainNavigationComponent.class));
     val reg = registry.register(RouteDefinition.global(MainNavigationComponent.class));
     UI.getCurrent().navigate(MainNavigationComponent.class);
     reg.remove();
-    assertThrows(NotFoundException.class,
-        () -> UI.getCurrent().navigate(MainNavigationComponent.class));
+    assertThrows(
+        NotFoundException.class, () -> UI.getCurrent().navigate(MainNavigationComponent.class));
   }
 
   @ViewTest
   @DirtiesContext
-  void ensureRegistrationWorksWithComponents(@Context TestContext $,
-      @Autowired UserInterface userInterface) {
-    val registration = userInterface.register(Selection.path(":main-2:navbar"),
-        Extensions.create(":sup", (@NonNull NavigationBar b) -> {
-          b.add(new Button("hello"));
-        }));
+  void ensureRegistrationWorksWithComponents(
+      @Context TestContext $, @Autowired UserInterface userInterface) {
+    val registration =
+        userInterface.register(
+            Selection.path(":main-2:navbar"),
+            Extensions.create(
+                ":sup",
+                (@NonNull NavigationBar b) -> {
+                  b.add(new Button("hello"));
+                }));
     assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isEmpty());
     val reg2 = userInterface.register(Mode.Global, MainNavigationComponent.class);
     $.navigate(MainNavigationComponent.class);
@@ -145,8 +149,7 @@ class ApplicationLayoutTest {
   @DirtiesContext
   void ensureActionManagerCanEnableAndDisableButtons(
       @Autowired UserInterface ui, @Context TestContext $) {
-    val action = spy(Actions.create("ui.module.stop", (self) -> {
-    }));
+    val action = spy(Actions.create("ui.module.stop", (self) -> {}));
 
     ui.register(
         Selection.path(":main:navigation"),

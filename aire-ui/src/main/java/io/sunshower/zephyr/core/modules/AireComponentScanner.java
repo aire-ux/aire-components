@@ -1,7 +1,5 @@
 package io.sunshower.zephyr.core.modules;
 
-import static org.reflections.scanners.Scanners.TypesAnnotated;
-
 import io.zephyr.kernel.Module;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -24,7 +22,8 @@ public class AireComponentScanner implements Callable<Set<Class<?>>>, Supplier<S
   public Set<Class<?>> call() {
     val scanner = createScanner();
     return null;
-//    return scanner.get(TypesAnnotated.with(UIExtension.class).asClass(module.getClassLoader()));
+    //    return
+    // scanner.get(TypesAnnotated.with(UIExtension.class).asClass(module.getClassLoader()));
   }
 
   private Reflections createScanner() {

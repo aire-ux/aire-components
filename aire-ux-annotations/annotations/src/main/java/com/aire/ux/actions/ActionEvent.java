@@ -9,12 +9,12 @@ public interface ActionEvent<E> extends Event<E> {
 
   EventType getEventType();
 
-
   enum Type implements EventType {
     ActionEnabled,
     ActionDisabled,
-    ActionRegistered, BulkActionsDisabled, BulkActionsEnabled;
-
+    ActionRegistered,
+    BulkActionsDisabled,
+    BulkActionsEnabled;
 
     final int id;
 

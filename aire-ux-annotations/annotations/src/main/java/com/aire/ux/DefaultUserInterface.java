@@ -18,7 +18,8 @@ public class DefaultUserInterface implements UserInterface {
   private final ExtensionRegistry registry;
 
   public DefaultUserInterface(
-      @NonNull final ExtensionRegistry registry, @NonNull AccessQueue accessQueue,
+      @NonNull final ExtensionRegistry registry,
+      @NonNull AccessQueue accessQueue,
       @NonNull ActionManager actionManager) {
     this.registry = registry;
     this.accessQueue = accessQueue;

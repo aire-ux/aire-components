@@ -4,8 +4,7 @@ import io.sunshower.lang.events.EventType;
 
 class DefaultActionEvent extends AbstractActionEvent<Action> {
 
-  public DefaultActionEvent(Key targetKey, Action target,
-      EventType eventType) {
+  public DefaultActionEvent(Key targetKey, Action target, EventType eventType) {
     super(targetKey, target, eventType);
   }
 

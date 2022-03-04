@@ -27,7 +27,8 @@ public class Scenario1 {
 
           @Override
           public void drain(VaadinSession session) {}
-        }, () -> null);
+        },
+        () -> null);
     //    return new SpringExtensionRegistry(command -> UI.getCurrent().access(command));
   }
 }

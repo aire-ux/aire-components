@@ -1,5 +1,3 @@
 package com.aire.ux;
 
-public interface ExtensionRegistration extends Registration {
-
-}
+public interface ExtensionRegistration extends Registration {}

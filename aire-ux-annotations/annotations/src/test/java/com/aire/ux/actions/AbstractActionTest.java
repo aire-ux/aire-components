@@ -1,6 +1,5 @@
 package com.aire.ux.actions;
 
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -18,8 +17,9 @@ class AbstractActionTest {
 
   @BeforeEach
   void setUp() {
-    action = new AbstractAction(Key.of("test.action"), true);
+    action = new AbstractAction(Key.of("test.action"), true) {};
   }
+
   @Test
   void ensureActionDisabledEventIsDispatched() {
     val listener = mock(EventListener.class);
@@ -28,5 +28,4 @@ class AbstractActionTest {
     verify(listener).onEvent(eq(Type.ActionEnabled), any());
     reg.close();
   }
-
 }

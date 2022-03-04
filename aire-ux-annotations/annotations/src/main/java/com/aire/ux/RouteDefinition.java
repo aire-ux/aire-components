@@ -22,6 +22,7 @@ public interface RouteDefinition {
 
   enum Mode {
     Session,
-    Aire, Global
+    Aire,
+    Global
   }
 }

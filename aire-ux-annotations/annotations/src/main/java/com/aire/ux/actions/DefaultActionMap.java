@@ -13,8 +13,7 @@ public class DefaultActionMap implements ActionMap {
   final TrieMap<Key, Action> keys;
 
   public DefaultActionMap() {
-    keys = new CompactTrieMap<>(
-        key -> new ArrayIterator<>(key.id().split("\\.")));
+    keys = new CompactTrieMap<>(key -> new ArrayIterator<>(key.id().split("\\.")));
   }
 
   @Override

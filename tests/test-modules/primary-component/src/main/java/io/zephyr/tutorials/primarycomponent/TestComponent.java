@@ -1,8 +1,5 @@
 package io.zephyr.tutorials.primarycomponent;
 
-import com.aire.ux.Control;
-import com.aire.ux.SelectorMode;
-import com.aire.ux.UIExtension;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -15,12 +12,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import lombok.val;
 
-@UIExtension(
-    control =
-        @Control(
-            target = ":main:navigation",
-            selectorMode = SelectorMode.Path,
-            factory = TestComponent.ControlFactory.class))
 @Route(value = "main-navigation", layout = MainView.class, registerAtStartup = false)
 public class TestComponent extends Div {
 

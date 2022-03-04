@@ -33,14 +33,12 @@ public interface ActionManager extends EventSource, AutoCloseable {
 
   default void register(@NonNull Action action) {
     getActionMap().add(action);
-    dispatchEvent(Type.ActionRegistered,
-        new DefaultActionEvent(action, Type.ActionRegistered));
+    dispatchEvent(Type.ActionRegistered, new DefaultActionEvent(action, Type.ActionRegistered));
   }
 
   default Action unregister(@NonNull Action action) {
     val result = unregister(action.getKey());
-    dispatchEvent(Type.ActionRegistered,
-        new DefaultActionEvent(action, Type.ActionRegistered));
+    dispatchEvent(Type.ActionRegistered, new DefaultActionEvent(action, Type.ActionRegistered));
     return result;
   }
 
