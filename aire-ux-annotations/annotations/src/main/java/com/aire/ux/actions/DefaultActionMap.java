@@ -20,7 +20,7 @@ public class DefaultActionMap implements ActionMap {
   }
 
   @Override
-  @GuardedBy("keys")
+  @GuardedBy("this.keys")
   public Action remove(Key key) {
     synchronized (keys) {
       return keys.remove(key);
@@ -28,7 +28,7 @@ public class DefaultActionMap implements ActionMap {
   }
 
   @Override
-  @GuardedBy("keys")
+  @GuardedBy("this.keys")
   public void add(Action action) {
     synchronized (keys) {
       keys.put(action.getKey(), action);
@@ -36,6 +36,7 @@ public class DefaultActionMap implements ActionMap {
   }
 
   @Override
+  @GuardedBy("this.keys")
   public List<Action> getKeysIn(Key... path) {
     synchronized (keys) {
       val spath = Arrays.stream(path).map(Key::id).collect(Collectors.joining("."));
@@ -45,6 +46,7 @@ public class DefaultActionMap implements ActionMap {
   }
 
   @Override
+  @GuardedBy("this.keys")
   public Action get(Key key) {
     synchronized (keys) {
       return keys.get(key);
