@@ -10,6 +10,7 @@ import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.function.Supplier;
 import javax.annotation.concurrent.ThreadSafe;
+import lombok.NonNull;
 
 @ThreadSafe
 public interface UserInterface {
@@ -27,6 +28,20 @@ public interface UserInterface {
 
   default <T> Optional<T> selectFirst(PartialSelection<T> path) {
     return selectFirst(path, UI::getCurrent);
+  }
+
+  @NonNull
+  default ComponentInclusionManager getComponentInclusionManager() {
+    return getExtensionRegistry().getComponentInclusionManager();
+  }
+
+  /**
+   * @param voter the ComponentInclusionVoter to register
+   * @return a registration allowing to unregister the voter
+   */
+  @NonNull
+  default Registration registerComponentInclusionVoter(@NonNull ComponentInclusionVoter voter) {
+    return getComponentInclusionManager().register(voter);
   }
 
   <T> Optional<T> selectFirst(PartialSelection<T> path, Supplier<UI> uiSupplier);

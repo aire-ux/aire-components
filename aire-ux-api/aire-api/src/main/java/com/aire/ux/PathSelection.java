@@ -93,18 +93,28 @@ public class PathSelection<T> implements Selection<T> {
           !Objects.equals(type, Object.class);
           type = type.getSuperclass()) {
         val host = type.getAnnotation(Host.class);
-        if (host != null && Objects.equals(normalize(host.value()), segments.peekFirst())) {
-          segments.pop();
-          if (segments.isEmpty()) {
-            return (T) comp;
-          }
-          try {
-            var result = searchFor(registry.typeOf(comp), comp, segments);
-            if (result != null) {
-              return (T) result;
+        if (host != null) {
+          if (Objects.equals(normalize(host.value()), segments.peekFirst())) {
+            segments.pop();
+            if (segments.isEmpty()) {
+              return (T) comp;
             }
-          } catch (Exception ex) {
-            throw new IllegalStateException(ex);
+            try {
+              var result = searchFor(registry.typeOf(comp), comp, segments);
+              if (result != null) {
+                return (T) result;
+              }
+            } catch (Exception ex) {
+              throw new IllegalStateException(ex);
+            }
+          } else {
+            segments.pop();
+            if (Objects.equals(normalize(host.value()), segments.peekFirst())) {
+              segments.pop();
+              if(segments.isEmpty()) {
+                return (T) comp;
+              }
+            }
           }
         }
       }

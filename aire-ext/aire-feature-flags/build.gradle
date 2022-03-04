@@ -1,5 +1,6 @@
 
 
 dependencies {
+    implementation project(':aire-ux-api:aire-api')
     testImplementation(testFixtures(project(':aire-ui')))
 }
