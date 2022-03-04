@@ -41,9 +41,9 @@ include(
         'aire-test-spring',
         'aire-ux-annotations',
         'aire-ux-flow:theme:aire-theme',
-        'aire-ux-annotations:annotations',
-        'aire-ux-annotations:annotations-core',
-        'aire-ux-annotations:annotations-spring',
+        'aire-ux-api:aire-api',
+        'aire-ux-api:aire-api-core',
+        'aire-ux-api:aire-api-spring',
 
         'tests:test-modules:primary-component'
 )

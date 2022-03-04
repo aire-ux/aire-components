@@ -11,6 +11,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import lombok.val;
 
 @ThreadSafe
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class DefaultActionMap implements ActionMap {
 
   final TrieMap<Key, Action> keys;

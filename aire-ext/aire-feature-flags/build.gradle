@@ -1,0 +1,5 @@
+
+
+dependencies {
+    testImplementation(testFixtures(project(':aire-ui')))
+}

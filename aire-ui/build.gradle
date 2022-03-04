@@ -75,27 +75,24 @@ dependencies {
 
     [
             ':aire-test-spring',
-            ':aire-ux-annotations:annotations',
-            ':aire-ux-annotations:annotations-core',
-            ':aire-ux-annotations:annotations-spring',
+            ':aire-ux-api:aire-api',
+            ':aire-ux-api:aire-api-core',
+            ':aire-ux-api:aire-api-spring',
     ].each {
         testFixturesApi project(it)
     }
 
-    implementation project(':aire-ux-annotations:annotations-core')
-    implementation project(':aire-ux-annotations:annotations-spring')
+    implementation project(':aire-ux-api:aire-api-core')
+    implementation project(':aire-ux-api:aire-api-spring')
 
     [
             ':aire-ux-core',
-            ':aire-ux-annotations:annotations',
-            ':aire-ux-annotations:annotations-spring'
+            ':aire-ux-api:aire-api',
+            ':aire-ux-api:aire-api-spring'
     ].each {
         testFixturesApi(testFixtures(project(it)))
     }
 
-//    testImplementation(testFixtures(project(":aire-ux-core")))
-//    testImplementation(testFixtures(project(":aire-ux-annotations:annotations")))
-//    testImplementation(testFixtures(project(":aire-ux-annotations:annotations-spring")))
 
     /**
      * general test libraries
@@ -103,7 +100,6 @@ dependencies {
     testFixturesApi('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-//    developmentOnly "org.springframework.boot:spring-boot-devtools"
 }
 
 dependencyManagement {

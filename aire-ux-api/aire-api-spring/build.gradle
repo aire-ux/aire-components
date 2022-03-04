@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api project(':aire-ux-annotations:annotations')
-    api project(':aire-ux-annotations:annotations-core')
+    api project(':aire-ux-api:aire-api')
+    api project(':aire-ux-api:aire-api-core')
 
     api 'io.zephyr:gyre-api'
     api 'javax.servlet:javax.servlet-api'
@@ -13,11 +13,11 @@ dependencies {
     api 'org.springframework:spring-context'
 
     testFixturesApi project(':aire-test-spring')
-    testFixturesApi project(':aire-ux-annotations:annotations')
+    testFixturesApi project(':aire-ux-api:aire-api')
 
 //    testImplementation project(':aire-ux-core')
     testImplementation project(':aire-test-spring')
 
-    testImplementation testFixtures(project(':aire-ux-annotations:annotations'))
+    testImplementation testFixtures(project(':aire-ux-api:aire-api'))
 
 }
