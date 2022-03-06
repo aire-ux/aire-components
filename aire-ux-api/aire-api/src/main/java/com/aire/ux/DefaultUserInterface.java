@@ -10,6 +10,7 @@ import com.vaadin.flow.component.UI;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.NonNull;
+import lombok.val;
 
 public class DefaultUserInterface implements UserInterface {
 
@@ -44,7 +45,9 @@ public class DefaultUserInterface implements UserInterface {
   @Override
   public <T extends HasElement> Registration register(
       PartialSelection<T> path, Extension<T> extension) {
-    return registry.register(path, extension);
+    val result = registry.register(path, extension);
+    Optional.ofNullable(UI.getCurrent()).ifPresent(UI::push);
+    return result;
   }
 
   @Override
@@ -53,6 +56,7 @@ public class DefaultUserInterface implements UserInterface {
   }
 
   private <T> Extension<T> extensionFor(PartialSelection<T> path) {
-    return new DefaultComponentExtension<>(path.getSegment(), c -> {});
+    return new DefaultComponentExtension<>(path.getSegment(), c -> {
+    });
   }
 }

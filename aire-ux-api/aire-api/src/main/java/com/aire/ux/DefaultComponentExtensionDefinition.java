@@ -17,7 +17,7 @@ public class DefaultComponentExtensionDefinition<T> implements ExtensionDefiniti
 
   @Override
   public String getPath() {
-    return path;
+    return path + extension.getSegment();
   }
 
   @Override

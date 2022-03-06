@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.management;
 
+import com.aire.ux.Host;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Image;
@@ -18,6 +19,7 @@ import io.sunshower.zephyr.ui.layout.ApplicationLayoutDecorator;
 import java.util.List;
 import lombok.val;
 
+@Host("modules")
 @RoutePrefix("zephyr")
 @ParentLayout(ApplicationLayout.class)
 public class ZephyrManagementConsoleView extends Panel implements ApplicationLayoutDecorator {

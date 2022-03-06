@@ -7,11 +7,13 @@ import com.aire.ux.PartialSelection;
 import com.aire.ux.RouteDefinition;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.server.RouteRegistry;
+import io.sunshower.lang.events.EventSource;
+import io.sunshower.lang.events.EventType;
 import javax.annotation.concurrent.ThreadSafe;
 import lombok.NonNull;
 
 @ThreadSafe
-public interface ExtensionRegistry extends RouteRegistry {
+public interface ExtensionRegistry extends RouteRegistry, EventSource, AutoCloseable {
 
   Class<?> typeOf(Object type);
 
@@ -28,4 +30,22 @@ public interface ExtensionRegistry extends RouteRegistry {
 
   @NonNull
   ComponentInclusionManager getComponentInclusionManager();
+
+  enum Events implements EventType {
+    RouteRegistered,
+    RouteUnregistered,
+    ExtensionRegistered,
+    ExtensionUnregistered;
+
+    private final int id;
+
+    Events() {
+      this.id = EventType.newId();
+    }
+
+    @Override
+    public int getId() {
+      return id;
+    }
+  }
 }

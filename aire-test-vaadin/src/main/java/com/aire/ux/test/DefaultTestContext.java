@@ -173,7 +173,7 @@ public class DefaultTestContext implements TestContext {
   }
 
   @Override
-  public void flush() {
+  public void flush(boolean force) {
     Optional.ofNullable(UI.getCurrent())
         .map(
             ui -> {
@@ -191,7 +191,9 @@ public class DefaultTestContext implements TestContext {
                 }
               }
             });
-    Frames.reload();
+    if(force) {
+      Frames.reload();
+    }
   }
 
   private Predicate<Element> elementTypePredicate(Class<?>... types) {

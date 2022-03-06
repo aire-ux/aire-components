@@ -7,6 +7,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.internal.ReflectTools;
+import io.sunshower.lang.tuple.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
@@ -92,7 +93,14 @@ public class PathSelection<T> implements Selection<T> {
       for (var type = registry.typeOf(comp);
           !Objects.equals(type, Object.class);
           type = type.getSuperclass()) {
-        val host = type.getAnnotation(Host.class);
+//        val host = type.getAnnotation(Host.class);
+        val r = findMatchingHost(type, segments);
+        Host host = null;
+
+        if(r != null) {
+          host = r.snd;
+          type = r.fst;
+        }
         if (host != null) {
           if (Objects.equals(normalize(host.value()), segments.peekFirst())) {
             segments.pop();
@@ -104,6 +112,7 @@ public class PathSelection<T> implements Selection<T> {
               if (result != null) {
                 return (T) result;
               }
+              break;
             } catch (Exception ex) {
               throw new IllegalStateException(ex);
             }
@@ -111,11 +120,13 @@ public class PathSelection<T> implements Selection<T> {
             segments.pop();
             if (Objects.equals(normalize(host.value()), segments.peekFirst())) {
               segments.pop();
-              if(segments.isEmpty()) {
+              if (segments.isEmpty()) {
                 return (T) comp;
               }
             }
           }
+        } else {
+          break;
         }
       }
       comp.getChildren().forEach(stack::push);
@@ -123,16 +134,29 @@ public class PathSelection<T> implements Selection<T> {
     return null;
   }
 
+  private Pair<Class<?>, Host> findMatchingHost(Class<?> type, ArrayDeque<String> segments) {
+    val hostName = normalize(segments.peek());
+    for (var t = type; !(t == null || Objects.equals(type, Object.class)); t = t.getSuperclass()) {
+      val host = t.getAnnotation(Host.class);
+      if (host != null && Objects.equals(normalize(host.value()), hostName)) {
+        return Pair.of(t, host);
+      }
+    }
+    return null;
+  }
+
   @SuppressWarnings("unchecked")
   private <T> T searchFor(Class<?> type, Component instance, ArrayDeque<String> slot)
       throws IllegalAccessException, InvocationTargetException {
+    val size = slot.size();
     while (!slot.isEmpty()) {
-      val slotValue = slot.pollFirst();
+      val slotValue = slot.peekFirst();
       for (var c = type; !Objects.equals(c, Object.class); c = c.getSuperclass()) {
 
         for (val field : c.getDeclaredFields()) {
           val slotAnnotation = field.getAnnotation(Slot.class);
           if (slotAnnotation != null && Objects.equals(slotAnnotation.value(), slotValue)) {
+            slot.pollFirst();
             if (!field.trySetAccessible()) {
               throw new IllegalStateException(
                   String.format(
@@ -146,6 +170,7 @@ public class PathSelection<T> implements Selection<T> {
         for (val method : c.getDeclaredMethods()) {
           val slotAnnotation = method.getAnnotation(Slot.class);
           if (slotAnnotation != null && Objects.equals(slotAnnotation.value(), slotValue)) {
+            slot.pollFirst();
             final Method getter;
             if (isGetter(method)) {
               getter = method;
@@ -173,6 +198,9 @@ public class PathSelection<T> implements Selection<T> {
             return (T) getter.invoke(instance);
           }
         }
+      }
+      if (size == slot.size()) {
+        return null;
       }
     }
     return null;

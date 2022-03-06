@@ -27,6 +27,8 @@ public class SpringComponentInclusionManager implements ComponentInclusionManage
 
   @Override
   public boolean decide(ExtensionDefinition<?> extension) {
-    return componentInclusionVoters.stream().allMatch(voter -> voter.decide(extension));
+    synchronized (componentInclusionVoters) {
+      return componentInclusionVoters.stream().allMatch(voter -> voter.decide(extension));
+    }
   }
 }

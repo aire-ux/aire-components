@@ -8,14 +8,20 @@ import com.aire.ux.actions.ActionManager;
 import com.aire.ux.actions.DefaultActionManager;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.aire.ux.ext.ExtensionRegistry.Events;
 import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinService;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
 import io.zephyr.kernel.concurrency.WorkerPool;
+import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.KernelModuleLoader;
 import io.zephyr.kernel.core.ModuleClasspath;
@@ -42,6 +48,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -141,8 +148,9 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   @Bean
   public static ExtensionRegistry extensionRegistry(
       AccessQueue queue, ComponentInclusionManager manager) {
-    return new SpringExtensionRegistry(
+    val registry = new SpringExtensionRegistry(
         queue, () -> VaadinService.getCurrent().getContext(), manager);
+    return registry;
   }
 
   @Bean
@@ -172,6 +180,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
     try {
       graph.add(context.getBean(EmbeddedModule.class));
       val kernel = context.getBean(Kernel.class);
+      registerServices(module, context, kernel);
       log.info("Starting embedded kernel...");
       kernel.start();
       log.info("Embedded kernel started successfully.  Started embedded module");
@@ -180,5 +189,17 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
     } catch (Exception ex) {
       log.error("Encountered an error attempting to start kernel: {}", ex.getMessage(), ex);
     }
+  }
+
+  private void registerServices(EmbeddedModule module,
+      ConfigurableApplicationContext context, Kernel kernel) {
+    log.info("Registering UserInterface service");
+    kernel.getServiceRegistry().register(module, new FactoryServiceDefinition<>(
+        UserInterface.class,
+        "aire:user-interface",
+        () -> context.getBean(UserInterface.class)
+    ));
+    log.info("Successfully registered UserInterface service");
+
   }
 }

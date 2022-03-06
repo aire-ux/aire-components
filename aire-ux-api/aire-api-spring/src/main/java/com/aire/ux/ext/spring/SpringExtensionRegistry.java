@@ -1,5 +1,7 @@
 package com.aire.ux.ext.spring;
 
+import static io.sunshower.lang.events.Events.create;
+
 import com.aire.ux.ComponentInclusionManager;
 import com.aire.ux.Extension;
 import com.aire.ux.ExtensionDefinition;
@@ -13,6 +15,8 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.internal.AbstractRouteRegistry;
 import com.vaadin.flow.server.VaadinContext;
+import io.sunshower.lang.events.AbstractEventSource;
+import io.sunshower.lang.events.EventSource;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,25 +25,28 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import javax.annotation.concurrent.ThreadSafe;
 import lombok.NonNull;
+import lombok.experimental.Delegate;
 import lombok.val;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 @ThreadSafe
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SpringExtensionRegistry extends AbstractRouteRegistry
-    implements ExtensionRegistry, ApplicationContextAware {
+    implements ExtensionRegistry, ApplicationContextAware, DisposableBean {
 
   public static final int CACHE_SIZE = 100;
-  final Object lock = new Object();
+  private final Object lock = new Object();
+  @Delegate
+  private final EventSource delegate;
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
   private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
   private final ComponentInclusionManager inclusionManager;
-
   private ApplicationContext context;
   private UserInterface userInterface;
 
@@ -51,6 +58,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
     this.extensions = new HashMap<>();
     this.vaadinContext = context;
     this.inclusionManager = inclusionManager;
+    this.delegate = new SpringExtensionRegistryEventSource();
     extensionCache =
         new LinkedHashMap<>() {
           @Override
@@ -85,8 +93,10 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
               () -> {
                 extensions.remove(select);
                 extensionCache.clear();
+                dispatchEvent(Events.ExtensionUnregistered, create(extension));
               });
       extensions.put(select, registration);
+      dispatchEvent(Events.ExtensionRegistered, create(extension));
       return registration;
     }
   }
@@ -94,16 +104,21 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   @Override
   public <T extends HasElement> ExtensionRegistration register(RouteDefinition routeDefinition) {
     synchronized (lock) {
-      val configuration = locate(routeDefinition);
       accessQueue.enqueue(
           () -> {
+            val configuration = locate(routeDefinition);
             val type = routeDefinition.getComponent();
             if (!configuration.isRouteRegistered(type)) {
               configuration.setAnnotatedRoute(type);
             }
+            dispatchEvent(Events.RouteRegistered, create(routeDefinition));
           });
       return () -> {
-        configuration.removeRoute(routeDefinition.getComponent());
+        accessQueue.enqueue(() -> {
+          val cfg = locate(routeDefinition);
+          cfg.removeRoute(routeDefinition.getComponent());
+          dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
+        });
       };
     }
   }
@@ -214,5 +229,20 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
         configuration = RouteConfiguration.forRegistry(this);
     }
     return configuration;
+  }
+
+  @Override
+  public void close() throws Exception {
+    //todo remove listeners
+  }
+
+  @Override
+  public void destroy() throws Exception {
+    close();
+
+  }
+
+  private static class SpringExtensionRegistryEventSource extends AbstractEventSource {
+
   }
 }

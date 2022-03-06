@@ -70,5 +70,9 @@ public interface TestContext {
 
   <T extends Component> TestContext downTo(T value);
 
-  void flush();
+  void flush(boolean force);
+
+  default void flush() {
+    flush(false);
+  }
 }

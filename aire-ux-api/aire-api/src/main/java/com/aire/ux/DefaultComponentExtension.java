@@ -12,6 +12,11 @@ public class DefaultComponentExtension<T> implements Extension<T> {
     this.consumer = consumer;
   }
 
+  @Override
+  public String getSegment() {
+    return segment;
+  }
+
   public void decorate(T value) {
     consumer.accept(value);
   }

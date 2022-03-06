@@ -12,10 +12,13 @@ import com.vaadin.flow.spring.SpringInstantiator;
 import com.vaadin.flow.spring.SpringVaadinServletService;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.val;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 public class VaadinSpringServletService extends SpringVaadinServletService {
+
 
   private final WebApplicationContext context;
 

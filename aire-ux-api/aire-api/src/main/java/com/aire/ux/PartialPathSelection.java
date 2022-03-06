@@ -69,14 +69,14 @@ class PartialPathSelection<T> implements PartialSelection<T> {
     for (var c = type; !Objects.equals(c, Object.class); c = c.getSuperclass()) {
       val host = c.getAnnotation(Host.class);
       if (host != null && path.startsWith(normalize(host.value()))) {
-        final Referent<Class<T>> referent;
+        Referent<Class<T>> referent;
         if (cache == null) {
           cache = new WeakReference<>(referent = new Referent<>());
         } else {
           referent = cache.get();
         }
-        if (referent == null) {
-          return false;
+        if(referent == null) {
+          cache = new WeakReference<>(referent = new Referent<>());
         }
         referent.value = (Class<T>) c;
         return true;
