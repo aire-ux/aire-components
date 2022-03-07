@@ -16,9 +16,7 @@ import java.util.List;
 import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,10 +24,8 @@ import org.springframework.context.annotation.Configuration;
 public class FeatureModuleConfiguration implements DisposableBean {
 
   private final List<Registration> registrations;
-  @Autowired
-  private ApplicationContext context;
-  @Autowired
-  private UserInterface userInterface;
+  @Autowired private ApplicationContext context;
+  @Autowired private UserInterface userInterface;
 
   public FeatureModuleConfiguration() {
     registrations = new ArrayList<>();
@@ -48,18 +44,20 @@ public class FeatureModuleConfiguration implements DisposableBean {
     registrations.add(userInterface.register(Mode.Global, FeatureGrid.class));
     registrations.add(userInterface.register(path(":module-management"), extension));
 
-    val feature = new FeatureDescriptor("modules.features.feature-grid", "Module Feature Grid",
-        ":module-management:feature-view", "Feature view");
+    val feature =
+        new FeatureDescriptor(
+            "modules.features.feature-grid",
+            "Module Feature Grid",
+            ":module-management:feature-view",
+            "Feature view");
     feature.enable();
     manager.registerFeature(feature);
     return manager;
   }
 
-
-
   @Override
   public void destroy() throws Exception {
-    for(val registration : registrations) {
+    for (val registration : registrations) {
       registration.close();
     }
   }

@@ -20,10 +20,10 @@ public class FeatureModuleActivator implements ModuleActivator {
 
   @Override
   public void start(ModuleContext context) throws Exception {
-    context.getReferences(SpringDelegatingInstantiator.class)
-        .stream().findFirst().ifPresent(instantiator -> initializeContext(context, instantiator));
+    context.getReferences(SpringDelegatingInstantiator.class).stream()
+        .findFirst()
+        .ifPresent(instantiator -> initializeContext(context, instantiator));
   }
-
 
   @Override
   public void stop(ModuleContext context) throws Exception {
@@ -37,34 +37,42 @@ public class FeatureModuleActivator implements ModuleActivator {
 
   private void initializeContext(
       ModuleContext moduleContext, ServiceReference<SpringDelegatingInstantiator> reference) {
-    registration = reference.getDefinition().get()
-        .performWithParent(parent -> applicationContext = new SpringApplicationBuilder()
-            .headless(true)
-            .web(WebApplicationType.NONE)
-            .initializers(new FeatureModuleInitializer(moduleContext))
-            .sources(FeatureModuleConfiguration.class)
-            .parent((ConfigurableApplicationContext) parent)
-            .run()
-        );
+    registration =
+        reference
+            .getDefinition()
+            .get()
+            .performWithParent(
+                parent ->
+                    applicationContext =
+                        new SpringApplicationBuilder()
+                            .headless(true)
+                            .web(WebApplicationType.NONE)
+                            .initializers(new FeatureModuleInitializer(moduleContext))
+                            .sources(FeatureModuleConfiguration.class)
+                            .parent((ConfigurableApplicationContext) parent)
+                            .run());
   }
 
-
-  static class FeatureModuleInitializer implements
-      ApplicationContextInitializer<ConfigurableApplicationContext> {
+  static class FeatureModuleInitializer
+      implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     final UserInterface userInterface;
 
     public FeatureModuleInitializer(ModuleContext context) {
-      userInterface = context.getReferences(UserInterface.class).stream().findFirst()
-          .map(t -> t.getDefinition().get()).orElseThrow(
-              () -> new IllegalArgumentException(
-                  "No UserInterface services registered.  Either the dependency graph is incorrect or there is no supplier of such a bean"));
+      userInterface =
+          context.getReferences(UserInterface.class).stream()
+              .findFirst()
+              .map(t -> t.getDefinition().get())
+              .orElseThrow(
+                  () ->
+                      new IllegalArgumentException(
+                          "No UserInterface services registered.  Either the dependency graph is incorrect or there is no supplier of such a bean"));
     }
-
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-      applicationContext.getBeanFactory()
+      applicationContext
+          .getBeanFactory()
           .registerSingleton("aire.userinterface.instance", userInterface);
     }
   }

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "modules/features", layout = PluginTabView.class)
 public class FeatureGrid extends VerticalLayout {
 
-
   private final FeatureManager featureManager;
 
   @Autowired
