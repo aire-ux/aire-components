@@ -20,7 +20,8 @@ import com.vaadin.flow.router.RouterLink;
 import io.sunshower.gyre.CompactTrieMap;
 import io.sunshower.gyre.RegexStringAnalyzer;
 import io.sunshower.gyre.TrieMap;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -35,14 +36,19 @@ public class TabPanel extends HtmlContainer
     implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
   static final String CLASS_NAME = "tab-panel";
-  /** immutable state */
+  /**
+   * immutable state
+   */
   private final Tabs tabs;
 
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
-  @Getter private final Map<Tab, ComponentDescriptor> components;
-  /** mutable state */
+  @Getter
+  private final Map<Tab, ComponentDescriptor> components;
+  /**
+   * mutable state
+   */
   private Component current;
 
   private TabPlacement placement;
@@ -61,9 +67,10 @@ public class TabPanel extends HtmlContainer
     add(contents);
     setTabPlacement(placement);
 
-    components = new HashMap<>();
+    components = new LinkedHashMap<>();
     locations = new CompactTrieMap<>(new RegexStringAnalyzer("/"));
   }
+
 
   public TabPanel() {
     this(TabPlacement.TOP);
@@ -74,6 +81,10 @@ public class TabPanel extends HtmlContainer
     components.put(tab, new ComponentDescriptor(false, component, null));
     tabs.add(tab);
     return tab;
+  }
+
+  public List<Tab> getTabs() {
+    return List.copyOf(components.keySet());
   }
 
   public Tab addTab(Component header, Supplier<Component> component) {

@@ -1,4 +1,4 @@
-package com.aire.ux.features;
+package com.aire.features;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

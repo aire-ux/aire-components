@@ -8,6 +8,8 @@ import com.vaadin.flow.spring.VaadinConfigurationProperties;
 import com.vaadin.flow.spring.VaadinServletConfiguration;
 import com.vaadin.flow.spring.VaadinServletContextInitializer;
 import com.vaadin.flow.spring.VaadinWebsocketEndpointExporter;
+import io.zephyr.kernel.Module;
+import io.zephyr.kernel.core.Kernel;
 import java.util.HashMap;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,11 @@ public class AireVaadinOverrideAutoConfiguration {
 
   static final String VAADIN_SERVLET_MAPPING = "/vaadinServlet/*";
 
-  @Autowired private WebApplicationContext context;
+  @Autowired
+  private WebApplicationContext context;
 
-  @Autowired private VaadinConfigurationProperties configurationProperties;
+  @Autowired
+  private VaadinConfigurationProperties configurationProperties;
 
   static String makeContextRelative(String url) {
     // / -> context://
@@ -58,7 +62,9 @@ public class AireVaadinOverrideAutoConfiguration {
    * @return a custom ServletRegistrationBean instance
    */
   @Bean
-  public ServletRegistrationBean<SpringServlet> servletRegistrationBean(AccessQueue queue) {
+  public ServletRegistrationBean<SpringServlet> servletRegistrationBean(Module module,
+      Kernel kernel,
+      AccessQueue queue) {
     var mapping = configurationProperties.getUrlMapping();
     val initParameters = new HashMap<String, String>();
     var rootMapping = RootMappedCondition.isRootMapping(mapping);
@@ -69,7 +75,7 @@ public class AireVaadinOverrideAutoConfiguration {
     }
     val registration =
         new ServletRegistrationBean<SpringServlet>(
-            new AireVaadinServlet(queue, context, rootMapping), mapping);
+            new AireVaadinServlet(kernel, module, queue, context, rootMapping), mapping);
     registration.setInitParameters(initParameters);
     registration.setAsyncSupported(configurationProperties.isAsyncSupported());
     registration.setName(ClassUtils.getShortNameAsProperty(SpringServlet.class));

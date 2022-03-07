@@ -1,4 +1,4 @@
-package com.aire.ux.features;
+package com.aire.features;
 
 import com.aire.ux.ExtensionDefinition;
 import java.util.ArrayList;

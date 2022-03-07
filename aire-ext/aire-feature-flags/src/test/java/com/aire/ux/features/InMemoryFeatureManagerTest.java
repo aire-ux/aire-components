@@ -3,6 +3,10 @@ package com.aire.ux.features;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aire.features.FeatureDescriptor;
+import com.aire.features.FeatureManager;
+import com.aire.features.InMemoryFeatureManager;
+import com.aire.features.SelectionBasedComponentInclusionVoter;
 import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.Extensions;
 import com.aire.ux.Registration;

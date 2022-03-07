@@ -1,27 +1,28 @@
-package com.aire.ux.features.ui;
+package com.aire.features.ui;
 
-import com.aire.ux.features.FeatureDescriptor;
-import com.aire.ux.features.InMemoryFeatureManager;
+import com.aire.features.FeatureDescriptor;
+import com.aire.features.FeatureManager;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.management.PluginTabView;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Breadcrumb(name = "Features", icon = "vaadin:plug", host = MainView.class)
 @Route(value = "modules/features", layout = PluginTabView.class)
 public class FeatureGrid extends VerticalLayout {
 
 
-  private final InMemoryFeatureManager featureManager;
+  private final FeatureManager featureManager;
 
-  public FeatureGrid() {
-    this.featureManager = InMemoryFeatureManager.getInstance();
+  @Autowired
+  public FeatureGrid(FeatureManager featureManager) {
+    this.featureManager = featureManager;
     getStyle().set("display", "flex");
     setHeight("100%");
     val grid = new Grid<FeatureDescriptor>();

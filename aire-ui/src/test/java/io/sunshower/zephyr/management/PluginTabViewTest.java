@@ -12,6 +12,7 @@ import com.aire.ux.test.ViewTest;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.ui.components.TabPanel;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 
 @AireUITest
 @Routes(scanClassPackage = ModuleGrid.class)
@@ -27,8 +28,11 @@ class PluginTabViewTest {
   @ViewTest
   @Navigate("zephyr/management/modules/list")
   void ensurePluginTabViewIsSelectableByPath(
-      @Select(mode = "path", selector = ":main:module-management") PluginTabView view) {
-    assertNotNull(view);
+      @Select TabPanel view) {
+
+    view.activate(view.getTabs().iterator().next());
+    System.out.println(view.getElement());
+
   }
 
 }

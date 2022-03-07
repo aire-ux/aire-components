@@ -8,18 +8,11 @@ import com.aire.ux.UserInterface;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.actions.DefaultActionManager;
 import com.aire.ux.concurrency.AccessQueue;
-import com.aire.ux.concurrency.AccessQueue.Target;
 import com.aire.ux.ext.ExtensionRegistry;
-import com.aire.ux.ext.ExtensionRegistry.Events;
 import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
-import io.sunshower.lang.events.Event;
-import io.sunshower.lang.events.EventListener;
-import io.sunshower.lang.events.EventType;
 import io.sunshower.zephyr.ZephyrApplication;
-import io.sunshower.zephyr.util.Debouncer;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
@@ -46,7 +39,6 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
@@ -174,30 +166,8 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   @Bean
   public ExtensionRegistry extensionRegistry(
       AccessQueue queue, ComponentInclusionManager manager) {
-    val registry = new SpringExtensionRegistry(
+    return new SpringExtensionRegistry(
         queue, () -> VaadinService.getCurrent().getContext(), manager);
-    val listener = new EventListener<>() {
-      @Override
-      public void onEvent(EventType eventType, Event<Object> event) {
-
-        queue.broadcast(Target.UI, (uiOrSession) -> {
-          if (uiOrSession instanceof UI ui) {
-            val callback = new Consumer<UI>() {
-              @Override
-              public void accept(UI ui) {
-                ui.access(() -> ui.getPage().reload());
-              }
-            };
-            new Debouncer<>(callback, 1000).call(ui);
-          }
-        });
-      }
-    };
-    registry.addEventListener(listener, Events.RouteRegistered, Events.ExtensionRegistered);
-    registrations.add(() -> {
-      registry.removeEventListener(listener);
-    });
-    return registry;
   }
 
   @Bean(name = "applicationEventMulticaster")

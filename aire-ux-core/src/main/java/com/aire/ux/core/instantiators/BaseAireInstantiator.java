@@ -20,19 +20,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
 
 public class BaseAireInstantiator implements Instantiator, Flushable {
 
+  @Getter(AccessLevel.PROTECTED)
   private final Instantiator delegate;
   private final ComponentDecorator decorator;
 
   /**
    * Creates a new instantiator for the given service.
    *
-   * @param delegate the base instantiator to use
+   * @param delegate  the base instantiator to use
    * @param decorator the decorator to use
    */
   public BaseAireInstantiator(
@@ -41,11 +44,17 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
     this.decorator = Objects.requireNonNull(decorator);
   }
 
-  /** @param delegate */
+  /**
+   * @param delegate
+   */
   public BaseAireInstantiator(@Nonnull Instantiator delegate) {
     this(
         delegate,
         new ServiceLoaderComponentDecorator(Thread.currentThread().getContextClassLoader()));
+  }
+
+  protected <T> T doGetOrCreate(Class<T> type) {
+    return delegate.getOrCreate(type);
   }
 
   @Override
@@ -68,7 +77,7 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
 
   @Override
   public <T> T getOrCreate(Class<T> type) {
-    val result = delegate.getOrCreate(type);
+    val result = doGetOrCreate(type);
     preDecorateResult(type, result);
     if (HasElement.class.isAssignableFrom(type)) {
       decorate((HasElement) result);
@@ -79,12 +88,22 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
 
   @Override
   public <T extends Component> T createComponent(Class<T> componentClass) {
-    val result = delegate.createComponent(componentClass);
+    val result = doCreateComponent(componentClass);
     preDecorateResult(componentClass, result);
     decorate(result);
     postDecorateResult(componentClass, result);
     return result;
   }
+
+  protected <T extends Component> T doCreateComponent(Class<T> componentClass) {
+    return delegate.createComponent(componentClass);
+  }
+
+  protected <T extends HasElement> T doCreateRouteTarget(Class<T> routeTargetType,
+      NavigationEvent event) {
+    return delegate.createRouteTarget(routeTargetType, event);
+  }
+
 
   @Override
   public Stream<BootstrapListener> getBootstrapListeners(
@@ -101,11 +120,12 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
   @Override
   public <T extends HasElement> T createRouteTarget(
       Class<T> routeTargetType, NavigationEvent event) {
-    val result = delegate.createRouteTarget(routeTargetType, event);
+    val result = doCreateRouteTarget(routeTargetType, event);
     decorateRouteTarget(routeTargetType);
     decorate(result);
     return result;
   }
+
 
   @Override
   public I18NProvider getI18NProvider() {
@@ -116,21 +136,24 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result the result
-   * @param <T> the type parameter
+   * @param result         the result
+   * @param <T>            the type parameter
    */
-  protected <T> void preDecorateResult(Class<T> componentClass, T result) {}
+  protected <T> void preDecorateResult(Class<T> componentClass, T result) {
+  }
 
   /**
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result the result
-   * @param <T> the type parameter
+   * @param result         the result
+   * @param <T>            the type parameter
    */
-  protected <T> void postDecorateResult(Class<T> componentClass, T result) {}
+  protected <T> void postDecorateResult(Class<T> componentClass, T result) {
+  }
 
-  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {}
+  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {
+  }
 
   @SuppressFBWarnings
   private <T extends HasElement> void decorate(T result) {
@@ -142,24 +165,22 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
       current = stack.pop();
       val c = current.current;
       switch (current.stage) {
-        case 0:
-          {
-            decorator.onComponentEntered(c);
-            decorator.decorate(c);
-            current.stage = 1;
-            stack.push(current);
-            val el = c.getElement();
-            for (int i = 0; i < el.getChildCount(); i++) {
-              val childOpt = el.getChild(i).getComponent();
-              childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
-            }
-            continue;
+        case 0: {
+          decorator.onComponentEntered(c);
+          decorator.decorate(c);
+          current.stage = 1;
+          stack.push(current);
+          val el = c.getElement();
+          for (int i = 0; i < el.getChildCount(); i++) {
+            val childOpt = el.getChild(i).getComponent();
+            childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
           }
-        case 1:
-          {
-            decorator.onComponentExited(c);
-            break;
-          }
+          continue;
+        }
+        case 1: {
+          decorator.onComponentExited(c);
+          break;
+        }
       }
     }
   }
