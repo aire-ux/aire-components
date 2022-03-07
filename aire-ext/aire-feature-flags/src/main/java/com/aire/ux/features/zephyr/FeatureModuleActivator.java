@@ -59,9 +59,9 @@ public class FeatureModuleActivator implements ModuleActivator {
               view.addTab("Feature Flags", FeatureGrid.class);
             });
     try {
+      gridRegistration = userInterface.register(Mode.Global, FeatureGrid.class);
       extensionRegistration = userInterface.register(Selection.path(":module-management"),
           extension);
-      gridRegistration = userInterface.register(Mode.Global, FeatureGrid.class);
       val manager = InMemoryFeatureManager.getInstance();
       val voter = new SelectionBasedComponentInclusionVoter(manager);
       userInterface.registerComponentInclusionVoter(voter);

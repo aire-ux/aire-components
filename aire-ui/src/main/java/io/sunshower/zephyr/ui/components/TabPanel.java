@@ -23,6 +23,7 @@ import io.sunshower.gyre.TrieMap;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -68,14 +69,14 @@ public class TabPanel extends HtmlContainer
     this(TabPlacement.TOP);
   }
 
-  public Tab addTab(String title, Component component) {
+  public Tab addTab(String title, Supplier<Component> component) {
     val tab = new Tab(title);
     components.put(tab, new ComponentDescriptor(false, component, null));
     tabs.add(tab);
     return tab;
   }
 
-  public Tab addTab(Component header, Component component) {
+  public Tab addTab(Component header, Supplier<Component> component) {
     val tab = new Tab(header);
     components.put(tab, new ComponentDescriptor(false, component, null));
     tabs.add(tab);
@@ -130,7 +131,7 @@ public class TabPanel extends HtmlContainer
     if (!next.isRoute) {
       Component nextInstance;
       if (next.instance != null) {
-        nextInstance = next.instance;
+        nextInstance = next.instance.get();
       } else {
         nextInstance = Instantiator.get(UI.getCurrent()).createComponent(next.componentType);
       }
@@ -216,7 +217,7 @@ public class TabPanel extends HtmlContainer
   static class ComponentDescriptor {
 
     final boolean isRoute;
-    final Component instance;
+    final Supplier<Component> instance;
     final Class<? extends Component> componentType;
   }
 
@@ -231,4 +232,5 @@ public class TabPanel extends HtmlContainer
       }
     }
   }
+
 }
