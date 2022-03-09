@@ -14,6 +14,5 @@ public class SwitchStateChangedEvent extends ComponentEvent<Switch> {
       Switch source, boolean fromClient, @EventData("event.detail.selected") boolean selected) {
     super(source, fromClient);
     this.selected = selected;
-    System.out.println("DISPATCHED");
   }
 }
