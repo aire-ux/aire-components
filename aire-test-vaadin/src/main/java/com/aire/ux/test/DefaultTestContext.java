@@ -191,7 +191,7 @@ public class DefaultTestContext implements TestContext {
                 }
               }
             });
-    if(force) {
+    if (force) {
       Frames.reload();
     }
   }

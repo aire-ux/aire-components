@@ -3,7 +3,6 @@ package com.aire.features;
 import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.Registration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class InMemoryFeatureManager implements FeatureManager {
 
   @Override
   public List<FeatureDescriptor> getDescriptors() {
-    return Collections.unmodifiableList(descriptors);
+    return descriptors;
   }
 
   @Override

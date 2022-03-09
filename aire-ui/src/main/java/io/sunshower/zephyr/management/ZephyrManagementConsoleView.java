@@ -44,8 +44,8 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     val homeButton =
         new NavigationBarButton(
             ModuleGrid.class,
-            List.of("modules/list", "modules/topology"),
-            MatchMode.Suffix,
+            List.of("management/modules"),
+            MatchMode.Contains,
             VaadinIcon.PLUG.create());
 
     layout.getNavigation().add(homeButton);

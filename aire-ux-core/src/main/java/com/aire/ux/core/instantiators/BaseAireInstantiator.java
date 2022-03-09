@@ -30,12 +30,13 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
 
   @Getter(AccessLevel.PROTECTED)
   private final Instantiator delegate;
+
   private final ComponentDecorator decorator;
 
   /**
    * Creates a new instantiator for the given service.
    *
-   * @param delegate  the base instantiator to use
+   * @param delegate the base instantiator to use
    * @param decorator the decorator to use
    */
   public BaseAireInstantiator(
@@ -44,9 +45,7 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
     this.decorator = Objects.requireNonNull(decorator);
   }
 
-  /**
-   * @param delegate
-   */
+  /** @param delegate */
   public BaseAireInstantiator(@Nonnull Instantiator delegate) {
     this(
         delegate,
@@ -99,11 +98,10 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
     return delegate.createComponent(componentClass);
   }
 
-  protected <T extends HasElement> T doCreateRouteTarget(Class<T> routeTargetType,
-      NavigationEvent event) {
+  protected <T extends HasElement> T doCreateRouteTarget(
+      Class<T> routeTargetType, NavigationEvent event) {
     return delegate.createRouteTarget(routeTargetType, event);
   }
-
 
   @Override
   public Stream<BootstrapListener> getBootstrapListeners(
@@ -126,7 +124,6 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
     return result;
   }
 
-
   @Override
   public I18NProvider getI18NProvider() {
     return delegate.getI18NProvider();
@@ -136,24 +133,21 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result         the result
-   * @param <T>            the type parameter
+   * @param result the result
+   * @param <T> the type parameter
    */
-  protected <T> void preDecorateResult(Class<T> componentClass, T result) {
-  }
+  protected <T> void preDecorateResult(Class<T> componentClass, T result) {}
 
   /**
    * extension point
    *
    * @param componentClass the type of the current component
-   * @param result         the result
-   * @param <T>            the type parameter
+   * @param result the result
+   * @param <T> the type parameter
    */
-  protected <T> void postDecorateResult(Class<T> componentClass, T result) {
-  }
+  protected <T> void postDecorateResult(Class<T> componentClass, T result) {}
 
-  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {
-  }
+  protected <T extends HasElement> void decorateRouteTarget(Class<T> routeTargetType) {}
 
   @SuppressFBWarnings
   private <T extends HasElement> void decorate(T result) {
@@ -165,22 +159,24 @@ public class BaseAireInstantiator implements Instantiator, Flushable {
       current = stack.pop();
       val c = current.current;
       switch (current.stage) {
-        case 0: {
-          decorator.onComponentEntered(c);
-          decorator.decorate(c);
-          current.stage = 1;
-          stack.push(current);
-          val el = c.getElement();
-          for (int i = 0; i < el.getChildCount(); i++) {
-            val childOpt = el.getChild(i).getComponent();
-            childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
+        case 0:
+          {
+            decorator.onComponentEntered(c);
+            decorator.decorate(c);
+            current.stage = 1;
+            stack.push(current);
+            val el = c.getElement();
+            for (int i = 0; i < el.getChildCount(); i++) {
+              val childOpt = el.getChild(i).getComponent();
+              childOpt.ifPresent(component -> stack.push(new Frame(0, component)));
+            }
+            continue;
           }
-          continue;
-        }
-        case 1: {
-          decorator.onComponentExited(c);
-          break;
-        }
+        case 1:
+          {
+            decorator.onComponentExited(c);
+            break;
+          }
       }
     }
   }

@@ -13,7 +13,6 @@ public class Debouncer<T> {
   private final ScheduledExecutorService scheduler;
   private final ConcurrentHashMap<T, TimerTask> tasks;
 
-
   public Debouncer(Consumer<T> c, int interval) {
     this.callback = c;
     this.interval = interval;

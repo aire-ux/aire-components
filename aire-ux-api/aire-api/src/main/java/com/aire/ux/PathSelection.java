@@ -93,11 +93,11 @@ public class PathSelection<T> implements Selection<T> {
       for (var type = registry.typeOf(comp);
           !Objects.equals(type, Object.class);
           type = type.getSuperclass()) {
-//        val host = type.getAnnotation(Host.class);
+        //        val host = type.getAnnotation(Host.class);
         val r = findMatchingHost(type, segments);
         Host host = null;
 
-        if(r != null) {
+        if (r != null) {
           host = r.snd;
           type = r.fst;
         }

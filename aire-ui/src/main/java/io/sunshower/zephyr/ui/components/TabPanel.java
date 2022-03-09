@@ -36,19 +36,14 @@ public class TabPanel extends HtmlContainer
     implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
   static final String CLASS_NAME = "tab-panel";
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Tabs tabs;
 
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
-  @Getter
-  private final Map<Tab, ComponentDescriptor> components;
-  /**
-   * mutable state
-   */
+  @Getter private final Map<Tab, ComponentDescriptor> components;
+  /** mutable state */
   private Component current;
 
   private TabPlacement placement;
@@ -70,7 +65,6 @@ public class TabPanel extends HtmlContainer
     components = new LinkedHashMap<>();
     locations = new CompactTrieMap<>(new RegexStringAnalyzer("/"));
   }
-
 
   public TabPanel() {
     this(TabPlacement.TOP);
@@ -191,7 +185,7 @@ public class TabPanel extends HtmlContainer
   private String getTargetUrl(Class<? extends Component> type) {
     val registry = RouteConfiguration.forApplicationScope().getHandledRegistry();
     val result = registry.getTargetUrl(type);
-    return result.get();
+    return result.orElse("");
   }
 
   private String getCurrentLocation() {
@@ -243,5 +237,4 @@ public class TabPanel extends HtmlContainer
       }
     }
   }
-
 }

@@ -21,7 +21,7 @@
     <junit-suite-engine.version>1.8.0-M1</junit-suite-engine.version>
     <junit-jupiter-engine.version>5.8.0-M1</junit-jupiter-engine.version>
     <junit-jupiter.version>${junit-jupiter-engine.version}</junit-jupiter.version>
-    <vaadin-bom.version>22.0.2</vaadin-bom.version>
+    <vaadin-bom.version>23.0.1</vaadin-bom.version>
     <!--    <vaadin-bom.version>14.5.1</vaadin-bom.version>-->
     <!--    <vaadin-bom.version>17.0.11</vaadin-bom.version>-->
     <arcus.version>1.0.40-SNAPSHOT</arcus.version>
@@ -31,7 +31,7 @@
     <spring-boot.version>2.6.2</spring-boot.version>
     <vaadin-helper.version>1.6.0</vaadin-helper.version>
     <byte-buddy.version>1.10.22</byte-buddy.version>
-    <karibu-testing.version>1.3.8</karibu-testing.version>
+    <karibu-testing.version>1.3.11</karibu-testing.version>
     <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     <mockito-core.version>3.11.2</mockito-core.version>
     <zephyr.version>2.0.93-SNAPSHOT</zephyr.version>

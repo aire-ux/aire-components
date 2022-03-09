@@ -8,6 +8,7 @@ import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.PartialSelection;
 import com.aire.ux.RouteDefinition;
+import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
@@ -19,10 +20,12 @@ import io.sunshower.lang.events.AbstractEventSource;
 import io.sunshower.lang.events.EventSource;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.annotation.concurrent.ThreadSafe;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
@@ -40,8 +43,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
 
   public static final int CACHE_SIZE = 100;
   private final Object lock = new Object();
-  @Delegate
-  private final EventSource delegate;
+  @Delegate private final EventSource delegate;
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
@@ -114,11 +116,12 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
             dispatchEvent(Events.RouteRegistered, create(routeDefinition));
           });
       return () -> {
-        accessQueue.enqueue(() -> {
-          val cfg = locate(routeDefinition);
-          cfg.removeRoute(routeDefinition.getComponent());
-          dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
-        });
+        accessQueue.enqueue(
+            () -> {
+              val cfg = locate(routeDefinition);
+              cfg.removeRoute(routeDefinition.getComponent());
+              dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
+            });
       };
     }
   }
@@ -163,6 +166,20 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
     synchronized (extensions) {
       return extensions.size();
     }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<ExtensionDefinition<?>> getExtensions() {
+    return extensions.entrySet().stream()
+        .map(
+            (kv) -> {
+              val selection = kv.getKey();
+              val registration = kv.getValue();
+              return new PartialExtensionDefinition<>(
+                  selection.getSegment(), registration.getExtension().getSegment());
+            })
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -233,16 +250,47 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
 
   @Override
   public void close() throws Exception {
-    //todo remove listeners
+    // todo remove listeners
   }
 
   @Override
   public void destroy() throws Exception {
     close();
-
   }
 
-  private static class SpringExtensionRegistryEventSource extends AbstractEventSource {
+  private static class SpringExtensionRegistryEventSource extends AbstractEventSource {}
 
+  private static class PartialExtensionDefinition<T> implements ExtensionDefinition<T> {
+
+    private final String path;
+
+    public PartialExtensionDefinition(String path, String segment) {
+      this.path = path + segment;
+    }
+
+    @Override
+    public String getPath() {
+      return path;
+    }
+
+    @Override
+    public T getValue() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Extension<T> getExtension() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Selection<T> getSelection() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Class<T> getType() {
+      throw new UnsupportedOperationException();
+    }
   }
 }

@@ -26,6 +26,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Overlays;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
+import io.sunshower.zephyr.ui.controls.Switch;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Module;
 import java.util.stream.Collectors;
@@ -97,7 +98,15 @@ public class ModuleGrid extends AbstractModuleView
     textField.setPrefixComponent(VaadinIcon.SEARCH.create());
     textField.setValueChangeMode(ValueChangeMode.EAGER);
     textField.addValueChangeListener(this);
+
+    val s = new Switch();
+    s.addSelectionChangeListener(
+        e -> {
+          System.out.println("SELECTED");
+        });
+
     result.addItem(textField);
+    result.addItem(s);
     addButtonsToMenubar(result);
 
     return result;

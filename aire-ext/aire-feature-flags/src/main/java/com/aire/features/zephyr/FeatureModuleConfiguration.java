@@ -2,10 +2,10 @@ package com.aire.features.zephyr;
 
 import static com.aire.ux.Selection.path;
 
-import com.aire.features.FeatureDescriptor;
 import com.aire.features.FeatureManager;
 import com.aire.features.InMemoryFeatureManager;
-import com.aire.features.ui.FeatureGrid;
+import com.aire.features.SelectionBasedComponentInclusionVoter;
+import com.aire.features.ui.FeatureList;
 import com.aire.ux.Extensions;
 import com.aire.ux.Registration;
 import com.aire.ux.RouteDefinition.Mode;
@@ -32,26 +32,22 @@ public class FeatureModuleConfiguration implements DisposableBean {
   }
 
   @Bean
-  public FeatureManager featureManager() {
+  public FeatureManager featureManager(@Autowired UserInterface userInterface) {
     val manager = new InMemoryFeatureManager();
     val extension =
         Extensions.create(
             ":feature-view",
             (PluginTabView view) -> {
-              view.addTab("Feature Flags", FeatureGrid.class);
+              view.addTab("Feature Flags", FeatureList.class);
             });
 
-    registrations.add(userInterface.register(Mode.Global, FeatureGrid.class));
+    registrations.add(userInterface.register(Mode.Global, FeatureList.class));
     registrations.add(userInterface.register(path(":module-management"), extension));
+    registrations.add(
+        userInterface
+            .getComponentInclusionManager()
+            .register(new SelectionBasedComponentInclusionVoter(manager)));
 
-    val feature =
-        new FeatureDescriptor(
-            "modules.features.feature-grid",
-            "Module Feature Grid",
-            ":module-management:feature-view",
-            "Feature view");
-    feature.enable();
-    manager.registerFeature(feature);
     return manager;
   }
 

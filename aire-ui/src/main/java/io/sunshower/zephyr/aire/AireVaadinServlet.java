@@ -22,7 +22,10 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
   private Registration sessionInitRegistration;
   private Registration sessionDestroyRegistration;
 
-  public AireVaadinServlet(Kernel kernel, Module kernelModule, AccessQueue queue,
+  public AireVaadinServlet(
+      Kernel kernel,
+      Module kernelModule,
+      AccessQueue queue,
       WebApplicationContext context,
       boolean rootMapping) {
     super(context, rootMapping);
@@ -35,15 +38,15 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
   @Override
   protected VaadinServletService createServletService(
       DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    val service = new VaadinSpringServletService(kernel, kernelModule, this,
-        deploymentConfiguration, context);
+    val service =
+        new VaadinSpringServletService(
+            kernel, kernelModule, this, deploymentConfiguration, context);
     uiListenerRegistration = service.addUIInitListener(queue);
     sessionInitRegistration = service.addSessionInitListener(queue);
     sessionDestroyRegistration = service.addSessionDestroyListener(queue);
     service.init();
     return service;
   }
-
 
   @Override
   public void destroy() {
@@ -55,6 +58,4 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
       sessionDestroyRegistration.remove();
     }
   }
-
-
 }

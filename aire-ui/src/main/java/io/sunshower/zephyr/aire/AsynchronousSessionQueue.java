@@ -21,7 +21,6 @@ import lombok.val;
 
 public class AsynchronousSessionQueue implements AccessQueue {
 
-
   private final WeakHashMap<Integer, UI> uiReferences;
   private final ConcurrentLinkedQueue<Command> commands;
   private final Set<WeakReference<VaadinSession>> sessionReferences;

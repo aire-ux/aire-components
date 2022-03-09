@@ -35,11 +35,9 @@ public class AireVaadinOverrideAutoConfiguration {
 
   static final String VAADIN_SERVLET_MAPPING = "/vaadinServlet/*";
 
-  @Autowired
-  private WebApplicationContext context;
+  @Autowired private WebApplicationContext context;
 
-  @Autowired
-  private VaadinConfigurationProperties configurationProperties;
+  @Autowired private VaadinConfigurationProperties configurationProperties;
 
   static String makeContextRelative(String url) {
     // / -> context://
@@ -62,9 +60,8 @@ public class AireVaadinOverrideAutoConfiguration {
    * @return a custom ServletRegistrationBean instance
    */
   @Bean
-  public ServletRegistrationBean<SpringServlet> servletRegistrationBean(Module module,
-      Kernel kernel,
-      AccessQueue queue) {
+  public ServletRegistrationBean<SpringServlet> servletRegistrationBean(
+      Module module, Kernel kernel, AccessQueue queue) {
     var mapping = configurationProperties.getUrlMapping();
     val initParameters = new HashMap<String, String>();
     var rootMapping = RootMappedCondition.isRootMapping(mapping);

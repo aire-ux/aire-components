@@ -18,6 +18,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
 @Log
+@SuppressWarnings("PMD.UseProperClassLoader")
 public class SpringDelegatingInstantiator extends BaseAireInstantiator {
 
   private final Object lock = new Object();
@@ -27,14 +28,12 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
   public SpringDelegatingInstantiator(
       @Nonnull Instantiator delegate,
       @Nonnull ComponentDecorator decorator,
-      @Nonnull ApplicationContext rootApplicationContext
+      @Nonnull ApplicationContext rootApplicationContext) {
 
-  ) {
     super(delegate, decorator);
     this.contexts = new ArrayList<>();
     this.rootApplicationContext = rootApplicationContext;
   }
-
 
   public Registration performWithParent(
       Function<ApplicationContext, ApplicationContext> supplierConsumer) {
@@ -45,8 +44,8 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
     }
   }
 
-  protected <T extends HasElement> T doCreateRouteTarget(Class<T> routeTargetType,
-      NavigationEvent event) {
+  protected <T extends HasElement> T doCreateRouteTarget(
+      Class<T> routeTargetType, NavigationEvent event) {
     return doGetOrCreate(routeTargetType);
   }
 
@@ -61,13 +60,14 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
           try {
             return ctx.getAutowireCapableBeanFactory().createBean(type);
           } catch (BeansException ex) {
-            log.log(Level.INFO, "Failed to resolve bean of type ''{0}'' from context: ''{1}''",
-                new Object[]{type, ctx.getClassLoader()});
+            log.log(
+                Level.INFO,
+                "Failed to resolve bean of type ''{0}'' from context: ''{1}''",
+                new Object[] {type, ctx.getClassLoader()});
           }
         }
       }
       return super.doGetOrCreate(type);
-
     }
   }
 

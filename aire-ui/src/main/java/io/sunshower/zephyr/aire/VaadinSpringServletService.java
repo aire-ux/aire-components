@@ -21,9 +21,8 @@ import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.web.context.WebApplicationContext;
 
-public class VaadinSpringServletService extends SpringVaadinServletService implements
-    DisposableBean {
-
+public class VaadinSpringServletService extends SpringVaadinServletService
+    implements DisposableBean {
 
   private final Kernel kernel;
   private final Module kernelModule;
@@ -54,11 +53,15 @@ public class VaadinSpringServletService extends SpringVaadinServletService imple
                 new ServiceLoaderComponentDecorator(
                     () -> Thread.currentThread().getContextClassLoader())));
     val instantiator = new SpringDelegatingInstantiator(delegate, decorator, context);
-    registrations.add(kernel.getServiceRegistry().register(kernelModule,
-        new FactoryServiceDefinition<>(SpringDelegatingInstantiator.class, () -> instantiator)));
+    registrations.add(
+        kernel
+            .getServiceRegistry()
+            .register(
+                kernelModule,
+                new FactoryServiceDefinition<>(
+                    SpringDelegatingInstantiator.class, () -> instantiator)));
     return Optional.of(instantiator);
   }
-
 
   @Override
   public void destroy() {

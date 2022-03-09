@@ -14,6 +14,7 @@ import com.vaadin.flow.router.HighlightAction;
 import com.vaadin.flow.router.HighlightActions;
 import com.vaadin.flow.router.HighlightCondition;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.shared.Registration;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -142,6 +143,11 @@ public class NavigationBarButton extends HtmlContainer
     highlightAction.highlight(this, highlightCondition.shouldHighlight(this, event));
   }
 
+  public Registration addRoutePatterns(Collection<String> routePatterns) {
+    this.routePatterns.addAll(routePatterns);
+    return () -> this.routePatterns.removeAll(routePatterns);
+  }
+
   protected void configureConditions() {
     highlightAction = HighlightActions.toggleAttribute("focused");
     //    val prefix = Objects.requireNonNull(route.getDeclaredAnnotation(Route.class));
@@ -158,6 +164,12 @@ public class NavigationBarButton extends HtmlContainer
       @Override
       public Predicate<String> apply(String path) {
         return value -> value.isBlank() ? path.isBlank() : path.startsWith(value);
+      }
+    },
+    Contains {
+      @Override
+      public Predicate<String> apply(String path) {
+        return value -> value.isBlank() ? path.isBlank() : path.contains(value);
       }
     },
     Suffix {

@@ -62,11 +62,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
 @ComponentScan(basePackages = "io.sunshower.zephyr.core")
-public class EmbeddedZephyrConfiguration implements ApplicationListener<ApplicationReadyEvent>,
-    DisposableBean {
+public class EmbeddedZephyrConfiguration
+    implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
 
   private final List<Registration> registrations;
-
 
   public EmbeddedZephyrConfiguration() {
     registrations = new ArrayList<>();
@@ -164,8 +163,7 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
   }
 
   @Bean
-  public ExtensionRegistry extensionRegistry(
-      AccessQueue queue, ComponentInclusionManager manager) {
+  public ExtensionRegistry extensionRegistry(AccessQueue queue, ComponentInclusionManager manager) {
     return new SpringExtensionRegistry(
         queue, () -> VaadinService.getCurrent().getContext(), manager);
   }
@@ -196,16 +194,18 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
     }
   }
 
-  private void registerServices(EmbeddedModule module,
-      ConfigurableApplicationContext context, Kernel kernel) {
+  private void registerServices(
+      EmbeddedModule module, ConfigurableApplicationContext context, Kernel kernel) {
     log.info("Registering UserInterface service");
-    kernel.getServiceRegistry().register(module, new FactoryServiceDefinition<>(
-        UserInterface.class,
-        "aire:user-interface",
-        () -> context.getBean(UserInterface.class)
-    ));
+    kernel
+        .getServiceRegistry()
+        .register(
+            module,
+            new FactoryServiceDefinition<>(
+                UserInterface.class,
+                "aire:user-interface",
+                () -> context.getBean(UserInterface.class)));
     log.info("Successfully registered UserInterface service");
-
   }
 
   @Override
@@ -217,6 +217,5 @@ public class EmbeddedZephyrConfiguration implements ApplicationListener<Applicat
         iter.remove();
       }
     }
-
   }
 }

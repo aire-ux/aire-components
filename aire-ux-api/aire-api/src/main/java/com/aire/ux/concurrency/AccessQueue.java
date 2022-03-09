@@ -15,31 +15,19 @@ import java.util.function.Consumer;
 public interface AccessQueue extends UIInitListener, SessionInitListener, SessionDestroyListener {
 
   @Override
-  default void sessionDestroy(SessionDestroyEvent event) {
-
-  }
+  default void sessionDestroy(SessionDestroyEvent event) {}
 
   @Override
-  default void sessionInit(SessionInitEvent event) throws ServiceException {
-
-  }
+  default void sessionInit(SessionInitEvent event) throws ServiceException {}
 
   @Override
-  default void uiInit(UIInitEvent event) {
+  default void uiInit(UIInitEvent event) {}
 
-  }
+  default void drain(UI session) {}
 
-  default void drain(UI session) {
-
-  }
-
-  default void broadcast(Target target, Consumer<Object> command) {
-
-
-  }
+  default void broadcast(Target target, Consumer<Object> command) {}
 
   void enqueue(Command command);
-
 
   void drain(VaadinSession session);
 
