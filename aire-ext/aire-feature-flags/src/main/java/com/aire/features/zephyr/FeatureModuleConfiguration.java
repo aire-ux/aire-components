@@ -33,7 +33,7 @@ public class FeatureModuleConfiguration implements DisposableBean {
 
   @Bean
   public FeatureManager featureManager(@Autowired UserInterface userInterface) {
-    val manager = new InMemoryFeatureManager();
+    val manager = new InMemoryFeatureManager(userInterface);
     val extension =
         Extensions.create(
             ":feature-view",

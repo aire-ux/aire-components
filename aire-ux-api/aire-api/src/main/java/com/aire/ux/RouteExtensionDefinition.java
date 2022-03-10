@@ -81,7 +81,6 @@ public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Exte
 
   @Override
   public int hashCode() {
-    return 0;
-//    return 31 * getType().hashCode() + 17 * getRouteDefinition().getScopes().hashCode();
+    return 31 * getType().hashCode() + 17 * getRouteDefinition().getScopes().hashCode();
   }
 }
