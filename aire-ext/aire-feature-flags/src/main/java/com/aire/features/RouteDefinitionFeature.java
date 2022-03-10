@@ -1,6 +1,5 @@
 package com.aire.features;
 
-import com.aire.features.FeatureDescriptor;
 import com.aire.ux.RouteDefinition;
 import com.aire.ux.UserInterface;
 import java.util.Set;
@@ -9,16 +8,16 @@ public class RouteDefinitionFeature extends FeatureDescriptor {
 
   final RouteDefinition routeDefinition;
 
-  public RouteDefinitionFeature(RouteDefinition definition, String name, String description,
-      String path) {
-    super(definition.getComponent().getCanonicalName(),
-        name, path, description
-    );
+  public RouteDefinitionFeature(
+      RouteDefinition definition, String name, String description, String path) {
+    super(definition.getComponent().getCanonicalName(), name, path, description);
     this.routeDefinition = definition;
   }
 
   public RouteDefinitionFeature(RouteDefinition definition) {
-    this(definition, definition.getComponent().getCanonicalName(),
+    this(
+        definition,
+        definition.getComponent().getCanonicalName(),
         definition.getComponent().getSimpleName(),
         "Route[" + definition.getComponent() + "]");
   }
@@ -26,7 +25,7 @@ public class RouteDefinitionFeature extends FeatureDescriptor {
   @Override
   public void setEnabled(boolean b, UserInterface ui) {
     super.setEnabled(b, ui);
-    if(b) {
+    if (b) {
       ui.getComponentInclusionManager().enableRoutes(Set.of(routeDefinition));
     } else {
       ui.getComponentInclusionManager().disableRoutes(Set.of(routeDefinition));

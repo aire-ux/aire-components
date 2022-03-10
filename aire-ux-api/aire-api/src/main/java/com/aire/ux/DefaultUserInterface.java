@@ -57,7 +57,6 @@ public class DefaultUserInterface implements UserInterface {
   }
 
   private <T> Extension<T> extensionFor(PartialSelection<T> path) {
-    return new DefaultComponentExtension<>(path.getSegment(), c -> {
-    });
+    return new DefaultComponentExtension<>(path.getSegment(), c -> {});
   }
 }

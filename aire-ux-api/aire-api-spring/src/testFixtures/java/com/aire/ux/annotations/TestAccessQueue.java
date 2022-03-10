@@ -12,8 +12,5 @@ public class TestAccessQueue implements AccessQueue {
   }
 
   @Override
-  public void drain(VaadinSession session) {
-
-
-  }
+  public void drain(VaadinSession session) {}
 }

@@ -18,7 +18,6 @@ public class InMemoryFeatureManager implements FeatureManager {
     this.descriptors = new ArrayList<>();
   }
 
-
   @Override
   public List<FeatureDescriptor> getDescriptors() {
     return descriptors;
@@ -65,5 +64,4 @@ public class InMemoryFeatureManager implements FeatureManager {
             })
         .isPresent();
   }
-
 }

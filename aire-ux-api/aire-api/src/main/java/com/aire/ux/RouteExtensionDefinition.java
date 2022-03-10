@@ -49,9 +49,7 @@ public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Exte
   }
 
   @Override
-  public void decorate(T value) {
-
-  }
+  public void decorate(T value) {}
 
   public ExtensionRegistration getFinalizer() {
     return finalizer;
@@ -72,12 +70,11 @@ public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Exte
     }
     if (getClass().equals(o.getClass())) {
       val definition = (RouteExtensionDefinition) o;
-      return definition.getType().equals(getType()) &&
-             definition.getRouteDefinition().getScopes().equals(getRouteDefinition().getScopes());
+      return definition.getType().equals(getType())
+          && definition.getRouteDefinition().getScopes().equals(getRouteDefinition().getScopes());
     }
     return false;
   }
-
 
   @Override
   public int hashCode() {

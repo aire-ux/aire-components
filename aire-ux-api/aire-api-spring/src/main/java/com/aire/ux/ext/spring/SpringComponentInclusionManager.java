@@ -17,12 +17,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 @ThreadSafe
-public class SpringComponentInclusionManager implements ComponentInclusionManager,
-    ApplicationContextAware {
+public class SpringComponentInclusionManager
+    implements ComponentInclusionManager, ApplicationContextAware {
 
   private final List<ComponentInclusionVoter> componentInclusionVoters;
   private Supplier<ExtensionRegistry> extensionRegistrySupplier;
-
 
   public SpringComponentInclusionManager() {
     this.componentInclusionVoters = new ArrayList<>();

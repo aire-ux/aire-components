@@ -31,7 +31,6 @@ import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
 @AireUITest
@@ -68,8 +67,10 @@ class InMemoryFeatureManagerTest {
   }
 
   @ViewTest
-  void ensureDisablingRoutesWorksWithSameAPI(@Autowired final ExtensionRegistry registry,
-      @Autowired final FeatureManager featureManager, @Context TestContext $) {
+  void ensureDisablingRoutesWorksWithSameAPI(
+      @Autowired final ExtensionRegistry registry,
+      @Autowired final FeatureManager featureManager,
+      @Context TestContext $) {
     val definition = RouteDefinition.fromAnnotatedClass(TestFeatureView.class);
     try (val reg = registry.register(definition)) {
       $.navigate(definition.getComponent());

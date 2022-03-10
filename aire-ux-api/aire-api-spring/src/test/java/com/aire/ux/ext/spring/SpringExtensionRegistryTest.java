@@ -26,7 +26,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = TestConfiguration.class)
 class SpringExtensionRegistryTest {
 
-
   @Test
   void ensureExtensionRegistryIsInjectable(@Autowired ExtensionRegistry registry) {
     assertNotNull(registry);
@@ -36,13 +35,12 @@ class SpringExtensionRegistryTest {
   void ensureRouteDefinitionHashCodeWorks() {
     val def1 = Set.of(RouteDefinition.fromAnnotatedClass(FrontPage.class));
     assertTrue(def1.contains(RouteDefinition.fromAnnotatedClass(FrontPage.class)));
-
   }
 
   @ViewTest
   @SneakyThrows
   void ensureRegistryCanRegisterRoutes(@Autowired ExtensionRegistry registry) {
-    try(val reg = registry.register(RouteDefinition.fromAnnotatedClass(FrontPage.class))) {
+    try (val reg = registry.register(RouteDefinition.fromAnnotatedClass(FrontPage.class))) {
       assertEquals(1, registry.getExtensions().size());
     }
   }
@@ -59,6 +57,4 @@ class SpringExtensionRegistryTest {
     }
     assertEquals(0, registry.getExtensions().size());
   }
-
-
 }

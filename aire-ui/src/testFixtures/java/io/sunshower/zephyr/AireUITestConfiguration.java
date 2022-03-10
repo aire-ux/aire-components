@@ -1,6 +1,7 @@
 package io.sunshower.zephyr;
 
 import com.aire.ux.concurrency.AccessQueue;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.Command;
 import com.vaadin.flow.server.VaadinSession;
 import io.sunshower.test.common.Tests;

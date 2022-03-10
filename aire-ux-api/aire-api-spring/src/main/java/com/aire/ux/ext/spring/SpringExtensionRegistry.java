@@ -50,8 +50,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
 
   public static final int CACHE_SIZE = 100;
   private final Object lock = new Object();
-  @Delegate
-  private final EventSource delegate;
+  @Delegate private final EventSource delegate;
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, Set<RouteExtensionDefinition<?>>> routeExtensions;
@@ -113,13 +112,12 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
     }
   }
 
-
   @Override
   public List<RouteDefinition> getRouteDefinitions() {
-    return routeExtensions.entrySet()
-        .stream().flatMap(t -> t.getValue().stream()).map(
-            RouteExtensionDefinition::getRouteDefinition).collect(
-            Collectors.toList());
+    return routeExtensions.entrySet().stream()
+        .flatMap(t -> t.getValue().stream())
+        .map(RouteExtensionDefinition::getRouteDefinition)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -144,8 +142,12 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   @Override
   public List<RouteDefinition> getRouteDefinitionsFor(Class<? extends Component> component) {
     return Optional.ofNullable(routeExtensions.get(component))
-        .map(t -> t.stream().map(RouteExtensionDefinition::getRouteDefinition)
-            .collect(Collectors.toList())).stream()
+        .map(
+            t ->
+                t.stream()
+                    .map(RouteExtensionDefinition::getRouteDefinition)
+                    .collect(Collectors.toList()))
+        .stream()
         .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
@@ -162,20 +164,23 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
               if (!configuration.isRouteRegistered(type)) {
                 configuration.setAnnotatedRoute(type);
               }
-              routeExtensions.computeIfAbsent(routeDefinition.getComponent(),
-                  k -> new HashSet<>()).add(definition);
+              routeExtensions
+                  .computeIfAbsent(routeDefinition.getComponent(), k -> new HashSet<>())
+                  .add(definition);
               dispatchEvent(Events.RouteRegistered, create(routeDefinition));
             }
           });
-      ExtensionRegistration finalizer = () -> accessQueue.enqueue(
-          () -> {
-            val configurations = locate(routeDefinition);
-            for (val configuration : configurations) {
-              configuration.removeRoute(routeDefinition.getComponent());
-              routeExtensions.remove(routeDefinition.getComponent());
-              dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
-            }
-          });
+      ExtensionRegistration finalizer =
+          () ->
+              accessQueue.enqueue(
+                  () -> {
+                    val configurations = locate(routeDefinition);
+                    for (val configuration : configurations) {
+                      configuration.removeRoute(routeDefinition.getComponent());
+                      routeExtensions.remove(routeDefinition.getComponent());
+                      dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
+                    }
+                  });
       definition.setFinalizer(finalizer);
       return finalizer;
     }
@@ -230,15 +235,17 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   @Override
   @SuppressWarnings("unchecked")
   public List<ExtensionDefinition<?>> getExtensions() {
-    return Stream.concat(extensions.entrySet().stream()
-            .map(
-                (kv) -> {
-                  val selection = kv.getKey();
-                  val registration = kv.getValue();
-                  return new PartialExtensionDefinition<>(
-                      selection.getSegment(), registration.getExtension().getSegment());
-                }),
-        routeExtensions.values().stream().flatMap(Collection::stream)).collect(Collectors.toList());
+    return Stream.concat(
+            extensions.entrySet().stream()
+                .map(
+                    (kv) -> {
+                      val selection = kv.getKey();
+                      val registration = kv.getValue();
+                      return new PartialExtensionDefinition<>(
+                          selection.getSegment(), registration.getExtension().getSegment());
+                    }),
+            routeExtensions.values().stream().flatMap(Collection::stream))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -306,7 +313,6 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
         default:
           results.add(RouteConfiguration.forRegistry(this));
       }
-
     }
     return results;
   }
@@ -323,9 +329,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
     close();
   }
 
-  private static class SpringExtensionRegistryEventSource extends AbstractEventSource {
-
-  }
+  private static class SpringExtensionRegistryEventSource extends AbstractEventSource {}
 
   private static class PartialExtensionDefinition<T> implements ExtensionDefinition<T> {
 

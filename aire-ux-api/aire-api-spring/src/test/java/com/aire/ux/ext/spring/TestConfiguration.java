@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TestConfiguration {
 
-
   @Bean
   public ComponentInclusionManager componentInclusionManager() {
     return new SpringComponentInclusionManager();
@@ -23,10 +22,8 @@ public class TestConfiguration {
   }
 
   @Bean
-  public ExtensionRegistry extensionRegistry(AccessQueue queue,
-      ComponentInclusionManager manager) {
-    return new SpringExtensionRegistry(queue, () -> VaadinService.getCurrent().getContext(),
-        manager);
+  public ExtensionRegistry extensionRegistry(AccessQueue queue, ComponentInclusionManager manager) {
+    return new SpringExtensionRegistry(
+        queue, () -> VaadinService.getCurrent().getContext(), manager);
   }
-
 }

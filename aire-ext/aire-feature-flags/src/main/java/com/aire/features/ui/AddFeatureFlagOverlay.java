@@ -1,6 +1,7 @@
 package com.aire.features.ui;
 
 import com.aire.features.FeatureDescriptor;
+import com.aire.features.FeatureManager;
 import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.UserInterface;
 import com.vaadin.flow.component.ClickEvent;
@@ -29,13 +30,14 @@ public class AddFeatureFlagOverlay extends Overlay {
   private TextField nameInputField;
   private Select<String> pathInputField;
   private TextField tagInputField;
+  private final FeatureManager manager;
   private TextArea descriptionInput;
 
-  @Getter private FeatureDescriptor value;
 
   @Autowired
-  public AddFeatureFlagOverlay(UserInterface userInterface) {
+  public AddFeatureFlagOverlay(UserInterface userInterface, FeatureManager manager) {
     this.ui = userInterface;
+    this.manager = manager;
     addHeader();
     addContent();
     addFooter();
@@ -50,14 +52,18 @@ public class AddFeatureFlagOverlay extends Overlay {
   private void addContent() {
     val form = new FormLayout();
     keyInputField = new TextField("Key");
+    keyInputField.getElement().setAttribute("name", "key");
 
     nameInputField = new TextField("Name");
+    nameInputField.getElement().setAttribute("name", "name");
     descriptionInput = new TextArea("Description");
+    descriptionInput.getElement().setAttribute("name", "description");
     pathInputField = new Select<>();
     pathInputField.setLabel("Extension Path");
     pathInputField.setItems(getExtensionKeys());
 
     tagInputField = new TextField("Tags");
+    tagInputField.getElement().setAttribute("name", "tags");
     enabledSwitch = new Switch("Enabled");
 
     form.add(
@@ -91,8 +97,8 @@ public class AddFeatureFlagOverlay extends Overlay {
     getFooter().add(menubar);
   }
 
-  private void onSuccess(ClickEvent<Button> buttonClickEvent) {
-    value =
+  void onSuccess(ClickEvent<Button> buttonClickEvent) {
+    val value =
         new FeatureDescriptor(
             keyInputField.getValue(),
             nameInputField.getValue(),
@@ -108,7 +114,7 @@ public class AddFeatureFlagOverlay extends Overlay {
         }
       }
     }
-
+    manager.registerFeature(value);
     close();
   }
 }

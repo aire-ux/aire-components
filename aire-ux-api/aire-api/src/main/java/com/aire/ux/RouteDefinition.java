@@ -18,14 +18,14 @@ public interface RouteDefinition {
     return new DefaultRouteDefinition(List.of(Scope.Global), component);
   }
 
-  static RouteDefinition fromAnnotatedClass(
-      Class<? extends Component> type) {
+  static RouteDefinition fromAnnotatedClass(Class<? extends Component> type) {
 
     val extension = type.getAnnotation(RouteExtension.class);
     if (extension == null) {
-      throw new IllegalArgumentException(String.format(
-          "Error: type '%s' is not annotated with @RouteExtension--please add the annotation to continue",
-          type));
+      throw new IllegalArgumentException(
+          String.format(
+              "Error: type '%s' is not annotated with @RouteExtension--please add the annotation to continue",
+              type));
     }
     val scopes = List.of(extension.scopes());
     return new DefaultRouteDefinition(scopes, type);

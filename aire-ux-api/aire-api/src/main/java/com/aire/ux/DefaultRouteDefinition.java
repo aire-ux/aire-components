@@ -10,8 +10,8 @@ public class DefaultRouteDefinition implements RouteDefinition {
   private final List<Scope> scopes;
   private final Class<? extends Component> component;
 
-  public DefaultRouteDefinition(@NonNull List<RouteDefinition.Scope> scope,
-      @NonNull Class<? extends Component> component) {
+  public DefaultRouteDefinition(
+      @NonNull List<RouteDefinition.Scope> scope, @NonNull Class<? extends Component> component) {
     this.scopes = scope;
     this.component = component;
   }
@@ -40,7 +40,8 @@ public class DefaultRouteDefinition implements RouteDefinition {
     if (getScopes() != null ? !getScopes().equals(that.getScopes()) : that.getScopes() != null) {
       return false;
     }
-    return getComponent() != null ? getComponent().equals(that.getComponent())
+    return getComponent() != null
+        ? getComponent().equals(that.getComponent())
         : that.getComponent() == null;
   }
 

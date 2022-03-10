@@ -13,5 +13,4 @@ public class TestConfiguration {
   public FeatureManager featureManager(UserInterface userInterface) {
     return new InMemoryFeatureManager(userInterface);
   }
-
 }
