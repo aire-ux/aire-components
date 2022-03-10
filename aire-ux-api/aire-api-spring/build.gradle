@@ -11,6 +11,7 @@ dependencies {
     api 'javax.servlet:javax.servlet-api'
     api 'org.springframework:spring-beans'
     api 'org.springframework:spring-context'
+    api 'org.awaitility:awaitility'
 
     testFixturesApi project(':aire-test-spring')
     testFixturesApi project(':aire-ux-api:aire-api')

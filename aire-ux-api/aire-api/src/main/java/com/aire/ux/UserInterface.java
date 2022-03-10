@@ -1,5 +1,6 @@
 package com.aire.ux;
 
+import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.Component;
@@ -48,7 +49,7 @@ public interface UserInterface {
 
   <T extends HasElement> Registration register(PartialSelection<T> path, Extension<T> extension);
 
-  <T extends Component> ExtensionRegistration register(RouteDefinition.Mode mode, Class<T> type);
+  <T extends Component> ExtensionRegistration register(Scope scope, Class<T> type);
 }
 
 class Holder {

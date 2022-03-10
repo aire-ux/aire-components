@@ -6,6 +6,7 @@ import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.PartialSelection;
 import com.aire.ux.RouteDefinition;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.server.RouteRegistry;
 import io.sunshower.lang.events.EventSource;
@@ -22,7 +23,13 @@ public interface ExtensionRegistry extends RouteRegistry, EventSource, AutoClose
   <T extends HasElement> ExtensionRegistration register(
       PartialSelection<T> path, Extension<T> extension);
 
-  <T extends HasElement> ExtensionRegistration register(RouteDefinition routeDefinition);
+  ExtensionRegistration register(RouteDefinition routeDefinition);
+
+  List<RouteDefinition> getRouteDefinitions();
+
+  boolean unregister(RouteDefinition routeDefinition);
+
+  List<RouteDefinition> getRouteDefinitionsFor(Class<? extends Component> component);
 
   boolean isRegistered(Class<?> type);
 

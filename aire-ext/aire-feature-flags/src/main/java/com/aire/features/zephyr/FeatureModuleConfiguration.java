@@ -8,7 +8,7 @@ import com.aire.features.SelectionBasedComponentInclusionVoter;
 import com.aire.features.ui.FeatureList;
 import com.aire.ux.Extensions;
 import com.aire.ux.Registration;
-import com.aire.ux.RouteDefinition.Mode;
+import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.UserInterface;
 import io.sunshower.zephyr.management.PluginTabView;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class FeatureModuleConfiguration implements DisposableBean {
               view.addTab("Feature Flags", FeatureList.class);
             });
 
-    registrations.add(userInterface.register(Mode.Global, FeatureList.class));
+    registrations.add(userInterface.register(Scope.Global, FeatureList.class));
     registrations.add(userInterface.register(path(":module-management"), extension));
     registrations.add(
         userInterface
