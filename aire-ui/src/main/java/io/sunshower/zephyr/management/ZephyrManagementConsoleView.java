@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.management;
 
+import com.aire.ux.Host;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Image;
@@ -18,6 +19,7 @@ import io.sunshower.zephyr.ui.layout.ApplicationLayoutDecorator;
 import java.util.List;
 import lombok.val;
 
+@Host("modules")
 @RoutePrefix("zephyr")
 @ParentLayout(ApplicationLayout.class)
 public class ZephyrManagementConsoleView extends Panel implements ApplicationLayoutDecorator {
@@ -42,8 +44,8 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
     val homeButton =
         new NavigationBarButton(
             ModuleGrid.class,
-            List.of("modules/list", "modules/topology"),
-            MatchMode.Suffix,
+            List.of("management/modules"),
+            MatchMode.Contains,
             VaadinIcon.PLUG.create());
 
     layout.getNavigation().add(homeButton);

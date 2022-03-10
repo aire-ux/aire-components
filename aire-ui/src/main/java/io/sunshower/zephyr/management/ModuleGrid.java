@@ -97,6 +97,7 @@ public class ModuleGrid extends AbstractModuleView
     textField.setPrefixComponent(VaadinIcon.SEARCH.create());
     textField.setValueChangeMode(ValueChangeMode.EAGER);
     textField.addValueChangeListener(this);
+
     result.addItem(textField);
     addButtonsToMenubar(result);
 

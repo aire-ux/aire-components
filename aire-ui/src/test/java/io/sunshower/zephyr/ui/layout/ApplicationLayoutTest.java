@@ -105,7 +105,7 @@ class ApplicationLayoutTest {
     button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
     assertTrue(button.isPresent());
     registration.close();
-    $.flush();
+    $.flush(true);
     assertEquals(0, ui.getExtensionRegistry().getExtensionCount());
     button = $.selectFirst("vaadin-button[text~=Hello]", Button.class);
     assertFalse(button.isPresent());

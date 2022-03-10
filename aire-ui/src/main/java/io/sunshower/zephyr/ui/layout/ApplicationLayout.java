@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.layout;
 
+import com.aire.ux.Host;
 import com.aire.ux.Slot;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasElement;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.val;
 
+@Host("application")
 @Tag("aire-application-layout")
 @JsModule("./aire/ui/layout/application-layout.ts")
 @CssImport("./styles/aire/ui/layout/application-layout.css")

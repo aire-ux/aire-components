@@ -41,8 +41,10 @@ dependencies {
             'sunshower-yaml-reader@jar'
     ].each {
         implementation "io.zephyr:$it"
+        testFixturesApi "io.zephyr:$it"
     }
     implementation project(':aire-ux-core')
+    testFixturesApi(project(':aire-ux-core'))
 
 
     /**
@@ -57,6 +59,7 @@ dependencies {
             'com.vaadin:vaadin-spring-boot-starter'
     ].each {
         implementation it
+        testFixturesApi it
     }
 
     /**
@@ -66,33 +69,37 @@ dependencies {
             'kernel-test',
             'kernel-test-common'
     ].each {
-        testImplementation "io.zephyr:$it"
+        testFixturesApi "io.zephyr:$it"
     }
 
 
     [
             ':aire-test-spring',
-            ':aire-ux-annotations:annotations',
-            ':aire-ux-annotations:annotations-core',
-            ':aire-ux-annotations:annotations-spring',
+            ':aire-ux-api:aire-api',
+            ':aire-ux-api:aire-api-core',
+            ':aire-ux-api:aire-api-spring',
     ].each {
-        testImplementation project(it)
+        testFixturesApi project(it)
     }
 
-    implementation project(':aire-ux-annotations:annotations-core')
-    implementation project(':aire-ux-annotations:annotations-spring')
+    implementation project(':aire-ux-api:aire-api-core')
+    implementation project(':aire-ux-api:aire-api-spring')
 
-    testImplementation(testFixtures(project(":aire-ux-core")))
-    testImplementation(testFixtures(project(":aire-ux-annotations:annotations")))
-    testImplementation(testFixtures(project(":aire-ux-annotations:annotations-spring")))
+    [
+            ':aire-ux-core',
+            ':aire-ux-api:aire-api',
+            ':aire-ux-api:aire-api-spring'
+    ].each {
+        testFixturesApi(testFixtures(project(it)))
+    }
+
 
     /**
      * general test libraries
      */
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    testFixturesApi('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-//    developmentOnly "org.springframework.boot:spring-boot-devtools"
 }
 
 dependencyManagement {

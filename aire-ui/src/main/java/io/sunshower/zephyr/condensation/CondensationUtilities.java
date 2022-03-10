@@ -1,10 +1,9 @@
 package io.sunshower.zephyr.condensation;
 
 import com.aire.ux.condensation.Condensation;
-import com.github.jknack.handlebars.internal.Files;
 import elemental.json.JsonValue;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import lombok.NonNull;
 import lombok.val;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -25,8 +24,8 @@ public class CondensationUtilities {
     val resourceLoader = new DefaultResourceLoader(Thread.currentThread().getContextClassLoader());
     val resource = resourceLoader.getResource(location);
     try (val inputStream = resource.getInputStream()) {
-      return condensation.read(type, Files.read(inputStream, Charset.defaultCharset()));
-
+      return condensation.read(
+          type, new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
     } catch (IOException ex) {
       throw new ResourceException(ex);
     }

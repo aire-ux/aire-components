@@ -17,6 +17,9 @@ public class DynamicInstantiator {
   @SuppressWarnings("unchecked")
   public static <T> Optional<T> create(UI ui, Class<T> type, Object... args) {
     val instantiator = Instantiator.get(ui);
+    if (args.length == 0) {
+      return Optional.of(instantiator.getOrCreate(type));
+    }
     val ctorDefinition = resolveConstructor(type);
     return ctorDefinition
         .flatMap(

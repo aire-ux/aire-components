@@ -6,7 +6,7 @@ dependencies {
     compileOnly 'io.zephyr:kernel-lib@jar'
     compileOnly 'com.vaadin:flow-html-components'
     compileOnly 'com.vaadin:vaadin-spring-boot-starter'
-    compileOnly project(':aire-ux-annotations:annotations')
+    compileOnly project(':aire-ux-api:aire-api')
     compileOnly 'org.springframework.boot:spring-boot-starter'
 }
 //def deps = [

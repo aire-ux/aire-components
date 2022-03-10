@@ -14,8 +14,8 @@ public class Overlays {
     host.getElement().setAttribute("aire-overlay-host", "true");
   }
 
-  public static Overlay open(
-      Component host, Class<? extends Overlay> content, Object... additionalArgs) {
+  public static <T extends Overlay> T open(
+      Component host, Class<T> content, Object... additionalArgs) {
     val actualHost = getActualHost(host);
     return host.getUI()
         .flatMap(ui -> DynamicInstantiator.create(ui, content, additionalArgs))

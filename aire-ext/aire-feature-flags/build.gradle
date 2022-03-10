@@ -1,0 +1,35 @@
+apply plugin: 'war'
+
+def deps = [
+        "service@io.zephyr.tutorials:spring-base:1.0.0-SNAPSHOT"
+].join(',')
+dependencies {
+
+    compileOnly 'io.zephyr:kernel-api'
+
+    compileOnly project(':aire-ux-api:aire-api')
+    compileOnly project(':aire-ux-api:aire-api-spring')
+
+    compileOnly project(':aire-ui')
+    testImplementation(testFixtures(project(':aire-ui')))
+
+    [
+            'com.vaadin:vaadin-spring-boot-starter'
+    ].each {
+        compileOnly(it)
+        testImplementation(it)
+    }
+}
+
+war {
+    manifest {
+        attributes(
+                'group': 'com.aire.ux',
+                'name': 'aire-ux-features',
+                'version': '1.0.0-SNAPSHOT',
+//                'dependencies': deps,
+                'description': 'just a test plugin!',
+                'type': 'plugin'
+        )
+    }
+}

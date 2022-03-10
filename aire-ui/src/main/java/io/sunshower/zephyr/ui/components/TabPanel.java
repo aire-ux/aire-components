@@ -20,9 +20,11 @@ import com.vaadin.flow.router.RouterLink;
 import io.sunshower.gyre.CompactTrieMap;
 import io.sunshower.gyre.RegexStringAnalyzer;
 import io.sunshower.gyre.TrieMap;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -60,7 +62,7 @@ public class TabPanel extends HtmlContainer
     add(contents);
     setTabPlacement(placement);
 
-    components = new HashMap<>();
+    components = new LinkedHashMap<>();
     locations = new CompactTrieMap<>(new RegexStringAnalyzer("/"));
   }
 
@@ -68,14 +70,18 @@ public class TabPanel extends HtmlContainer
     this(TabPlacement.TOP);
   }
 
-  public Tab addTab(String title, Component component) {
+  public Tab addTab(String title, Supplier<Component> component) {
     val tab = new Tab(title);
     components.put(tab, new ComponentDescriptor(false, component, null));
     tabs.add(tab);
     return tab;
   }
 
-  public Tab addTab(Component header, Component component) {
+  public List<Tab> getTabs() {
+    return List.copyOf(components.keySet());
+  }
+
+  public Tab addTab(Component header, Supplier<Component> component) {
     val tab = new Tab(header);
     components.put(tab, new ComponentDescriptor(false, component, null));
     tabs.add(tab);
@@ -130,7 +136,7 @@ public class TabPanel extends HtmlContainer
     if (!next.isRoute) {
       Component nextInstance;
       if (next.instance != null) {
-        nextInstance = next.instance;
+        nextInstance = next.instance.get();
       } else {
         nextInstance = Instantiator.get(UI.getCurrent()).createComponent(next.componentType);
       }
@@ -179,7 +185,7 @@ public class TabPanel extends HtmlContainer
   private String getTargetUrl(Class<? extends Component> type) {
     val registry = RouteConfiguration.forApplicationScope().getHandledRegistry();
     val result = registry.getTargetUrl(type);
-    return result.get();
+    return result.orElse("");
   }
 
   private String getCurrentLocation() {
@@ -216,7 +222,7 @@ public class TabPanel extends HtmlContainer
   static class ComponentDescriptor {
 
     final boolean isRoute;
-    final Component instance;
+    final Supplier<Component> instance;
     final Class<? extends Component> componentType;
   }
 
