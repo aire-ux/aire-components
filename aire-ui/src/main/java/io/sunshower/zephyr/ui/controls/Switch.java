@@ -47,7 +47,7 @@ public class Switch extends Input {
   }
 
   public void setEnabled(boolean enabled) {
-    if(enabled) {
+    if (enabled) {
       setMode(Mode.Enabled);
     } else {
       setMode(Mode.Disabled);
@@ -86,9 +86,9 @@ public class Switch extends Input {
   }
 
   public void setMode(Mode mode) {
-    if(mode == Mode.Enabled) {
+    if (mode == Mode.Enabled) {
       super.setEnabled(true);
-    } else if(mode == Mode.Disabled) {
+    } else if (mode == Mode.Disabled) {
       super.setEnabled(false);
     }
     set(MODE_PROPERTY_DESCRIPTOR, propertyValue(mode));

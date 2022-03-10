@@ -92,12 +92,23 @@ public class AddFeatureFlagOverlay extends Overlay {
   }
 
   private void onSuccess(ClickEvent<Button> buttonClickEvent) {
-    this.value =
+    value =
         new FeatureDescriptor(
             keyInputField.getValue(),
             nameInputField.getValue(),
             pathInputField.getValue(),
             descriptionInput.getValue());
+
+    val tagValue = tagInputField.getValue();
+    if (tagValue != null) {
+      val tags = tagValue.split(",");
+      for (val tag : tags) {
+        if (!tag.isBlank()) {
+          value.addTag(tag);
+        }
+      }
+    }
+
     close();
   }
 }
