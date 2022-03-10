@@ -45,6 +45,8 @@ public interface UserInterface {
     return getComponentInclusionManager().register(voter);
   }
 
+  void reload();
+
   <T> Optional<T> selectFirst(PartialSelection<T> path, Supplier<UI> uiSupplier);
 
   <T extends HasElement> Registration register(PartialSelection<T> path, Extension<T> extension);

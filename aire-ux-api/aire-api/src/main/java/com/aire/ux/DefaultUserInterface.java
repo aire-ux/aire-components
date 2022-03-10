@@ -3,6 +3,7 @@ package com.aire.ux;
 import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.concurrency.AccessQueue;
+import com.aire.ux.concurrency.AccessQueue.Target;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
@@ -36,6 +37,17 @@ public class DefaultUserInterface implements UserInterface {
   @Override
   public ExtensionRegistry getExtensionRegistry() {
     return registry;
+  }
+
+  @Override
+  public void reload() {
+    accessQueue.broadcast(
+        Target.UI,
+        ui -> {
+          if (ui instanceof UI u) {
+            u.getPage().reload();
+          }
+        });
   }
 
   @Override

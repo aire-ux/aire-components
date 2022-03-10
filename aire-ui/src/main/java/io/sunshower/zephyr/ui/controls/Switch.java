@@ -1,6 +1,6 @@
 package io.sunshower.zephyr.ui.controls;
 
-import static com.vaadin.flow.component.PropertyDescriptors.attributeWithDefault;
+import static com.vaadin.flow.component.PropertyDescriptors.propertyWithDefault;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -9,7 +9,6 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.shared.Registration;
 import java.util.Locale;
 import lombok.val;
@@ -17,7 +16,7 @@ import lombok.val;
 @Tag("aire-switch")
 @JsModule("./aire/ui/controls/switch.ts")
 @CssImport("./styles/aire/ui/controls/switch.css")
-public class Switch extends Input {
+public class Switch extends Component {
 
   static final PropertyDescriptor<String, String> MODE_PROPERTY_DESCRIPTOR;
   static final PropertyDescriptor<String, String> LABEL_PROPERTY_DESCRIPTOR;
@@ -25,12 +24,12 @@ public class Switch extends Input {
   static final PropertyDescriptor<String, String> DIRECTION_PROPERTY_DESCRIPTOR;
 
   static {
-    MODE_PROPERTY_DESCRIPTOR = attributeWithDefault("mode", propertyValue(Mode.Enabled));
+    MODE_PROPERTY_DESCRIPTOR = propertyWithDefault("mode", propertyValue(Mode.On));
 
     DIRECTION_PROPERTY_DESCRIPTOR =
-        attributeWithDefault("direction", propertyValue(Direction.Horizontal));
+        propertyWithDefault("direction", propertyValue(Direction.Horizontal));
 
-    LABEL_PROPERTY_DESCRIPTOR = attributeWithDefault("label", "");
+    LABEL_PROPERTY_DESCRIPTOR = propertyWithDefault("label", "");
   }
 
   public Switch() {
@@ -43,15 +42,7 @@ public class Switch extends Input {
 
   public Switch(Component label) {
     getElement().appendChild(label.getElement());
-    setMode(Mode.Enabled);
-  }
-
-  public void setEnabled(boolean enabled) {
-    if (enabled) {
-      setMode(Mode.Enabled);
-    } else {
-      setMode(Mode.Disabled);
-    }
+    setMode(Mode.On);
   }
 
   static String propertyValue(Enum<?> e) {
@@ -82,21 +73,28 @@ public class Switch extends Input {
   }
 
   public Mode getMode() {
-    return parse(Mode.class, Mode.Enabled, get(MODE_PROPERTY_DESCRIPTOR));
+    return parse(Mode.class, Mode.On, get(MODE_PROPERTY_DESCRIPTOR));
   }
 
   public void setMode(Mode mode) {
-    if (mode == Mode.Enabled) {
-      super.setEnabled(true);
-    } else if (mode == Mode.Disabled) {
-      super.setEnabled(false);
-    }
     set(MODE_PROPERTY_DESCRIPTOR, propertyValue(mode));
   }
 
+  public boolean isSelected() {
+    return getMode() == Mode.On;
+  }
+
+  public void setSelected(boolean selected) {
+    if (selected) {
+      setMode(Mode.On);
+    } else {
+      setMode(Mode.Off);
+    }
+  }
+
   public enum Mode {
-    Enabled,
-    Disabled,
+    On,
+    Off,
     Indeterminate
   }
 

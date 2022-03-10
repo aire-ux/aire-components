@@ -7,7 +7,7 @@ export class Overlay extends LitElement {
     :host {
       position: absolute;
       background-color: white;
-      z-index: 1000;
+      z-index: 150;
       display: flex;
       flex-direction: column;
       

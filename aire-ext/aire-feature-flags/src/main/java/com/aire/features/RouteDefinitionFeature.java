@@ -9,14 +9,15 @@ public class RouteDefinitionFeature extends FeatureDescriptor {
   final RouteDefinition routeDefinition;
 
   public RouteDefinitionFeature(
-      RouteDefinition definition, String name, String description, String path) {
-    super(definition.getComponent().getCanonicalName(), name, path, description);
+      RouteDefinition definition, String key, String name, String description, String path) {
+    super(key, name, path, description);
     this.routeDefinition = definition;
   }
 
   public RouteDefinitionFeature(RouteDefinition definition) {
     this(
         definition,
+        definition.getComponent().getCanonicalName(),
         definition.getComponent().getCanonicalName(),
         definition.getComponent().getSimpleName(),
         "Route[" + definition.getComponent() + "]");

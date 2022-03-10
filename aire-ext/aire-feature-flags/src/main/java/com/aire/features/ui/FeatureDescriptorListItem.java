@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import io.sunshower.zephyr.ui.controls.Switch;
+import io.sunshower.zephyr.ui.controls.Switch.Mode;
 import lombok.val;
 
 @SuppressWarnings("PMD")
@@ -38,7 +39,11 @@ public class FeatureDescriptorListItem extends HorizontalLayout {
     div.getStyle().set("justify-content", "center");
 
     val enable = new Switch();
-    enable.setEnabled(true);
+    if (item.isEnabled()) {
+      enable.setMode(Mode.On);
+    } else {
+      enable.setMode(Mode.Off);
+    }
     div.add(enable);
     enable.addSelectionChangeListener(
         changed -> {

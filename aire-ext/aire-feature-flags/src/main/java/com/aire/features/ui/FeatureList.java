@@ -83,6 +83,5 @@ public class FeatureList extends VerticalLayout
   }
 
   @Override
-  public void valueChanged(ComponentValueChangeEvent<TextField, String> event) {
-  }
+  public void valueChanged(ComponentValueChangeEvent<TextField, String> event) {}
 }
