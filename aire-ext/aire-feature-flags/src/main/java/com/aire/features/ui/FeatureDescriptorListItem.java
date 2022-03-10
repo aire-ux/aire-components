@@ -3,8 +3,7 @@ package com.aire.features.ui;
 import com.aire.features.FeatureDescriptor;
 import com.aire.features.FeatureManager;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import io.sunshower.zephyr.ui.controls.Switch;
 import lombok.val;
@@ -30,7 +29,7 @@ public class FeatureDescriptorListItem extends HorizontalLayout {
     div.getStyle().set("width", "25%");
     val enable = new Switch();
     enable.setEnabled(true);
-    add(enable);
+    div.add(enable);
     enable.addSelectionChangeListener(
         changed -> {
           if (changed.isSelected()) {
@@ -45,10 +44,29 @@ public class FeatureDescriptorListItem extends HorizontalLayout {
   private Div createLeft() {
     val div = new Div();
     div.getStyle().set("width", "75%");
-    val name = new H2(item.getName());
-    val description = new H3(item.getDescription());
-    add(name);
-    add(description);
+    div.getStyle().set("display", "flex");
+    div.getStyle().set("flex-direction", "row");
+
+    val firstRow = new Div();
+    firstRow.getStyle().set("display", "flex");
+    firstRow.getStyle().set("flex-direction", "column");
+    firstRow.getStyle().set("width", "auto");
+    firstRow.getStyle().set("margin-right", "8px");
+
+    firstRow.add(new Span("Key: " + item.getKey()));
+    firstRow.add(new Span("Name: " + item.getKey()));
+    div.add(firstRow);
+
+    val secondRow = new Div();
+    secondRow.getStyle().set("display", "flex");
+    secondRow.getStyle().set("flex-direction", "column");
+    secondRow.add(new Span("Description: " + item.getDescription()));
+    secondRow.add(new Span("Path" + item.getPath()));
+
+    div.add(secondRow);
+
+
+//    div.add(keyHolder);
 
     return div;
   }
