@@ -1,6 +1,7 @@
 package com.aire.ux;
 
 import lombok.NonNull;
+import lombok.val;
 
 public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Extension<T> {
 
@@ -58,5 +59,29 @@ public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Exte
 
   public void setFinalizer(@NonNull ExtensionRegistration finalizer) {
     this.finalizer = finalizer;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public boolean equals(Object o) {
+    if (o == null) {
+      return false;
+    }
+    if (o == this) {
+      return true;
+    }
+    if (getClass().equals(o.getClass())) {
+      val definition = (RouteExtensionDefinition) o;
+      return definition.getType().equals(getType()) &&
+             definition.getRouteDefinition().getScopes().equals(getRouteDefinition().getScopes());
+    }
+    return false;
+  }
+
+
+  @Override
+  public int hashCode() {
+    return 0;
+//    return 31 * getType().hashCode() + 17 * getRouteDefinition().getScopes().hashCode();
   }
 }

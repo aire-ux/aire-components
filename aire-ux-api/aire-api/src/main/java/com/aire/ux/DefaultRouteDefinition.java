@@ -25,4 +25,29 @@ public class DefaultRouteDefinition implements RouteDefinition {
   public Class<? extends Component> getComponent() {
     return component;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    DefaultRouteDefinition that = (DefaultRouteDefinition) o;
+
+    if (getScopes() != null ? !getScopes().equals(that.getScopes()) : that.getScopes() != null) {
+      return false;
+    }
+    return getComponent() != null ? getComponent().equals(that.getComponent())
+        : that.getComponent() == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = getScopes() != null ? getScopes().hashCode() : 0;
+    result = 31 * result + (getComponent() != null ? getComponent().hashCode() : 0);
+    return result;
+  }
 }

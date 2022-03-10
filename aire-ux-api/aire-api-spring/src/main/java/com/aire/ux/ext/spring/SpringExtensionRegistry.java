@@ -23,11 +23,13 @@ import io.sunshower.lang.events.EventSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,7 +54,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   private final EventSource delegate;
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
-  private final Map<Class<?>, List<RouteExtensionDefinition<?>>> routeExtensions;
+  private final Map<Class<?>, Set<RouteExtensionDefinition<?>>> routeExtensions;
   private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
   private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
   private final ComponentInclusionManager inclusionManager;
@@ -161,7 +163,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
                 configuration.setAnnotatedRoute(type);
               }
               routeExtensions.computeIfAbsent(routeDefinition.getComponent(),
-                  k -> new ArrayList<>()).add(definition);
+                  k -> new HashSet<>()).add(definition);
               dispatchEvent(Events.RouteRegistered, create(routeDefinition));
             }
           });
@@ -170,8 +172,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
             val configurations = locate(routeDefinition);
             for (val configuration : configurations) {
               configuration.removeRoute(routeDefinition.getComponent());
-              routeExtensions.remove(routeDefinition.getComponent(),
-                  List.of(definition));
+              routeExtensions.remove(routeDefinition.getComponent());
               dispatchEvent(Events.RouteUnregistered, create(routeDefinition));
             }
           });
