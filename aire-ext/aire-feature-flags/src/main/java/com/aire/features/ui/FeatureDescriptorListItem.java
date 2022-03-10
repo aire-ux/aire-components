@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import io.sunshower.zephyr.ui.controls.Switch;
 import lombok.val;
 
+@SuppressWarnings("PMD")
 @JsModule("@vaadin/vaadin-lumo-styles/badge.js")
 public class FeatureDescriptorListItem extends HorizontalLayout {
 
