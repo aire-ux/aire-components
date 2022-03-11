@@ -2,6 +2,7 @@ package com.aire.features.ui;
 
 import com.aire.features.FeatureDescriptor;
 import com.aire.features.FeatureManager;
+import com.aire.ux.RouteExtension;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -23,8 +24,9 @@ import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@RouteExtension
 @Breadcrumb(name = "Features", icon = "vaadin:plug", host = MainView.class)
-@Route(value = "modules/features", layout = PluginTabView.class)
+@Route(value = "modules/features", layout = PluginTabView.class, registerAtStartup = false)
 public class FeatureList extends VerticalLayout
     implements ValueChangeListener<ComponentValueChangeEvent<TextField, String>> {
 
@@ -70,7 +72,6 @@ public class FeatureList extends VerticalLayout
           overlay.addOverlayClosedEventListener(
               event -> {
                 if (!event.isCancelled()) {
-                  featureManager.registerFeature(overlay.getValue());
                   grid.getDataProvider().refreshAll();
                 }
               });

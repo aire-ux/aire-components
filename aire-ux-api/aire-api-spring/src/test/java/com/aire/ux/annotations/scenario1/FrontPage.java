@@ -1,6 +1,8 @@
 package com.aire.ux.annotations.scenario1;
 
 import com.aire.ux.Host;
+import com.aire.ux.RouteDefinition.Scope;
+import com.aire.ux.RouteExtension;
 import com.aire.ux.Slot;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,6 +12,7 @@ import javax.inject.Inject;
 
 @Host("my-id")
 @Route("front-page")
+@RouteExtension(scopes = {Scope.Global, Scope.Session})
 public class FrontPage extends VerticalLayout {
 
   public final Coolbean bean;

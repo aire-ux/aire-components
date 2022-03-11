@@ -1,6 +1,7 @@
 package com.aire.features;
 
 import com.aire.ux.ExtensionDefinition;
+import com.aire.ux.UserInterface;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -51,5 +52,9 @@ public class FeatureDescriptor {
 
   public List<String> getTags() {
     return tags;
+  }
+
+  public void setEnabled(boolean b, UserInterface ui) {
+    this.enabled = b;
   }
 }

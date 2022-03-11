@@ -2,6 +2,7 @@ package com.aire.features;
 
 import com.aire.ux.ExtensionDefinition;
 import com.aire.ux.Registration;
+import com.aire.ux.UserInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,14 +10,12 @@ import java.util.Optional;
 
 public class InMemoryFeatureManager implements FeatureManager {
 
+  private final UserInterface ui;
   private final List<FeatureDescriptor> descriptors;
 
-  public InMemoryFeatureManager() {
+  public InMemoryFeatureManager(UserInterface ui) {
+    this.ui = ui;
     this.descriptors = new ArrayList<>();
-  }
-
-  public static InMemoryFeatureManager getInstance() {
-    return Holder.instance;
   }
 
   @Override
@@ -49,7 +48,7 @@ public class InMemoryFeatureManager implements FeatureManager {
     return locate(key)
         .map(
             descriptor -> {
-              descriptor.setEnabled(true);
+              descriptor.setEnabled(true, ui);
               return descriptor;
             })
         .isPresent();
@@ -60,14 +59,9 @@ public class InMemoryFeatureManager implements FeatureManager {
     return locate(key)
         .map(
             descriptor -> {
-              descriptor.setEnabled(false);
+              descriptor.setEnabled(false, ui);
               return descriptor;
             })
         .isPresent();
-  }
-
-  static final class Holder {
-
-    static final InMemoryFeatureManager instance = new InMemoryFeatureManager();
   }
 }

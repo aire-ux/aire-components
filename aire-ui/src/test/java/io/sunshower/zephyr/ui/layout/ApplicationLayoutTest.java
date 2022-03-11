@@ -11,7 +11,7 @@ import static org.mockito.Mockito.spy;
 import com.aire.ux.DefaultComponentExtension;
 import com.aire.ux.Extensions;
 import com.aire.ux.RouteDefinition;
-import com.aire.ux.RouteDefinition.Mode;
+import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.Selection;
 import com.aire.ux.UserInterface;
 import com.aire.ux.actions.ActionEvent.Type;
@@ -136,7 +136,7 @@ class ApplicationLayoutTest {
                   b.add(new Button("hello"));
                 }));
     assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isEmpty());
-    val reg2 = userInterface.register(Mode.Global, MainNavigationComponent.class);
+    val reg2 = userInterface.register(Scope.Global, MainNavigationComponent.class);
     $.navigate(MainNavigationComponent.class);
     assertTrue($.selectFirst("vaadin-button[text=hello]", Button.class).isPresent());
     registration.close();

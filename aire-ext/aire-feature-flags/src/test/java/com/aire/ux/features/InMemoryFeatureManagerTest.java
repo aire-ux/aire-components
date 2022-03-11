@@ -1,11 +1,13 @@
 package com.aire.ux.features;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.features.FeatureDescriptor;
 import com.aire.features.FeatureManager;
 import com.aire.features.InMemoryFeatureManager;
+import com.aire.features.RouteDefinitionFeature;
 import com.aire.features.SelectionBasedComponentInclusionVoter;
 import com.aire.ux.ExtensionRegistration;
 import com.aire.ux.Extensions;
@@ -21,6 +23,7 @@ import com.aire.ux.test.Routes;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.router.NotFoundException;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.management.PluginTabView;
@@ -28,10 +31,12 @@ import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 @AireUITest
 @Navigate
 @Routes(scanClassPackage = MainView.class)
+@ContextConfiguration(classes = TestConfiguration.class)
 class InMemoryFeatureManagerTest {
 
   private FeatureManager featureManager;
@@ -41,7 +46,7 @@ class InMemoryFeatureManagerTest {
 
   @BeforeEach
   void setUp(@Autowired ExtensionRegistry registry, @Autowired UserInterface userInterface) {
-    featureManager = new InMemoryFeatureManager();
+    featureManager = new InMemoryFeatureManager(userInterface);
     featureVoter = new SelectionBasedComponentInclusionVoter(featureManager);
     userInterface.registerComponentInclusionVoter(featureVoter);
     routeRegistration = registry.register(RouteDefinition.global(TestFeatureView.class));
@@ -59,6 +64,23 @@ class InMemoryFeatureManagerTest {
   void tearDown() {
     routeRegistration.close();
     extensionRegistration.close();
+  }
+
+  @ViewTest
+  void ensureDisablingRoutesWorksWithSameAPI(
+      @Autowired final ExtensionRegistry registry,
+      @Autowired final FeatureManager featureManager,
+      @Context TestContext $) {
+    val definition = RouteDefinition.fromAnnotatedClass(TestFeatureView.class);
+    try (val reg = registry.register(definition)) {
+      $.navigate(definition.getComponent());
+      featureManager.registerFeature(new RouteDefinitionFeature(definition));
+      featureManager.disable(TestFeatureView.class.getCanonicalName());
+      assertThrows(NotFoundException.class, () -> $.navigate(definition.getComponent()));
+
+      featureManager.enable(TestFeatureView.class.getCanonicalName());
+      $.navigate(definition.getComponent());
+    }
   }
 
   @ViewTest

@@ -12,7 +12,6 @@ import {
 
 @customElement('aire-switch')
 export class Switch extends LitElement {
-
   static styles = css`
     .aire-switch {
       display: flex;
@@ -128,15 +127,24 @@ export class Switch extends LitElement {
     .aire-switch.vertical > input {
       transform: rotate(calc(90deg * var(--isLTR) * -1));
     }
-    
-  
   `
 
 
-  private _mode: Mode | undefined;
+
+  @property({
+    attribute: true,
+    type: String,
+    reflect: true
+  })
+  private mode: Mode | undefined;
 
 
-  private _direction: Direction | undefined;
+  @property({
+    attribute: true,
+    reflect: true,
+    type: String
+  })
+  private direction: Direction | undefined;
 
 
   @query('input[type=checkbox]')
@@ -144,54 +152,29 @@ export class Switch extends LitElement {
 
   constructor() {
     super();
+    this.mode = 'on';
   }
 
 
-  @property({
-    reflect: true,
-    attribute: true,
-    // @ts-ignore
-    converter: value => Mode[`${value[0].toUpperCase()}${value.slice(1)}`]
-  })
-  public get mode(): Mode | undefined {
-    return this._mode;
-  }
-
-  public set mode(m: Mode | undefined) {
-    let old = this._mode;
-    this._mode = m;
-    this.requestUpdate('mode', old);
-  }
-
-
-  @property({
-    reflect: true,
-    attribute: true,
-    // @ts-ignore
-    converter: value => Mode[`${value[0].toUpperCase()}${value.slice(1)}`]
-  })
-  public get direction(): Direction | undefined {
-    return this._direction;
-  }
 
 
   protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
     const input = this.input;
     if (changedProperties.has('mode')) {
       const mode = this.mode;
       if (input) {
-        if (mode === Mode.Disabled) {
-          input.disabled = true;
+        if (mode === 'off') {
+          input.checked = false;
         }
-        if (mode === Mode.Indeterminate) {
+        if (mode === 'indeterminate') {
           input.indeterminate = true;
         }
-        if (mode === Mode.Enabled) {
-          input.disabled = false;
+        if (mode === 'on') {
+          input.checked = true;
         }
       }
     }
-    super.updated(changedProperties);
   }
 
 
@@ -211,15 +194,7 @@ export class Switch extends LitElement {
     this.input?.addEventListener('change', this.onInputChanged);
   }
 
-  protected update(changedProperties: PropertyValues) {
-    super.update(changedProperties);
-  }
 
-  public set direction(direction: Direction | undefined) {
-    let old = this._direction;
-    this._direction = direction;
-    this.requestUpdate('direction', old);
-  }
 
   readonly onInputChanged = (e: Event) => {
     const input = this.input;
@@ -231,16 +206,6 @@ export class Switch extends LitElement {
     }));
 
   }
-
-  // private onInputChanged(e: Event): void {
-  //   const input = this.input;
-  //   console.log("input changed", this.input?.checked);
-  //   this.dispatchEvent(new CustomEvent('value-changed', {
-  //     detail: {
-  //       selected: input?.checked
-  //     }
-  //   }));
-  // }
 
   render(): TemplateResult {
     return html`
@@ -254,13 +219,15 @@ export class Switch extends LitElement {
 
 }
 
-export enum Mode {
-  Enabled = 'enabled',
-  Disabled = 'disabled',
-  Indeterminate = 'indeterminate'
-}
+export type Mode = 'on' | 'off' | 'indeterminate';
+// export enum Mode {
+//   On = 'on',
+//   Off = 'off',
+//   Indeterminate = 'indeterminate'
+// }
 
-export enum Direction {
-  Vertical = 'vertical',
-  Horizontal = 'horizontal'
-}
+export type Direction = 'horizontal' | 'vertical';
+// export enum Direction {
+//   Vertical = 'vertical',
+//   Horizontal = 'horizontal'
+// }
