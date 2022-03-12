@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import servlet.ZephyrModuleResourceServlet;
 
 @Configuration
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
@@ -35,9 +36,11 @@ public class AireVaadinOverrideAutoConfiguration {
 
   static final String VAADIN_SERVLET_MAPPING = "/vaadinServlet/*";
 
-  @Autowired private WebApplicationContext context;
+  @Autowired
+  private WebApplicationContext context;
 
-  @Autowired private VaadinConfigurationProperties configurationProperties;
+  @Autowired
+  private VaadinConfigurationProperties configurationProperties;
 
   static String makeContextRelative(String url) {
     // / -> context://
@@ -52,6 +55,12 @@ public class AireVaadinOverrideAutoConfiguration {
   @Bean
   public static AccessQueue accessQueue() {
     return new AsynchronousSessionQueue();
+  }
+
+  @Bean
+  public ServletRegistrationBean<ZephyrModuleResourceServlet> zephyrModuleResourceServletServletRegistrationBean(
+      Kernel kernel, Module module) {
+    return new ServletRegistrationBean<>(new ZephyrModuleResourceServlet(kernel, module), "/kernel");
   }
 
   /**
