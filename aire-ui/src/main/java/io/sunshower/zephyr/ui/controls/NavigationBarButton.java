@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.controls;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
@@ -40,6 +41,7 @@ public class NavigationBarButton extends HtmlContainer
   private final List<String> routePatterns;
 
   private final Class<? extends Component> route;
+  private final Registration registration;
   private Class<? extends Component> drawerContents;
   private HighlightAction<NavigationBarButton> highlightAction;
   private HighlightCondition<NavigationBarButton> highlightCondition;
@@ -107,10 +109,11 @@ public class NavigationBarButton extends HtmlContainer
     add(components);
     this.route = route;
     this.matchMode = matchMode;
-    this.addClickListener(
-        event -> {
-          UI.getCurrent().navigate(this.route);
-        });
+    this.registration =
+        addClickListener(
+            event -> {
+              UI.getCurrent().navigate(this.route);
+            });
     this.routePatterns = List.copyOf(toMatch);
 
     /** behaviors */
@@ -132,6 +135,10 @@ public class NavigationBarButton extends HtmlContainer
       throw new IllegalStateException("Error: route must be present");
     }
     return routeAnnotation.value();
+  }
+
+  public void click() {
+    fireEvent(new ClickEvent<>(this, false, 0, 0, 0, 0, 0, 0, false, false, false, false));
   }
 
   public void setDrawer(@Nullable Class<? extends Component> drawerContents) {

@@ -24,9 +24,18 @@ pluginManagement {
 }
 include(
 
+
         'aire-ui',
         'aire-json-mapper',
         'aire-css-selectors',
+
+        /**
+         * plugin implementators should depend on
+         * aire-all,
+         * aire-test
+         */
+        'aire-ext:aire-all',
+        'aire-ext:aire-test',
 
         'aire-ux-core',
         'aire-ux-spring',

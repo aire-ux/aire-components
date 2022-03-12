@@ -6,7 +6,6 @@ dependencies {
             'com.vaadin:flow-html-components',
             'com.github.mvysny.kaributesting:karibu-testing-v10'
     ].each {
-
         api(it) {
             [
                     "com.vaadin.webjar",

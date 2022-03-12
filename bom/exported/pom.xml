@@ -16,33 +16,126 @@
 
   <name>Aire-UX Exported Bill-Of-Materials</name>
   <url>http://www.sunshower.io</url>
+  <properties>
+    <aire.version>1.0.16-SNAPSHOT</aire.version>
+  </properties>
 
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-api</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
-        <artifactId>aire-test-common</artifactId>
-        <version>${aire-ux.version}</version>
+        <artifactId>aire-test</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-all</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-api-core</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-api-spring</artifactId>
+        <version>${aire.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
         <artifactId>aire-css-selectors</artifactId>
-        <version>${aire-ux.version}</version>
+        <version>${aire.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
-        <artifactId>aire-test-vaadin</artifactId>
-        <version>${aire-ux.version}</version>
+        <artifactId>aire-feature-flags</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-json-mapper</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-mock</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-core</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-mockito</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-test-common</artifactId>
+        <version>${aire.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
         <artifactId>aire-test-spring</artifactId>
-        <version>${aire-ux.version}</version>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-test-vaadin</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-theme</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-ux-api</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-ux-core</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-ux-zephyr</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire.ux.ui</groupId>
+        <artifactId>aire-ui</artifactId>
+        <version>${aire.version}</version>
       </dependency>
 
     </dependencies>

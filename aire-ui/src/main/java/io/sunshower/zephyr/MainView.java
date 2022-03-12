@@ -9,10 +9,14 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import io.sunshower.zephyr.management.ModuleGrid;
+import io.sunshower.zephyr.ui.components.Card;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
+import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
+import io.sunshower.zephyr.ui.layout.TestRoute;
+import java.util.List;
 import lombok.val;
 
 @Route("")
@@ -20,7 +24,24 @@ import lombok.val;
 @Breadcrumb(name = "Home", icon = "vaadin:home")
 public class MainView extends ApplicationLayout {
 
-  public MainView() {}
+  public MainView() {
+    super();
+
+  }
+
+  @Override
+  protected HasComponents createNavigation() {
+    val nav = super.createNavigation();
+
+    val button = new NavigationBarButton(
+        TestRoute.class,
+        List.of("test"),
+        MatchMode.Contains,
+        VaadinIcon.PAPERCLIP.create()
+    );
+    nav.add(button);
+    return nav;
+  }
 
   protected HasComponents createTop() {
     val topNav = super.createTop();
