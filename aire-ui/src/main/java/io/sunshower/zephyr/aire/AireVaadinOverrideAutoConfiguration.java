@@ -36,11 +36,9 @@ public class AireVaadinOverrideAutoConfiguration {
 
   static final String VAADIN_SERVLET_MAPPING = "/vaadinServlet/*";
 
-  @Autowired
-  private WebApplicationContext context;
+  @Autowired private WebApplicationContext context;
 
-  @Autowired
-  private VaadinConfigurationProperties configurationProperties;
+  @Autowired private VaadinConfigurationProperties configurationProperties;
 
   static String makeContextRelative(String url) {
     // / -> context://
@@ -58,9 +56,10 @@ public class AireVaadinOverrideAutoConfiguration {
   }
 
   @Bean
-  public ServletRegistrationBean<ZephyrModuleResourceServlet> zephyrModuleResourceServletServletRegistrationBean(
-      Kernel kernel, Module module) {
-    return new ServletRegistrationBean<>(new ZephyrModuleResourceServlet(kernel, module), "/kernel");
+  public ServletRegistrationBean<ZephyrModuleResourceServlet>
+      zephyrModuleResourceServletServletRegistrationBean(Kernel kernel, Module module) {
+    return new ServletRegistrationBean<>(
+        new ZephyrModuleResourceServlet(kernel, module), "/kernel");
   }
 
   /**

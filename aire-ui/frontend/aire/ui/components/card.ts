@@ -29,6 +29,9 @@ export class Card extends LitElement {
       z-index: 1;
       background-color: white;
       transition: box-shadow .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     div.header {
@@ -63,6 +66,13 @@ export class Card extends LitElement {
         
         div.icon {
           border: 1px solid ${this.color}
+          
+        }
+        div.icon > ::slotted(img) {
+          max-width: 30px;
+          max-height: 30px;
+          width: 30px;
+          height: 30px;
         }
         div.footer {
           border-top: 1px solid ${this.color}
@@ -70,7 +80,9 @@ export class Card extends LitElement {
       </style>
       
       <article part="content">
-        <div class="icon"></div>
+        <div class="icon">
+          <slot name="icon"></slot>
+        </div>
         
         <div class="header" part="header">
           

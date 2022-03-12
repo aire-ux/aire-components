@@ -1,5 +1,6 @@
 package servlet;
 
+import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.ModuleCoordinate;
@@ -17,7 +18,6 @@ import lombok.val;
 @WebServlet(urlPatterns = "/kernel", name = "zephyr:kernel:resource:servlet")
 public class ZephyrModuleResourceServlet extends HttpServlet {
 
-
   private final Kernel kernel;
   private final Module rootModule;
 
@@ -26,11 +26,9 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
     this.rootModule = rootModule;
   }
 
-
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    val accept = req.getHeader("Accept");
     val moduleCoordinate = req.getParameter("module");
     var resourceName = req.getParameter("resource");
     if (resourceName == null) {
@@ -66,6 +64,12 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
 
   private Module lookupModule(String moduleCoordinate) {
     try {
+      val active = kernel.getModuleManager().getModules(State.Active);
+      for (val m : active) {
+        if (m.getCoordinate().toCanonicalForm().startsWith(moduleCoordinate)) {
+          return m;
+        }
+      }
       val module = kernel.getModuleManager().getModule(ModuleCoordinate.parse(moduleCoordinate));
       if (module != null) {
         return module;

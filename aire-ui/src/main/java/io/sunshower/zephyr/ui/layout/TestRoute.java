@@ -14,12 +14,9 @@ public class TestRoute extends Panel {
   }
 
   private void createContent() {
-    for(int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++) {
       val card = new Card();
       add(card);
     }
-
   }
-
-
 }
