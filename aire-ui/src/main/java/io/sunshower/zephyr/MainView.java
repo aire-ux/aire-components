@@ -12,10 +12,7 @@ import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
-import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
-import io.sunshower.zephyr.ui.layout.TestRoute;
-import java.util.List;
 import lombok.val;
 
 @Route("")
@@ -31,10 +28,11 @@ public class MainView extends ApplicationLayout {
   protected HasComponents createNavigation() {
     val nav = super.createNavigation();
 
-//    val button =
-//        new NavigationBarButton(
-//            TestRoute.class, List.of("test"), MatchMode.Contains, VaadinIcon.PAPERCLIP.create());
-//    nav.add(button);
+    //    val button =
+    //        new NavigationBarButton(
+    //            TestRoute.class, List.of("test"), MatchMode.Contains,
+    // VaadinIcon.PAPERCLIP.create());
+    //    nav.add(button);
 
     return nav;
   }
