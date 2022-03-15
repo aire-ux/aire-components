@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @WithServlets(ZephyrModuleResourceServlet.class)
 class ZephyrModuleResourceServletTest {
 
-  @Inject
-  private ZephyrModuleResourceServlet servlet;
+  @Inject private ZephyrModuleResourceServlet servlet;
 
   @Test
   void ensureServletIsInjectable(@Autowired Client client) {
@@ -26,11 +25,9 @@ class ZephyrModuleResourceServletTest {
     assertNotNull(result);
   }
 
-
   @Test
   void ensureClientReturnsCorrectValue(@Autowired Client client) {
     val result = client.get("/kernel?resource=images/icon.svg");
     assertTrue(result.contains("svg"));
   }
-
 }

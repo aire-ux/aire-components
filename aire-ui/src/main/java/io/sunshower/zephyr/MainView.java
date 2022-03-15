@@ -33,8 +33,7 @@ public class MainView extends ApplicationLayout {
 
     val button =
         new NavigationBarButton(
-            TestRoute.class, List.of("test"), MatchMode.Contains,
-            VaadinIcon.PAPERCLIP.create());
+            TestRoute.class, List.of("test"), MatchMode.Contains, VaadinIcon.PAPERCLIP.create());
     nav.add(button);
     return nav;
   }

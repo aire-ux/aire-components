@@ -7,7 +7,6 @@ import static java.util.stream.Collectors.toList;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.lang.tuple.Pair;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -63,7 +62,8 @@ public class DefaultClient implements Client {
   @SneakyThrows
   private Map<String, String[]> parseParameters(String path) {
     val query = path.substring(path.indexOf("?") + 1, path.length());
-    return Pattern.compile("&").splitAsStream(query)
+    return Pattern.compile("&")
+        .splitAsStream(query)
         .map(p -> Arrays.copyOf(p.split("=", 2), 2))
         .collect(groupingBy(s -> s[0], mapping(s -> s[1], toList())))
         .entrySet()
@@ -85,6 +85,5 @@ public class DefaultClient implements Client {
   }
 
   @Override
-  public void post(String path, String body) {
-  }
+  public void post(String path, String body) {}
 }

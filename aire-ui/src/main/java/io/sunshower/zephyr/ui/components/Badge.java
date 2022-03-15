@@ -53,7 +53,6 @@ public class Badge extends Span {
     this(mode, null, text, false);
   }
 
-
   public enum Mode {
     Success("success"),
     Error("error"),
@@ -66,5 +65,4 @@ public class Badge extends Span {
       this.value = value;
     }
   }
-
 }

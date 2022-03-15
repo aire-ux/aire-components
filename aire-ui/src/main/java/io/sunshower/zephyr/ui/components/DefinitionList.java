@@ -10,9 +10,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 @CssImport("./styles/aire/ui/components/definition-list.css")
 public class DefinitionList extends HtmlContainer {
 
-  public DefinitionList() {
-
-  }
+  public DefinitionList() {}
 
   public DefinitionTitleBuilder key(Component key) {
     return new DefinitionTitleBuilder(new Label(key));
@@ -21,7 +19,6 @@ public class DefinitionList extends HtmlContainer {
   public DefinitionTitleBuilder key(String text) {
     return key(new Label(text));
   }
-
 
   @Tag("dt")
   public static class Label extends Component implements HasText {
@@ -57,7 +54,6 @@ public class DefinitionList extends HtmlContainer {
     }
   }
 
-
   public class DefinitionTitleBuilder {
 
     final Component key;
@@ -74,7 +70,5 @@ public class DefinitionList extends HtmlContainer {
       DefinitionList.this.add(key, new Description(value));
       return DefinitionList.this;
     }
-
-
   }
 }

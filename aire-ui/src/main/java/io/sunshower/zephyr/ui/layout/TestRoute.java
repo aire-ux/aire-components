@@ -26,16 +26,18 @@ public class TestRoute extends Panel {
     card.setIcon(VaadinIcon.ARCHIVES.create());
 
     card.add(Slot.Header, new Text("Heroku"));
-    val dl = new DefinitionList().key("Version")
-        .value(new Badge(Mode.Contrast, "1.0"))
-        .key("Name")
-        .value(new Badge(Mode.Contrast, "Heroku"));
+    val dl =
+        new DefinitionList()
+            .key("Version")
+            .value(new Badge(Mode.Contrast, "1.0"))
+            .key("Name")
+            .value(new Badge(Mode.Contrast, "Heroku"));
     card.add(Slot.Content, dl);
 
     card.add(Slot.Footer, new Badge(Mode.Success, "Active"));
 
-//    card.add(Slot.Content, new
-//    card.getHeader().add(new Text("Heroku"));
+    //    card.add(Slot.Content, new
+    //    card.getHeader().add(new Text("Heroku"));
 
     add(card);
   }

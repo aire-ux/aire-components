@@ -16,25 +16,18 @@ import lombok.val;
 @CssImport("./styles/aire/ui/components/card.css")
 public class Card extends HtmlContainer {
 
-
   public static final String SLOT = "slot";
   public static final String FOOTER = "footer";
   public static final String CONTENT = "content";
   public static final String HEADER = "header";
   public static final String ICON = "icon";
-  /**
-   * the header of this card
-   */
+  /** the header of this card */
   private final Component header;
 
-  /**
-   * the content of this card
-   */
+  /** the content of this card */
   private final Component content;
 
-  /**
-   * the footer of this card
-   */
+  /** the footer of this card */
   private final Component footer;
 
   public Card() {
@@ -42,7 +35,6 @@ public class Card extends HtmlContainer {
     add(content = createContent());
     add(footer = createFooter());
   }
-
 
   @NonNull
   public Component getHeader() {
@@ -59,7 +51,7 @@ public class Card extends HtmlContainer {
     return footer;
   }
 
-  public void remove(Slot slot, Component...components) {
+  public void remove(Slot slot, Component... components) {
     val component = get(slot);
     for (val child : components) {
       component.getElement().removeChild(child.getElement());
@@ -103,7 +95,6 @@ public class Card extends HtmlContainer {
     footer.getElement().setAttribute(SLOT, FOOTER);
     return footer;
   }
-
 
   public enum Slot {
     Header,

@@ -28,6 +28,7 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
   }
 
   @Override
+  @SuppressWarnings(value = "PMD.UseProperClassLoader")
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     val moduleCoordinate = req.getParameter("module");
