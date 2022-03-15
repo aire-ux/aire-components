@@ -5,6 +5,7 @@ import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.ModuleCoordinate;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,12 +36,7 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
-    if (!resourceName.startsWith("ZEPHYR-INF/resources")) {
-      if (resourceName.charAt(0) != '/') {
-        resourceName = '/' + resourceName;
-      }
-      resourceName = "ZEPHYR-INF/resources" + resourceName;
-    }
+    resourceName = getResourceName(resourceName);
     val module = lookupModule(moduleCoordinate);
     val resource = module.getClassLoader().getResource(resourceName);
     if (resource == null) {
@@ -49,6 +45,10 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
     }
     resp.setContentType(resourceName);
     resp.setStatus(HttpServletResponse.SC_OK);
+    performGet(resp, resource);
+  }
+
+  private void performGet(HttpServletResponse resp, URL resource) throws IOException {
     try {
       val connection = resource.openConnection();
       try (val inputStream = connection.getInputStream()) {
@@ -60,6 +60,16 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
       resp.setContentType("text/plain");
       resp.getOutputStream().write(ex.getMessage().getBytes(StandardCharsets.UTF_8));
     }
+  }
+
+  private String getResourceName(String resourceName) {
+    if (!resourceName.startsWith("ZEPHYR-INF/resources")) {
+      if (resourceName.charAt(0) != '/') {
+        resourceName = '/' + resourceName;
+      }
+      resourceName = "ZEPHYR-INF/resources" + resourceName;
+    }
+    return resourceName;
   }
 
   private Module lookupModule(String moduleCoordinate) {

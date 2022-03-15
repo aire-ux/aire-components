@@ -1,0 +1,36 @@
+
+dl {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  flex-flow: row;
+  flex-wrap: wrap;
+  overflow: visible;
+  margin-block-end: 0;
+  margin-block-start: 0;
+  &, * {
+    height: 1.375em;
+    line-height: 1.375em;
+    vertical-align: middle;
+    font-family: var(--lumo-font-family);
+    color: var(--lumo-contrast-80pct);
+  }
+
+
+
+  dt {
+    flex: 0 0 50%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: var(--lumo-font-size-s)
+  }
+  dd {
+    flex:0 0 50%;
+    margin-left: auto;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: var(--lumo-font-size-m)
+  }
+}

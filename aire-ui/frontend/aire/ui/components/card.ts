@@ -16,7 +16,7 @@ export class Card extends LitElement {
       flex-direction: column;
       box-sizing: border-box;
       transition: box-shadow .3s;
-
+      cursor: pointer;
     }
     
     div.icon {
@@ -34,21 +34,33 @@ export class Card extends LitElement {
       justify-content: center;
     }
     
-    div.header {
+    ::slotted(header) {
       height:20px;
       margin-left:60px;
-    }
-    div.footer {
-      height: 32px;
+      line-height: 20px;
+      vertical-align: middle;
+      padding-left: .50em;
+      font-size: var(--lumo-font-size-m);
+      font-weight: 400;
+      font-family: var(--lumo-font-family);
+      color: var(--lumo-secondary-text-color);
     }
     
-    div.content {
+    ::slotted(footer) {
+      height: 20px;
+      padding: var(--lumo-space-xs) var(--lumo-space-s);
+      display: flex;
+      flex-direction: row-reverse;
+    }
+    
+    ::slotted(section){
       flex: 1 1;
+      padding: var(--lumo-space-s)
     }
   `
 
   @property({reflect: true, attribute: true})
-  private color: string | undefined = '#660066';
+  private color: string | undefined = '#AAAAAA';
 
   render(): HTMLTemplateResult {
     return html`
@@ -74,7 +86,7 @@ export class Card extends LitElement {
           width: 30px;
           height: 30px;
         }
-        div.footer {
+        ::slotted(footer) {
           border-top: 1px solid ${this.color}
         }
       </style>
@@ -84,18 +96,14 @@ export class Card extends LitElement {
           <slot name="icon"></slot>
         </div>
         
-        <div class="header" part="header">
-          
-        </div>
-        <div class="content" part="content">
-          
-        </div>
-        
-        <div class="footer" part="footer">
-          <slot name="footer">
+        <slot name="header" part="header"></slot>
 
-          </slot>
-        </div>
+        <slot name="content" part="content">
+
+        </slot>
+        <slot name="footer" part="footer">
+
+        </slot>
       </article>
 
     `;
