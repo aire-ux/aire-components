@@ -12,3 +12,28 @@ aire-panel {
     }
   }
 }
+
+.panel {
+  header {
+    padding: 1em;
+    background-color: var(--lumo-primary-contrast-color);
+    height: 48px;
+    width: 100%;
+    line-height: 48px;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid var(--lumo-shade-20pct);
+    h2 {
+      display: inline;
+      margin: 0;
+      padding-left:.5em;
+      line-height: unset;
+    }
+    img {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}

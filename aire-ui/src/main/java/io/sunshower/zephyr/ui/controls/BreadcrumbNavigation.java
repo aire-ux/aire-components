@@ -59,9 +59,9 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
   private Pair<Breadcrumb, Class<? extends Component>> locateRouteTarget(
       AfterNavigationEvent event) {
     val chain = event.getActiveChain();
-    val iterator = chain.listIterator(chain.size());
-    while (iterator.hasPrevious()) {
-      val previous = iterator.previous();
+    val iterator = chain.listIterator();
+    while (iterator.hasNext()) {
+      val previous = iterator.next();
       val element = previous.getElement();
       val component = element.getComponent();
       if (component.isPresent()) {

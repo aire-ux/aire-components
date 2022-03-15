@@ -27,6 +27,7 @@ public class Badge extends Span {
     if (text != null) {
       add(new Text(text));
     }
+    getElement().setAttribute("text-overflow", "ellipsis");
   }
 
   public Badge(Mode mode, Icon icon, String text) {

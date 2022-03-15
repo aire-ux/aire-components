@@ -23,19 +23,13 @@ public class Card extends HtmlContainer implements ClickNotifier<Card> {
   public static final String CONTENT = "content";
   public static final String HEADER = "header";
   public static final String ICON = "icon";
-  /**
-   * the header of this card
-   */
+  /** the header of this card */
   private final Component header;
 
-  /**
-   * the content of this card
-   */
+  /** the content of this card */
   private final Component content;
 
-  /**
-   * the footer of this card
-   */
+  /** the footer of this card */
   private final Component footer;
 
   public Card() {
@@ -81,11 +75,9 @@ public class Card extends HtmlContainer implements ClickNotifier<Card> {
     };
   }
 
-
   public void click() {
     fireEvent(new ClickEvent<>(this));
   }
-
 
   public void setIcon(Component icon) {
     icon.getElement().setAttribute(SLOT, ICON);
