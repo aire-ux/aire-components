@@ -35,6 +35,10 @@ public class TestRoute extends Panel {
     card.add(Slot.Content, dl);
 
     card.add(Slot.Footer, new Badge(Mode.Success, "Active"));
+    card.addClickListener(e -> {
+      System.out.println("CLICKED");
+
+    });
 
     //    card.add(Slot.Content, new
     //    card.getHeader().add(new Text("Heroku"));

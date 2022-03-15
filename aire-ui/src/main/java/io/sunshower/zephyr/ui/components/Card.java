@@ -1,5 +1,7 @@
 package io.sunshower.zephyr.ui.components;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
@@ -14,20 +16,26 @@ import lombok.val;
 @Tag("aire-card")
 @JsModule("./aire/ui/components/card.ts")
 @CssImport("./styles/aire/ui/components/card.css")
-public class Card extends HtmlContainer {
+public class Card extends HtmlContainer implements ClickNotifier<Card> {
 
   public static final String SLOT = "slot";
   public static final String FOOTER = "footer";
   public static final String CONTENT = "content";
   public static final String HEADER = "header";
   public static final String ICON = "icon";
-  /** the header of this card */
+  /**
+   * the header of this card
+   */
   private final Component header;
 
-  /** the content of this card */
+  /**
+   * the content of this card
+   */
   private final Component content;
 
-  /** the footer of this card */
+  /**
+   * the footer of this card
+   */
   private final Component footer;
 
   public Card() {
@@ -72,6 +80,12 @@ public class Card extends HtmlContainer {
       case Content -> content;
     };
   }
+
+
+  public void click() {
+    fireEvent(new ClickEvent<>(this));
+  }
+
 
   public void setIcon(Component icon) {
     icon.getElement().setAttribute(SLOT, ICON);
