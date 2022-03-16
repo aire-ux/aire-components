@@ -64,9 +64,15 @@ dependencies {
      'com.vaadin:vaadin-spring-boot-starter'
     ].each { dep ->
 
-        api dep
-        testFixturesApi dep
+        api(dep) {
+            exclude module: "spring-boot-starter-tomcat"
+        }
+        testFixturesApi(dep) {
+            exclude module: "spring-boot-starter-tomcat"
+        }
     }
+    implementation("org.springframework.boot:spring-boot-starter-undertow")
+
 
     /**
      * kernel test libraries
@@ -130,6 +136,7 @@ build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = false
+    productionMode = false
 }
 defaultTasks("clean", "build")
 

@@ -6,8 +6,12 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.shared.communication.PushMode;
 import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
@@ -20,8 +24,10 @@ import lombok.val;
 
 @Route("")
 @Host("main")
+@Push(PushMode.MANUAL)
+@PWA(name = "Zephyr Shell for Aire", shortName = "Zephyr")
 @Breadcrumb(name = "Home", icon = "vaadin:home")
-public class MainView extends ApplicationLayout {
+public class MainView extends ApplicationLayout implements AppShellConfigurator {
 
   public MainView() {
     super();

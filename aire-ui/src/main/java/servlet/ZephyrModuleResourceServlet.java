@@ -44,7 +44,6 @@ public class ZephyrModuleResourceServlet extends HttpServlet {
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
-    resp.setContentType(resourceName);
     resp.setStatus(HttpServletResponse.SC_OK);
     performGet(resp, resource);
   }

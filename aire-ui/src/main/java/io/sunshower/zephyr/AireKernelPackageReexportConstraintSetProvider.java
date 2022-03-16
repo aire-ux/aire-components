@@ -17,6 +17,8 @@ public class AireKernelPackageReexportConstraintSetProvider
     return Set.of(
         "com.vaadin.*",
         "com.aire.ux.*",
+        "javax.inject.*",
+        "javax.annotation.*",
         "io.sunshower.zephyr.management.*",
         "org.springframework.*",
         "io.sunshower.zephyr.aire.*",

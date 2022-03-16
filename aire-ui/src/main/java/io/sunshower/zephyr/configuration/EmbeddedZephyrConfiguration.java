@@ -183,6 +183,7 @@ public class EmbeddedZephyrConfiguration
     try {
       graph.add(context.getBean(EmbeddedModule.class));
       val kernel = context.getBean(Kernel.class);
+      module.getLifecycle().setState(State.Starting);
       registerServices(module, context, kernel);
       log.info("Starting embedded kernel...");
       kernel.start();
