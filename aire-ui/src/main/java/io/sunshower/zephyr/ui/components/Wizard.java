@@ -2,6 +2,7 @@ package io.sunshower.zephyr.ui.components;
 
 import static java.lang.String.format;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
@@ -13,8 +14,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.di.Instantiator;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Supplier;
 import lombok.NonNull;
@@ -25,13 +28,18 @@ import lombok.val;
 @CssImport("./styles/aire/ui/components/wizard.css")
 public class Wizard<K> extends HtmlContainer {
 
-  static final TransitionListener<?> NO_OP = new TransitionListener<>() {};
-  /** immutable state */
+  static final TransitionListener<?> NO_OP = new TransitionListener<>() {
+  };
+  /**
+   * immutable state
+   */
   private final Map<K, WizardStep<K, ?>> steps;
 
   private final Deque<WizardStep<K, ?>> history;
   private final Map<K, Transition<K>> transitions;
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private WizardStep<K, ?> currentStep;
 
   public Wizard() {
@@ -50,22 +58,28 @@ public class Wizard<K> extends HtmlContainer {
         new WizardStep<>(step.getKey(), step.getTitle(), step.getPage(), step.getIconFactory()));
   }
 
+
+
+  public boolean canRetreat() {
+    return !history.isEmpty();
+  }
+
+  public boolean canAdvance() {
+    if(currentStep == null) {
+      return false;
+    }
+    val next = transitions.get(currentStep.key);
+    if(next != null) {
+      return true;
+    }
+    return false;
+  }
+
   public <T extends Component> void addStep(@NonNull Class<T> page) {
     val annotatedStep = annotatedStep(page);
     steps.put(annotatedStep.key, annotatedStep);
   }
 
-  @SuppressWarnings("unchecked")
-  private <T extends Component> WizardStep<K, ?> annotatedStep(Class<T> page) {
-
-    val pageDefinition = page.getAnnotation(WizardPage.class);
-    if (pageDefinition == null) {
-      throw new IllegalArgumentException(
-          "Error: page type '%s' must be annotated with @WizardPage");
-    }
-    return new WizardStep<>(
-        (K) pageDefinition.key(), pageDefinition.title(), page, pageDefinition.iconFactory());
-  }
 
   public void setInitialStep(@NonNull K key) {
     val step = steps.get(key);
@@ -75,14 +89,14 @@ public class Wizard<K> extends HtmlContainer {
               "Error: state-key '%s' is not registered--please register it via 'addStep' before calling this method",
               key));
     }
-    currentStep = step;
+    setCurrentStep(step);
   }
 
   /**
    * add a transition from <code>from</code> to <code>to</code>
    *
-   * @param from the starting state
-   * @param to the end state
+   * @param from     the starting state
+   * @param to       the end state
    * @param listener the listener to apply when the transition is triggered
    */
   public void addTransition(K from, K to, TransitionListener<K> listener) {
@@ -93,7 +107,7 @@ public class Wizard<K> extends HtmlContainer {
    * add a transition from <code>from</code> to <code>to</code>
    *
    * @param from the starting state
-   * @param to the end state
+   * @param to   the end state
    */
   @SuppressWarnings("unchecked")
   public void addTransition(K from, K to) {
@@ -105,6 +119,13 @@ public class Wizard<K> extends HtmlContainer {
     addTransition(from, to, (TransitionListener<K>) NO_OP);
   }
 
+  /**
+   * @param from     the annotated source state
+   * @param to       the annotated target state
+   * @param listener the listener to bind to the transition
+   * @param <T>      the type-parameter of the source state
+   * @param <U>      the type-parameter of the target state
+   */
   public <T extends Component, U extends Component> void addTransition(
       Class<T> from, Class<U> to, TransitionListener<K> listener) {
     var fst = lookupStepByType(from);
@@ -128,7 +149,7 @@ public class Wizard<K> extends HtmlContainer {
    *
    * @return the next state after transition
    * @throws IllegalStateException if the current step is not defined or if there is no transition
-   *     from the current step to a next step
+   *                               from the current step to a next step
    */
   public K advance() {
     if (currentStep == null) {
@@ -159,11 +180,11 @@ public class Wizard<K> extends HtmlContainer {
   }
 
   private void setCurrentStep(WizardStep<K, ?> step) {
-    history.push(currentStep);
-    currentStep = step;
+    updatePage(currentStep, step);
   }
 
-  public void addSteps(Class<? extends Component>... components) {
+  @SafeVarargs
+  public final void addSteps(Class<? extends Component>... components) {
     for (val step : components) {
       addStep(step);
     }
@@ -174,6 +195,13 @@ public class Wizard<K> extends HtmlContainer {
     for (val step : components) {
       addStep(step);
     }
+  }
+
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    validate();
+    assert currentStep != null;
+    updatePage(null, currentStep);
   }
 
   protected Instantiator getInstantiator() {
@@ -200,18 +228,89 @@ public class Wizard<K> extends HtmlContainer {
     return null;
   }
 
+  @SuppressWarnings("unchecked")
+  private <T extends Component> WizardStep<K, ?> annotatedStep(Class<T> page) {
+
+    val pageDefinition = page.getAnnotation(WizardPage.class);
+    if (pageDefinition == null) {
+      throw new IllegalArgumentException(
+          "Error: page type '%s' must be annotated with @WizardPage");
+    }
+    return new WizardStep<>(
+        (K) pageDefinition.key(), pageDefinition.title(), page, pageDefinition.iconFactory());
+  }
+
+  @SuppressWarnings("unchecked")
+  private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
+    UI.getCurrent().accessSynchronously(() -> {
+      if (previous != null) {
+        remove(previous.component);
+        history.push(previous);
+      }
+      val page = getInstantiator().createComponent(step.page);
+      page.getElement().setAttribute("slot", "page");
+      ((WizardStep<K, Component>) step).component = page;
+      add(page);
+      currentStep = step;
+    });
+  }
+
+  /**
+   * ensure that all states are connected
+   */
+  private void validate() {
+    if (currentStep == null) {
+      throw new IllegalStateException("Error: please set an initial state");
+    }
+
+    var current = currentStep.key;
+    val allSteps = new ArrayList<K>();
+
+    while (current != null) {
+      if (allSteps.size() > steps.size()) {
+        val keys = new HashSet<>(steps.keySet());
+        allSteps.removeAll(keys);
+        throw new IllegalStateException(
+            format("Error: cyclic wizard.  Cycle exists in '%s'", keys));
+      }
+      allSteps.add(current);
+      val next = transitions.get(current);
+      if (next != null) {
+        current = next.key;
+      } else {
+        current = null;
+      }
+    }
+    if (allSteps.size() < steps.size()) {
+      val keys = new HashSet<>(steps.keySet());
+      allSteps.forEach(keys::remove);
+      throw new IllegalStateException(
+          String.format("Error: dangling steps: '%s'.  Please connect them", allSteps));
+    }
+
+  }
+
+
   public interface Step<K, V extends Component> {
 
-    /** @return the key for this step */
+    /**
+     * @return the key for this step
+     */
     K getKey();
 
-    /** @return the title for this step */
+    /**
+     * @return the title for this step
+     */
     String getTitle();
 
-    /** @return the icon factory for this step */
+    /**
+     * @return the icon factory for this step
+     */
     Supplier<Icon> getIconFactory();
 
-    /** @return the component for this wizard */
+    /**
+     * @return the component for this wizard
+     */
     Class<V> getPage();
   }
 
@@ -220,8 +319,8 @@ public class Wizard<K> extends HtmlContainer {
     /**
      * determine if the wizard can transition between this state and the next state
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current wizard page
      * @return true if the transition can be made
      */
@@ -232,20 +331,22 @@ public class Wizard<K> extends HtmlContainer {
     /**
      * fired before the wizard makes the transition
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current page
      */
-    default void beforeTransition(K state, Wizard<K> host, Component currentPage) {}
+    default void beforeTransition(K state, Wizard<K> host, Component currentPage) {
+    }
 
     /**
      * fired after the wizard makes the transition
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current page
      */
-    default void afterTransition(K state, Wizard<K> host, Component currentPage) {}
+    default void afterTransition(K state, Wizard<K> host, Component currentPage) {
+    }
   }
 
   private static final class WizardStep<K, V extends Component> {
