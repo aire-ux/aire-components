@@ -1,0 +1,15 @@
+apply plugin: 'java-library'
+dependencies {
+
+    api 'com.vaadin:vaadin-spring-boot-starter'
+    api 'org.springframework.boot:spring-boot-test'
+
+    [
+            ':aire-ui',
+            ':aire-ux-api:aire-api',
+            ':aire-ux-api:aire-api-spring'
+    ].each {
+        api project(it)
+        api testFixtures(project(it))
+    }
+}

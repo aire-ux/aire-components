@@ -40,7 +40,7 @@ dependencies {
             'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'
     ].each {
-        implementation "io.zephyr:$it"
+        api "io.zephyr:$it"
         testFixturesApi "io.zephyr:$it"
     }
     implementation project(':aire-ux-core')
@@ -52,14 +52,20 @@ dependencies {
      */
     [
             'info.picocli:picocli',
-            'javax.inject:javax.inject:1',
             'org.reflections:reflections',
             'org.jboss.modules:jboss-modules',
             'com.github.zafarkhaja:java-semver',
-            'com.vaadin:vaadin-spring-boot-starter'
     ].each {
         implementation it
         testFixturesApi it
+    }
+
+    ['javax.inject:javax.inject:1',
+     'com.vaadin:vaadin-spring-boot-starter'
+    ].each { dep ->
+
+        api dep
+        testFixturesApi dep
     }
 
     /**
@@ -127,7 +133,12 @@ vaadin {
 }
 defaultTasks("clean", "build")
 
+bootJar {
+    archiveClassifier = 'dist'
+}
+
 jar {
+    archiveClassifier = ''
     manifest {
 
         attributes(

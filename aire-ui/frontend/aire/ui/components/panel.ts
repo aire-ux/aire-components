@@ -8,6 +8,10 @@ export class AirePanel extends LitElement {
       width:100%;
       height:100%;
       position: relative;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
     
     ::slotted(section) {
