@@ -1,15 +1,15 @@
 package io.sunshower.zephyr.ui.layout;
 
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.html.Section;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.ui.components.Badge;
-import io.sunshower.zephyr.ui.components.Badge.Mode;
-import io.sunshower.zephyr.ui.components.Card;
-import io.sunshower.zephyr.ui.components.Card.Slot;
-import io.sunshower.zephyr.ui.components.DefinitionList;
 import io.sunshower.zephyr.ui.components.Panel;
+import io.sunshower.zephyr.ui.components.Wizard;
+import io.sunshower.zephyr.ui.components.WizardPage;
 import lombok.val;
 
 @Route(value = "test", layout = MainView.class)
@@ -20,29 +20,37 @@ public class TestRoute extends Panel {
   }
 
   private void createContent() {
+    val wizard = new Wizard<String>();
+    wizard.addSteps(Page1.class, Page2.class);
+    wizard.setInitialStep(Page1.class);
+    wizard.addTransition(Page1.class, Page2.class);
+    add(wizard);
+  }
 
-    val card = new Card();
-    card.setTitle("Heroku");
-    card.setIcon(VaadinIcon.ARCHIVES.create());
+  @WizardPage(title = "Second Page", iconFactory = Page2.class, key = "page-2")
+  public static class Page2 extends Section implements IconFactory {
 
-    card.add(Slot.Header, new Text("Heroku"));
-    val dl =
-        new DefinitionList()
-            .key("Version")
-            .value(new Badge(Mode.Contrast, "1.0"))
-            .key("Name")
-            .value(new Badge(Mode.Contrast, "Heroku"));
-    card.add(Slot.Content, dl);
+    public Page2() {
+      add(new Text("Hello"));
+    }
 
-    card.add(Slot.Footer, new Badge(Mode.Success, "Active"));
-    card.addClickListener(
-        e -> {
-          System.out.println("CLICKED");
-        });
+    @Override
+    public Icon create() {
+      return VaadinIcon.LIST.create();
+    }
+  }
 
-    //    card.add(Slot.Content, new
-    //    card.getHeader().add(new Text("Heroku"));
+  @WizardPage(title = "First Page", iconFactory = Page1.class, key = "page-1")
+  public static class Page1 extends Section implements IconFactory {
 
-    add(card);
+    public Page1() {
+      add(new Text("World"));
+
+    }
+
+    @Override
+    public Icon create() {
+      return VaadinIcon.BOLD.create();
+    }
   }
 }

@@ -1,12 +1,11 @@
 package io.sunshower.zephyr.ui.components;
 
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IconFactory;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.function.Supplier;
 
 @Documented
 @Target(ElementType.TYPE)
@@ -17,5 +16,5 @@ public @interface WizardPage {
 
   String title();
 
-  Class<? extends Supplier<Icon>> iconFactory() default IconSupplier.class;
+  Class<? extends IconFactory> iconFactory() default IconFactory.class;
 }

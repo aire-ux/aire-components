@@ -1,11 +1,15 @@
 package io.sunshower.zephyr.ui.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.di.Instantiator;
+import com.vaadin.flow.server.Command;
+import io.sunshower.arcus.reflect.Reflect;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +22,13 @@ class WizardTest {
   @BeforeEach
   void setUp() {
     instantiator = mock(Instantiator.class);
-    wizard =
-        new Wizard<>() {
-          @Override
-          protected Instantiator getInstantiator() {
-            return instantiator;
-          }
-        };
+    doAnswer(invocationOnMock -> {
+      val type = invocationOnMock.getArgument(0);
+      return Reflect.instantiate((Class) type);
+    }).when(instantiator).createComponent(any());
+    wizard = create();
   }
+
 
   @Test
   void ensureAddingStepWorks() {
@@ -33,15 +36,15 @@ class WizardTest {
         Wizard.key(Steps.FirstPage)
             .title("just a title")
             .page(Page.class)
-            .icon(VaadinIcon.LIST::create);
+            .icon(VaadinIcon.LIST);
 
     val p2 =
-        Wizard.key(Steps.FirstPage)
+        Wizard.key(Steps.SecondPage)
             .title("just a title")
             .page(Page.class)
-            .icon(VaadinIcon.LIST::create);
+            .icon(VaadinIcon.LIST);
 
-    val w = new Wizard<Steps>();
+    val w = this.<Steps>create();
     w.addSteps(p1, p2);
     w.setInitialStep(Steps.FirstPage);
     w.addTransition(Steps.FirstPage, Steps.SecondPage);
@@ -60,6 +63,20 @@ class WizardTest {
     assertEquals(state, "hello2");
   }
 
+  <K> Wizard<K> create() {
+    return new Wizard<>() {
+      @Override
+      protected Instantiator getInstantiator() {
+        return instantiator;
+      }
+
+      @Override
+      protected void access(Command command) {
+        command.execute();
+      }
+    };
+  }
+
   enum Steps {
     FirstPage,
     SecondPage,
@@ -67,9 +84,14 @@ class WizardTest {
     FourthPage
   }
 
+
   @WizardPage(key = "hello2", title = "hello")
-  static class Page2 extends Component {}
+  public static class Page2 extends Section {
+
+  }
 
   @WizardPage(key = "hello", title = "hello")
-  static class Page extends Component {}
+  public static class Page extends Section  {
+
+  }
 }

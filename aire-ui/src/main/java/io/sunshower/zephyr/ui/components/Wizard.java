@@ -6,20 +6,27 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.html.ListItem;
+import com.vaadin.flow.component.html.Nav;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.di.Instantiator;
+import com.vaadin.flow.server.Command;
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
@@ -59,17 +66,16 @@ public class Wizard<K> extends HtmlContainer {
   }
 
 
-
   public boolean canRetreat() {
     return !history.isEmpty();
   }
 
   public boolean canAdvance() {
-    if(currentStep == null) {
+    if (currentStep == null) {
       return false;
     }
     val next = transitions.get(currentStep.key);
-    if(next != null) {
+    if (next != null) {
       return true;
     }
     return false;
@@ -197,17 +203,6 @@ public class Wizard<K> extends HtmlContainer {
     }
   }
 
-  @Override
-  protected void onAttach(AttachEvent attachEvent) {
-    validate();
-    assert currentStep != null;
-    updatePage(null, currentStep);
-  }
-
-  protected Instantiator getInstantiator() {
-    return Instantiator.get(UI.getCurrent());
-  }
-
   public <T extends Component> void setInitialStep(Class<T> step) {
     var wizardStep = lookupStepByType(step);
     if (wizardStep == null) {
@@ -216,6 +211,54 @@ public class Wizard<K> extends HtmlContainer {
     wizardStep = lookupStepByType(step);
     assert wizardStep != null;
     setInitialStep(wizardStep.key);
+  }
+
+
+  protected final List<StepDescriptor<K>> getSteps() {
+    if (currentStep == null) {
+      throw new IllegalStateException("No initial step");
+    }
+    var current = currentStep.key;
+    val results = new ArrayList<StepDescriptor<K>>();
+    while (current != null) {
+      val step = steps.get(current);
+      val descriptor = new StepDescriptor<>(step);
+      results.add(descriptor);
+
+      val next = transitions.get(step.key);
+      if(next != null) {
+        current = next.key;
+      } else {
+        current = null;
+      }
+    }
+    return results;
+  }
+
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    validate();
+    assert currentStep != null;
+    createProgressView(getSteps());
+    updatePage(currentStep, currentStep);
+  }
+
+  protected void createProgressView(List<StepDescriptor<K>> steps) {
+    val header = new Nav();
+    header.getElement().setAttribute("slot", "progress");
+    val list = new UnorderedList();
+    for (val step : steps) {
+      val listItem = new ListItem();
+      val title = new Span(new Text(step.getTitle()));
+      listItem.add(title);
+      list.add(step.getIcon().create(), listItem);
+    }
+    header.add(list);
+    add(header);
+  }
+
+  protected Instantiator getInstantiator() {
+    return Instantiator.get(UI.getCurrent());
   }
 
   @SuppressWarnings("unchecked")
@@ -242,7 +285,7 @@ public class Wizard<K> extends HtmlContainer {
 
   @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
-    UI.getCurrent().accessSynchronously(() -> {
+    access(() -> {
       if (previous != null) {
         remove(previous.component);
         history.push(previous);
@@ -253,6 +296,10 @@ public class Wizard<K> extends HtmlContainer {
       add(page);
       currentStep = step;
     });
+  }
+
+  protected void access(Command command) {
+    UI.getCurrent().accessSynchronously(command);
   }
 
   /**
@@ -306,7 +353,7 @@ public class Wizard<K> extends HtmlContainer {
     /**
      * @return the icon factory for this step
      */
-    Supplier<Icon> getIconFactory();
+    IconFactory getIconFactory();
 
     /**
      * @return the component for this wizard
@@ -349,12 +396,31 @@ public class Wizard<K> extends HtmlContainer {
     }
   }
 
+  @Getter
+  public static final class StepDescriptor<K> {
+
+    private final K key;
+    private final String title;
+    private final IconFactory icon;
+
+    public StepDescriptor(K key, String title,
+        IconFactory icon) {
+      this.key = key;
+      this.title = title;
+      this.icon = icon;
+    }
+
+    public StepDescriptor(WizardStep<K, ?> step) {
+      this(step.key, step.title, step.iconFactory);
+    }
+  }
+
   private static final class WizardStep<K, V extends Component> {
 
     private final K key;
     private final Class<V> page;
     private final String title;
-    private final Supplier<Icon> iconFactory;
+    private final IconFactory iconFactory;
 
     private V component;
 
@@ -362,18 +428,18 @@ public class Wizard<K> extends HtmlContainer {
         @NonNull final K key,
         @NonNull String title,
         @NonNull final Class<V> page,
-        Class<? extends Supplier<Icon>> iconFactory) {
+        Class<? extends IconFactory> iconFactory) {
       this.key = key;
       this.page = page;
       this.title = title;
-      if (!IconSupplier.class.equals(iconFactory)) {
+      if (!IconFactory.class.equals(iconFactory)) {
         this.iconFactory = Reflect.instantiate(iconFactory);
       } else {
         this.iconFactory = VaadinIcon.LIST::create;
       }
     }
 
-    public WizardStep(K key, String title, Class<V> component, Supplier<Icon> iconFactory) {
+    public WizardStep(K key, String title, Class<V> component, IconFactory iconFactory) {
       this.key = key;
       this.title = title;
       this.page = component;
@@ -432,7 +498,7 @@ public class Wizard<K> extends HtmlContainer {
       this.pageType = page;
     }
 
-    public Step<K, V> icon(Supplier<Icon> iconSupplier) {
+    public Step<K, V> icon(IconFactory iconSupplier) {
       return new DefaultStep<K, V>(key, title, pageType, iconSupplier);
     }
   }
@@ -442,9 +508,9 @@ public class Wizard<K> extends HtmlContainer {
     private final K key;
     private final String title;
     private final Class<V> pageType;
-    private final Supplier<Icon> iconSupplier;
+    private final IconFactory iconSupplier;
 
-    public DefaultStep(K key, String title, Class<V> pageType, Supplier<Icon> iconSupplier) {
+    public DefaultStep(K key, String title, Class<V> pageType, IconFactory iconSupplier) {
       this.key = key;
       this.title = title;
       this.pageType = pageType;
@@ -462,7 +528,7 @@ public class Wizard<K> extends HtmlContainer {
     }
 
     @Override
-    public Supplier<Icon> getIconFactory() {
+    public IconFactory getIconFactory() {
       return iconSupplier;
     }
 
