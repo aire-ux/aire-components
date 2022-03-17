@@ -40,14 +40,13 @@ public class Wizard<K> extends HtmlContainer {
   /**
    * immutable state
    */
+  private final Nav header;
+  private final WizardModel<K> model;
   private final Map<K, WizardStep<K, ?>> steps;
 
   private final Deque<WizardStep<K, ?>> history;
   private final Map<K, Transition<K>> transitions;
 
-  private final Nav header;
-
-  private final WizardModel<K> model;
   /**
    * mutable state
    */
@@ -114,7 +113,7 @@ public class Wizard<K> extends HtmlContainer {
               "Error: state-key '%s' is not registered--please register it via 'addStep' before calling this method",
               key));
     }
-    setCurrentStep(step);
+    currentStep = step;
   }
 
   /**
@@ -348,6 +347,9 @@ public class Wizard<K> extends HtmlContainer {
   @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
     access(() -> {
+      if(!(previous == null || previous.component == null)) {
+        remove(previous.component);
+      }
       val page = instantiate(step.page);
       page.getElement().setAttribute("slot", "page");
       ((WizardStep<K, Component>) step).component = page;
