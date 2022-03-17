@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.di.Instantiator;
@@ -64,10 +65,11 @@ class WizardTest {
   }
 
   <K> Wizard<K> create() {
-    return new Wizard<>() {
+    final Wizard<K> wizard = new Wizard<>() {
       @Override
-      protected Instantiator getInstantiator() {
-        return instantiator;
+      @SuppressWarnings("unchecked")
+      protected <T> T instantiate(Class<T> type) {
+        return (T) instantiator.createComponent((Class<Component>) type);
       }
 
       @Override
@@ -75,6 +77,7 @@ class WizardTest {
         command.execute();
       }
     };
+    return wizard;
   }
 
   enum Steps {
@@ -91,7 +94,7 @@ class WizardTest {
   }
 
   @WizardPage(key = "hello", title = "hello")
-  public static class Page extends Section  {
+  public static class Page extends Section {
 
   }
 }

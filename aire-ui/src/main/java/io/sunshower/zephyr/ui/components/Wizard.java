@@ -16,9 +16,9 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.server.Command;
 import io.sunshower.arcus.reflect.Reflect;
+import io.sunshower.zephyr.aire.DynamicInstantiator;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -44,16 +44,35 @@ public class Wizard<K> extends HtmlContainer {
 
   private final Deque<WizardStep<K, ?>> history;
   private final Map<K, Transition<K>> transitions;
+
+  private final Nav header;
+
+  private final WizardModel<K> model;
   /**
    * mutable state
    */
   private WizardStep<K, ?> currentStep;
 
   public Wizard() {
+    model = WizardModel.newModel();
     steps = new HashMap<>();
     history = new ArrayDeque<>();
     transitions = new HashMap<>();
+    header = createHeader();
+    add(header);
   }
+
+
+  @SuppressWarnings("unchecked")
+  public <U extends Enum<U>> Wizard(Class<U> type) {
+    model = (WizardModel<K>) WizardModel.newModel(type);
+    steps = new HashMap<>();
+    history = new ArrayDeque<>();
+    transitions = new HashMap<>();
+    header = createHeader();
+    add(header);
+  }
+
 
   public static <K> WizardKeyStepBuilder<K> key(K key) {
     return new WizardKeyStepBuilder(key);
@@ -150,6 +169,16 @@ public class Wizard<K> extends HtmlContainer {
     addTransition(fst.key, snd.key, listener);
   }
 
+
+  public K retreat() {
+    if(!canRetreat()) {
+      throw new IllegalStateException("Error: no previous states!");
+    }
+
+    val previous = history.pop();
+    setCurrentStep(previous);
+    return previous.key;
+  }
   /**
    * transition to the next state
    *
@@ -158,10 +187,7 @@ public class Wizard<K> extends HtmlContainer {
    *                               from the current step to a next step
    */
   public K advance() {
-    if (currentStep == null) {
-      throw new IllegalStateException(
-          "Error: initial value was not set.  Please call 'setInitial' before trying to advance");
-    }
+    checkCurrentStep();
 
     val next = transitions.get(currentStep.key);
     if (next == null) {
@@ -170,11 +196,28 @@ public class Wizard<K> extends HtmlContainer {
               "Error: there is no transition from '%s' to anything.  Please register the transition via 'addTransition'",
               currentStep.key));
     }
-    next.listener.beforeTransition(currentStep.key, this, currentStep.component);
+    val currentKey = currentStep.key;
+    val currentComponent = currentStep.component;
+    if (next.listener.canTransition(currentKey, this, currentComponent)) {
+      next.listener.beforeTransition(currentKey, this, currentComponent);
+      history.push(currentStep);
+      val key = next.key;
+      setCurrentStep(steps.get(key));
+      next.listener.afterTransition(currentKey, this, currentComponent);
+      return key;
+    }
+    return currentStep.key;
+  }
 
-    val key = next.key;
-    setCurrentStep(steps.get(key));
-    return key;
+
+
+  @SuppressWarnings("unchecked")
+  public <T extends Component> T getCurrentPage() {
+    if (currentStep == null) {
+      throw new IllegalStateException(
+          "Current step has not been set.  Have you called 'setInitialStep'?");
+    }
+    return (T) currentStep.component;
   }
 
   public K getCurrentStep() {
@@ -185,9 +228,6 @@ public class Wizard<K> extends HtmlContainer {
     return currentStep.key;
   }
 
-  private void setCurrentStep(WizardStep<K, ?> step) {
-    updatePage(currentStep, step);
-  }
 
   @SafeVarargs
   public final void addSteps(Class<? extends Component>... components) {
@@ -226,7 +266,7 @@ public class Wizard<K> extends HtmlContainer {
       results.add(descriptor);
 
       val next = transitions.get(step.key);
-      if(next != null) {
+      if (next != null) {
         current = next.key;
       } else {
         current = null;
@@ -244,21 +284,43 @@ public class Wizard<K> extends HtmlContainer {
   }
 
   protected void createProgressView(List<StepDescriptor<K>> steps) {
-    val header = new Nav();
-    header.getElement().setAttribute("slot", "progress");
     val list = new UnorderedList();
+    list.getElement().setAttribute("part", "wizard-list");
     for (val step : steps) {
       val listItem = new ListItem();
+      listItem.add(step.getIcon().create());
       val title = new Span(new Text(step.getTitle()));
       listItem.add(title);
-      list.add(step.getIcon().create(), listItem);
+      list.add(listItem);
     }
     header.add(list);
     add(header);
   }
 
-  protected Instantiator getInstantiator() {
-    return Instantiator.get(UI.getCurrent());
+  protected <T> T instantiate(Class<T> type) {
+    return DynamicInstantiator.create(getUI().orElse(UI.getCurrent()), type, this, model)
+        .orElseThrow();
+  }
+
+  protected Nav createHeader() {
+    val nav = new Nav();
+    nav.getElement().setAttribute("slot", "header");
+    return nav;
+  }
+
+  protected void access(Command command) {
+    UI.getCurrent().accessSynchronously(command);
+  }
+
+  private void setCurrentStep(WizardStep<K, ?> step) {
+    updatePage(currentStep, step);
+  }
+
+  private void checkCurrentStep() {
+    if (currentStep == null) {
+      throw new IllegalStateException(
+          "Error: initial value was not set.  Please call 'setInitial' before trying to advance");
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -286,11 +348,7 @@ public class Wizard<K> extends HtmlContainer {
   @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
     access(() -> {
-      if (previous != null) {
-        remove(previous.component);
-        history.push(previous);
-      }
-      val page = getInstantiator().createComponent(step.page);
+      val page = instantiate(step.page);
       page.getElement().setAttribute("slot", "page");
       ((WizardStep<K, Component>) step).component = page;
       add(page);
@@ -298,17 +356,12 @@ public class Wizard<K> extends HtmlContainer {
     });
   }
 
-  protected void access(Command command) {
-    UI.getCurrent().accessSynchronously(command);
-  }
 
   /**
    * ensure that all states are connected
    */
   private void validate() {
-    if (currentStep == null) {
-      throw new IllegalStateException("Error: please set an initial state");
-    }
+    checkCurrentStep();
 
     var current = currentStep.key;
     val allSteps = new ArrayList<K>();
