@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.server.Command;
+import com.vaadin.flow.shared.Registration;
 import io.sunshower.arcus.reflect.Reflect;
 import io.sunshower.zephyr.aire.DynamicInstantiator;
 import java.util.ArrayDeque;
@@ -143,6 +145,13 @@ public class Wizard<K> extends HtmlContainer {
     addTransition(from, to, (TransitionListener<K>) NO_OP);
   }
 
+  @SuppressWarnings("unchecked")
+  public Registration addWizardStateChangedEventListener(
+      ComponentEventListener<WizardStateChangedEvent<K>> listener) {
+    return addListener((Class<WizardStateChangedEvent<K>>) (Class) WizardStateChangedEvent.class,
+        listener);
+  }
+
   /**
    * @param from     the annotated source state
    * @param to       the annotated target state
@@ -170,14 +179,17 @@ public class Wizard<K> extends HtmlContainer {
 
 
   public K retreat() {
-    if(!canRetreat()) {
+    if (!canRetreat()) {
       throw new IllegalStateException("Error: no previous states!");
     }
 
     val previous = history.pop();
+    val currentKey = currentStep.key;
     setCurrentStep(previous);
+    this.fireEvent(new WizardStateChangedEvent<>(this, false, currentKey, previous.key));
     return previous.key;
   }
+
   /**
    * transition to the next state
    *
@@ -203,11 +215,11 @@ public class Wizard<K> extends HtmlContainer {
       val key = next.key;
       setCurrentStep(steps.get(key));
       next.listener.afterTransition(currentKey, this, currentComponent);
+      this.fireEvent(new WizardStateChangedEvent<>(this, false, currentKey, next.key));
       return key;
     }
     return currentStep.key;
   }
-
 
 
   @SuppressWarnings("unchecked")
@@ -227,6 +239,9 @@ public class Wizard<K> extends HtmlContainer {
     return currentStep.key;
   }
 
+  private void setCurrentStep(WizardStep<K, ?> step) {
+    updatePage(currentStep, step);
+  }
 
   @SafeVarargs
   public final void addSteps(Class<? extends Component>... components) {
@@ -251,7 +266,6 @@ public class Wizard<K> extends HtmlContainer {
     assert wizardStep != null;
     setInitialStep(wizardStep.key);
   }
-
 
   protected final List<StepDescriptor<K>> getSteps() {
     if (currentStep == null) {
@@ -311,10 +325,6 @@ public class Wizard<K> extends HtmlContainer {
     UI.getCurrent().accessSynchronously(command);
   }
 
-  private void setCurrentStep(WizardStep<K, ?> step) {
-    updatePage(currentStep, step);
-  }
-
   private void checkCurrentStep() {
     if (currentStep == null) {
       throw new IllegalStateException(
@@ -347,7 +357,7 @@ public class Wizard<K> extends HtmlContainer {
   @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
     access(() -> {
-      if(!(previous == null || previous.component == null)) {
+      if (!(previous == null || previous.component == null)) {
         remove(previous.component);
       }
       val page = instantiate(step.page);
