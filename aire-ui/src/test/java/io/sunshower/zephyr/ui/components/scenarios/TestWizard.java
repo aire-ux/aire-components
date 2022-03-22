@@ -17,6 +17,4 @@ public class TestWizard extends Article {
     wizard.setInitialStep(Page1.class);
     add(wizard);
   }
-
-
 }

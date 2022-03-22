@@ -44,7 +44,8 @@ public class WizardE2ETest {
 
   @ViewTest
   @Navigate("test-wizard")
-  void ensureNavigatingToTheEndWorks(@Select("aire-wizard") Wizard<?> wizard, @Context TestContext $) {
+  void ensureNavigatingToTheEndWorks(
+      @Select("aire-wizard") Wizard<?> wizard, @Context TestContext $) {
     assertNotNull(wizard);
     wizard.advance();
     wizard.advance();

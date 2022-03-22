@@ -9,6 +9,4 @@ public class Page1 extends Section {
   public Page1() {
     addClassName("page-1");
   }
-
-
 }

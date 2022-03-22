@@ -30,7 +30,6 @@ public interface WizardModel<E> {
   Map<Object, Object> clear(E key);
 
   Set<Entry<E, Map<Object, Object>>> values();
-
 }
 
 class DefaultWizardModel<E> implements WizardModel<E> {
@@ -40,7 +39,6 @@ class DefaultWizardModel<E> implements WizardModel<E> {
   DefaultWizardModel(@NonNull Map<E, Map<Object, Object>> pageMap) {
     this.pageMap = pageMap;
   }
-
 
   @Override
   @SuppressWarnings("unchecked")

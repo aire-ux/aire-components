@@ -11,7 +11,7 @@ public class WizardStateChangedEvent<E> extends ComponentEvent<Wizard<E>> {
    * Creates a new event using the given source and indicator whether the event originated from the
    * client side or the server side.
    *
-   * @param source     the source component
+   * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
   public WizardStateChangedEvent(Wizard<E> source, boolean fromClient, E previous, E next) {

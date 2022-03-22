@@ -23,27 +23,23 @@ class WizardTest {
   @BeforeEach
   void setUp() {
     instantiator = mock(Instantiator.class);
-    doAnswer(invocationOnMock -> {
-      val type = invocationOnMock.getArgument(0);
-      return Reflect.instantiate((Class) type);
-    }).when(instantiator).createComponent(any());
+    doAnswer(
+            invocationOnMock -> {
+              val type = invocationOnMock.getArgument(0);
+              return Reflect.instantiate((Class) type);
+            })
+        .when(instantiator)
+        .createComponent(any());
     wizard = create();
   }
-
 
   @Test
   void ensureAddingStepWorks() {
     val p1 =
-        Wizard.key(Steps.FirstPage)
-            .title("just a title")
-            .page(Page.class)
-            .icon(VaadinIcon.LIST);
+        Wizard.key(Steps.FirstPage).title("just a title").page(Page.class).icon(VaadinIcon.LIST);
 
     val p2 =
-        Wizard.key(Steps.SecondPage)
-            .title("just a title")
-            .page(Page.class)
-            .icon(VaadinIcon.LIST);
+        Wizard.key(Steps.SecondPage).title("just a title").page(Page.class).icon(VaadinIcon.LIST);
 
     val w = this.<Steps>create();
     w.addSteps(p1, p2);
@@ -65,18 +61,19 @@ class WizardTest {
   }
 
   <K> Wizard<K> create() {
-    final Wizard<K> wizard = new Wizard<>() {
-      @Override
-      @SuppressWarnings("unchecked")
-      protected <T> T instantiate(Class<T> type) {
-        return (T) instantiator.createComponent((Class<Component>) type);
-      }
+    final Wizard<K> wizard =
+        new Wizard<>() {
+          @Override
+          @SuppressWarnings("unchecked")
+          protected <T> T instantiate(Class<T> type) {
+            return (T) instantiator.createComponent((Class<Component>) type);
+          }
 
-      @Override
-      protected void access(Command command) {
-        command.execute();
-      }
-    };
+          @Override
+          protected void access(Command command) {
+            command.execute();
+          }
+        };
     return wizard;
   }
 
@@ -87,14 +84,9 @@ class WizardTest {
     FourthPage
   }
 
-
   @WizardPage(key = "hello2", title = "hello")
-  public static class Page2 extends Section {
-
-  }
+  public static class Page2 extends Section {}
 
   @WizardPage(key = "hello", title = "hello")
-  public static class Page extends Section {
-
-  }
+  public static class Page extends Section {}
 }

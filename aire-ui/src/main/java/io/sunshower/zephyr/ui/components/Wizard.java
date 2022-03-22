@@ -28,21 +28,26 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
 @Tag("aire-wizard")
+@SuppressWarnings("PMD")
 @JsModule("./aire/ui/components/wizard.ts")
 @CssImport("./styles/aire/ui/components/wizard.css")
 public class Wizard<K> extends HtmlContainer {
 
   static final TransitionListener<?> NO_OP = new TransitionListener<>() {
   };
+  public static final String COMPLETE = "complete";
+  public static final String NOT_COMPLETE = "not-complete";
   /**
    * immutable state
    */
   private final Nav header;
+
   private final WizardModel<K> model;
   private final Map<K, WizardStep<K, ?>> steps;
 
@@ -63,7 +68,6 @@ public class Wizard<K> extends HtmlContainer {
     add(header);
   }
 
-
   @SuppressWarnings("unchecked")
   public <U extends Enum<U>> Wizard(Class<U> type) {
     model = (WizardModel<K>) WizardModel.newModel(type);
@@ -74,7 +78,6 @@ public class Wizard<K> extends HtmlContainer {
     add(header);
   }
 
-
   public static <K> WizardKeyStepBuilder<K> key(K key) {
     return new WizardKeyStepBuilder(key);
   }
@@ -84,7 +87,6 @@ public class Wizard<K> extends HtmlContainer {
         step.getKey(),
         new WizardStep<>(step.getKey(), step.getTitle(), step.getPage(), step.getIconFactory()));
   }
-
 
   public boolean canRetreat() {
     return !history.isEmpty();
@@ -105,7 +107,6 @@ public class Wizard<K> extends HtmlContainer {
     val annotatedStep = annotatedStep(page);
     steps.put(annotatedStep.key, annotatedStep);
   }
-
 
   public void setInitialStep(@NonNull K key) {
     val step = steps.get(key);
@@ -148,8 +149,8 @@ public class Wizard<K> extends HtmlContainer {
   @SuppressWarnings("unchecked")
   public Registration addWizardStateChangedEventListener(
       ComponentEventListener<WizardStateChangedEvent<K>> listener) {
-    return addListener((Class<WizardStateChangedEvent<K>>) (Class) WizardStateChangedEvent.class,
-        listener);
+    return addListener(
+        (Class<WizardStateChangedEvent<K>>) (Class) WizardStateChangedEvent.class, listener);
   }
 
   /**
@@ -176,7 +177,6 @@ public class Wizard<K> extends HtmlContainer {
     assert snd != null;
     addTransition(fst.key, snd.key, listener);
   }
-
 
   public K retreat() {
     if (!canRetreat()) {
@@ -220,7 +220,6 @@ public class Wizard<K> extends HtmlContainer {
     }
     return currentStep.key;
   }
-
 
   @SuppressWarnings("unchecked")
   public <T extends Component> T getCurrentPage() {
@@ -356,18 +355,38 @@ public class Wizard<K> extends HtmlContainer {
 
   @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> previous, WizardStep<K, ?> step) {
-    access(() -> {
-      if (!(previous == null || previous.component == null)) {
-        remove(previous.component);
-      }
-      val page = instantiate(step.page);
-      page.getElement().setAttribute("slot", "page");
-      ((WizardStep<K, Component>) step).component = page;
-      add(page);
-      currentStep = step;
-    });
+    access(
+        () -> {
+          if (!(previous == null || previous.component == null)) {
+            remove(previous.component);
+          }
+          val page = instantiate(step.page);
+          page.getElement().setAttribute("slot", "page");
+          ((WizardStep<K, Component>) step).component = page;
+          add(page);
+          currentStep = step;
+          updateProgressView(step);
+        });
   }
 
+  private void updateProgressView(WizardStep<K, ?> step) {
+    val listItem = header.getChildren()
+        .filter(child -> child.getClass().equals(UnorderedList.class)).findFirst()
+        .orElseThrow(() -> new NoSuchElementException(
+            "Could not find progress list.  Component is misconfigured"));
+
+    val iter = listItem.getChildren().iterator();
+    for (int i = 0; i < steps.size(); i++) {
+      val cl = iter.next().getElement().getClassList();
+      if(i <= history.size()) {
+        cl.remove(NOT_COMPLETE);
+        cl.add(COMPLETE);
+      } else {
+        cl.remove(COMPLETE);
+        cl.add(NOT_COMPLETE);
+      }
+    }
+  }
 
   /**
    * ensure that all states are connected
@@ -399,9 +418,7 @@ public class Wizard<K> extends HtmlContainer {
       throw new IllegalStateException(
           String.format("Error: dangling steps: '%s'.  Please connect them", allSteps));
     }
-
   }
-
 
   public interface Step<K, V extends Component> {
 
@@ -468,8 +485,7 @@ public class Wizard<K> extends HtmlContainer {
     private final String title;
     private final IconFactory icon;
 
-    public StepDescriptor(K key, String title,
-        IconFactory icon) {
+    public StepDescriptor(K key, String title, IconFactory icon) {
       this.key = key;
       this.title = title;
       this.icon = icon;

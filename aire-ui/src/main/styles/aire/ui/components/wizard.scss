@@ -6,17 +6,62 @@ aire-wizard {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding: 0;
+    padding: .5em 0;
+
     > li {
+      position: relative;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
+      width: inherit;
+      justify-content: center;
 
+      &:before, &:after {
+        content: "";
+        height:2px;
+        position: absolute;
+        width:calc(50% - 1em - 1px);
+        top: 1em;
+        background: linear-gradient(to right, $blue 50%, $dark-gray-1 50%) right bottom;
+        background-size: 200% 100%;
+        transition: background-position .3s ease-in;
+        animation-direction: normal;
+      }
+
+      &:before {
+        left: 0;
+      }
+      &:after {
+        right:0;
+        transition-delay: .3s;
+      }
       & > .icon, icon, vaadin-icon {
-        background-color: $blue;
-        color: white;
+        font-weight: lighter;
+        border: 1px solid $blue;
+        color: $blue;
+        font-size: 1.5em;
         padding: .5em;
-        border-radius: 100%;
+        transition: background-color .3s;
+      }
+
+      &.not-complete {
+        &:before {
+          transition-delay: .3s;
+        }
+        &:after {
+          transition-delay: 0s;
+        }
+      }
+
+      &.complete {
+        & > .icon, icon, vaadin-icon {
+          color: $white;
+          background-color: $blue;
+        }
+        &:before, &:after {
+          background-position: left bottom;
+        }
+
       }
     }
   }

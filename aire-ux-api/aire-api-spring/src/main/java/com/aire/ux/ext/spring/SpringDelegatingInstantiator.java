@@ -7,8 +7,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.NavigationEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
@@ -22,8 +21,9 @@ import org.springframework.context.ApplicationContext;
 public class SpringDelegatingInstantiator extends BaseAireInstantiator {
 
   private final Object lock = new Object();
-  private final List<ApplicationContext> contexts;
   private final ApplicationContext rootApplicationContext;
+
+  private final WeakHashMap<ClassLoader, ApplicationContext> contexts;
 
   public SpringDelegatingInstantiator(
       @Nonnull Instantiator delegate,
@@ -31,7 +31,7 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
       @Nonnull ApplicationContext rootApplicationContext) {
 
     super(delegate, decorator);
-    this.contexts = new ArrayList<>();
+    this.contexts = new WeakHashMap<>();
     this.rootApplicationContext = rootApplicationContext;
   }
 
@@ -39,8 +39,8 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
       Function<ApplicationContext, ApplicationContext> supplierConsumer) {
     synchronized (lock) {
       val ctx = supplierConsumer.apply(rootApplicationContext);
-      contexts.add(ctx);
-      return () -> contexts.remove(ctx);
+      contexts.put(ctx.getClassLoader(), ctx);
+      return () -> contexts.remove(ctx.getClassLoader());
     }
   }
 
@@ -52,13 +52,20 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
   @Override
   protected <T> T doGetOrCreate(Class<T> type) {
     synchronized (contexts) {
-      for (val ctx : contexts) {
+      val ctx = contexts.get(type.getClassLoader());
+      if (ctx != null) {
         val names = ctx.getBeanNamesForType(type);
-        if (names.length == 1) {
+        if (names.length > 0) {
           return ctx.getBean(type);
+        }
+      }
+      for (val context : contexts.values()) {
+        val names = context.getBeanNamesForType(type);
+        if (names.length == 1) {
+          return context.getBean(type);
         } else {
           try {
-            return ctx.getAutowireCapableBeanFactory().createBean(type);
+            return context.getAutowireCapableBeanFactory().createBean(type);
           } catch (BeansException ex) {
             log.log(
                 Level.INFO,
@@ -73,16 +80,6 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
 
   @Override
   protected <T extends Component> T doCreateComponent(Class<T> type) {
-    synchronized (contexts) {
-      for (val ctx : contexts) {
-        val names = ctx.getBeanNamesForType(type);
-        if (names.length == 1) {
-          return ctx.getBean(type);
-        } else if (names.length > 1) {
-          return ctx.getAutowireCapableBeanFactory().createBean(type);
-        }
-      }
-      return super.doCreateComponent(type);
-    }
+    return doGetOrCreate(type);
   }
 }

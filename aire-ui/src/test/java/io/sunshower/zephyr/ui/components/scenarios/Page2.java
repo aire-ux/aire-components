@@ -11,10 +11,8 @@ import lombok.Getter;
 @WizardPage(key = "page2", title = "Page 2")
 public class Page2 extends Section {
 
-  @Getter
-  private final Wizard<?> wizard;
-  @Getter
-  private final WizardModel<?> model;
+  @Getter private final Wizard<?> wizard;
+  @Getter private final WizardModel<?> model;
 
   @Dynamic
   public Page2(@Dynamic Wizard<?> parent, @Dynamic WizardModel<?> model) {
@@ -22,6 +20,4 @@ public class Page2 extends Section {
     this.model = Objects.requireNonNull(model);
     this.wizard = Objects.requireNonNull(parent);
   }
-
-
 }

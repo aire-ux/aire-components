@@ -25,10 +25,52 @@ public class TestRoute extends Panel {
 
   private void createContent() {
     val wizard = new Wizard<String>();
-    wizard.addSteps(Page1.class, Page2.class);
+    wizard.addSteps(Page1.class, Page2.class, Page3.class);
     wizard.setInitialStep(Page1.class);
     wizard.addTransition(Page1.class, Page2.class);
+    wizard.addTransition(Page2.class, Page3.class);
     add(wizard);
+  }
+
+
+  @WizardPage(title = "Third Page", iconFactory = IF2.class, key = "page-3")
+  public static class Page3 extends Section implements IconFactory {
+
+    private final Wizard<String> wizard;
+
+    public static class IF2 implements IconFactory {
+
+      @Override
+      public Icon create() {
+        return VaadinIcon.UNDERLINE.create();
+      }
+    }
+
+    @Dynamic
+    public Page3(@Dynamic Wizard<String> wizard) {
+      this.wizard = wizard;
+      add(new Text("page3"));
+
+      val nextButton = new Button("next");
+      val previousButton = new Button("previous");
+
+      nextButton.addClickListener(
+          click -> {
+            wizard.advance();
+          });
+
+      previousButton.addClickListener(
+          click -> {
+            wizard.retreat();
+          });
+      add(nextButton);
+      add(previousButton);
+    }
+
+    @Override
+    public Icon create() {
+      return VaadinIcon.LIST.create();
+    }
   }
 
   @WizardPage(title = "Second Page", iconFactory = IF2.class, key = "page-2")
@@ -43,6 +85,7 @@ public class TestRoute extends Panel {
         return VaadinIcon.UNDERLINE.create();
       }
     }
+
     @Dynamic
     public Page2(@Dynamic Wizard<String> wizard) {
       this.wizard = wizard;
@@ -50,13 +93,15 @@ public class TestRoute extends Panel {
       val nextButton = new Button("next");
       val previousButton = new Button("previous");
 
-      nextButton.addClickListener(click -> {
-        wizard.advance();
-      });
+      nextButton.addClickListener(
+          click -> {
+            wizard.advance();
+          });
 
-      previousButton.addClickListener(click -> {
-        wizard.retreat();
-      });
+      previousButton.addClickListener(
+          click -> {
+            wizard.retreat();
+          });
       add(nextButton);
       add(previousButton);
     }
@@ -87,13 +132,15 @@ public class TestRoute extends Panel {
       val nextButton = new Button("next");
       val previousButton = new Button("previous");
 
-      nextButton.addClickListener(click -> {
-        wizard.advance();
-      });
+      nextButton.addClickListener(
+          click -> {
+            wizard.advance();
+          });
 
-      previousButton.addClickListener(click -> {
-        wizard.retreat();
-      });
+      previousButton.addClickListener(
+          click -> {
+            wizard.retreat();
+          });
       add(nextButton);
       add(previousButton);
     }
