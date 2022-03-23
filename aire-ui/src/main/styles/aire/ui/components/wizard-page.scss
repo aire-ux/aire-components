@@ -1,0 +1,19 @@
+
+aire-wizard-page {
+
+  height: 100%;
+  position: relative;
+  padding: 2em;
+
+  [slot=content] {
+    flex: 2;
+    height: 100%;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+}

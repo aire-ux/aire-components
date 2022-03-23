@@ -12,10 +12,10 @@ import lombok.Getter;
 public class Page2 extends Section {
 
   @Getter private final Wizard<?> wizard;
-  @Getter private final WizardModel<?> model;
+  @Getter private final WizardModel model;
 
   @Dynamic
-  public Page2(@Dynamic Wizard<?> parent, @Dynamic WizardModel<?> model) {
+  public Page2(@Dynamic Wizard<?> parent, @Dynamic WizardModel model) {
     addClassName("page-2");
     this.model = Objects.requireNonNull(model);
     this.wizard = Objects.requireNonNull(parent);

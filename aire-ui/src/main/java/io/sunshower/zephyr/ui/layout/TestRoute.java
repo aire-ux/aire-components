@@ -1,19 +1,16 @@
 package io.sunshower.zephyr.ui.layout;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.spring.Dynamic;
+import io.sunshower.zephyr.ui.components.AbstractWizardPage;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.components.Wizard;
 import io.sunshower.zephyr.ui.components.WizardPage;
-import io.sunshower.zephyr.ui.layout.TestRoute.Page1.IF;
-import io.sunshower.zephyr.ui.layout.TestRoute.Page2.IF2;
+import io.sunshower.zephyr.ui.layout.TestRoute.Page2.IF1;
 import lombok.val;
 
 @Route(value = "test", layout = MainView.class)
@@ -33,121 +30,91 @@ public class TestRoute extends Panel {
   }
 
 
-  @WizardPage(title = "Third Page", iconFactory = IF2.class, key = "page-3")
-  public static class Page3 extends Section implements IconFactory {
+  public static class Person {
 
-    private final Wizard<String> wizard;
+  }
 
-    public static class IF2 implements IconFactory {
+  public static class Address {
 
-      @Override
-      public Icon create() {
-        return VaadinIcon.UNDERLINE.create();
-      }
-    }
+  }
 
-    @Dynamic
-    public Page3(@Dynamic Wizard<String> wizard) {
-      this.wizard = wizard;
-      add(new Text("page3"));
 
-      val nextButton = new Button("next");
-      val previousButton = new Button("previous");
+  @WizardPage(title = "Info2", key = "page-3")
+  public static class Page3 extends AbstractWizardPage<String, Person> implements IconFactory {
 
-      nextButton.addClickListener(
-          click -> {
-            wizard.advance();
-          });
-
-      previousButton.addClickListener(
-          click -> {
-            wizard.retreat();
-          });
-      add(nextButton);
-      add(previousButton);
+    public Page3() {
+      super(Person.class);
+      addContent(new Button("Hello sup!"));
+      val button = new Button("Add Address");
+      button.addClickListener(click -> {
+        setModelElement(new Person());
+        transitionTo(Page2.class);
+      });
+      addNavigationControl(button, (b, w, p) -> {
+        b.setEnabled(p.canAdvance());
+      });
     }
 
     @Override
     public Icon create() {
-      return VaadinIcon.LIST.create();
+      return VaadinIcon.ARCHIVES.create();
     }
   }
 
-  @WizardPage(title = "Second Page", iconFactory = IF2.class, key = "page-2")
-  public static class Page2 extends Section implements IconFactory {
+  @WizardPage(title = "Info", key = "page-1")
+  public static class Page1 extends AbstractWizardPage<String, Person> implements IconFactory {
 
-    private final Wizard<String> wizard;
-
-    public static class IF2 implements IconFactory {
-
-      @Override
-      public Icon create() {
-        return VaadinIcon.UNDERLINE.create();
-      }
-    }
-
-    @Dynamic
-    public Page2(@Dynamic Wizard<String> wizard) {
-      this.wizard = wizard;
-      add(new Text("Hello2"));
-      val nextButton = new Button("next");
-      val previousButton = new Button("previous");
-
-      nextButton.addClickListener(
-          click -> {
-            wizard.advance();
-          });
-
-      previousButton.addClickListener(
-          click -> {
-            wizard.retreat();
-          });
-      add(nextButton);
-      add(previousButton);
+    public Page1() {
+      super(Person.class);
+      addContent(new Button("Hello sup!"));
+      val button = new Button("Add Address");
+      button.addClickListener(click -> {
+        setModelElement(new Person());
+        transitionTo(Page2.class);
+      });
+      addNavigationControl(button, (b, w, p) -> {
+        b.setEnabled(p.canAdvance());
+      });
     }
 
     @Override
     public Icon create() {
-      return VaadinIcon.LIST.create();
+      return VaadinIcon.ARCHIVES.create();
     }
   }
 
-  @WizardPage(title = "First Page", iconFactory = IF.class, key = "page-1")
-  public static class Page1 extends Section implements IconFactory {
+  @WizardPage(title = "Addresses", iconFactory = IF1.class, key = "page-2")
+  public static class Page2 extends AbstractWizardPage<String, Address> {
 
-    private final Wizard<String> wizard;
+    public Page2() {
+      super(Address.class);
 
-    public static class IF implements IconFactory {
+      addContent(new Button("Hello!"));
+      val button = new Button("Save");
+      button.addClickListener(click -> {
+        addModelElement(new Address());
+        retreat();
+      });
+
+      addNavigationControl(button, (b, w, p) -> {
+        b.setEnabled(p.canAdvance());
+      });
+
+      val addAddress = new Button("Add Address");
+      addAddress.addClickListener(click -> {
+        addModelElement(new Address());
+        transitionTo(Page2.class);
+      });
+    }
+
+    public static class IF1 implements IconFactory {
 
       @Override
       public Icon create() {
         return VaadinIcon.BOLD.create();
       }
     }
-
-    @Dynamic
-    public Page1(@Dynamic Wizard<String> wizard) {
-      this.wizard = wizard;
-      add(new Text("World"));
-      val nextButton = new Button("next");
-      val previousButton = new Button("previous");
-
-      nextButton.addClickListener(
-          click -> {
-            wizard.advance();
-          });
-
-      previousButton.addClickListener(
-          click -> {
-            wizard.retreat();
-          });
-      add(nextButton);
-      add(previousButton);
-    }
-
-    @Override
-    public Icon create() {
-      return VaadinIcon.BOLD.create();
-    }
   }
+
+
 }
