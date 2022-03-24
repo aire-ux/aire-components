@@ -4,12 +4,16 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableTriConsumer;
+import com.vaadin.flow.shared.Registration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +30,7 @@ import lombok.val;
 @JsModule("./aire/ui/components/wizard-page.ts")
 @CssImport("./styles/aire/ui/components/wizard-page.css")
 public class AbstractWizardPage<K, T> extends Component implements HasComponents,
-    WizardModelSupport<K, T> {
+    WizardModelSupport<K, T>, AutoCloseable {
 
   /**
    * the wizard-key associated with this page
@@ -66,26 +70,31 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
    * relevant constructor argument
    */
   private Wizard<K> wizard;
+  private Registration nextRegistration;
+  private Registration previousRegistration;
 
   protected AbstractWizardPage(@NonNull K key, @NonNull Class<T> modelType) {
+    this.controls = new ArrayList<>();
     this.key = key;
     this.modelType = modelType;
     this.header = createHeader();
     this.content = createContent();
     this.footer = createFooter();
-    this.controls = new ArrayList<>();
+    configureNavigationMenu();
     add(header, content, footer);
   }
 
   @SuppressWarnings("unchecked")
   protected AbstractWizardPage(Class<T> modelType) {
+    this.controls = new ArrayList<>();
     val descriptor = read((Class<? extends AbstractWizardPage<K, T>>) getClass());
+
     this.key = (K) descriptor.key;
     this.modelType = modelType;
     this.header = createHeader();
     this.content = createContent();
     this.footer = createFooter();
-    this.controls = new ArrayList<>();
+    configureNavigationMenu();
     setTitle(descriptor.title);
     add(header, content, footer);
   }
@@ -116,32 +125,39 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
   }
 
   public boolean advance() {
-    if (wizard.canAdvance()) {
-      wizard.advance();
-      return true;
+    try {
+      if (wizard.canAdvance()) {
+        wizard.advance();
+        return true;
+      }
+      return false;
+    } finally {
+      updateNavigationControls(wizard);
     }
-    return false;
   }
 
   public boolean retreat() {
-    if (wizard.canRetreat()) {
-      wizard.retreat();
-      return true;
+    try {
+      if (wizard.canRetreat()) {
+        wizard.retreat();
+        return true;
+      }
+      return false;
+    } finally {
+      updateNavigationControls(wizard);
     }
-    return false;
   }
 
 
   @Override
   public void onEntered(Wizard<K> wizard) {
     this.wizard = wizard;
-    for (val definition : controls) {
-      definition.f.accept((Component) definition.control, this, wizard);
-    }
+    updateNavigationControls(wizard);
   }
 
   @Override
   public void onExited(Wizard<K> wizard) {
+    updateNavigationControls(wizard);
   }
 
 
@@ -185,6 +201,39 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
   }
 
 
+  protected void configureNavigationMenu() {
+    createPreviousButton();
+    createNextButton();
+  }
+
+
+  private Button createNextButton() {
+    val button = new Button("Next", VaadinIcon.ANGLE_RIGHT.create());
+    button.setIconAfterText(true);
+    addNavigationControl(button, (control, modelSupport, wizard) -> {
+      control.setEnabled(wizard.canAdvance());
+    });
+    nextRegistration = button.addClickListener(click -> advance());
+    return button;
+  }
+
+  private Button createPreviousButton() {
+    val button = new Button("Previous", VaadinIcon.ANGLE_LEFT.create());
+    addNavigationControl(button, (control, modelSupport, wizard) -> {
+      control.setEnabled(wizard.canRetreat());
+    });
+    previousRegistration = button.addClickListener(click -> retreat());
+    return button;
+  }
+
+  private void updateNavigationControls(Wizard<K> wizard) {
+    getUI().orElse(UI.getCurrent()).access(() -> {
+      for (val definition : controls) {
+        definition.f.accept((Component) definition.control, this, wizard);
+      }
+    });
+  }
+
   protected K getKey() {
     return key;
   }
@@ -197,6 +246,12 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     } else {
       return new WizardPageDescriptor(wizardPage.key(), wizardPage.title());
     }
+  }
+
+  @Override
+  public void close() {
+    nextRegistration.remove();
+    previousRegistration.remove();
   }
 
 

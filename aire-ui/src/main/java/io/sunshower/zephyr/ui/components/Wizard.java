@@ -42,6 +42,8 @@ public class Wizard<K> extends HtmlContainer {
   public static final String NOT_COMPLETE = "not-complete";
   static final TransitionListener<?> NO_OP = new TransitionListener<>() {
   };
+  public static final String LEAVING = "leaving";
+  public static final String ENTERING = "entering";
   /**
    * immutable state
    */
@@ -374,6 +376,8 @@ public class Wizard<K> extends HtmlContainer {
     access(
         () -> {
           if (!(previous == null || previous.component == null)) {
+            addClass(previous.component, LEAVING);
+            removeClass(previous.component, ENTERING);
             removePrevious(previous);
           }
           updatePage(step, getComponent(step));
@@ -391,6 +395,8 @@ public class Wizard<K> extends HtmlContainer {
   }
 
   private void updatePage(WizardStep<K, ?> step, Component page) {
+    addClass(page, ENTERING);
+    removeClass(page, LEAVING);
     page.getElement().setAttribute("slot", "page");
     ((WizardStep<K, Component>) step).setComponent(page);
     add(page);
@@ -399,6 +405,14 @@ public class Wizard<K> extends HtmlContainer {
     }
     currentStep = step;
     updateProgressView(step);
+  }
+
+  private void removeClass(@NonNull Component page, @NonNull String type) {
+    page.getElement().getClassList().remove(type);
+  }
+
+  private void addClass(@NonNull Component page, @NonNull String type) {
+    page.getElement().getClassList().add(type);
   }
 
   private void removePrevious(WizardStep<K, ?> previous) {

@@ -44,15 +44,6 @@ public class TestRoute extends Panel {
 
     public Page3() {
       super(Person.class);
-      addContent(new Button("Hello sup!"));
-      val button = new Button("Add Address");
-      button.addClickListener(click -> {
-        setModelElement(new Person());
-        transitionTo(Page2.class);
-      });
-      addNavigationControl(button, (b, w, p) -> {
-        b.setEnabled(p.canAdvance());
-      });
     }
 
     @Override
@@ -66,15 +57,6 @@ public class TestRoute extends Panel {
 
     public Page1() {
       super(Person.class);
-      addContent(new Button("Hello sup!"));
-      val button = new Button("Add Address");
-      button.addClickListener(click -> {
-        setModelElement(new Person());
-        transitionTo(Page2.class);
-      });
-      addNavigationControl(button, (b, w, p) -> {
-        b.setEnabled(p.canAdvance());
-      });
     }
 
     @Override
@@ -88,23 +70,6 @@ public class TestRoute extends Panel {
 
     public Page2() {
       super(Address.class);
-
-      addContent(new Button("Hello!"));
-      val button = new Button("Save");
-      button.addClickListener(click -> {
-        addModelElement(new Address());
-        retreat();
-      });
-
-      addNavigationControl(button, (b, w, p) -> {
-        b.setEnabled(p.canAdvance());
-      });
-
-      val addAddress = new Button("Add Address");
-      addAddress.addClickListener(click -> {
-        addModelElement(new Address());
-        transitionTo(Page2.class);
-      });
     }
 
     public static class IF1 implements IconFactory {

@@ -1,6 +1,9 @@
 @import "../colors";
 
+
 aire-wizard {
+
+
   ul {
     width: 100%;
     display: flex;
@@ -18,9 +21,9 @@ aire-wizard {
 
       &:before, &:after {
         content: "";
-        height:2px;
+        height: 2px;
         position: absolute;
-        width:calc(50% - 1em - 1px);
+        width: calc(50% - 1em - 1px);
         top: 1em;
         background: linear-gradient(to right, $blue 50%, $dark-gray-1 50%) right bottom;
         background-size: 200% 100%;
@@ -31,10 +34,12 @@ aire-wizard {
       &:before {
         left: 0;
       }
+
       &:after {
-        right:0;
+        right: 0;
         transition-delay: .3s;
       }
+
       & > .icon, icon, vaadin-icon {
         font-weight: lighter;
         border: 1px solid $blue;
@@ -48,6 +53,7 @@ aire-wizard {
         &:before {
           transition-delay: .3s;
         }
+
         &:after {
           transition-delay: 0s;
         }
@@ -58,6 +64,7 @@ aire-wizard {
           color: $white;
           background-color: $blue;
         }
+
         &:before, &:after {
           background-position: left bottom;
         }

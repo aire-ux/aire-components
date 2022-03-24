@@ -4,6 +4,7 @@ aire-wizard-page {
   height: 100%;
   position: relative;
   padding: 2em;
+  overflow-x: hidden;
 
   [slot=content] {
     flex: 2;
