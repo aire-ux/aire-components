@@ -46,6 +46,7 @@ class WizardTest {
     w.setInitialStep(Steps.FirstPage);
     w.addTransition(Steps.FirstPage, Steps.SecondPage);
 
+    w.onAttach(null);
     val next = w.advance();
     assertEquals(Steps.SecondPage, next);
   }
@@ -56,6 +57,7 @@ class WizardTest {
     wizard.addStep(Page2.class);
     wizard.setInitialStep(Page.class);
     wizard.addTransition(Page.class, Page2.class);
+    wizard.onAttach(null);
     val state = wizard.advance();
     assertEquals(state, "hello2");
   }

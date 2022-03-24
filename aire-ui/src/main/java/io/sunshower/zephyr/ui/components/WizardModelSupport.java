@@ -10,13 +10,7 @@ public interface WizardModelSupport<K, T> {
 
   boolean transitionTo(K key);
 
+  default void onEntered(Wizard<K> wizard) {}
 
-  default void onEntered(Wizard<K> wizard) {
-
-  }
-
-  default void onExited(Wizard<K> wizard) {
-
-  }
-
+  default void onExited(Wizard<K> wizard) {}
 }

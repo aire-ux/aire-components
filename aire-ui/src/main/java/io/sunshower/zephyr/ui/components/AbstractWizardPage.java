@@ -23,53 +23,39 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
-/**
- * base-class for commonly-themed wizard-pages
- */
+/** base-class for commonly-themed wizard-pages */
 @Tag("aire-wizard-page")
 @JsModule("./aire/ui/components/wizard-page.ts")
 @CssImport("./styles/aire/ui/components/wizard-page.css")
-public class AbstractWizardPage<K, T> extends Component implements HasComponents,
-    WizardModelSupport<K, T>, AutoCloseable {
+public class AbstractWizardPage<K, T> extends Component
+    implements HasComponents, WizardModelSupport<K, T>, AutoCloseable {
 
-  /**
-   * the wizard-key associated with this page
-   */
+  /** the wizard-key associated with this page */
   private final K key;
 
-  /**
-   * the model-type associated with this page
-   */
+  /** the model-type associated with this page */
   private final Class<T> modelType;
 
-  /**
-   * the header for this page.  May be overridden by overriding {@code createHeader()}
-   */
+  /** the header for this page. May be overridden by overriding {@code createHeader()} */
   @Getter(AccessLevel.PROTECTED)
   private final Component header;
-  /**
-   * the footer for this page.  May be overridden by overriding {@code createFooter()}.
-   */
+  /** the footer for this page. May be overridden by overriding {@code createFooter()}. */
   @Getter(AccessLevel.PROTECTED)
   private final Component footer;
 
-
-  /**
-   * the content for this page.  May be overridden by overridding  {@code createContent()}
-   */
+  /** the content for this page. May be overridden by overridding {@code createContent()} */
   @Getter(AccessLevel.PROTECTED)
   private final Component content;
 
-  /**
-   * the list of controls.  Defaults to a previous button and a next button
-   */
+  /** the list of controls. Defaults to a previous button and a next button */
   private final List<ControlDefinition<? super Component, K, T>> controls;
   /**
-   * the wizard associated with this page.  May be null depending on the component lifecycle if you
+   * the wizard associated with this page. May be null depending on the component lifecycle if you
    * need a non-null wizard at any point, use @Dynamic on your subclass's constructor and the
    * relevant constructor argument
    */
   private Wizard<K> wizard;
+
   private Registration nextRegistration;
   private Registration previousRegistration;
 
@@ -99,7 +85,6 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     add(header, content, footer);
   }
 
-
   public void addContent(Component... contents) {
     if (content instanceof HasComponents) {
       ((HasComponents) content).add(contents);
@@ -107,7 +92,6 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
       Arrays.stream(contents).forEachOrdered(c -> content.getElement().appendChild(c.getElement()));
     }
   }
-
 
   @Override
   public boolean addModelElement(T value) {
@@ -148,7 +132,6 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     }
   }
 
-
   @Override
   public void onEntered(Wizard<K> wizard) {
     this.wizard = wizard;
@@ -160,15 +143,14 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     updateNavigationControls(wizard);
   }
 
-
   @SuppressWarnings("unchecked")
   protected <U extends Component> void addNavigationControl(
       U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {
-    controls.add(new ControlDefinition<>(control,
-        (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K>>) f));
+    controls.add(
+        new ControlDefinition<>(
+            control, (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K>>) f));
     footer.getElement().appendChild(control.getElement());
   }
-
 
   protected Header createHeader() {
     val header = new Header();
@@ -200,38 +182,43 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     Objects.requireNonNull(wizard).getModel().set(getKey(), value);
   }
 
-
   protected void configureNavigationMenu() {
     createPreviousButton();
     createNextButton();
   }
 
-
   private Button createNextButton() {
     val button = new Button("Next", VaadinIcon.ANGLE_RIGHT.create());
     button.setIconAfterText(true);
-    addNavigationControl(button, (control, modelSupport, wizard) -> {
-      control.setEnabled(wizard.canAdvance());
-    });
+    addNavigationControl(
+        button,
+        (control, modelSupport, wizard) -> {
+          control.setEnabled(wizard.canAdvance());
+        });
     nextRegistration = button.addClickListener(click -> advance());
     return button;
   }
 
   private Button createPreviousButton() {
     val button = new Button("Previous", VaadinIcon.ANGLE_LEFT.create());
-    addNavigationControl(button, (control, modelSupport, wizard) -> {
-      control.setEnabled(wizard.canRetreat());
-    });
+    addNavigationControl(
+        button,
+        (control, modelSupport, wizard) -> {
+          control.setEnabled(wizard.canRetreat());
+        });
     previousRegistration = button.addClickListener(click -> retreat());
     return button;
   }
 
   private void updateNavigationControls(Wizard<K> wizard) {
-    getUI().orElse(UI.getCurrent()).access(() -> {
-      for (val definition : controls) {
-        definition.f.accept((Component) definition.control, this, wizard);
-      }
-    });
+    getUI()
+        .orElse(UI.getCurrent())
+        .access(
+            () -> {
+              for (val definition : controls) {
+                definition.f.accept((Component) definition.control, this, wizard);
+              }
+            });
   }
 
   protected K getKey() {
@@ -254,7 +241,6 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     previousRegistration.remove();
   }
 
-
   private static class WizardPageDescriptor {
 
     private final String key;
@@ -266,8 +252,6 @@ public class AbstractWizardPage<K, T> extends Component implements HasComponents
     }
   }
 
-  record ControlDefinition<U, K, T>(U control,
-                                    SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {
-
-  }
+  record ControlDefinition<U, K, T>(
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {}
 }

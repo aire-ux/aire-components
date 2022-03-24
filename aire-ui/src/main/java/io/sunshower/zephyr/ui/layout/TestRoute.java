@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.ui.layout;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -29,15 +28,9 @@ public class TestRoute extends Panel {
     add(wizard);
   }
 
+  public static class Person {}
 
-  public static class Person {
-
-  }
-
-  public static class Address {
-
-  }
-
+  public static class Address {}
 
   @WizardPage(title = "Info2", key = "page-3")
   public static class Page3 extends AbstractWizardPage<String, Person> implements IconFactory {
@@ -80,6 +73,4 @@ public class TestRoute extends Panel {
       }
     }
   }
-
-
 }
