@@ -9,6 +9,7 @@ export class AirePanel extends LitElement {
       height:100%;
       position: relative;
       overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;

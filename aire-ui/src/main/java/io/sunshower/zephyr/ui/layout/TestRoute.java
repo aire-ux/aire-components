@@ -1,15 +1,15 @@
 package io.sunshower.zephyr.ui.layout;
 
-import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import io.sunshower.zephyr.MainView;
-import io.sunshower.zephyr.ui.components.Badge;
-import io.sunshower.zephyr.ui.components.Badge.Mode;
-import io.sunshower.zephyr.ui.components.Card;
-import io.sunshower.zephyr.ui.components.Card.Slot;
-import io.sunshower.zephyr.ui.components.DefinitionList;
+import io.sunshower.zephyr.ui.components.AbstractWizardPage;
 import io.sunshower.zephyr.ui.components.Panel;
+import io.sunshower.zephyr.ui.components.Wizard;
+import io.sunshower.zephyr.ui.components.WizardPage;
+import io.sunshower.zephyr.ui.layout.TestRoute.Page2.IF1;
 import lombok.val;
 
 @Route(value = "test", layout = MainView.class)
@@ -20,25 +20,57 @@ public class TestRoute extends Panel {
   }
 
   private void createContent() {
+    val wizard = new Wizard<String>();
+    wizard.addSteps(Page1.class, Page2.class, Page3.class);
+    wizard.setInitialStep(Page1.class);
+    wizard.addTransition(Page1.class, Page2.class);
+    wizard.addTransition(Page2.class, Page3.class);
+    add(wizard);
+  }
 
-    val card = new Card();
-    card.setTitle("Heroku");
-    card.setIcon(VaadinIcon.ARCHIVES.create());
+  public static class Person {}
 
-    card.add(Slot.Header, new Text("Heroku"));
-    val dl =
-        new DefinitionList()
-            .key("Version")
-            .value(new Badge(Mode.Contrast, "1.0"))
-            .key("Name")
-            .value(new Badge(Mode.Contrast, "Heroku"));
-    card.add(Slot.Content, dl);
+  public static class Address {}
 
-    card.add(Slot.Footer, new Badge(Mode.Success, "Active"));
+  @WizardPage(title = "Info2", key = "page-3")
+  public static class Page3 extends AbstractWizardPage<String, Person> implements IconFactory {
 
-    //    card.add(Slot.Content, new
-    //    card.getHeader().add(new Text("Heroku"));
+    public Page3() {
+      super(Person.class);
+    }
 
-    add(card);
+    @Override
+    public Icon create() {
+      return VaadinIcon.ARCHIVES.create();
+    }
+  }
+
+  @WizardPage(title = "Info", key = "page-1")
+  public static class Page1 extends AbstractWizardPage<String, Person> implements IconFactory {
+
+    public Page1() {
+      super(Person.class);
+    }
+
+    @Override
+    public Icon create() {
+      return VaadinIcon.ARCHIVES.create();
+    }
+  }
+
+  @WizardPage(title = "Addresses", iconFactory = IF1.class, key = "page-2")
+  public static class Page2 extends AbstractWizardPage<String, Address> {
+
+    public Page2() {
+      super(Address.class);
+    }
+
+    public static class IF1 implements IconFactory {
+
+      @Override
+      public Icon create() {
+        return VaadinIcon.BOLD.create();
+      }
+    }
   }
 }
