@@ -50,7 +50,7 @@ public class AbstractWizardPage<K, T> extends Component
   /** the list of controls. Defaults to a previous button and a next button */
   private final List<ControlDefinition<? super Component, K, T>> controls;
   /**
-   * the wizard associated with this page. May be null depending on the component lifecycle if you
+   * the wizard associated with this page. May be null depending on the component lifecycle. If you
    * need a non-null wizard at any point, use @Dynamic on your subclass's constructor and the
    * relevant constructor argument
    */
