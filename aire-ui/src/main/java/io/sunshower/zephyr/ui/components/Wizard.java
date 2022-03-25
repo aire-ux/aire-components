@@ -322,7 +322,8 @@ public class Wizard<K> extends HtmlContainer {
   }
 
   protected <T> T instantiate(Class<T> type) {
-    return DynamicInstantiator.create(getUI().orElse(UI.getCurrent()), type, this, model).orElseThrow();
+    return DynamicInstantiator.create(getUI().orElse(UI.getCurrent()), type, this, model)
+        .orElseThrow();
   }
 
   protected Nav createHeader() {

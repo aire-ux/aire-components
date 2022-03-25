@@ -12,6 +12,7 @@ import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
+import com.vaadin.flow.component.textfield.TextField;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.ui.components.scenarios.Page1;
 import io.sunshower.zephyr.ui.components.scenarios.Page2;
@@ -74,5 +75,24 @@ public class WizardE2ETest {
     assertTrue($.selectFirst("section.page-2", Page2.class).isPresent());
     wizard.retreat();
     assertTrue($.selectFirst("section.page-1", Page1.class).isPresent());
+  }
+
+  @ViewTest
+  @Navigate("test-wizard")
+  void ensureUIStateIsPreservedUponNavigation(@Select Wizard<?> wizard, @Context TestContext $) {
+    wizard.advance();
+    val hello = "Hello World";
+    var tf = $.selectFirst(".text-field", TextField.class);
+    assertTrue(tf.isPresent());
+    tf.ifPresent(
+        f -> {
+          f.setValue(hello);
+          assertEquals(f.getValue(), hello);
+        });
+    $.flush();
+    wizard.advance();
+    wizard.retreat();
+    tf = $.selectFirst(".text-field[value='%s']".formatted(hello), TextField.class);
+    assertTrue(tf.isPresent());
   }
 }

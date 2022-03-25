@@ -15,12 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+@Slf4j
 public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
 
+  private static final Set<String> SYNTHETIC_FIELDS = Set.of("value");
   private final LRUCache<Class<?>, Map<String, PropertyDescriptor>> attributeCache;
 
   public ComponentHierarchyNodeAdapter() {
@@ -191,6 +195,26 @@ public class ComponentHierarchyNodeAdapter implements NodeAdapter<Element> {
         if (result != null) {
           return result;
         }
+      }
+    }
+    return readSynthetic(current, key, componentType);
+  }
+
+  private String readSynthetic(Object current, String key, Class<?> componentType) {
+    try {
+      if (SYNTHETIC_FIELDS.contains(key)) {
+        val methodName = methodNameFrom(key, componentType);
+        val method = componentType.getMethod(methodName);
+        if (!(method.canAccess(current) || method.trySetAccessible())) {
+          log.warn("Failed to set method {} accessible", methodName);
+          return null;
+        }
+        return String.valueOf(method.invoke(current));
+      }
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+      log.warn("Failed to locate synthetic property {}", key);
+      if (current instanceof Element e) {
+        return e.getComponent().map(c -> readSynthetic(c, key, c.getClass())).orElse(null);
       }
     }
     return null;
