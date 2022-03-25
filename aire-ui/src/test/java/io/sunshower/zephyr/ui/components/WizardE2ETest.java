@@ -84,10 +84,11 @@ public class WizardE2ETest {
     val hello = "Hello World";
     var tf = $.selectFirst(".text-field", TextField.class);
     assertTrue(tf.isPresent());
-    tf.ifPresent(f -> {
-      f.setValue(hello);
-      assertEquals(f.getValue(), hello);
-    });
+    tf.ifPresent(
+        f -> {
+          f.setValue(hello);
+          assertEquals(f.getValue(), hello);
+        });
     $.flush();
     wizard.advance();
     wizard.retreat();

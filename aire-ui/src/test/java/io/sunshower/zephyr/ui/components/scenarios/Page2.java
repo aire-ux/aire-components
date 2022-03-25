@@ -29,6 +29,4 @@ public class Page2 extends Section {
     textField.getElement().getClassList().add("text-field");
     add(textField);
   }
-
-
 }
