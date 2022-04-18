@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.condensation;
 
-import com.aire.ux.condensation.Condensation;
 import elemental.json.JsonValue;
+import io.sunshower.arcus.condensation.Condensation;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import lombok.NonNull;

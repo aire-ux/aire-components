@@ -3,7 +3,7 @@ package io.sunshower.zephyr.ui.canvas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.aire.ux.condensation.Condensation;
+import io.sunshower.arcus.condensation.Condensation;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;

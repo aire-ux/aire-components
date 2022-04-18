@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.canvas.listeners;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.canvas.Cell;
 import lombok.Getter;

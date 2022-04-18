@@ -2,13 +2,13 @@ package io.sunshower.zephyr;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.condensation.Alias;
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.Condensation;
-import com.aire.ux.condensation.Convert;
-import com.aire.ux.condensation.Converter;
-import com.aire.ux.condensation.Element;
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.Alias;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.arcus.condensation.Convert;
+import io.sunshower.arcus.condensation.Converter;
+import io.sunshower.arcus.condensation.Element;
+import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.lang.common.encodings.Base58;
 import io.sunshower.lang.common.encodings.Base58.Alphabets;
 import io.sunshower.lang.common.encodings.Encoding;

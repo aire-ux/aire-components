@@ -2,6 +2,7 @@ package com.aire.ux.test;
 
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.dom.impl.AbstractNodeStateProvider;
+import io.sunshower.arcus.selectors.test.NodeAdapter;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;

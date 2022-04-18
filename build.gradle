@@ -38,6 +38,14 @@ allprojects {
                 password "$mavenRepositoryPassword"
             }
         }
+
+        maven {
+            url "https://maven.pkg.github.com/sunshower-io/*"
+            credentials {
+                username "$mavenRepositoryUsername"
+                password "$mavenRepositoryPassword"
+            }
+        }
     }
 
     dependencyManagement {

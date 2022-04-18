@@ -1,9 +1,9 @@
 package io.sunshower.zephyr.ui.rmi;
 
-import com.aire.ux.condensation.Condensation;
-import com.aire.ux.condensation.DocumentWriter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.arcus.condensation.DocumentWriter;
 import io.sunshower.zephyr.ui.canvas.RemoteAction;
 import java.io.Serializable;
 import java.util.HashMap;

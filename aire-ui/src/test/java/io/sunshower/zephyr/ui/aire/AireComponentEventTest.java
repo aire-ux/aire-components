@@ -2,12 +2,12 @@ package io.sunshower.zephyr.ui.aire;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.RootElement;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
 import elemental.json.Json;
 import elemental.json.JsonValue;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.RootElement;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

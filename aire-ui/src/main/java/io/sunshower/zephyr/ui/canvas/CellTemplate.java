@@ -1,6 +1,6 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.RootElement;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;

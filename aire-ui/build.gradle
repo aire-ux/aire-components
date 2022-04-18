@@ -21,17 +21,19 @@ dependencies {
     implementation "io.sunshower.arcus:arcus-reflect"
     implementation "io.sunshower.arcus.persist:persist-api"
 
-    [
-            ':aire-json-mapper',
-            ':aire-css-selectors'
-    ].each { dependency ->
-        implementation project(dependency)
-    }
+    implementation 'io.sunshower.arcus:condensation-core'
+    implementation 'io.sunshower.arcus:condensation-json'
+
+//    [
+//            ':aire-json-mapper',
+//            ':aire-css-selectors'
+//    ].each { dependency ->
+//        implementation project(dependency)
+//    }
     /**
      * zephyr dependencies
      */
     [
-            'gyre-api',
             'kernel-api',
             'kernel-lib@jar',
             'kernel-core',
@@ -40,9 +42,15 @@ dependencies {
             'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'
     ].each {
-        api "io.zephyr:$it"
-        testFixturesApi "io.zephyr:$it"
+        api "io.sunshower.zephyr:$it"
+        testFixturesApi "io.sunshower.zephyr:$it"
     }
+
+    ['gyre-api'].each {
+        api "io.sunshower.arcus:$it"
+        testFixturesApi "io.sunshower.arcus:$it"
+    }
+
     implementation project(':aire-ux-core')
     testFixturesApi(project(':aire-ux-core'))
 
@@ -52,9 +60,9 @@ dependencies {
      */
     [
             'info.picocli:picocli',
+            'com.vdurmont:semver4j',
             'org.reflections:reflections',
             'org.jboss.modules:jboss-modules',
-            'com.github.zafarkhaja:java-semver',
     ].each {
         implementation it
         testFixturesApi it
@@ -81,7 +89,7 @@ dependencies {
             'kernel-test',
             'kernel-test-common'
     ].each {
-        testFixturesApi "io.zephyr:$it"
+        testFixturesApi "io.sunshower.zephyr:$it"
     }
 
 

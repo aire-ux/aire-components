@@ -4,9 +4,9 @@ import static com.aire.ux.test.vaadin.VaadinExtension.ROOT_AIRE_NAMESPACE;
 
 import com.aire.ux.test.Adapter;
 import com.aire.ux.test.ComponentHierarchyNodeAdapter;
-import com.aire.ux.test.NodeAdapter;
 import com.vaadin.flow.dom.Element;
 import io.sunshower.arcus.reflect.Reflect;
+import io.sunshower.arcus.selectors.test.NodeAdapter;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.Deque;

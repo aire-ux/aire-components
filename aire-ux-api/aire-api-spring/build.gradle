@@ -7,7 +7,7 @@ dependencies {
     api project(':aire-ux-api:aire-api')
     api project(':aire-ux-api:aire-api-core')
 
-    api 'io.zephyr:gyre-api'
+    api 'io.sunshower.arcus:gyre-api'
     api 'javax.servlet:javax.servlet-api'
     api 'org.springframework:spring-beans'
     api 'org.springframework:spring-context'

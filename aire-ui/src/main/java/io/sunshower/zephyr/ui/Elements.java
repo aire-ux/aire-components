@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui;
 
-import com.aire.ux.condensation.Condensation;
 import com.vaadin.flow.dom.Element;
+import io.sunshower.arcus.condensation.Condensation;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;

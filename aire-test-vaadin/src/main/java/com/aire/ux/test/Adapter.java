@@ -1,6 +1,7 @@
 package com.aire.ux.test;
 
 import com.vaadin.flow.dom.Element;
+import io.sunshower.arcus.selectors.test.NodeAdapter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

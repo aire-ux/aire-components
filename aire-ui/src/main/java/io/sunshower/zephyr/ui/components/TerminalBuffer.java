@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.components;
 
-import com.aire.ux.condensation.Element;
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.Element;
+import io.sunshower.arcus.condensation.RootElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

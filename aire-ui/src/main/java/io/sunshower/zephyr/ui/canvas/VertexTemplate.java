@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.zephyr.ui.canvas.attributes.VertexTemplateBuilder;
 import lombok.Getter;
 import lombok.Setter;
