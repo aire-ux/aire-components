@@ -5,7 +5,7 @@ def deps = [
 ].join(',')
 dependencies {
 
-    compileOnly 'io.zephyr:kernel-api'
+    compileOnly 'io.sunshower.zephyr:kernel-api'
 
     compileOnly project(':aire-ux-api:aire-api')
     compileOnly project(':aire-ux-api:aire-api-spring')

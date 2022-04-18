@@ -2,8 +2,8 @@ apply plugin: 'war'
 
 dependencies {
     compileOnly project(':aire-ui')
-    compileOnly 'io.zephyr:kernel-api'
-    compileOnly 'io.zephyr:kernel-lib@jar'
+    compileOnly 'io.sunshower.zephyr:kernel-api'
+    compileOnly 'io.sunshower.zephyr:kernel-lib@jar'
     compileOnly 'com.vaadin:flow-html-components'
     compileOnly 'com.vaadin:vaadin-spring-boot-starter'
     compileOnly project(':aire-ux-api:aire-api')
