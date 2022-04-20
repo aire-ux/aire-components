@@ -13,7 +13,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.sunshower.gyre.Pair;
+import io.sunshower.lang.events.Event;
 import io.sunshower.zephyr.log.LogbackRemoteAppender;
 import io.sunshower.zephyr.spring.Dynamic;
 import io.sunshower.zephyr.ui.canvas.Canvas;
@@ -30,7 +32,6 @@ import io.zephyr.kernel.Module;
 import io.zephyr.kernel.concurrency.Process;
 import io.zephyr.kernel.concurrency.TaskEvents;
 import io.zephyr.kernel.core.Kernel;
-import io.zephyr.kernel.core.actions.plugin.ModuleLifecycleTask;
 import io.zephyr.kernel.module.ModuleLifecycle;
 import io.zephyr.kernel.module.ModuleLifecycle.Actions;
 import java.io.Serializable;
@@ -197,22 +198,19 @@ public class ModuleScheduleOverlay extends Overlay
                   process.addEventListener(
                       TaskEvents.TASK_STARTING,
                       (type, event) -> {
-                        log.info("Starting task: {}", event);
-                        val target = event.getTarget();
-                        if (target instanceof ModuleLifecycleTask task) {
-                          val attributes = attributesFor(task.getCoordinate());
-                          canvas
-                              .getUI()
-                              .ifPresent(
-                                  ui -> {
-                                    ui.accessSynchronously(
-                                        () -> {
-                                          canvas.invoke(
-                                              SetAllCellAttributesAction.class, attributes);
-                                          ui.push();
-                                        });
-                                  });
-                        }
+                        val coordinate = getCoordinate(event);
+                        log.info("Starting task: {}", coordinate);
+                        val attributes = attributesFor(coordinate);
+                        canvas
+                            .getUI()
+                            .ifPresent(
+                                ui -> {
+                                  ui.accessSynchronously(
+                                      () -> {
+                                        canvas.invoke(SetAllCellAttributesAction.class, attributes);
+                                        ui.push();
+                                      });
+                                });
                       });
 
               val completeReg =
@@ -244,6 +242,29 @@ public class ModuleScheduleOverlay extends Overlay
                                 });
                       });
             });
+  }
+
+  /**
+   * omfg
+   *
+   * @param event
+   * @return
+   */
+  @SuppressFBWarnings
+  @SuppressWarnings({"PMD", "unchecked"})
+  private Coordinate getCoordinate(Event<?> event) {
+
+    try {
+      val method = event.getClass().getMethod("getTarget");
+      method.trySetAccessible();
+      val result = method.invoke(event);
+      val resultMethod = result.getClass().getMethod("getCoordinate");
+      resultMethod.trySetAccessible();
+      return (Coordinate) resultMethod.invoke(result);
+    } catch (Exception ex) {
+      log.warn("Error: {}", ex);
+      return null;
+    }
   }
 
   private List<CellAttributes> attributesFor(Coordinate coordinate) {

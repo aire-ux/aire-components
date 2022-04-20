@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.arcus.condensation.DocumentWriter;
+import io.sunshower.zephyr.ZephyrApplication;
 import io.sunshower.zephyr.ui.canvas.RemoteAction;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public final class ClientMethods {
   @NonNull private final Map<String, ClientMethod<?>> internmap;
 
   public ClientMethods(final Supplier<UI> uiSupplier) {
-    this(uiSupplier, Condensation.create("json"));
+    this(uiSupplier, ZephyrApplication.getCondensation());
   }
 
   public ClientMethods(@NonNull Supplier<UI> uiSupplier, @NonNull Condensation condensation) {

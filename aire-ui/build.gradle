@@ -45,6 +45,7 @@ dependencies {
         testFixturesApi "io.sunshower.zephyr:$it"
     }
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     implementation 'io.sunshower.zephyr:spring-embedded-plugin'
 
     ['gyre-api'].each {
@@ -150,7 +151,7 @@ vaadin {
 defaultTasks("clean", "build")
 
 bootWar {
-    rootSpec.exclude("**/*arcus-lang*.jar")
+    rootSpec.exclude("**/*arcus-lang*.jar", "**/*gyre-api*.jar")
     archiveClassifier = 'dist'
     manifest {
 

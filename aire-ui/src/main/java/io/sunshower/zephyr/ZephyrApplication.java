@@ -1,5 +1,6 @@
 package io.sunshower.zephyr;
 
+import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
 import io.sunshower.zephyr.configuration.ZephyrCoreConfiguration;
 import io.zephyr.api.ModuleActivator;
@@ -16,14 +17,23 @@ import org.springframework.context.annotation.Import;
 @Import({EmbeddedZephyrConfiguration.class, ZephyrCoreConfiguration.class})
 public class ZephyrApplication implements ModuleActivator {
 
+  private static final AtomicReference<Condensation> condensation;
   private static final AtomicReference<ConfigurableApplicationContext> context;
 
   static {
     context = new AtomicReference<>();
+    condensation = new AtomicReference<>();
   }
 
   public static void main(String[] args) {
     context.set(SpringApplication.run(ZephyrApplication.class, args));
+  }
+
+  public static Condensation getCondensation() {
+    if (condensation.get() == null) {
+      condensation.set(Condensation.create("json"));
+    }
+    return condensation.get();
   }
 
   public static ConfigurableApplicationContext getApplicationContext() {
@@ -36,11 +46,13 @@ public class ZephyrApplication implements ModuleActivator {
     application.addPrimarySources(Set.of(ZephyrApplication.class));
     application.addInitializers(new EmbeddingModuleInitializer(moduleContext));
     context.set(application.run());
+    condensation.set(Condensation.create("json"));
     //    context.set(SpringApplication.run(ZephyrApplication.class));
   }
 
   @Override
   public void stop(ModuleContext moduleContext) throws Exception {
-    context.get().close();
+    context.get().stop();
+    condensation.set(null);
   }
 }

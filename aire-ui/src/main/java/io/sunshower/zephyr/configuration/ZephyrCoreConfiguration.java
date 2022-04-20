@@ -10,7 +10,9 @@ import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
+import io.zephyr.api.ModuleEvents;
 import io.zephyr.api.ServiceRegistration;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
@@ -84,6 +86,19 @@ public class ZephyrCoreConfiguration
                     UserInterface.class,
                     "aire:user-interface",
                     () -> context.getBean(UserInterface.class)));
+
+    kernel.addEventListener(
+        (type, event) -> {
+          val ui = UI.getCurrent();
+          if (ui != null) {
+            ui.access(
+                () -> {
+                  ui.getPage().reload();
+                });
+          }
+        },
+        ModuleEvents.STOPPED,
+        ModuleEvents.STARTED);
     log.info("Successfully registered UserInterface service");
   }
 
