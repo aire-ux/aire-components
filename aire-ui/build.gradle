@@ -1,4 +1,5 @@
 plugins {
+    id 'war'
     id 'java'
     id 'com.vaadin'
     id 'java-test-fixtures'
@@ -16,14 +17,13 @@ configurations {
 
 dependencies {
 
+    compileOnly "io.sunshower.arcus:arcus-lang"
     implementation "io.sunshower.arcus:arcus-ast"
-    implementation "io.sunshower.arcus:arcus-lang"
     implementation "io.sunshower.arcus:arcus-reflect"
     implementation "io.sunshower.arcus.persist:persist-api"
 
     implementation 'io.sunshower.arcus:condensation-core'
     implementation 'io.sunshower.arcus:condensation-json'
-
 //    [
 //            ':aire-json-mapper',
 //            ':aire-css-selectors'
@@ -39,15 +39,16 @@ dependencies {
             'kernel-core',
             'sunshower-spring@jar',
             'synchronous-api@jar',
-            'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'
     ].each {
-        api "io.sunshower.zephyr:$it"
+        compileOnly "io.sunshower.zephyr:$it"
         testFixturesApi "io.sunshower.zephyr:$it"
     }
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
+    implementation 'io.sunshower.zephyr:spring-embedded-plugin'
 
     ['gyre-api'].each {
-        api "io.sunshower.arcus:$it"
+        compileOnly "io.sunshower.arcus:$it"
         testFixturesApi "io.sunshower.arcus:$it"
     }
 
@@ -144,22 +145,35 @@ build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = false
-    productionMode = false
+    productionMode = true
 }
 defaultTasks("clean", "build")
 
-bootJar {
+bootWar {
+    rootSpec.exclude("**/*arcus-lang*.jar")
     archiveClassifier = 'dist'
+    manifest {
+
+        attributes(
+                "group": project.group,
+                "name": project.name,
+                "version": '1.0.1',
+                "description": "Aire Core Module",
+                "type": "plugin"
+        )
+    }
 }
 
-jar {
+war {
     archiveClassifier = ''
     manifest {
 
         attributes(
                 "group": project.group,
                 "name": project.name,
-                "version": project.version,
+                "version": '1.0.1',
+                "description": "Aire Core Module",
+                "type": "plugin"
         )
     }
 }

@@ -7,7 +7,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.NavigationEvent;
-import java.util.WeakHashMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
@@ -23,7 +24,7 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
   private final Object lock = new Object();
   private final ApplicationContext rootApplicationContext;
 
-  private final WeakHashMap<ClassLoader, ApplicationContext> contexts;
+  private final Map<String, ApplicationContext> contexts;
 
   public SpringDelegatingInstantiator(
       @Nonnull Instantiator delegate,
@@ -31,7 +32,7 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
       @Nonnull ApplicationContext rootApplicationContext) {
 
     super(delegate, decorator);
-    this.contexts = new WeakHashMap<>();
+    this.contexts = new HashMap<>();
     this.rootApplicationContext = rootApplicationContext;
   }
 
@@ -39,8 +40,11 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
       Function<ApplicationContext, ApplicationContext> supplierConsumer) {
     synchronized (lock) {
       val ctx = supplierConsumer.apply(rootApplicationContext);
-      contexts.put(ctx.getClassLoader(), ctx);
-      return () -> contexts.remove(ctx.getClassLoader());
+      val classloader = ctx.getClassLoader();
+      assert classloader != null;
+      val name = keyFor(classloader);
+      contexts.put(name, ctx);
+      return () -> contexts.remove(name);
     }
   }
 
@@ -52,7 +56,7 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
   @Override
   protected <T> T doGetOrCreate(Class<T> type) {
     synchronized (contexts) {
-      val ctx = contexts.get(type.getClassLoader());
+      val ctx = contexts.get(keyFor(type.getClassLoader()));
       if (ctx != null) {
         val names = ctx.getBeanNamesForType(type);
         if (names.length > 0) {
@@ -81,5 +85,9 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
   @Override
   protected <T extends Component> T doCreateComponent(Class<T> type) {
     return doGetOrCreate(type);
+  }
+
+  private String keyFor(ClassLoader classLoader) {
+    return classLoader.getName();
   }
 }
