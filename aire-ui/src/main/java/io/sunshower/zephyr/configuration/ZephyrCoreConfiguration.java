@@ -12,11 +12,19 @@ import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
+import io.sunshower.crypt.DefaultSecretService;
+import io.sunshower.crypt.core.SecretService;
+import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.api.ModuleEvents;
 import io.zephyr.api.ServiceRegistration;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
+import io.zephyr.kernel.launch.KernelOptions;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
@@ -25,14 +33,39 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
-public class ZephyrCoreConfiguration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
+
+  private static final AtomicBoolean initialized;
+  private static final String LOGIN_URL = "/login";
+  private static final String LOGIN_FAILURE_URL = "/login?error";
+  private static final String LOGIN_PROCESSING_URL = "/login";
+  private static final String LOGOUT_SUCCESS_URL = "/login";
+
+
+  static {
+    initialized = new AtomicBoolean();
+  }
 
   private ServiceRegistration<UserInterface> result;
 
@@ -57,6 +90,28 @@ public class ZephyrCoreConfiguration
   }
 
   @Bean
+  public static ConfigureUIServiceInitListener configureUIServiceInitListener() {
+    return new ConfigureUIServiceInitListener();
+  }
+
+  @Bean(name = "crypt.keeper.secret.service")
+  public SecretService cryptkeeperSecretService(Kernel kernel) throws IOException {
+    val path = KernelOptions.getKernelRootDirectory().toPath().resolve("security/auth/secrets");
+
+    log.info("Locating administrator crypt at: {}", path);
+    if (!(Files.exists(path))) {
+      log.info("Administrator crypt directory {} does not exist. Attempting to create it", path);
+      try {
+        Files.createDirectories(path);
+      } catch (IOException ex) {
+        log.error("Failed to create crypt directory: {}.  Reason: {}", path, ex.getMessage());
+        throw ex;
+      }
+    }
+    return new DefaultSecretService(path.toFile(), ZephyrApplication.getCondensation());
+  }
+
+  @Bean
   public ComponentInclusionManager componentInclusionManager() {
     return new SpringComponentInclusionManager();
   }
@@ -72,6 +127,16 @@ public class ZephyrCoreConfiguration
     val result = new SimpleApplicationEventMulticaster();
     result.setTaskExecutor(executor);
     return result;
+  }
+
+  @Bean
+  public UserDetailsService userDetailsService() {
+    UserDetails user =
+        User.withUsername("user")
+            .password("{noop}password")
+            .roles("USER")
+            .build();
+    return new InMemoryUserDetailsManager(user);
   }
 
   private void registerServices(
@@ -111,9 +176,42 @@ public class ZephyrCoreConfiguration
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    val context = event.getApplicationContext();
-    val kernel = context.getBean(Kernel.class);
-    val module = context.getBean(Module.class);
-    registerServices(module, context, kernel);
+    if (!initialized.get()) {
+      val context = event.getApplicationContext();
+      val kernel = context.getBean(Kernel.class);
+      val module = context.getBean(Module.class);
+      registerServices(module, context, kernel);
+      initialized.set(true);
+    }
+  }
+
+
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable()
+        .requestCache().requestCache(new SecurityRequestCache())
+        .and().authorizeRequests()
+        .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll() // (3)
+        .anyRequest().authenticated()
+        .and().formLogin().loginPage(LOGIN_URL).permitAll()
+        .loginProcessingUrl(LOGIN_PROCESSING_URL)
+        .failureUrl(LOGIN_FAILURE_URL)
+        .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+  }
+
+  @Override
+  public void configure(WebSecurity web) {
+    web.ignoring().antMatchers(
+        "/VAADIN/**",
+        "/favicon.ico",
+        "/robots.txt",
+        "/manifest.webmanifest",
+        "/sw.js",
+        "/offline-page.html",
+        "/icons/**",
+        "/images/**",
+        "/frontend/**",
+        "/webjars/**",
+        "/h2-console/**",
+        "/frontend-es5/**", "/frontend-es6/**");
   }
 }

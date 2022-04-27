@@ -24,12 +24,13 @@ dependencies {
 
     implementation 'io.sunshower.arcus:condensation-core'
     implementation 'io.sunshower.arcus:condensation-json'
-//    [
-//            ':aire-json-mapper',
-//            ':aire-css-selectors'
-//    ].each { dependency ->
-//        implementation project(dependency)
-//    }
+
+    implementation 'io.sunshower.arcus.cryptkeeper:cryptkeeper-api'
+    implementation 'io.sunshower.arcus.cryptkeeper:cryptkeeper-core'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     /**
      * zephyr dependencies
      */

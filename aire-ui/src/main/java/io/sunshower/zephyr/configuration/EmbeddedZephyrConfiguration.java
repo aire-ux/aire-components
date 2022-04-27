@@ -43,6 +43,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+/**
+ * this is sort of a dev class. I guess we could move it to tests or something and include a new m
+ */
 @Slf4j
 @EnableAsync
 @Configuration

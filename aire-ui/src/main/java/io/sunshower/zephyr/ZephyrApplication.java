@@ -1,5 +1,6 @@
 package io.sunshower.zephyr;
 
+import com.vaadin.flow.spring.annotation.EnableVaadin;
 import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
 import io.sunshower.zephyr.configuration.ZephyrCoreConfiguration;
@@ -10,12 +11,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.val;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
-@SpringBootApplication
-@Import({EmbeddedZephyrConfiguration.class, ZephyrCoreConfiguration.class})
-public class ZephyrApplication implements ModuleActivator {
+@EnableVaadin
+@SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Import({ZephyrCoreConfiguration.class, EmbeddedZephyrConfiguration.class})
+public class ZephyrApplication extends SpringBootServletInitializer implements ModuleActivator {
 
   private static final AtomicReference<Condensation> condensation;
   private static final AtomicReference<ConfigurableApplicationContext> context;
@@ -26,7 +31,8 @@ public class ZephyrApplication implements ModuleActivator {
   }
 
   public static void main(String[] args) {
-    context.set(SpringApplication.run(ZephyrApplication.class, args));
+    val application = new SpringApplication(ZephyrApplication.class);
+    context.set(application.run(args));
   }
 
   public static Condensation getCondensation() {
@@ -47,7 +53,6 @@ public class ZephyrApplication implements ModuleActivator {
     application.addInitializers(new EmbeddingModuleInitializer(moduleContext));
     context.set(application.run());
     condensation.set(Condensation.create("json"));
-    //    context.set(SpringApplication.run(ZephyrApplication.class));
   }
 
   @Override

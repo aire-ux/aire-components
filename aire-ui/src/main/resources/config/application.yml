@@ -8,6 +8,7 @@ spring:
     default-domain: com.aire.ux
   main:
     allow-bean-definition-overriding: true
+#    allow-circular-references: true
   servlet:
     multipart:
       max-file-size: 400MB

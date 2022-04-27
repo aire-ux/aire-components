@@ -1,7 +1,7 @@
 apply plugin: 'war'
 
 def deps = [
-        "service@io.zephyr.tutorials:spring-base:1.0.0-SNAPSHOT"
+        "service@com.aire.ux.ui:aire-ui:1.0.+"
 ].join(',')
 dependencies {
 
@@ -26,8 +26,8 @@ war {
         attributes(
                 'group': 'com.aire.ux',
                 'name': 'aire-ux-features',
-                'version': '1.0.0-SNAPSHOT',
-//                'dependencies': deps,
+                'version': '1.0.1',
+                'dependencies': deps,
                 'description': 'just a test plugin!',
                 'type': 'plugin'
         )
