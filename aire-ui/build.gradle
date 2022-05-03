@@ -18,18 +18,26 @@ configurations {
 dependencies {
 
     compileOnly "io.sunshower.arcus:arcus-lang"
-    implementation "io.sunshower.arcus:arcus-ast"
-    implementation "io.sunshower.arcus:arcus-reflect"
-    implementation "io.sunshower.arcus.persist:persist-api"
 
-    implementation 'io.sunshower.arcus:condensation-core'
-    implementation 'io.sunshower.arcus:condensation-json'
+    [
+            "io.sunshower.arcus:arcus-ast",
+            "io.sunshower.arcus:arcus-reflect",
+            'commons-beanutils:commons-beanutils',
+            "io.sunshower.arcus.persist:persist-api",
+            'io.sunshower.arcus:condensation-core',
+            'io.sunshower.arcus:condensation-json',
+            'org.apache.commons:commons-configuration2',
+            'io.sunshower.arcus.cryptkeeper:cryptkeeper-api',
+            'io.sunshower.arcus.cryptkeeper:cryptkeeper-core',
+            'org.springframework.boot:spring-boot-starter-security',
+    ].each {
+        implementation it
+    }
 
-    implementation 'io.sunshower.arcus.cryptkeeper:cryptkeeper-api'
-    implementation 'io.sunshower.arcus.cryptkeeper:cryptkeeper-core'
 
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
 
     /**
      * zephyr dependencies
@@ -104,6 +112,7 @@ dependencies {
     ].each {
         testFixturesApi project(it)
     }
+
 
     implementation project(':aire-ux-api:aire-api-core')
     implementation project(':aire-ux-api:aire-api-spring')

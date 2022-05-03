@@ -359,7 +359,7 @@ public class Wizard<K> extends HtmlContainer {
     val pageDefinition = page.getAnnotation(WizardPage.class);
     if (pageDefinition == null) {
       throw new IllegalArgumentException(
-          "Error: page type '%s' must be annotated with @WizardPage");
+          format("Error: page type '%s' must be annotated with @WizardPage", page));
     }
     return new WizardStep<>(
         (K) pageDefinition.key(), pageDefinition.title(), page, pageDefinition.iconFactory());

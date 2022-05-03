@@ -6,7 +6,6 @@ import org.springframework.security.core.AuthenticationException;
 
 public class CryptkeeperAuthenticationProvider implements AuthenticationProvider {
 
-
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     return null;

@@ -1,5 +1,7 @@
 package io.sunshower.zephyr.configuration;
 
+import static java.lang.String.format;
+
 import com.aire.ux.Aire;
 import com.aire.ux.ComponentInclusionManager;
 import com.aire.ux.DefaultUserInterface;
@@ -21,19 +23,23 @@ import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.launch.KernelOptions;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -46,13 +52,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
 
@@ -61,7 +65,6 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   private static final String LOGIN_FAILURE_URL = "/login?error";
   private static final String LOGIN_PROCESSING_URL = "/login";
   private static final String LOGOUT_SUCCESS_URL = "/login";
-
 
   static {
     initialized = new AtomicBoolean();
@@ -90,12 +93,66 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public static ConfigureUIServiceInitListener configureUIServiceInitListener() {
-    return new ConfigureUIServiceInitListener();
+  public org.apache.commons.configuration2.Configuration zephyrConfigurationSource()
+      throws IOException, ConfigurationException {
+    val rootDirectory = KernelOptions.getKernelRootDirectory();
+    val cfg = rootDirectory.toPath().resolve(Paths.get("config"));
+    log.info("Attempting to resolve base configuration from {}", cfg.toAbsolutePath());
+    if (!Files.exists(cfg)) {
+      log.info("File {} does not exist--attempting to create it", cfg);
+      try {
+        Files.createDirectories(cfg);
+      } catch (IOException ex) {
+        log.error("Error.  Failed to create directory {}.  Reason: {}", cfg, ex.getMessage());
+      }
+    } else {
+      if (!Files.isDirectory(cfg)) {
+        log.error("Error: file {} exists, but it is not a directory", cfg);
+      }
+    }
+
+    val file = new File(cfg.toFile(), "aire.properties").toPath();
+
+    if (!Files.exists(file)) {
+      log.info("Properties file {} does not exist--attempting to create it", file);
+      try {
+        Files.createFile(file);
+        log.info("Successfully created {}", file);
+      } catch (IOException ex) {
+        log.error(
+            "Application properties file {} "
+            + "does not exist and could not be created.  Reason: {}. Can't continue",
+            file,
+            ex.getMessage());
+      }
+    }
+
+    if(!Files.isRegularFile(file)) {
+      throw new IllegalArgumentException(format("Error: file %s is not a file", file));
+    }
+
+
+    log.info("Successfully resolved configuration file {}", file);
+
+    val parameters = new Parameters();
+    return new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+        .configure(
+            parameters
+                .fileBased()
+                .setFile(file.toFile())
+                .setThrowExceptionOnMissing(false)
+        )
+        .getConfiguration();
+  }
+
+  @Bean
+  public ConfigureUIServiceInitListener configureUIServiceInitListener(
+      SecretService service, org.apache.commons.configuration2.Configuration configuration) {
+    return new ConfigureUIServiceInitListener(service, configuration);
   }
 
   @Bean(name = "crypt.keeper.secret.service")
-  public SecretService cryptkeeperSecretService(Kernel kernel) throws IOException {
+  public SecretService cryptkeeperSecretService() throws IOException {
     val path = KernelOptions.getKernelRootDirectory().toPath().resolve("security/auth/secrets");
 
     log.info("Locating administrator crypt at: {}", path);
@@ -131,11 +188,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
 
   @Bean
   public UserDetailsService userDetailsService() {
-    UserDetails user =
-        User.withUsername("user")
-            .password("{noop}password")
-            .roles("USER")
-            .build();
+    UserDetails user = User.withUsername("user").password("{noop}password").roles("USER").build();
     return new InMemoryUserDetailsManager(user);
   }
 
@@ -185,33 +238,45 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     }
   }
 
-
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-        .requestCache().requestCache(new SecurityRequestCache())
-        .and().authorizeRequests()
-        .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll() // (3)
-        .anyRequest().authenticated()
-        .and().formLogin().loginPage(LOGIN_URL).permitAll()
+    http.csrf()
+        .disable()
+        .requestCache()
+        .requestCache(new SecurityRequestCache())
+        .and()
+        .authorizeRequests()
+        .requestMatchers(SecurityUtils::isFrameworkInternalRequest)
+        .permitAll() // (3)
+        .anyRequest()
+        .authenticated()
+        .and()
+        .formLogin()
+        .loginPage(LOGIN_URL)
+        .permitAll()
         .loginProcessingUrl(LOGIN_PROCESSING_URL)
         .failureUrl(LOGIN_FAILURE_URL)
-        .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+        .and()
+        .logout()
+        .logoutSuccessUrl(LOGOUT_SUCCESS_URL);
   }
 
   @Override
   public void configure(WebSecurity web) {
-    web.ignoring().antMatchers(
-        "/VAADIN/**",
-        "/favicon.ico",
-        "/robots.txt",
-        "/manifest.webmanifest",
-        "/sw.js",
-        "/offline-page.html",
-        "/icons/**",
-        "/images/**",
-        "/frontend/**",
-        "/webjars/**",
-        "/h2-console/**",
-        "/frontend-es5/**", "/frontend-es6/**");
+    web.ignoring()
+        .antMatchers(
+            "/VAADIN/**",
+            "/favicon.ico",
+            "/robots.txt",
+            "/manifest.webmanifest",
+            "/sw.js",
+            "/aire/initialize/**",
+            "/offline-page.html",
+            "/icons/**",
+            "/images/**",
+            "/frontend/**",
+            "/webjars/**",
+            "/h2-console/**",
+            "/frontend-es5/**",
+            "/frontend-es6/**");
   }
 }
