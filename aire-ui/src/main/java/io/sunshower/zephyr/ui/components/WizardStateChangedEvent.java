@@ -2,7 +2,7 @@ package io.sunshower.zephyr.ui.components;
 
 import com.vaadin.flow.component.ComponentEvent;
 
-public class WizardStateChangedEvent<E> extends ComponentEvent<Wizard<E>> {
+public class WizardStateChangedEvent<E, V> extends ComponentEvent<Wizard<E, V>> {
 
   private final E next;
   private final E previous;
@@ -14,7 +14,7 @@ public class WizardStateChangedEvent<E> extends ComponentEvent<Wizard<E>> {
    * @param source the source component
    * @param fromClient <code>true</code> if the event originated from the client
    */
-  public WizardStateChangedEvent(Wizard<E> source, boolean fromClient, E previous, E next) {
+  public WizardStateChangedEvent(Wizard<E, V> source, boolean fromClient, E previous, E next) {
     super(source, fromClient);
     this.next = next;
     this.previous = previous;

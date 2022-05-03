@@ -32,31 +32,37 @@ import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.val;
 
+/**
+ * A wizard is a structured information flow.  The wizard has a <i>Key</i> type, which
+ * is how individual pages are identified within the flow, and a value-type, which is the
+ * type of the model
+ * @param <K>
+ * @param <V>
+ */
 @Tag("aire-wizard")
 @SuppressWarnings("PMD")
 @JsModule("./aire/ui/components/wizard.ts")
 @CssImport("./styles/aire/ui/components/wizard.css")
-public class Wizard<K> extends HtmlContainer {
+public class Wizard<K, V> extends HtmlContainer {
 
   public static final String COMPLETE = "complete";
   public static final String NOT_COMPLETE = "not-complete";
-  static final TransitionListener<?> NO_OP = new TransitionListener<>() {};
+  static final TransitionListener<?, ?> NO_OP = new TransitionListener<>() {};
   public static final String LEAVING = "leaving";
   public static final String ENTERING = "entering";
   /** immutable state */
   private final Nav header;
 
-  private final WizardModel<K> model;
+  private V model;
   private final Map<K, WizardStep<K, ?>> steps;
 
   private final Deque<WizardStep<K, ?>> history;
-  private final Map<K, Transition<K>> transitions;
+  private final Map<K, Transition<K, V>> transitions;
 
   /** mutable state */
   private WizardStep<K, ?> currentStep;
 
   public Wizard() {
-    model = WizardModel.newModel();
     steps = new HashMap<>();
     history = new ArrayDeque<>();
     transitions = new HashMap<>();
@@ -64,14 +70,23 @@ public class Wizard<K> extends HtmlContainer {
     add(header);
   }
 
+  public Wizard(@NonNull V model) {
+    this();
+    this.model =  model;
+  }
+
   @SuppressWarnings("unchecked")
   public static <K> WizardKeyStepBuilder<K> key(K key) {
-    return new WizardKeyStepBuilder(key);
+    return new WizardKeyStepBuilder<>(key);
   }
 
   @NonNull
-  public WizardModel<K> getModel() {
+  public V getModel() {
     return model;
+  }
+
+  public void setModel(@NonNull V model) {
+    this.model = model;
   }
 
   public <T extends Component> void addStep(Step<K, T> step) {
@@ -118,7 +133,7 @@ public class Wizard<K> extends HtmlContainer {
    * @param to the end state
    * @param listener the listener to apply when the transition is triggered
    */
-  public void addTransition(K from, K to, TransitionListener<K> listener) {
+  public void addTransition(K from, K to, TransitionListener<K, V> listener) {
     transitions.put(from, new Transition<>(to, listener));
   }
 
@@ -130,19 +145,19 @@ public class Wizard<K> extends HtmlContainer {
    */
   @SuppressWarnings("unchecked")
   public void addTransition(K from, K to) {
-    addTransition(from, to, (TransitionListener<K>) NO_OP);
+    addTransition(from, to, (TransitionListener<K, V>) NO_OP);
   }
 
   @SuppressWarnings("unchecked")
   public <T extends Component, U extends Component> void addTransition(Class<T> from, Class<U> to) {
-    addTransition(from, to, (TransitionListener<K>) NO_OP);
+    addTransition(from, to, (TransitionListener<K, V>) NO_OP);
   }
 
   @SuppressWarnings("unchecked")
   public Registration addWizardStateChangedEventListener(
-      ComponentEventListener<WizardStateChangedEvent<K>> listener) {
+      ComponentEventListener<WizardStateChangedEvent<K, V>> listener) {
     return addListener(
-        (Class<WizardStateChangedEvent<K>>) (Class) WizardStateChangedEvent.class, listener);
+        (Class<WizardStateChangedEvent<K, V>>) (Class) WizardStateChangedEvent.class, listener);
   }
 
   public <T extends Component> boolean transitionTo(Class<T> type) {
@@ -173,7 +188,7 @@ public class Wizard<K> extends HtmlContainer {
    * @param <U> the type-parameter of the target state
    */
   public <T extends Component, U extends Component> void addTransition(
-      Class<T> from, Class<U> to, TransitionListener<K> listener) {
+      Class<T> from, Class<U> to, TransitionListener<K, V> listener) {
     var fst = lookupStepByType(from);
     if (fst == null) {
       addStep(from);
@@ -487,7 +502,7 @@ public class Wizard<K> extends HtmlContainer {
     Class<V> getPage();
   }
 
-  public interface TransitionListener<K> {
+  public interface TransitionListener<K, V> {
 
     /**
      * determine if the wizard can transition between this state and the next state
@@ -497,7 +512,7 @@ public class Wizard<K> extends HtmlContainer {
      * @param currentPage the current wizard page
      * @return true if the transition can be made
      */
-    default boolean canTransition(K state, Wizard<K> host, Component currentPage) {
+    default boolean canTransition(K state, Wizard<K, V> host, Component currentPage) {
       return true;
     }
 
@@ -508,7 +523,7 @@ public class Wizard<K> extends HtmlContainer {
      * @param host the current wizard
      * @param currentPage the current page
      */
-    default void beforeTransition(K state, Wizard<K> host, Component currentPage) {}
+    default void beforeTransition(K state, Wizard<K, V> host, Component currentPage) {}
 
     /**
      * fired after the wizard makes the transition
@@ -517,7 +532,7 @@ public class Wizard<K> extends HtmlContainer {
      * @param host the current wizard
      * @param currentPage the current page
      */
-    default void afterTransition(K state, Wizard<K> host, Component currentPage) {}
+    default void afterTransition(K state, Wizard<K, V> host, Component currentPage) {}
   }
 
   private static final class WizardStep<K, V extends Component> {
@@ -559,12 +574,12 @@ public class Wizard<K> extends HtmlContainer {
     }
   }
 
-  private static final class Transition<K> {
+  private static final class Transition<K, V> {
 
     private final K key;
-    private final TransitionListener<K> listener;
+    private final TransitionListener<K, V> listener;
 
-    Transition(@NonNull final K key, @NonNull TransitionListener<K> listener) {
+    Transition(@NonNull final K key, @NonNull TransitionListener<K, V> listener) {
       this.key = key;
       this.listener = listener;
     }

@@ -54,10 +54,31 @@ public class AbstractWizardPage<K, T> extends Component
    * need a non-null wizard at any point, use @Dynamic on your subclass's constructor and the
    * relevant constructor argument
    */
-  private Wizard<K> wizard;
+  private Wizard<K, T> wizard;
 
   private Registration nextRegistration;
   private Registration previousRegistration;
+
+  protected AbstractWizardPage() {
+    this.controls = new ArrayList<>();
+    val descriptor = read((Class<? extends AbstractWizardPage<K, T>>) getClass());
+
+    this.key = (K) descriptor.key;
+    this.modelType = getModelType(getClass());
+    this.header = createHeader();
+    this.content = createContent();
+    this.footer = createFooter();
+    configureNavigationMenu();
+    setTitle(descriptor.title);
+    add(header, content, footer);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Class<T> getModelType(Class<? extends AbstractWizardPage> type) {
+    val ptype = type.getTypeParameters();
+    val bounds = ptype[1].getBounds();
+    return (Class<T>) bounds[bounds.length - 1];
+  }
 
   protected AbstractWizardPage(@NonNull K key, @NonNull Class<T> modelType) {
     this.controls = new ArrayList<>();
@@ -133,22 +154,22 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   @Override
-  public void onEntered(Wizard<K> wizard) {
+  public void onEntered(Wizard<K, T> wizard) {
     this.wizard = wizard;
     updateNavigationControls(wizard);
   }
 
   @Override
-  public void onExited(Wizard<K> wizard) {
+  public void onExited(Wizard<K, T> wizard) {
     updateNavigationControls(wizard);
   }
 
   @SuppressWarnings("unchecked")
   protected <U extends Component> void addNavigationControl(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {
     controls.add(
         new ControlDefinition<>(
-            control, (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K>>) f));
+            control, (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K, T>>) f));
     footer.getElement().appendChild(control.getElement());
   }
 
@@ -179,7 +200,7 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   protected void setModelElement(T value) {
-    Objects.requireNonNull(wizard).getModel().set(getKey(), value);
+    wizard.setModel(value);
   }
 
   protected void configureNavigationMenu() {
@@ -210,7 +231,7 @@ public class AbstractWizardPage<K, T> extends Component
     return button;
   }
 
-  private void updateNavigationControls(Wizard<K> wizard) {
+  private void updateNavigationControls(Wizard<K, T> wizard) {
     getUI()
         .orElse(UI.getCurrent())
         .access(
@@ -253,5 +274,5 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   record ControlDefinition<U, K, T>(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {}
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {}
 }

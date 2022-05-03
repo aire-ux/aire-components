@@ -17,17 +17,17 @@ import org.junit.jupiter.api.Test;
 
 class WizardTest {
 
-  private Wizard<String> wizard;
+  private Wizard<String, ?> wizard;
   private Instantiator instantiator;
 
   @BeforeEach
   void setUp() {
     instantiator = mock(Instantiator.class);
     doAnswer(
-            invocationOnMock -> {
-              val type = invocationOnMock.getArgument(0);
-              return Reflect.instantiate((Class) type);
-            })
+        invocationOnMock -> {
+          val type = invocationOnMock.getArgument(0);
+          return Reflect.instantiate((Class) type);
+        })
         .when(instantiator)
         .createComponent(any());
     wizard = create();
@@ -62,8 +62,8 @@ class WizardTest {
     assertEquals(state, "hello2");
   }
 
-  <K> Wizard<K> create() {
-    final Wizard<K> wizard =
+  <K> Wizard<K, ?> create() {
+    final Wizard<K, ?> wizard =
         new Wizard<>() {
           @Override
           @SuppressWarnings("unchecked")
@@ -87,8 +87,12 @@ class WizardTest {
   }
 
   @WizardPage(key = "hello2", title = "hello")
-  public static class Page2 extends Section {}
+  public static class Page2 extends Section {
+
+  }
 
   @WizardPage(key = "hello", title = "hello")
-  public static class Page extends Section {}
+  public static class Page extends Section {
+
+  }
 }

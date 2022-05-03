@@ -12,15 +12,11 @@ import lombok.Getter;
 @WizardPage(key = "page2", title = "Page 2")
 public class Page2 extends Section {
 
-  @Getter private final Wizard<?> wizard;
-  @Getter private final WizardModel model;
   private TextField textField;
 
   @Dynamic
-  public Page2(@Dynamic Wizard<?> parent, @Dynamic WizardModel model) {
+  public Page2() {
     addClassName("page-2");
-    this.model = Objects.requireNonNull(model);
-    this.wizard = Objects.requireNonNull(parent);
     configure();
   }
 
