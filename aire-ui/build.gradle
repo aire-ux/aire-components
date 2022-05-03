@@ -30,6 +30,7 @@ dependencies {
             'io.sunshower.arcus.cryptkeeper:cryptkeeper-api',
             'io.sunshower.arcus.cryptkeeper:cryptkeeper-core',
             'org.springframework.boot:spring-boot-starter-security',
+            'org.springframework.security:spring-security-test'
     ].each {
         implementation it
     }

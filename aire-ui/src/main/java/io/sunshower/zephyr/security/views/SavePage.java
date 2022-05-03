@@ -4,6 +4,4 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.sunshower.zephyr.ui.components.WizardPage;
 
 @WizardPage(key = "save", title = "Save Configuration")
-public class SavePage extends VerticalLayout {
-
-}
+public class SavePage extends VerticalLayout {}

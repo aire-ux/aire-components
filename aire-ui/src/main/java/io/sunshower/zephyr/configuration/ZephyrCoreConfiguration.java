@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -121,31 +122,26 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       } catch (IOException ex) {
         log.error(
             "Application properties file {} "
-            + "does not exist and could not be created.  Reason: {}. Can't continue",
+                + "does not exist and could not be created.  Reason: {}. Can't continue",
             file,
             ex.getMessage());
       }
     }
 
-    if(!Files.isRegularFile(file)) {
+    if (!Files.isRegularFile(file)) {
       throw new IllegalArgumentException(format("Error: file %s is not a file", file));
     }
-
 
     log.info("Successfully resolved configuration file {}", file);
 
     val parameters = new Parameters();
     return new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
-        .configure(
-            parameters
-                .fileBased()
-                .setFile(file.toFile())
-                .setThrowExceptionOnMissing(false)
-        )
+        .configure(parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false))
         .getConfiguration();
   }
 
   @Bean
+  @ConditionalOnProperty("ui-service.init.listener")
   public ConfigureUIServiceInitListener configureUIServiceInitListener(
       SecretService service, org.apache.commons.configuration2.Configuration configuration) {
     return new ConfigureUIServiceInitListener(service, configuration);
