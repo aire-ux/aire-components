@@ -14,40 +14,55 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableTriConsumer;
 import com.vaadin.flow.shared.Registration;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
-/** base-class for commonly-themed wizard-pages */
+/**
+ * base-class for commonly-themed wizard-pages
+ */
 @Tag("aire-wizard-page")
 @JsModule("./aire/ui/components/wizard-page.ts")
 @CssImport("./styles/aire/ui/components/wizard-page.css")
 public class AbstractWizardPage<K, T> extends Component
     implements HasComponents, WizardModelSupport<K, T>, AutoCloseable {
 
-  /** the wizard-key associated with this page */
+  /**
+   * the wizard-key associated with this page
+   */
   private final K key;
 
-  /** the model-type associated with this page */
+  /**
+   * the model-type associated with this page
+   */
   private final Class<T> modelType;
 
-  /** the header for this page. May be overridden by overriding {@code createHeader()} */
+  /**
+   * the header for this page. May be overridden by overriding {@code createHeader()}
+   */
   @Getter(AccessLevel.PROTECTED)
   private final Component header;
-  /** the footer for this page. May be overridden by overriding {@code createFooter()}. */
+  /**
+   * the footer for this page. May be overridden by overriding {@code createFooter()}.
+   */
   @Getter(AccessLevel.PROTECTED)
   private final Component footer;
 
-  /** the content for this page. May be overridden by overridding {@code createContent()} */
+  /**
+   * the content for this page. May be overridden by overridding {@code createContent()}
+   */
   @Getter(AccessLevel.PROTECTED)
   private final Component content;
 
-  /** the list of controls. Defaults to a previous button and a next button */
+  /**
+   * the list of controls. Defaults to a previous button and a next button
+   */
   private final List<ControlDefinition<? super Component, K, T>> controls;
   /**
    * the wizard associated with this page. May be null depending on the component lifecycle. If you
@@ -71,13 +86,6 @@ public class AbstractWizardPage<K, T> extends Component
     configureNavigationMenu();
     setTitle(descriptor.title);
     add(header, content, footer);
-  }
-
-  @SuppressWarnings("unchecked")
-  private Class<T> getModelType(Class<? extends AbstractWizardPage> type) {
-    val ptype = type.getTypeParameters();
-    val bounds = ptype[1].getBounds();
-    return (Class<T>) bounds[bounds.length - 1];
   }
 
   protected AbstractWizardPage(@NonNull K key, @NonNull Class<T> modelType) {
@@ -104,6 +112,16 @@ public class AbstractWizardPage<K, T> extends Component
     configureNavigationMenu();
     setTitle(descriptor.title);
     add(header, content, footer);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Class<T> getModelType(Class<? extends AbstractWizardPage> type) {
+    Class<?> c = type;
+    for (; !AbstractWizardPage.class.equals(c.getSuperclass()); c = c.getSuperclass())
+      ;
+
+   val ptype = ((ParameterizedType) (c.getGenericSuperclass())).getActualTypeArguments();
+    return (Class<T>) ptype[ptype.length - 1];
   }
 
   public void addContent(Component... contents) {
@@ -169,7 +187,8 @@ public class AbstractWizardPage<K, T> extends Component
       U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {
     controls.add(
         new ControlDefinition<>(
-            control, (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K, T>>) f));
+            control,
+            (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K, T>>) f));
     footer.getElement().appendChild(control.getElement());
   }
 
@@ -274,5 +293,7 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   record ControlDefinition<U, K, T>(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {}
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {
+
+  }
 }

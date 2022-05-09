@@ -157,7 +157,7 @@ build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = false
-    productionMode = true
+//    productionMode = true
 }
 defaultTasks("clean", "build")
 

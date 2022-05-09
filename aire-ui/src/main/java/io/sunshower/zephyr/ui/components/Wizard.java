@@ -403,6 +403,7 @@ public class Wizard<K, V> extends HtmlContainer {
     return page;
   }
 
+  @SuppressWarnings("unchecked")
   private void updatePage(WizardStep<K, ?> step, Component page) {
     addClass(page, ENTERING);
     removeClass(page, LEAVING);
