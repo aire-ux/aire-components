@@ -1,5 +1,3 @@
 package io.sunshower.zephyr.security.model;
 
-public class UserDetails {
-
-}
+public class UserDetails {}

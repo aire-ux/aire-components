@@ -33,9 +33,9 @@ import lombok.NonNull;
 import lombok.val;
 
 /**
- * A wizard is a structured information flow.  The wizard has a <i>Key</i> type, which
- * is how individual pages are identified within the flow, and a value-type, which is the
- * type of the model
+ * A wizard is a structured information flow. The wizard has a <i>Key</i> type, which is how
+ * individual pages are identified within the flow, and a value-type, which is the type of the model
+ *
  * @param <K>
  * @param <V>
  */
@@ -72,7 +72,7 @@ public class Wizard<K, V> extends HtmlContainer {
 
   public Wizard(@NonNull V model) {
     this();
-    this.model =  model;
+    this.model = model;
   }
 
   @SuppressWarnings("unchecked")

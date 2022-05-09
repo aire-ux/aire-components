@@ -11,10 +11,5 @@ import com.vaadin.flow.component.dependency.JsModule;
 @CssImport("./styles/aire/ui/components/fieldset.css")
 public class FieldSet extends Component implements HasComponents {
 
-
-  public FieldSet() {
-
-  }
-
-
+  public FieldSet() {}
 }

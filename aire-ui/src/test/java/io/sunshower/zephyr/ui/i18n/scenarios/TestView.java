@@ -13,9 +13,7 @@ public class TestView extends VerticalLayout {
   @Localized("name")
   private String name;
 
-
-  @Localized
-  private TextField textField;
+  @Localized private TextField textField;
 
   public TestView() {
     textField = new TextField();
@@ -29,6 +27,4 @@ public class TestView extends VerticalLayout {
   public String getName() {
     return name;
   }
-
-
 }

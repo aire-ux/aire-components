@@ -57,7 +57,8 @@ public class WizardE2ETest {
 
   @ViewTest
   @Navigate("test-wizard")
-  void ensureParentIsInjectable(@Select("aire-wizard") Wizard<?, ?> wizard, @Context TestContext $) {
+  void ensureParentIsInjectable(
+      @Select("aire-wizard") Wizard<?, ?> wizard, @Context TestContext $) {
     assertInstanceOf(Page1.class, wizard.getCurrentPage());
     wizard.advance();
     assertInstanceOf(Page2.class, wizard.getCurrentPage());
@@ -66,7 +67,8 @@ public class WizardE2ETest {
 
   @ViewTest
   @Navigate("test-wizard")
-  void ensureNavigatingBackwardsAndForwardsWorks(@Select Wizard<?, ?> wizard, @Context TestContext $) {
+  void ensureNavigatingBackwardsAndForwardsWorks(
+      @Select Wizard<?, ?> wizard, @Context TestContext $) {
     assertFalse(wizard.canRetreat());
     wizard.advance();
     assertTrue(wizard.canRetreat());

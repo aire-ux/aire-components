@@ -7,9 +7,7 @@ import com.aire.ux.test.Navigate;
 import com.aire.ux.test.Routes;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
-import com.aire.ux.test.spring.EnableSpring;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.di.Instantiator;
 import io.sunshower.zephyr.AireUITest;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessorTest.Cfg;
 import io.sunshower.zephyr.ui.i18n.scenarios.TestView;
@@ -29,7 +27,7 @@ class InternationalizationBeanPostProcessorTest {
 
   @Test
   void ensureResourceBundleIsResolved(@Autowired ResourceBundleResolver resolver) {
-    val bundle = resolver.resolve("i18n." + TestView.class.getName(), Locale.US);
+    val bundle = resolver.resolve(TestView.class.getName(), Locale.US);
     assertNotNull(bundle);
   }
 
@@ -42,15 +40,14 @@ class InternationalizationBeanPostProcessorTest {
 
   @ViewTest
   @Navigate("test-view")
-  void ensureLocalizedValuesAreInjectedIntoHasTextFields(@Select("vaadin-vertical-layout vaadin-text-field")
-      TextField textField) {
+  void ensureLocalizedValuesAreInjectedIntoHasTextFields(
+      @Select("vaadin-vertical-layout vaadin-text-field") TextField textField) {
     assertNotNull(textField);
     assertEquals(textField.getValue(), "waddup");
   }
 
   @Configuration
   public static class Cfg {
-
 
     @Bean
     public static ResourceBundleResolver resourceBundleResolver() {
@@ -62,9 +59,5 @@ class InternationalizationBeanPostProcessorTest {
         ApplicationContext context, ResourceBundleResolver resolver) {
       return new InternationalizationBeanPostProcessor(resolver, context);
     }
-
-
   }
-
-
 }

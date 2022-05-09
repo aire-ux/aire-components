@@ -8,12 +8,10 @@ import io.sunshower.zephyr.ui.components.Wizard;
 import io.sunshower.zephyr.ui.components.WizardModelSupport;
 import io.sunshower.zephyr.ui.components.WizardPage;
 import javax.inject.Inject;
-import lombok.val;
 
 @WizardPage(key = "security-info", title = "Seed Security Information")
-public class AireSecurityPage extends
-    AbstractWizardPage<String, SecurityInitializationModel> implements
-    WizardModelSupport<String, SecurityInitializationModel> {
+public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitializationModel>
+    implements WizardModelSupport<String, SecurityInitializationModel> {
 
   private final FormPanel contents;
   private final SecretService secretService;
@@ -27,20 +25,11 @@ public class AireSecurityPage extends
   }
 
   private void setUpContents() {
-//    val left = contents.getLeft();
-//    left.setHeader("Seed Security Information");
+    //    val left = contents.getLeft();
+    //    left.setHeader("Seed Security Information");
 
-
-
-
-//    left.setDescription();
+    //    left.setDescription();
   }
 
-
-  public void onEntered(Wizard<String, SecurityInitializationModel> host) {
-
-  }
-
-
-
+  public void onEntered(Wizard<String, SecurityInitializationModel> host) {}
 }

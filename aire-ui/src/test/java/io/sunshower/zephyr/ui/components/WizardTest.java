@@ -24,10 +24,10 @@ class WizardTest {
   void setUp() {
     instantiator = mock(Instantiator.class);
     doAnswer(
-        invocationOnMock -> {
-          val type = invocationOnMock.getArgument(0);
-          return Reflect.instantiate((Class) type);
-        })
+            invocationOnMock -> {
+              val type = invocationOnMock.getArgument(0);
+              return Reflect.instantiate((Class) type);
+            })
         .when(instantiator)
         .createComponent(any());
     wizard = create();
@@ -87,12 +87,8 @@ class WizardTest {
   }
 
   @WizardPage(key = "hello2", title = "hello")
-  public static class Page2 extends Section {
-
-  }
+  public static class Page2 extends Section {}
 
   @WizardPage(key = "hello", title = "hello")
-  public static class Page extends Section {
-
-  }
+  public static class Page extends Section {}
 }

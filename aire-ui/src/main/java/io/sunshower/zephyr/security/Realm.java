@@ -1,7 +1,3 @@
 package io.sunshower.zephyr.security;
 
-
-public interface Realm {
-
-
-}
+public interface Realm {}

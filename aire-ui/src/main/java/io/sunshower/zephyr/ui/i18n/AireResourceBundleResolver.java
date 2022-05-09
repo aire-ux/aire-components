@@ -7,6 +7,7 @@ public class AireResourceBundleResolver implements ResourceBundleResolver {
 
   @Override
   public ResourceBundle resolve(String name, Locale locale) {
-    return ResourceBundle.getBundle("i18n." + name, locale, Thread.currentThread().getContextClassLoader());
+    return ResourceBundle.getBundle(
+        "i18n." + name, locale, Thread.currentThread().getContextClassLoader());
   }
 }
