@@ -22,6 +22,8 @@ dependencies {
     [
             "io.sunshower.arcus:arcus-ast",
             "io.sunshower.arcus:arcus-reflect",
+            "io.sunshower.arcus:tag-builder@jar",
+            "io.sunshower.arcus:arcus-identicon@jar",
             'commons-beanutils:commons-beanutils',
             "io.sunshower.arcus.persist:persist-api",
             'io.sunshower.arcus:condensation-core',
@@ -52,6 +54,7 @@ dependencies {
             'sunshower-yaml-reader@jar'
     ].each {
         compileOnly "io.sunshower.zephyr:$it"
+        developmentOnly "io.sunshower.zephyr:$it"
         testFixturesApi "io.sunshower.zephyr:$it"
     }
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
@@ -157,7 +160,7 @@ build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = false
-//    productionMode = true
+    productionMode = false
 }
 defaultTasks("clean", "build")
 

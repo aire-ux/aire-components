@@ -1,0 +1,15 @@
+@import "../colors";
+aire-split-panel {
+  display: flex;
+  width: 100%;
+  position: unset;
+
+  article {
+  }
+
+
+  h1 {
+    color: $purple;
+    font-size: var(--lumo-font-size-xl);
+  }
+}

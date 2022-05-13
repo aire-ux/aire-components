@@ -17,6 +17,9 @@ import com.vaadin.flow.server.VaadinService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
 import io.sunshower.zephyr.ZephyrApplication;
+import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
+import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
+import io.sunshower.zephyr.ui.i18n.ResourceBundleResolver;
 import io.zephyr.api.ModuleEvents;
 import io.zephyr.api.ServiceRegistration;
 import io.zephyr.kernel.Module;
@@ -35,8 +38,10 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -91,6 +96,17 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     executor.setCorePoolSize(2);
     executor.setMaxPoolSize(8);
     return executor;
+  }
+
+  @Bean
+  public static ResourceBundleResolver resourceBundleResolver() {
+    return new AireResourceBundleResolver();
+  }
+
+  @Bean
+  public static BeanPostProcessor internationalizationBeanPostProcessor(
+      ResourceBundleResolver resolver, ApplicationContext context) {
+    return new InternationalizationBeanPostProcessor(resolver, context);
   }
 
   @Bean

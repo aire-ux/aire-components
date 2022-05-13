@@ -71,7 +71,17 @@ public class AbstractWizardPage<K, T> extends Component
     this.footer = createFooter();
     configureNavigationMenu();
     setTitle(descriptor.title);
-    add(header, content, footer);
+    if (header != null) {
+      add(header);
+    }
+    if (content != null) {
+      add(content);
+    }
+    if (footer != null) {
+      add(footer);
+    }
+
+    //    add(header, content, footer);
   }
 
   protected AbstractWizardPage(@NonNull K key, @NonNull Class<T> modelType) {
@@ -97,7 +107,16 @@ public class AbstractWizardPage<K, T> extends Component
     this.footer = createFooter();
     configureNavigationMenu();
     setTitle(descriptor.title);
-    add(header, content, footer);
+    if (header != null) {
+      add(header);
+    }
+    if (content != null) {
+      add(content);
+    }
+    if (footer != null) {
+      add(footer);
+    }
+    //    add(header, content, footer);
   }
 
   @SuppressWarnings("unchecked")
@@ -201,7 +220,9 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   protected void setTitle(Component title) {
-    header.getElement().appendChild(title.getElement());
+    if (header != null) {
+      header.getElement().appendChild(title.getElement());
+    }
   }
 
   protected void setModelElement(T value) {
