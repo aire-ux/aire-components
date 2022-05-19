@@ -52,7 +52,6 @@ public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitial
   @Localized("field.header")
   private H1 rightHeader;
 
-
   @Localized("actions.copy-success")
   private String successfullyCopiedValue;
 
@@ -86,7 +85,7 @@ public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitial
     rightPanel.add(rightHeader);
     rightPanel.add(form);
     result.setSecond(rightPanel);
-//    result.add(rightPanel);
+    //    result.add(rightPanel);
   }
 
   private void createLeftPanel(SplitPanel result) {
@@ -107,39 +106,48 @@ public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitial
   public void onEntered(Wizard<String, SecurityInitializationModel> host) {
     super.onEntered(host);
     this.model = host.getModel();
-    getUI().ifPresent(ui -> {
-      ((Panel) content.getSecond()).remove(form);
-      form = new FormLayout();
-      ((Panel) content.getSecond()).add(form);
+    getUI()
+        .ifPresent(
+            ui -> {
+              ((Panel) content.getSecond()).remove(form);
+              form = new FormLayout();
+              ((Panel) content.getSecond()).add(form);
 
-      val parameters = model.getInitialParameters();
-      val img = Identicon.createFromObject(parameters, "Encoded Initialization Parameters");
-      form.setWidth("100%");
-      form.setResponsiveSteps(new ResponsiveStep("0", 1));
-      form.addFormItem(img, "Identicon");
-      form.setColspan(img, 1);
-      val textField = new TextField();
-      textField.setValue(parameters);
-//      form.addFormItem(textField, "Security Init Key");
+              val parameters = model.getInitialParameters();
+              val img = Identicon.createFromObject(parameters, "Encoded Initialization Parameters");
+              form.setWidth("100%");
+              form.setResponsiveSteps(new ResponsiveStep("0", 1));
+              form.addFormItem(img, "Identicon");
+              form.setColspan(img, 1);
+              val textField = new TextField();
+              textField.setValue(parameters);
+              //      form.addFormItem(textField, "Security Init Key");
 
-      val group = new Div();
-      group.add(textField);
+              val group = new Div();
+              group.add(textField);
 
-      val button = new Button(VaadinIcon.COPY.create());
-      button.addClickListener(click -> {
-        getUI().ifPresent(u -> {
-          ClipboardCopier.copy(u, textField::getValue).then(resultHandler -> {
-            Notification.show(successfullyCopiedValue, 1000, Position.TOP_STRETCH);
-          }, errorHandler -> {
-            Notification.show(failedToCopyValue, 1000, Position.TOP_STRETCH);
-          });
-        });
-      });
-      group.add(button);
-      form.addFormItem(group, "Security Init Params");
-      form.setColspan(group, 1);
-
-    });
+              val button = new Button(VaadinIcon.COPY.create());
+              button.addClickListener(
+                  click -> {
+                    getUI()
+                        .ifPresent(
+                            u -> {
+                              ClipboardCopier.copy(u, textField::getValue)
+                                  .then(
+                                      resultHandler -> {
+                                        Notification.show(
+                                            successfullyCopiedValue, 1000, Position.TOP_STRETCH);
+                                      },
+                                      errorHandler -> {
+                                        Notification.show(
+                                            failedToCopyValue, 1000, Position.TOP_STRETCH);
+                                      });
+                            });
+                  });
+              group.add(button);
+              form.addFormItem(group, "Security Init Params");
+              form.setColspan(group, 1);
+            });
   }
 
   @Override

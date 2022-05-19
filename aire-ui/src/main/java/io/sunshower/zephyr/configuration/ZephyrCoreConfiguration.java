@@ -16,7 +16,11 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
+import io.sunshower.realms.RealmManager;
+import io.sunshower.realms.cryptkeeper.FileBackedCryptKeeperRealm;
+import io.sunshower.realms.cryptkeeper.RealmConfiguration;
 import io.sunshower.zephyr.ZephyrApplication;
+import io.sunshower.zephyr.security.CompositeRealmManager;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
 import io.sunshower.zephyr.ui.i18n.ResourceBundleResolver;
@@ -26,6 +30,7 @@ import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.launch.KernelOptions;
+import jakarta.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -138,7 +143,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       } catch (IOException ex) {
         log.error(
             "Application properties file {} "
-                + "does not exist and could not be created.  Reason: {}. Can't continue",
+            + "does not exist and could not be created.  Reason: {}. Can't continue",
             file,
             ex.getMessage());
       }
@@ -159,14 +164,14 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   @Bean
   @ConditionalOnProperty("ui-service.init.listener")
   public ConfigureUIServiceInitListener configureUIServiceInitListener(
-      SecretService service, org.apache.commons.configuration2.Configuration configuration) {
-    return new ConfigureUIServiceInitListener(service, configuration);
+      CompositeRealmManager manager, org.apache.commons.configuration2.Configuration configuration) {
+    return new ConfigureUIServiceInitListener(manager, configuration);
   }
 
-  @Bean(name = "crypt.keeper.secret.service")
-  public SecretService cryptkeeperSecretService() throws IOException {
-    val path = KernelOptions.getKernelRootDirectory().toPath().resolve("security/auth/secrets");
 
+  @Bean
+  public File realmDirectory() throws IOException {
+    val path = KernelOptions.getKernelRootDirectory().toPath().resolve("security/auth/realm");
     log.info("Locating administrator crypt at: {}", path);
     if (!(Files.exists(path))) {
       log.info("Administrator crypt directory {} does not exist. Attempting to create it", path);
@@ -177,7 +182,14 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
         throw ex;
       }
     }
-    return new DefaultSecretService(path.toFile(), ZephyrApplication.getCondensation());
+    return path.toFile();
+  }
+
+
+  @Bean(name = "crypt.keeper.secret.service")
+  public SecretService cryptkeeperSecretService(@Named("realmDirectory") File realmDirectory)
+      throws IOException {
+    return new DefaultSecretService(realmDirectory, ZephyrApplication.getCondensation());
   }
 
   @Bean
@@ -202,6 +214,12 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public UserDetailsService userDetailsService() {
     UserDetails user = User.withUsername("user").password("{noop}password").roles("USER").build();
     return new InMemoryUserDetailsManager(user);
+  }
+
+
+  @Bean
+  public CompositeRealmManager compositeRealmManager(Kernel kernel) {
+    return new CompositeRealmManager(kernel);
   }
 
   private void registerServices(

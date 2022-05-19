@@ -27,7 +27,7 @@ public class InternationalizationBeanPostProcessor implements BeanPostProcessor,
   }
 
   @Override
-  public Object postProcessBeforeInitialization(Object bean, String beanName)
+  public Object postProcessAfterInitialization(Object bean, String beanName)
       throws BeansException {
     if (isLocalizable(bean)) {
       val type = AopUtils.getTargetClass(bean);

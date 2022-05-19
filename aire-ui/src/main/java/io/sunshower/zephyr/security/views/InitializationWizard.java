@@ -14,10 +14,10 @@ import org.apache.commons.configuration2.Configuration;
 @Route("aire/initialize")
 public class InitializationWizard extends VerticalLayout {
 
+  private final SecretService service;
   private final Configuration configuration;
   private final SecurityInitializationModel model;
   private final Wizard<String, SecurityInitializationModel> wizard;
-  private final SecretService service;
 
   @Inject
   public InitializationWizard(final Configuration configuration, final SecretService service) {

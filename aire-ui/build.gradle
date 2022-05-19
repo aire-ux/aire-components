@@ -19,7 +19,12 @@ dependencies {
 
     compileOnly "io.sunshower.arcus:arcus-lang"
 
+
     [
+            'io.sunshower.base:model-api',
+            'io.sunshower.base:model-core',
+            'io.sunshower.base:file-realm',
+            'io.sunshower.base:realm-api',
             "io.sunshower.arcus:arcus-ast",
             "io.sunshower.arcus:arcus-reflect",
             "io.sunshower.arcus:tag-builder@jar",
@@ -36,10 +41,6 @@ dependencies {
     ].each {
         implementation it
     }
-
-
-
-
 
 
     /**
@@ -83,10 +84,11 @@ dependencies {
         testFixturesApi it
     }
 
-    ['javax.inject:javax.inject:1',
-     'com.vaadin:vaadin-spring-boot-starter'
-    ].each { dep ->
+    [
 
+            'jakarta.inject:jakarta.inject-api',
+            'com.vaadin:vaadin-spring-boot-starter'
+    ].each { dep ->
         api(dep) {
             exclude module: "spring-boot-starter-tomcat"
         }
