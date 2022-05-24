@@ -16,9 +16,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
-import io.sunshower.realms.RealmManager;
-import io.sunshower.realms.cryptkeeper.FileBackedCryptKeeperRealm;
-import io.sunshower.realms.cryptkeeper.RealmConfiguration;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.sunshower.zephyr.security.CompositeRealmManager;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
@@ -30,12 +27,14 @@ import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.launch.KernelOptions;
-import jakarta.inject.Named;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -115,8 +114,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public org.apache.commons.configuration2.Configuration zephyrConfigurationSource()
-      throws IOException, ConfigurationException {
+  public Path aireConfigurationFile() throws AccessDeniedException {
     val rootDirectory = KernelOptions.getKernelRootDirectory();
     val cfg = rootDirectory.toPath().resolve(Paths.get("config"));
     log.info("Attempting to resolve base configuration from {}", cfg.toAbsolutePath());
@@ -132,7 +130,6 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
         log.error("Error: file {} exists, but it is not a directory", cfg);
       }
     }
-
     val file = new File(cfg.toFile(), "aire.properties").toPath();
 
     if (!Files.exists(file)) {
@@ -154,7 +151,20 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     }
 
     log.info("Successfully resolved configuration file {}", file);
+    return file;
 
+  }
+
+  /**
+   * this implementation is referenced by security.views.UserInfoPage, so you must update
+   * it there when you're changing it.  Sort of dictated by the configuration API
+   * @param file the path to the configuration file
+   * @return the configuration
+   * @throws ConfigurationException if something happens
+   */
+  @Bean
+  public org.apache.commons.configuration2.Configuration zephyrConfigurationSource(
+      @Named("aireConfigurationFile") Path file) throws ConfigurationException {
     val parameters = new Parameters();
     return new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
         .configure(parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false))
@@ -164,7 +174,8 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   @Bean
   @ConditionalOnProperty("ui-service.init.listener")
   public ConfigureUIServiceInitListener configureUIServiceInitListener(
-      CompositeRealmManager manager, org.apache.commons.configuration2.Configuration configuration) {
+      CompositeRealmManager manager,
+      org.apache.commons.configuration2.Configuration configuration) {
     return new ConfigureUIServiceInitListener(manager, configuration);
   }
 
@@ -187,8 +198,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
 
 
   @Bean(name = "crypt.keeper.secret.service")
-  public SecretService cryptkeeperSecretService(@Named("realmDirectory") File realmDirectory)
-      throws IOException {
+  public SecretService cryptkeeperSecretService(@Named("realmDirectory") File realmDirectory) {
     return new DefaultSecretService(realmDirectory, ZephyrApplication.getCondensation());
   }
 

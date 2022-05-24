@@ -33,9 +33,8 @@ public class InitializationWizard extends VerticalLayout {
     val wizard =
         new Wizard<String, SecurityInitializationModel>(
             new SecurityInitializationModel(service, Encodings.create(Type.Base58)));
-    wizard.addSteps(AireSecurityPage.class, UserInfoPage.class, SavePage.class);
+    wizard.addSteps(AireSecurityPage.class, UserInfoPage.class);
     wizard.addTransition(AireSecurityPage.class, UserInfoPage.class);
-    wizard.addTransition(UserInfoPage.class, SavePage.class);
     wizard.setInitialStep(AireSecurityPage.class);
     return wizard;
   }
