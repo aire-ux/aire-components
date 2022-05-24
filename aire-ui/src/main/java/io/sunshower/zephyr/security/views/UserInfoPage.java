@@ -238,7 +238,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
           model.getRawInitializationVector()
       );
       val realm = new FileBackedCryptKeeperRealm(realmConfiguration);
-      realm.saveUser(user);
+      realm.setOwner(realm.saveUser(user));
       val encoding = Encodings.create(Type.Base58);
 
       configuration.setProperty("default.realm.iv",

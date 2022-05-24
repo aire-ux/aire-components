@@ -17,6 +17,7 @@ import com.vaadin.flow.server.VaadinService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
 import io.sunshower.zephyr.ZephyrApplication;
+import io.sunshower.zephyr.security.AireRealmAggregator;
 import io.sunshower.zephyr.security.CompositeRealmManager;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
@@ -58,10 +59,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Slf4j
 @Configuration
@@ -156,8 +154,9 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   /**
-   * this implementation is referenced by security.views.UserInfoPage, so you must update
-   * it there when you're changing it.  Sort of dictated by the configuration API
+   * this implementation is referenced by security.views.UserInfoPage, so you must update it there
+   * when you're changing it.  Sort of dictated by the configuration API
+   *
    * @param file the path to the configuration file
    * @return the configuration
    * @throws ConfigurationException if something happens
@@ -221,15 +220,16 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails user = User.withUsername("user").password("{noop}password").roles("USER").build();
-    return new InMemoryUserDetailsManager(user);
+  public UserDetailsService userDetailsService(CompositeRealmManager realmManager) {
+    return new AireRealmAggregator(realmManager);
   }
 
 
   @Bean
-  public CompositeRealmManager compositeRealmManager(Kernel kernel) {
-    return new CompositeRealmManager(kernel);
+  public CompositeRealmManager compositeRealmManager(Kernel kernel,
+      @Named("realmDirectory") File realm,
+      org.apache.commons.configuration2.Configuration configuration) {
+    return new CompositeRealmManager(kernel, realm.toPath(), configuration);
   }
 
   private void registerServices(
