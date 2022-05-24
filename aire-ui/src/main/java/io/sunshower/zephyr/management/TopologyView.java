@@ -42,10 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.val;
 
+@PermitAll
 @Breadcrumb(name = "Topology", host = MainView.class)
 @Route(value = "modules/topology", layout = PluginTabView.class)
 public class TopologyView extends AbstractModuleView

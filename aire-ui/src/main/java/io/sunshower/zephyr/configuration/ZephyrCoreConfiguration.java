@@ -14,11 +14,13 @@ import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.sunshower.zephyr.security.AireRealmAggregator;
 import io.sunshower.zephyr.security.CompositeRealmManager;
+import io.sunshower.zephyr.security.CryptkeeperAuthenticationProvider;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
 import io.sunshower.zephyr.ui.i18n.ResourceBundleResolver;
@@ -54,7 +56,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -64,7 +68,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+
 public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
 
@@ -85,6 +90,11 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       ExtensionRegistry extensionRegistry, AccessQueue accessQueue, ActionManager actionManager) {
     return Aire.setUserInterface(
         new DefaultUserInterface(extensionRegistry, accessQueue, actionManager));
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
   }
 
   @Bean
@@ -220,8 +230,14 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public UserDetailsService userDetailsService(CompositeRealmManager realmManager) {
+  public AireRealmAggregator userDetailsService(CompositeRealmManager realmManager) {
     return new AireRealmAggregator(realmManager);
+  }
+
+
+  @Override
+  public UserDetailsService userDetailsService() {
+    return getApplicationContext().getBean(AireRealmAggregator.class);
   }
 
 
@@ -318,5 +334,21 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
             "/h2-console/**",
             "/frontend-es5/**",
             "/frontend-es6/**");
+  }
+
+  @Bean
+  public AuthenticationProvider defaultLocalRealmAuthenticationProvider() {
+    return new CryptkeeperAuthenticationProvider(
+        getApplicationContext().getBean(AireRealmAggregator.class));
+  }
+
+  @Override
+  public void configure(AuthenticationManagerBuilder builder) {
+    val ctx = getApplicationContext();
+    val providerNames = ctx.getBeanNamesForType(AuthenticationProvider.class);
+    for (val providerName : providerNames) {
+      builder.authenticationProvider(ctx.getBean(providerName, AuthenticationProvider.class));
+    }
+
   }
 }

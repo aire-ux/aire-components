@@ -20,10 +20,12 @@ import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import io.sunshower.zephyr.ui.layout.TestRoute;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import lombok.val;
 
 @Route("")
 @Host("main")
+@PermitAll
 @Push(PushMode.MANUAL)
 @PWA(name = "Zephyr Shell for Aire", shortName = "Zephyr")
 @Breadcrumb(name = "Home", icon = "vaadin:home")

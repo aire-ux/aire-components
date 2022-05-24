@@ -19,12 +19,12 @@ public class CryptkeeperAuthenticationProvider implements AuthenticationProvider
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     val username = (String) authentication.getPrincipal();
     val realm = realmAggregator.realmManagerFor(username);
-    return new UserAuthentication(
+    val auth = new UserAuthentication(
         realm.authenticate(username, (String) authentication.getCredentials()).orElseThrow(
             () -> new AuthenticationFailedException(
                 "Username/password combination not found in any realm")));
-
-
+    auth.setAuthenticated(true);
+    return auth;
   }
 
   @Override

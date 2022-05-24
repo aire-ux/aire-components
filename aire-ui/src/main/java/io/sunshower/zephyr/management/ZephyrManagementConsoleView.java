@@ -17,8 +17,10 @@ import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import io.sunshower.zephyr.ui.layout.ApplicationLayoutDecorator;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import lombok.val;
 
+@PermitAll
 @Host("modules")
 @RoutePrefix("zephyr")
 @ParentLayout(ApplicationLayout.class)

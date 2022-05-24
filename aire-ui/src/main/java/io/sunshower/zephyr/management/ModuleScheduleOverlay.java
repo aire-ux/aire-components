@@ -40,12 +40,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import javax.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
 @Slf4j
+@PermitAll
 public class ModuleScheduleOverlay extends Overlay
     implements ComponentEventListener<CanvasReadyEvent> {
 

@@ -5,9 +5,11 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import io.sunshower.zephyr.ui.components.TabPanel;
+import javax.annotation.security.PermitAll;
 import lombok.Getter;
 
 @Getter
+@PermitAll
 @Host("module-management")
 @RoutePrefix("management")
 @ParentLayout(ZephyrManagementConsoleView.class)
