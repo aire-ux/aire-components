@@ -38,37 +38,27 @@ import io.sunshower.zephyr.ui.components.WizardPage;
 import io.sunshower.zephyr.ui.i18n.Localize;
 import io.sunshower.zephyr.ui.i18n.Localized;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.val;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertiesConfigurationLayout;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 
 @Localize
+@SuppressWarnings("PMD")
 @WizardPage(key = "user-info-page", title = "Administrator Info", iconFactory = IF.class)
-public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializationModel> implements
-    TransitionListener<String, SecurityInitializationModel> {
-
+public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializationModel>
+    implements TransitionListener<String, SecurityInitializationModel> {
 
   private final File realmDirectory;
   private final Configuration configuration;
   private final CompositeRealmManager realmManager;
   private final Path configurationFile;
 
-
   private SplitPanel content;
   private SecurityInitializationModel model;
 
-
-  /**
-   * localized content
-   */
+  /** localized content */
   @Localized("title.key")
   private H1 header;
 
@@ -78,17 +68,13 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   @Localized("description.realm")
   private Paragraph p2;
 
-
   @Localized("description.realm.2")
   private Paragraph p3;
 
   @Localized("description.realm.3")
   private Paragraph p4;
 
-
-  /**
-   * labels
-   */
+  /** labels */
   @Localized("labels.firstname")
   private String firstNameLabel;
 
@@ -113,13 +99,11 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   @Localized("labels.passwordConfirm")
   private String confirmPasswordLabel;
 
-
   private TextField firstNameField;
   private TextField lastNameField;
   private EmailField emailAddressField;
   private PasswordField passwordField;
   private PasswordField passwordConfirmField;
-
 
   private Binder<User> userBinder;
   private Binder<UserDetails> userDetailsBinder;
@@ -129,8 +113,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
       CompositeRealmManager realmManager,
       Configuration configuration,
       @Named("realmDirectory") File realmDirectory,
-      @Named("aireConfigurationFile") Path configurationFile
-  ) {
+      @Named("aireConfigurationFile") Path configurationFile) {
     this.realmManager = realmManager;
     this.configuration = configuration;
     this.realmDirectory = realmDirectory;
@@ -157,19 +140,21 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
     getControl(Key.of("next")).ifPresent(next -> ((Button) next).setEnabled(false));
   }
 
-
   private void createRightPanel(SplitPanel content) {
     val second = content.getSecond();
     if (second != null) {
       return;
     }
 
-    getControl(Key.of("next")).ifPresent(c -> {
-      val button = (Button) c;
-      button.addClickListener(click -> {
-        doSave();
-      });
-    });
+    getControl(Key.of("next"))
+        .ifPresent(
+            c -> {
+              val button = (Button) c;
+              button.addClickListener(
+                  click -> {
+                    doSave();
+                  });
+            });
 
     val formView = new FormLayout();
 
@@ -193,24 +178,28 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   private void attachListeners() {
     userBinder = new Binder<>(User.class);
 
-    userBinder.forField(emailAddressField)
+    userBinder
+        .forField(emailAddressField)
         .withValidator(new EmailValidator(emailError))
         .withValidationStatusHandler(this::validate)
         .bind(User::getUsername, User::setUsername);
 
-    userBinder.forField(passwordField)
+    userBinder
+        .forField(passwordField)
         .withValidator(
             new StringLengthValidator("Password must be between 4-255 characters", 4, 255))
         .withValidationStatusHandler(this::validate)
         .bind(User::getPassword, User::setPassword);
 
     userDetailsBinder = new Binder<>(UserDetails.class);
-    userDetailsBinder.forField(firstNameField)
+    userDetailsBinder
+        .forField(firstNameField)
         .withValidator(new StringLengthValidator(firstNameLengthMessage, 1, 255))
         .withValidationStatusHandler(this::validate)
         .bind(UserDetails::getFirstName, UserDetails::setFirstName);
 
-    userDetailsBinder.forField(lastNameField)
+    userDetailsBinder
+        .forField(lastNameField)
         .withValidator(new StringLengthValidator(lastNameLengthMessage, 1, 255))
         .withValidationStatusHandler(this::validate)
         .bind(UserDetails::getLastName, UserDetails::setLastName);
@@ -231,20 +220,20 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
 
       val plaintextPassword = passwordField.getValue();
 
-      val realmConfiguration = new RealmConfiguration(
-          realmDirectory,
-          plaintextPassword,
-          model.getRawSalt(),
-          model.getRawInitializationVector()
-      );
+      val realmConfiguration =
+          new RealmConfiguration(
+              realmDirectory,
+              plaintextPassword,
+              model.getRawSalt(),
+              model.getRawInitializationVector());
       val realm = new FileBackedCryptKeeperRealm(realmConfiguration);
       realm.setOwner(realm.saveUser(user));
       val encoding = Encodings.create(Type.Base58);
 
-      configuration.setProperty("default.realm.iv",
-          encoding.encode(realmConfiguration.getInitializationVector()));
-      configuration.setProperty("default.realm.salt",
-          encoding.encode(realmConfiguration.getSalt()));
+      configuration.setProperty(
+          "default.realm.iv", encoding.encode(realmConfiguration.getInitializationVector()));
+      configuration.setProperty(
+          "default.realm.salt", encoding.encode(realmConfiguration.getSalt()));
       configuration.setProperty("aire.initialized", true);
       saveConfiguration(configuration);
       realmManager.register(realm);
@@ -255,20 +244,21 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   }
 
   private void saveConfiguration(Configuration configuration) {
-//    val layout = new PropertiesConfigurationLayout();
-//
-//    try (val out = Files.newBufferedWriter(configurationFile, StandardOpenOption.TRUNCATE_EXISTING,
-//        StandardOpenOption.WRITE, StandardOpenOption.DSYNC)) {
-//      layout.save((PropertiesConfiguration) configuration, out);
-//      out.flush();
-//    } catch (IOException | ConfigurationException ex) {
-//      Notification.show("Error saving configuration: '%s'".formatted(ex.getMessage()));
-//    }
+    //    val layout = new PropertiesConfigurationLayout();
+    //
+    //    try (val out = Files.newBufferedWriter(configurationFile,
+    // StandardOpenOption.TRUNCATE_EXISTING,
+    //        StandardOpenOption.WRITE, StandardOpenOption.DSYNC)) {
+    //      layout.save((PropertiesConfiguration) configuration, out);
+    //      out.flush();
+    //    } catch (IOException | ConfigurationException ex) {
+    //      Notification.show("Error saving configuration: '%s'".formatted(ex.getMessage()));
+    //    }
   }
 
   private void validate(BindingValidationStatus<?> bindingValidationStatus) {
-    getControl(Key.of("next")).ifPresent(
-        u -> ((Button) u).setEnabled(!bindingValidationStatus.isError()));
+    getControl(Key.of("next"))
+        .ifPresent(u -> ((Button) u).setEnabled(!bindingValidationStatus.isError()));
   }
 
   private void createLeftPanel(SplitPanel content) {

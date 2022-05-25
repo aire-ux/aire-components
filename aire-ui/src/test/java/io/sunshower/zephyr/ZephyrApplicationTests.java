@@ -11,6 +11,7 @@ import io.zephyr.kernel.launch.KernelOptions;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.inject.Named;
 import lombok.val;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class ZephyrApplicationTests {
 
   @Test
   void ensureKernelHasNecessaryConfigurations(
-      @Autowired File kernelHome,
+      @Autowired @Named("kernelRootDirectory") File kernelHome,
       @Autowired KernelOptions options,
       @Autowired ApplicationArguments arguments) {
 
@@ -49,7 +50,8 @@ class ZephyrApplicationTests {
    * @param options
    */
   @Test
-  void ensureTestHomeDirectoryIsUsed(@Autowired File kernelHome, @Autowired KernelOptions options) {
+  void ensureTestHomeDirectoryIsUsed(
+      @Autowired @Named("kernelRootDirectory") File kernelHome, @Autowired KernelOptions options) {
     assertEquals(kernelHome, options.getHomeDirectory());
   }
 

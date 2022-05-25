@@ -4,7 +4,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
-import io.sunshower.crypt.core.SecretService;
 import io.sunshower.zephyr.security.CompositeRealmManager;
 import io.sunshower.zephyr.security.views.AuthenticationView;
 import io.sunshower.zephyr.security.views.InitializationWizard;

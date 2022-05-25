@@ -67,7 +67,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+// @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 
 public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
@@ -147,7 +147,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       } catch (IOException ex) {
         log.error(
             "Application properties file {} "
-            + "does not exist and could not be created.  Reason: {}. Can't continue",
+                + "does not exist and could not be created.  Reason: {}. Can't continue",
             file,
             ex.getMessage());
       }
@@ -159,12 +159,11 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
 
     log.info("Successfully resolved configuration file {}", file);
     return file;
-
   }
 
   /**
    * this implementation is referenced by security.views.UserInfoPage, so you must update it there
-   * when you're changing it.  Sort of dictated by the configuration API
+   * when you're changing it. Sort of dictated by the configuration API
    *
    * @param file the path to the configuration file
    * @return the configuration
@@ -174,8 +173,10 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public org.apache.commons.configuration2.Configuration zephyrConfigurationSource(
       @Named("aireConfigurationFile") Path file) throws ConfigurationException {
     val parameters = new Parameters();
-    val builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
-        .configure(parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false));
+    val builder =
+        new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+            .configure(
+                parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false));
     builder.setAutoSave(true);
     return builder.getConfiguration();
   }
@@ -187,7 +188,6 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       org.apache.commons.configuration2.Configuration configuration) {
     return new ConfigureUIServiceInitListener(manager, configuration);
   }
-
 
   @Bean
   public File realmDirectory() throws IOException {
@@ -204,7 +204,6 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     }
     return path.toFile();
   }
-
 
   @Bean(name = "crypt.keeper.secret.service")
   public SecretService cryptkeeperSecretService(@Named("realmDirectory") File realmDirectory) {
@@ -234,15 +233,14 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     return new AireRealmAggregator(realmManager);
   }
 
-
   @Override
   public UserDetailsService userDetailsService() {
     return getApplicationContext().getBean(AireRealmAggregator.class);
   }
 
-
   @Bean
-  public CompositeRealmManager compositeRealmManager(Kernel kernel,
+  public CompositeRealmManager compositeRealmManager(
+      Kernel kernel,
       @Named("realmDirectory") File realm,
       org.apache.commons.configuration2.Configuration configuration) {
     return new CompositeRealmManager(kernel, realm.toPath(), configuration);
@@ -349,6 +347,5 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     for (val providerName : providerNames) {
       builder.authenticationProvider(ctx.getBean(providerName, AuthenticationProvider.class));
     }
-
   }
 }

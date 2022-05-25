@@ -80,13 +80,15 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
       userIcon.setHeight("24px");
       val userMenu = menuBar.addItem(userIcon);
       val subMenu = userMenu.getSubMenu();
-      subMenu.addItem("Log out: " + user.getPrincipal(),
-          (ComponentEventListener<ClickEvent<MenuItem>>) event -> {
-            VaadinSession.getCurrent().setAttribute(SPRING_SECURITY_CONTEXT_KEY, null);
-            SecurityContextHolder.clearContext();
-            val ui = UI.getCurrent();
-            ui.navigate(AuthenticationView.class);
-          });
+      subMenu.addItem(
+          "Log out: " + user.getPrincipal(),
+          (ComponentEventListener<ClickEvent<MenuItem>>)
+              event -> {
+                VaadinSession.getCurrent().setAttribute(SPRING_SECURITY_CONTEXT_KEY, null);
+                SecurityContextHolder.clearContext();
+                val ui = UI.getCurrent();
+                ui.navigate(AuthenticationView.class);
+              });
     }
 
     return topNav;

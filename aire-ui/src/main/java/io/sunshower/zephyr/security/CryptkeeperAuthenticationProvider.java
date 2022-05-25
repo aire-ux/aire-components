@@ -10,8 +10,7 @@ public class CryptkeeperAuthenticationProvider implements AuthenticationProvider
 
   final AireRealmAggregator realmAggregator;
 
-  public CryptkeeperAuthenticationProvider(
-      AireRealmAggregator realmAggregator) {
+  public CryptkeeperAuthenticationProvider(AireRealmAggregator realmAggregator) {
     this.realmAggregator = realmAggregator;
   }
 
@@ -19,10 +18,14 @@ public class CryptkeeperAuthenticationProvider implements AuthenticationProvider
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     val username = (String) authentication.getPrincipal();
     val realm = realmAggregator.realmManagerFor(username);
-    val auth = new UserAuthentication(
-        realm.authenticate(username, (String) authentication.getCredentials()).orElseThrow(
-            () -> new AuthenticationFailedException(
-                "Username/password combination not found in any realm")));
+    val auth =
+        new UserAuthentication(
+            realm
+                .authenticate(username, (String) authentication.getCredentials())
+                .orElseThrow(
+                    () ->
+                        new AuthenticationFailedException(
+                            "Username/password combination not found in any realm")));
     auth.setAuthenticated(true);
     return auth;
   }

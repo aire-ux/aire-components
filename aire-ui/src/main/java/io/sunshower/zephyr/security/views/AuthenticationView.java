@@ -28,45 +28,44 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
   private LoginOverlay overlay;
 
   @Inject
-  public AuthenticationView(AuthenticationManager authenticationManager,
-      CompositeRealmManager realmManager) {
+  public AuthenticationView(
+      AuthenticationManager authenticationManager, CompositeRealmManager realmManager) {
     addClassName("login-view");
     setSizeFull();
     setAlignItems(Alignment.CENTER);
     overlay = new LoginOverlay();
     overlay.setTitle("Welcome to Zephyr");
     overlay.setDescription("Beautifully Simple Cloud Management");
-    overlay.addLoginListener(event -> {
-      try {
-        if (realmManager.getRealms().isEmpty()) {
-          realmManager.bootstrap(event.getPassword());
-        }
-        val auth = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(event.getUsername(), event.getPassword()));
-        val sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-        VaadinSession.getCurrent().setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-//        UI.getCurrent().navigate(MainView.class);
-        val ui = UI.getCurrent();
-        overlay.close();
-        ui.access(() -> {
-          ui.navigate(MainView.class);
-          ui.push();
+    overlay.addLoginListener(
+        event -> {
+          try {
+            if (realmManager.getRealms().isEmpty()) {
+              realmManager.bootstrap(event.getPassword());
+            }
+            val auth =
+                authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                        event.getUsername(), event.getPassword()));
+            val sc = SecurityContextHolder.getContext();
+            sc.setAuthentication(auth);
+            VaadinSession.getCurrent().setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+            //        UI.getCurrent().navigate(MainView.class);
+            val ui = UI.getCurrent();
+            overlay.close();
+            ui.access(
+                () -> {
+                  ui.navigate(MainView.class);
+                  ui.push();
+                });
+          } catch (Exception ex) {
+            overlay.setError(true);
+          }
         });
-      } catch (Exception ex) {
-        overlay.setError(true);
-      }
-    });
-
-
   }
 
   @Override
   public void beforeEnter(BeforeEnterEvent event) {
-    if (event.getLocation()
-        .getQueryParameters()
-        .getParameters()
-        .containsKey("error")) {
+    if (event.getLocation().getQueryParameters().getParameters().containsKey("error")) {
       overlay.setError(true);
     }
   }

@@ -26,9 +26,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
 
-/**
- * base-class for commonly-themed wizard-pages
- */
+/** base-class for commonly-themed wizard-pages */
 @Tag("aire-wizard-page")
 @JsModule("./aire/ui/components/wizard-page.ts")
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -36,36 +34,24 @@ import lombok.val;
 public class AbstractWizardPage<K, T> extends Component
     implements HasComponents, WizardModelSupport<K, T>, AutoCloseable {
 
-  /**
-   * the wizard-key associated with this page
-   */
+  /** the wizard-key associated with this page */
   private final K key;
 
-  /**
-   * the model-type associated with this page
-   */
+  /** the model-type associated with this page */
   private final Class<T> modelType;
 
-  /**
-   * the header for this page. May be overridden by overriding {@code createHeader()}
-   */
+  /** the header for this page. May be overridden by overriding {@code createHeader()} */
   @Getter(AccessLevel.PROTECTED)
   private final Component header;
-  /**
-   * the footer for this page. May be overridden by overriding {@code createFooter()}.
-   */
+  /** the footer for this page. May be overridden by overriding {@code createFooter()}. */
   @Getter(AccessLevel.PROTECTED)
   private final Component footer;
 
-  /**
-   * the content for this page. May be overridden by overridding {@code createContent()}
-   */
+  /** the content for this page. May be overridden by overridding {@code createContent()} */
   @Getter(AccessLevel.PROTECTED)
   private final Component content;
 
-  /**
-   * the list of controls. Defaults to a previous button and a next button
-   */
+  /** the list of controls. Defaults to a previous button and a next button */
   private final Map<Key, ControlDefinition<? super Component, K, T>> controls;
   /**
    * the wizard associated with this page. May be null depending on the component lifecycle. If you
@@ -219,11 +205,9 @@ public class AbstractWizardPage<K, T> extends Component
     return Key.of(component.getElement().getAttribute("key"));
   }
 
-
   @SuppressWarnings("unchecked")
   protected <U extends Component> Optional<U> getControl(Key key) {
-    return Optional.ofNullable(controls.get(key))
-        .map(t -> (U) t.control);
+    return Optional.ofNullable(controls.get(key)).map(t -> (U) t.control);
   }
 
   protected Header createHeader() {
@@ -331,7 +315,5 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   record ControlDefinition<U extends Component, K, T>(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {
-
-  }
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {}
 }

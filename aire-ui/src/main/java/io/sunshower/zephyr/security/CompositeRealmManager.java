@@ -23,17 +23,14 @@ import org.apache.commons.configuration2.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Slf4j
+@SuppressWarnings("PMD")
 public class CompositeRealmManager implements EventListener<ServiceRegistration<RealmManager>> {
 
   private final Path userDatabaseFile;
   private final Configuration configuration;
   private final WeakHashMap<String, RealmManager> realms;
 
-  public CompositeRealmManager(
-      Kernel kernel,
-      Path userDatabaseFile,
-      Configuration configuration
-  ) {
+  public CompositeRealmManager(Kernel kernel, Path userDatabaseFile, Configuration configuration) {
     this.realms = new WeakHashMap<>();
     this.configuration = configuration;
     this.userDatabaseFile = userDatabaseFile;
@@ -53,16 +50,15 @@ public class CompositeRealmManager implements EventListener<ServiceRegistration<
     return realmManagerFor(user.getUsername());
   }
 
-
   public void bootstrap(CharSequence plaintextPassword) {
     val encoding = Encodings.create(Type.Base58);
     val iv = encoding.decode(configuration.getString("default.realm.iv"));
     val salt = encoding.decode(configuration.getString("default.realm.salt"));
-    val realm = new FileBackedCryptKeeperRealm(
-        new RealmConfiguration(userDatabaseFile.toFile(), plaintextPassword, salt, iv));
+    val realm =
+        new FileBackedCryptKeeperRealm(
+            new RealmConfiguration(userDatabaseFile.toFile(), plaintextPassword, salt, iv));
     register(realm);
   }
-
 
   public void register(RealmManager realmManager) {
     realms.put(realmManager.getName(), realmManager);
@@ -95,5 +91,4 @@ public class CompositeRealmManager implements EventListener<ServiceRegistration<
       realm.save();
     }
   }
-
 }

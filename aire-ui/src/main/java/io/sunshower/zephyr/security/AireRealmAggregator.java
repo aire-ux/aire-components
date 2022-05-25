@@ -18,9 +18,12 @@ public class AireRealmAggregator implements RealmAuthorizer {
   @Override
   public UserDetails updatePassword(UserDetails user, String newPassword) {
     val rm = realmManager.realmManagerFor(user);
-    val udetails = rm.findByUsername(user.getUsername())
-        .orElseThrow(() -> new UsernameNotFoundException(
-            "Error: username '%s' was not found".formatted(user.getUsername())));
+    val udetails =
+        rm.findByUsername(user.getUsername())
+            .orElseThrow(
+                () ->
+                    new UsernameNotFoundException(
+                        "Error: username '%s' was not found".formatted(user.getUsername())));
 
     if (rm instanceof UserDetailsManager rmanager) {
       rmanager.updateUser(udetails);
@@ -30,13 +33,15 @@ public class AireRealmAggregator implements RealmAuthorizer {
     return loadUserByUsername(user.getUsername());
   }
 
-
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return realmManager
-        .getRealms().stream().flatMap(realm -> realm.findByUsername(username).stream())
-        .findFirst().orElseThrow(() -> new UsernameNotFoundException(
-            "No username '%s' found in this system".formatted(username)));
+    return realmManager.getRealms().stream()
+        .flatMap(realm -> realm.findByUsername(username).stream())
+        .findFirst()
+        .orElseThrow(
+            () ->
+                new UsernameNotFoundException(
+                    "No username '%s' found in this system".formatted(username)));
   }
 
   @Override

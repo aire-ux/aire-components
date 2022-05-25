@@ -51,7 +51,9 @@ public class RealmUserDetailsManager implements UserDetailsManager {
     if (realmManager instanceof UserDetailsManager manager) {
       return manager.loadUserByUsername(username);
     }
-    return realmManager.findByUsername(username).orElseThrow(
-        () -> new UsernameNotFoundException("No user identified by '%s'".formatted(username)));
+    return realmManager
+        .findByUsername(username)
+        .orElseThrow(
+            () -> new UsernameNotFoundException("No user identified by '%s'".formatted(username)));
   }
 }

@@ -12,5 +12,6 @@ public interface RealmAuthorizer extends UserDetailsService, UserDetailsPassword
   void save();
 
   UserDetailsManager detailsManagerFor(Realm realm);
+
   UserDetailsManager detailsManagerFor(String realmName);
 }

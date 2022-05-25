@@ -42,6 +42,7 @@
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
     <base.version>1.0.0-SNAPSHOT</base.version>
     <spring-boot.version>2.6.7</spring-boot.version>
+    <javax.inject-version>1</javax.inject-version>
   </properties>
 
   <dependencyManagement>

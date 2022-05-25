@@ -85,8 +85,6 @@ dependencies {
     }
 
     [
-
-            'jakarta.inject:jakarta.inject-api',
             'com.vaadin:vaadin-spring-boot-starter'
     ].each { dep ->
         api(dep) {
