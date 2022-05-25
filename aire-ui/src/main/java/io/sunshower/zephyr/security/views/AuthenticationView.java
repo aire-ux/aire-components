@@ -13,11 +13,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import io.sunshower.zephyr.MainView;
+import io.sunshower.zephyr.security.CompositeRealmManager;
 import javax.inject.Inject;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Route("login")
@@ -28,7 +28,8 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
   private LoginOverlay overlay;
 
   @Inject
-  public AuthenticationView(AuthenticationManager authenticationManager) {
+  public AuthenticationView(AuthenticationManager authenticationManager,
+      CompositeRealmManager realmManager) {
     addClassName("login-view");
     setSizeFull();
     setAlignItems(Alignment.CENTER);
@@ -37,6 +38,9 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
     overlay.setDescription("Beautifully Simple Cloud Management");
     overlay.addLoginListener(event -> {
       try {
+        if (realmManager.getRealms().isEmpty()) {
+          realmManager.bootstrap(event.getPassword());
+        }
         val auth = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(event.getUsername(), event.getPassword()));
         val sc = SecurityContextHolder.getContext();
@@ -49,10 +53,11 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
           ui.navigate(MainView.class);
           ui.push();
         });
-      } catch (AuthenticationException ex) {
+      } catch (Exception ex) {
         overlay.setError(true);
       }
     });
+
 
   }
 

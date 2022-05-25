@@ -255,14 +255,15 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   }
 
   private void saveConfiguration(Configuration configuration) {
-    val layout = new PropertiesConfigurationLayout();
-
-    try (val out = Files.newBufferedWriter(configurationFile, StandardOpenOption.TRUNCATE_EXISTING,
-        StandardOpenOption.WRITE, StandardOpenOption.DSYNC)) {
-      layout.save((PropertiesConfiguration) configuration, out);
-    } catch (IOException | ConfigurationException ex) {
-      Notification.show("Error saving configuration: '%s'".formatted(ex.getMessage()));
-    }
+//    val layout = new PropertiesConfigurationLayout();
+//
+//    try (val out = Files.newBufferedWriter(configurationFile, StandardOpenOption.TRUNCATE_EXISTING,
+//        StandardOpenOption.WRITE, StandardOpenOption.DSYNC)) {
+//      layout.save((PropertiesConfiguration) configuration, out);
+//      out.flush();
+//    } catch (IOException | ConfigurationException ex) {
+//      Notification.show("Error saving configuration: '%s'".formatted(ex.getMessage()));
+//    }
   }
 
   private void validate(BindingValidationStatus<?> bindingValidationStatus) {

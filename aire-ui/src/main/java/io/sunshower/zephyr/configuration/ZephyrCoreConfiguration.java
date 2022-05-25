@@ -14,7 +14,6 @@ import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
 import io.sunshower.zephyr.ZephyrApplication;
@@ -93,11 +92,6 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public AuthenticationManager authenticationManager() throws Exception {
-    return super.authenticationManager();
-  }
-
-  @Bean
   public static ActionManager actionManager() {
     return new DefaultActionManager();
   }
@@ -119,6 +113,11 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public static BeanPostProcessor internationalizationBeanPostProcessor(
       ResourceBundleResolver resolver, ApplicationContext context) {
     return new InternationalizationBeanPostProcessor(resolver, context);
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
   }
 
   @Bean
@@ -175,9 +174,10 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public org.apache.commons.configuration2.Configuration zephyrConfigurationSource(
       @Named("aireConfigurationFile") Path file) throws ConfigurationException {
     val parameters = new Parameters();
-    return new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
-        .configure(parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false))
-        .getConfiguration();
+    val builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+        .configure(parameters.fileBased().setFile(file.toFile()).setThrowExceptionOnMissing(false));
+    builder.setAutoSave(true);
+    return builder.getConfiguration();
   }
 
   @Bean
