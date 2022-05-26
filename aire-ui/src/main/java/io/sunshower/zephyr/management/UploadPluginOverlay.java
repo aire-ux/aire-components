@@ -23,11 +23,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 @Slf4j
+@PermitAll
 public class UploadPluginOverlay extends Overlay implements ComponentEventListener<SucceededEvent> {
 
   private final Kernel kernel;

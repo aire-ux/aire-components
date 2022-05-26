@@ -1,10 +1,10 @@
 package io.sunshower.zephyr.ui.aire;
 
-import com.aire.ux.condensation.mappings.LRUCache;
-import com.aire.ux.test.NodeAdapter;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.internal.BeanUtil;
+import io.sunshower.arcus.condensation.mappings.LRUCache;
 import io.sunshower.arcus.reflect.Reflect;
+import io.sunshower.arcus.selectors.test.NodeAdapter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;

@@ -9,3 +9,4 @@ packages/*/lib
 build/
 out/
 lombok.config
+aire-ui/frontend/styles/aire/**

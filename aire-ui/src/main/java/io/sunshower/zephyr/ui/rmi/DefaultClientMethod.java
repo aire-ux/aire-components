@@ -1,8 +1,8 @@
 package io.sunshower.zephyr.ui.rmi;
 
-import com.aire.ux.condensation.DocumentWriter;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
+import io.sunshower.arcus.condensation.DocumentWriter;
 import io.sunshower.arcus.reflect.Reflect;
 import java.io.IOException;
 import java.io.Serializable;

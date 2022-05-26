@@ -1,10 +1,10 @@
 package io.sunshower.zephyr.core.modules;
 
+import io.sunshower.lang.events.Event;
+import io.sunshower.lang.events.EventType;
 import io.zephyr.api.ModuleEvents;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.Kernel;
-import io.zephyr.kernel.events.Event;
-import io.zephyr.kernel.events.EventType;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.val;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class ModuleEventDispatcher
     implements DisposableBean,
         ApplicationEventPublisherAware,
-        io.zephyr.kernel.events.EventListener<Module> {
+        io.sunshower.lang.events.EventListener<Module> {
 
   private final Kernel kernel;
   private ApplicationEventPublisher publisher;

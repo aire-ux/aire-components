@@ -1,11 +1,11 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.Element;
-import com.aire.ux.condensation.RootElement;
 import com.vaadin.flow.component.DomEvent;
 import com.vaadin.flow.component.EventData;
 import elemental.json.JsonValue;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.Element;
+import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.ui.aire.AireComponentEvent;
 import io.sunshower.zephyr.ui.canvas.CanvasEventListener.CellDefinition;

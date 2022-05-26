@@ -40,8 +40,10 @@ public class LifecycleTasks {
 
     val changeGroup = new ModuleLifecycleChangeGroup();
     for (val coordinate : coordinates) {
-      val changeRequest = new ModuleLifecycleChangeRequest(coordinate, action);
-      changeGroup.addRequest(changeRequest);
+      if (!coordinate.getGroup().contains("com.aire.ux.ui")) {
+        val changeRequest = new ModuleLifecycleChangeRequest(coordinate, action);
+        changeGroup.addRequest(changeRequest);
+      }
     }
     val prepped = kernel.getModuleManager().prepare(changeGroup);
     val process = prepped.getProcess();

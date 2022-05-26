@@ -7,7 +7,7 @@ import io.sunshower.zephyr.ui.components.Wizard;
 @Route("test-wizard")
 public class TestWizard extends Article {
 
-  private final Wizard<String> wizard;
+  private final Wizard<String, ?> wizard;
 
   public TestWizard() {
     wizard = new Wizard<>();

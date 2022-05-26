@@ -8,12 +8,14 @@ export class WizardPage extends LitElement {
   // language=CSS
   static styles = css`
     section {
+      width: 100%;
       display: flex;
-      height: 100%;
       flex-direction: column;
     }
+    ::slotted(footer) {
+      align-self: flex-end;
+    }
   `;
-
   render(): HTMLTemplateResult {
     return html`
       <section>

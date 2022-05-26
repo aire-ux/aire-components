@@ -20,7 +20,7 @@ public class TestRoute extends Panel {
   }
 
   private void createContent() {
-    val wizard = new Wizard<String>();
+    val wizard = new Wizard<String, Object>();
     wizard.addSteps(Page1.class, Page2.class, Page3.class);
     wizard.setInitialStep(Page1.class);
     wizard.addTransition(Page1.class, Page2.class);

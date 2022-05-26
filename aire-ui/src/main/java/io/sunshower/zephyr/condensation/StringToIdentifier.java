@@ -1,6 +1,6 @@
 package io.sunshower.zephyr.condensation;
 
-import com.aire.ux.condensation.ConverterProvider;
+import io.sunshower.arcus.condensation.ConverterProvider;
 import io.sunshower.lang.tuple.Pair;
 import io.sunshower.persistence.id.Identifier;
 import java.util.function.Function;

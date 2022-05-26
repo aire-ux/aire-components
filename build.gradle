@@ -32,7 +32,21 @@ allprojects {
         }
 
         maven {
+            url 'https://repo.spring.io/milestone'
+        }
+        maven {
+            url 'https://repo.spring.io/release'
+        }
+        maven {
             url "https://maven.pkg.github.com/sunshower-io/sunshower-arcus"
+            credentials {
+                username "$mavenRepositoryUsername"
+                password "$mavenRepositoryPassword"
+            }
+        }
+
+        maven {
+            url "https://maven.pkg.github.com/sunshower-io/*"
             credentials {
                 username "$mavenRepositoryUsername"
                 password "$mavenRepositoryPassword"

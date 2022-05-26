@@ -29,10 +29,12 @@ import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.Module;
 import java.util.stream.Collectors;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.val;
 
+@PermitAll
 @JsModule("@vaadin/vaadin-lumo-styles/badge.js")
 @CssImport(value = "./styles/shared-styles.css", include = "lumo-badge")
 @Route(value = "modules/list", layout = PluginTabView.class)

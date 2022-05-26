@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 class WizardTest {
 
-  private Wizard<String> wizard;
+  private Wizard<String, ?> wizard;
   private Instantiator instantiator;
 
   @BeforeEach
@@ -62,8 +62,8 @@ class WizardTest {
     assertEquals(state, "hello2");
   }
 
-  <K> Wizard<K> create() {
-    final Wizard<K> wizard =
+  <K> Wizard<K, ?> create() {
+    final Wizard<K, ?> wizard =
         new Wizard<>() {
           @Override
           @SuppressWarnings("unchecked")

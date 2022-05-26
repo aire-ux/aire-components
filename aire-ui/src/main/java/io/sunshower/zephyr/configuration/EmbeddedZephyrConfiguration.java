@@ -1,23 +1,11 @@
 package io.sunshower.zephyr.configuration;
 
-import com.aire.ux.Aire;
-import com.aire.ux.ComponentInclusionManager;
-import com.aire.ux.DefaultUserInterface;
 import com.aire.ux.Registration;
-import com.aire.ux.UserInterface;
-import com.aire.ux.actions.ActionManager;
-import com.aire.ux.actions.DefaultActionManager;
-import com.aire.ux.concurrency.AccessQueue;
-import com.aire.ux.ext.ExtensionRegistry;
-import com.aire.ux.ext.spring.SpringComponentInclusionManager;
-import com.aire.ux.ext.spring.SpringExtensionRegistry;
-import com.vaadin.flow.server.VaadinService;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.zephyr.kernel.Lifecycle.State;
 import io.zephyr.kernel.Module.Type;
 import io.zephyr.kernel.concurrency.ExecutorWorkerPool;
 import io.zephyr.kernel.concurrency.WorkerPool;
-import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
 import io.zephyr.kernel.core.KernelModuleLoader;
 import io.zephyr.kernel.core.ModuleClasspath;
@@ -43,25 +31,27 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.event.ApplicationEventMulticaster;
-import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+/**
+ * this is sort of a dev class. I guess we could move it to tests or something and include a new m
+ */
 @Slf4j
 @EnableAsync
 @Configuration
 @Import(EmbeddedSpringConfiguration.class)
 @ComponentScan(basePackages = "io.sunshower.zephyr.core")
+@ConditionalOnMissingBean(Kernel.class)
 public class EmbeddedZephyrConfiguration
     implements ApplicationListener<ApplicationReadyEvent>, DisposableBean {
 
@@ -92,14 +82,6 @@ public class EmbeddedZephyrConfiguration
   public static WorkerPool workerPool(ThreadPoolTaskExecutor executor) {
     return new ExecutorWorkerPool(
         executor.getThreadPoolExecutor(), Executors.newFixedThreadPool(2));
-  }
-
-  @Bean(name = "threadPoolTaskExecutor")
-  public static ThreadPoolTaskExecutor executor() {
-    val executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(2);
-    executor.setMaxPoolSize(8);
-    return executor;
   }
 
   @Bean
@@ -145,36 +127,6 @@ public class EmbeddedZephyrConfiguration
         .orElseGet(() -> defaultModuleDescriptor(kernelRootDirectory));
   }
 
-  @Bean
-  public static ActionManager actionManager() {
-    return new DefaultActionManager();
-  }
-
-  @Bean
-  public static UserInterface userInterface(
-      ExtensionRegistry extensionRegistry, AccessQueue accessQueue, ActionManager actionManager) {
-    return Aire.setUserInterface(
-        new DefaultUserInterface(extensionRegistry, accessQueue, actionManager));
-  }
-
-  @Bean
-  public ComponentInclusionManager componentInclusionManager() {
-    return new SpringComponentInclusionManager();
-  }
-
-  @Bean
-  public ExtensionRegistry extensionRegistry(AccessQueue queue, ComponentInclusionManager manager) {
-    return new SpringExtensionRegistry(
-        queue, () -> VaadinService.getCurrent().getContext(), manager);
-  }
-
-  @Bean(name = "applicationEventMulticaster")
-  public ApplicationEventMulticaster applicationEventMulticaster(ThreadPoolTaskExecutor executor) {
-    val result = new SimpleApplicationEventMulticaster();
-    result.setTaskExecutor(executor);
-    return result;
-  }
-
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
     val context = event.getApplicationContext();
@@ -184,7 +136,6 @@ public class EmbeddedZephyrConfiguration
       graph.add(context.getBean(EmbeddedModule.class));
       val kernel = context.getBean(Kernel.class);
       module.getLifecycle().setState(State.Starting);
-      registerServices(module, context, kernel);
       log.info("Starting embedded kernel...");
       kernel.start();
       log.info("Embedded kernel started successfully.  Started embedded module");
@@ -193,20 +144,6 @@ public class EmbeddedZephyrConfiguration
     } catch (Exception ex) {
       log.error("Encountered an error attempting to start kernel: {}", ex.getMessage(), ex);
     }
-  }
-
-  private void registerServices(
-      EmbeddedModule module, ConfigurableApplicationContext context, Kernel kernel) {
-    log.info("Registering UserInterface service");
-    kernel
-        .getServiceRegistry()
-        .register(
-            module,
-            new FactoryServiceDefinition<>(
-                UserInterface.class,
-                "aire:user-interface",
-                () -> context.getBean(UserInterface.class)));
-    log.info("Successfully registered UserInterface service");
   }
 
   @Override

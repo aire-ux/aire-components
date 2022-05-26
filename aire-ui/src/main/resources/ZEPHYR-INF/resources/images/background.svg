@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="151"
+  height="151" preserveAspectRatio="xMidYMid" viewBox="0 0 151 151"
+  style="display:block;background-repeat-y:initial;background-repeat-x:initial;animation-play-state:paused">
+  <g transform="scale(0.59)"
+    style="transform:matrix(0.59, 0, 0, 0.59, 0, 0);animation-play-state:paused">
+    <defs style="animation-play-state:paused">
+      <g id="id-0.3693928762233991" style="animation-play-state:paused">
+        <polygon points="58.66,35 41.34,35 32.679,50 41.34,65 58.66,65 67.321,50 " data-fill="c1"
+          style="fill:rgb(102, 0, 102);animation-play-state:paused"></polygon>
+        <polygon points="84.641,50 67.321,50 58.66,65 67.321,80 84.641,80 93.301,65 " data-fill="c2"
+          style="fill:rgb(163, 102, 163);animation-play-state:paused"></polygon>
+        <polygon points="32.679,50 15.359,50 6.699,65 15.359,80 32.679,80 41.34,65 " data-fill="c3"
+          style="fill:rgb(160, 200, 215);animation-play-state:paused"></polygon>
+        <polygon points="58.66,65 41.34,65 32.679,80 41.34,95 58.66,95 67.321,80 " data-fill="c4"
+          style="fill:rgb(119, 204, 164);animation-play-state:paused"></polygon>
+        <polygon points="58.66,5 41.34,5 32.679,20 41.34,35 58.66,35 67.321,20 " data-fill="c4"
+          style="fill:rgb(119, 204, 164);animation-play-state:paused"></polygon>
+        <polygon points="84.641,20 67.321,20 58.66,35 67.321,50 84.641,50 93.301,35 " data-fill="c3"
+          style="fill:rgb(160, 200, 215);animation-play-state:paused"></polygon>
+        <polygon points="32.679,20 15.359,20 6.699,35 15.359,50 32.679,50 41.34,35 " data-fill="c2"
+          style="fill:rgb(163, 102, 163);animation-play-state:paused"></polygon>
+        <metadata xmlns:d="https://loading.io/stock/" style="animation-play-state:paused">
+          <d:name style="animation-play-state:paused">honeycomb</d:name>
+          <d:tags style="animation-play-state:paused">honeycomb,hex,grid,tactics,step,map,tile
+          </d:tags>
+          <d:license style="animation-play-state:paused">by</d:license>
+          <d:slug style="animation-play-state:paused">vebyyg</d:slug>
+        </metadata>
+      </g>
+    </defs>
+
+
+    <g data-idx="0" data-dup="" dx="-128" dy="-128"
+      style="transform-origin:64px 63.9995px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(-128,-128)"
+        style="transform:matrix(1, 0, 0, 1, -128, -128);animation-play-state:paused">
+        <g transform=" translate(192,191.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 192, 191.999);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="0" data-dup="" dx="128" dy="-128"
+      style="transform-origin:320px 63.9995px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(128,-128)"
+        style="transform:matrix(1, 0, 0, 1, 128, -128);animation-play-state:paused">
+        <g transform=" translate(192,191.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 192, 191.999);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="1" data-dup="" dx="-128" dy="-128"
+      style="transform-origin:-64px -64.0005px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(-128,-128)"
+        style="transform:matrix(1, 0, 0, 1, -128, -128);animation-play-state:paused">
+        <g transform=" translate(64,63.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 64, 63.9995);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="1" data-dup="" dx="128" dy="-128"
+      style="transform-origin:192px -64.0005px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(128,-128)"
+        style="transform:matrix(1, 0, 0, 1, 128, -128);animation-play-state:paused">
+        <g transform=" translate(64,63.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 64, 63.9995);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="0" data-dup="" dx="-128" dy="128"
+      style="transform-origin:64px 319.999px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(-128,128)"
+        style="transform:matrix(1, 0, 0, 1, -128, 128);animation-play-state:paused">
+        <g transform=" translate(192,191.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 192, 191.999);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="0" data-dup="" dx="128" dy="128"
+      style="transform-origin:320px 319.999px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(128,128)"
+        style="transform:matrix(1, 0, 0, 1, 128, 128);animation-play-state:paused">
+        <g transform=" translate(192,191.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 192, 191.999);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="1" data-dup="" dx="-128" dy="128"
+      style="transform-origin:-64px 191.999px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(-128,128)"
+        style="transform:matrix(1, 0, 0, 1, -128, 128);animation-play-state:paused">
+        <g transform=" translate(64,63.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 64, 63.9995);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g data-idx="1" data-dup="" dx="128" dy="128"
+      style="transform-origin:192px 191.999px;animation-timing-function:linear;animation-play-state:paused;animation-name:static-dcf30f89-a821-4095-8149-79965dd72d5b;animation-iteration-count:infinite;animation-fill-mode:forwards;animation-duration:100s">
+      <g transform="translate(128,128)"
+        style="transform:matrix(1, 0, 0, 1, 128, 128);animation-play-state:paused">
+        <g transform=" translate(64,63.9995) scale(0.8888888888888888)"
+          style="transform:matrix(0.888889, 0, 0, 0.888889, 64, 63.9995);animation-play-state:paused">
+          <g data-icon="" transform="scale(0.91)"
+            style="transform:matrix(0.91, 0, 0, 0.91, 0, 0);animation-play-state:paused">
+            <use xlink:href="#id-0.3693928762233991" x="-50" y="-50"
+              style="animation-play-state:paused"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -21,7 +21,7 @@ dependencies {
     }
 
 
-    api project(':aire-css-selectors')
+    api 'io.sunshower.arcus:css-selectors'
 
 
     api project(':aire-mock:aire-mockito')

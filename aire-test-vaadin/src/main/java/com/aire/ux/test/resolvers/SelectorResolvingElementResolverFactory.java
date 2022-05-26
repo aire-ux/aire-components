@@ -1,7 +1,5 @@
 package com.aire.ux.test.resolvers;
 
-import com.aire.ux.plan.DefaultPlanContext;
-import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.ElementResolver;
 import com.aire.ux.test.ElementResolverFactory;
 import com.aire.ux.test.Select;
@@ -10,6 +8,8 @@ import com.aire.ux.test.vaadin.Frames;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
 import io.sunshower.arcus.reflect.Reflect;
+import io.sunshower.arcus.selectors.css.CssSelectorParser;
+import io.sunshower.arcus.selectors.plan.DefaultPlanContext;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;

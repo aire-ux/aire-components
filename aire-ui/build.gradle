@@ -1,4 +1,5 @@
 plugins {
+    id 'war'
     id 'java'
     id 'com.vaadin'
     id 'java-test-fixtures'
@@ -16,33 +17,56 @@ configurations {
 
 dependencies {
 
-    implementation "io.sunshower.arcus:arcus-ast"
-    implementation "io.sunshower.arcus:arcus-lang"
-    implementation "io.sunshower.arcus:arcus-reflect"
-    implementation "io.sunshower.arcus.persist:persist-api"
+    compileOnly "io.sunshower.arcus:arcus-lang"
+
 
     [
-            ':aire-json-mapper',
-            ':aire-css-selectors'
-    ].each { dependency ->
-        implementation project(dependency)
+            'io.sunshower.base:model-api',
+            'io.sunshower.base:model-core',
+            'io.sunshower.base:file-realm',
+            'io.sunshower.base:realm-api',
+            "io.sunshower.arcus:arcus-ast",
+            "io.sunshower.arcus:arcus-reflect",
+            "io.sunshower.arcus:tag-builder@jar",
+            "io.sunshower.arcus:arcus-identicon@jar",
+            'commons-beanutils:commons-beanutils',
+            "io.sunshower.arcus.persist:persist-api",
+            'io.sunshower.arcus:condensation-core',
+            'io.sunshower.arcus:condensation-json',
+            'org.apache.commons:commons-configuration2',
+            'io.sunshower.arcus.cryptkeeper:cryptkeeper-api',
+            'io.sunshower.arcus.cryptkeeper:cryptkeeper-core',
+            'org.springframework.boot:spring-boot-starter-security',
+            'org.springframework.security:spring-security-test'
+    ].each {
+        implementation it
     }
+
+
     /**
      * zephyr dependencies
      */
     [
-            'gyre-api',
             'kernel-api',
             'kernel-lib@jar',
             'kernel-core',
             'sunshower-spring@jar',
             'synchronous-api@jar',
-            'spring-embedded-plugin',
             'sunshower-yaml-reader@jar'
     ].each {
-        api "io.zephyr:$it"
-        testFixturesApi "io.zephyr:$it"
+        compileOnly "io.sunshower.zephyr:$it"
+        developmentOnly "io.sunshower.zephyr:$it"
+        testFixturesApi "io.sunshower.zephyr:$it"
     }
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
+    implementation 'io.sunshower.zephyr:spring-embedded-plugin'
+
+    ['gyre-api'].each {
+        compileOnly "io.sunshower.arcus:$it"
+        testFixturesApi "io.sunshower.arcus:$it"
+    }
+
     implementation project(':aire-ux-core')
     testFixturesApi(project(':aire-ux-core'))
 
@@ -52,18 +76,17 @@ dependencies {
      */
     [
             'info.picocli:picocli',
+            'com.vdurmont:semver4j',
             'org.reflections:reflections',
             'org.jboss.modules:jboss-modules',
-            'com.github.zafarkhaja:java-semver',
     ].each {
         implementation it
         testFixturesApi it
     }
 
-    ['javax.inject:javax.inject:1',
-     'com.vaadin:vaadin-spring-boot-starter'
+    [
+            'com.vaadin:vaadin-spring-boot-starter'
     ].each { dep ->
-
         api(dep) {
             exclude module: "spring-boot-starter-tomcat"
         }
@@ -81,7 +104,7 @@ dependencies {
             'kernel-test',
             'kernel-test-common'
     ].each {
-        testFixturesApi "io.zephyr:$it"
+        testFixturesApi "io.sunshower.zephyr:$it"
     }
 
 
@@ -93,6 +116,7 @@ dependencies {
     ].each {
         testFixturesApi project(it)
     }
+
 
     implementation project(':aire-ux-api:aire-api-core')
     implementation project(':aire-ux-api:aire-api-spring')
@@ -140,18 +164,31 @@ vaadin {
 }
 defaultTasks("clean", "build")
 
-bootJar {
+bootWar {
+    rootSpec.exclude("**/*arcus-lang*.jar", "**/*gyre-api*.jar")
     archiveClassifier = 'dist'
+    manifest {
+
+        attributes(
+                "group": project.group,
+                "name": project.name,
+                "version": '1.0.1',
+                "description": "Aire Core Module",
+                "type": "plugin"
+        )
+    }
 }
 
-jar {
+war {
     archiveClassifier = ''
     manifest {
 
         attributes(
                 "group": project.group,
                 "name": project.name,
-                "version": project.version,
+                "version": '1.0.1',
+                "description": "Aire Core Module",
+                "type": "plugin"
         )
     }
 }

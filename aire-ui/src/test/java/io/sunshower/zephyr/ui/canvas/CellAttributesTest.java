@@ -1,8 +1,8 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.condensation.Condensation;
+import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.persistence.id.Identifiers;
 import java.io.Serializable;
 import java.util.HashMap;

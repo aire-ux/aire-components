@@ -1,8 +1,8 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Attribute;
-import com.aire.ux.condensation.Element;
-import com.aire.ux.condensation.RootElement;
+import io.sunshower.arcus.condensation.Attribute;
+import io.sunshower.arcus.condensation.Element;
+import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import java.io.Serializable;
 import java.util.HashMap;

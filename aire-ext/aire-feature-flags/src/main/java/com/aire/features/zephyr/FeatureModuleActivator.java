@@ -34,7 +34,7 @@ public class FeatureModuleActivator implements ModuleActivator {
   @Override
   public void stop(ModuleContext context) throws Exception {
     if (applicationContext != null) {
-      applicationContext.close();
+      applicationContext.stop();
     }
     if (registration != null) {
       registration.close();

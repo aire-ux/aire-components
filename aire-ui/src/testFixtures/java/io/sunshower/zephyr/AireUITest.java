@@ -5,6 +5,7 @@ import com.aire.ux.test.AireTest;
 import com.aire.ux.test.spring.EnableSpring;
 import io.sunshower.zephyr.aire.AireVaadinOverrideAutoConfiguration;
 import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
+import io.sunshower.zephyr.configuration.ZephyrCoreConfiguration;
 import io.sunshower.zephyr.ui.aire.ComponentHierarchyNodeAdapter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
     classes = {
       AireVaadinOverrideAutoConfiguration.class,
       EmbeddedZephyrConfiguration.class,
+      ZephyrCoreConfiguration.class,
       AireUITestConfiguration.class
     })
 // @ExtendWith(RegisterComponentExtension.class)

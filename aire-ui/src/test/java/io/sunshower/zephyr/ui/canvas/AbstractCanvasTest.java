@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.canvas;
 
-import com.aire.ux.condensation.Condensation;
-import com.aire.ux.condensation.DocumentWriter;
+import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.arcus.condensation.DocumentWriter;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import org.junit.jupiter.api.BeforeEach;
 

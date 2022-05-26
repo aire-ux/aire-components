@@ -2,7 +2,7 @@ package io.sunshower.zephyr.ui.canvas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.aire.ux.condensation.Condensation;
+import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.zephyr.condensation.CondensationUtilities;
 import java.util.ArrayList;
 import java.util.List;

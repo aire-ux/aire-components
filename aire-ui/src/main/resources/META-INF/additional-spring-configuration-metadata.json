@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "ui-service.init.listener",
+      "type": "java.lang.String",
+      "description": "Description for ui-service.init.listener."
+  }
+] }

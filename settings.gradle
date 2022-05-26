@@ -26,8 +26,6 @@ include(
 
 
         'aire-ui',
-        'aire-json-mapper',
-        'aire-css-selectors',
 
         /**
          * plugin implementators should depend on

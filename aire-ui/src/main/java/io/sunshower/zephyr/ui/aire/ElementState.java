@@ -1,7 +1,7 @@
 package io.sunshower.zephyr.ui.aire;
 
-import com.aire.ux.test.NodeAdapter;
 import io.sunshower.arcus.ast.Symbol;
+import io.sunshower.arcus.selectors.test.NodeAdapter;
 
 public enum ElementState implements NodeAdapter.State {
   Hover(":hover"),

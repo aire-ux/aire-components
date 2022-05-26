@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.components;
 
+import com.aire.ux.actions.Key;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
@@ -14,10 +15,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableTriConsumer;
 import com.vaadin.flow.shared.Registration;
-import java.util.ArrayList;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -26,6 +29,7 @@ import lombok.val;
 /** base-class for commonly-themed wizard-pages */
 @Tag("aire-wizard-page")
 @JsModule("./aire/ui/components/wizard-page.ts")
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @CssImport("./styles/aire/ui/components/wizard-page.css")
 public class AbstractWizardPage<K, T> extends Component
     implements HasComponents, WizardModelSupport<K, T>, AutoCloseable {
@@ -48,19 +52,43 @@ public class AbstractWizardPage<K, T> extends Component
   private final Component content;
 
   /** the list of controls. Defaults to a previous button and a next button */
-  private final List<ControlDefinition<? super Component, K, T>> controls;
+  private final Map<Key, ControlDefinition<? super Component, K, T>> controls;
   /**
    * the wizard associated with this page. May be null depending on the component lifecycle. If you
    * need a non-null wizard at any point, use @Dynamic on your subclass's constructor and the
    * relevant constructor argument
    */
-  private Wizard<K> wizard;
+  private Wizard<K, T> wizard;
 
   private Registration nextRegistration;
   private Registration previousRegistration;
 
+  protected AbstractWizardPage() {
+    this.controls = new HashMap<>();
+    val descriptor = read((Class<? extends AbstractWizardPage<K, T>>) getClass());
+
+    this.key = (K) descriptor.key;
+    this.modelType = getModelType(getClass());
+    this.header = createHeader();
+    this.content = createContent();
+    this.footer = createFooter();
+    configureNavigationMenu();
+    setTitle(descriptor.title);
+    if (header != null) {
+      add(header);
+    }
+    if (content != null) {
+      add(content);
+    }
+    if (footer != null) {
+      add(footer);
+    }
+
+    //    add(header, content, footer);
+  }
+
   protected AbstractWizardPage(@NonNull K key, @NonNull Class<T> modelType) {
-    this.controls = new ArrayList<>();
+    this.controls = new LinkedHashMap<>();
     this.key = key;
     this.modelType = modelType;
     this.header = createHeader();
@@ -72,7 +100,7 @@ public class AbstractWizardPage<K, T> extends Component
 
   @SuppressWarnings("unchecked")
   protected AbstractWizardPage(Class<T> modelType) {
-    this.controls = new ArrayList<>();
+    this.controls = new LinkedHashMap<>();
     val descriptor = read((Class<? extends AbstractWizardPage<K, T>>) getClass());
 
     this.key = (K) descriptor.key;
@@ -82,7 +110,26 @@ public class AbstractWizardPage<K, T> extends Component
     this.footer = createFooter();
     configureNavigationMenu();
     setTitle(descriptor.title);
-    add(header, content, footer);
+    if (header != null) {
+      add(header);
+    }
+    if (content != null) {
+      add(content);
+    }
+    if (footer != null) {
+      add(footer);
+    }
+    //    add(header, content, footer);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Class<T> getModelType(Class<? extends AbstractWizardPage> type) {
+    Class<?> c = type;
+    for (; !AbstractWizardPage.class.equals(c.getSuperclass()); c = c.getSuperclass())
+      ;
+
+    val ptype = ((ParameterizedType) (c.getGenericSuperclass())).getActualTypeArguments();
+    return (Class<T>) ptype[ptype.length - 1];
   }
 
   public void addContent(Component... contents) {
@@ -133,23 +180,34 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   @Override
-  public void onEntered(Wizard<K> wizard) {
+  public void onEntered(Wizard<K, T> wizard) {
     this.wizard = wizard;
     updateNavigationControls(wizard);
   }
 
   @Override
-  public void onExited(Wizard<K> wizard) {
+  public void onExited(Wizard<K, T> wizard) {
     updateNavigationControls(wizard);
   }
 
   @SuppressWarnings("unchecked")
   protected <U extends Component> void addNavigationControl(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {
-    controls.add(
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {
+    controls.put(
+        getKey(control),
         new ControlDefinition<>(
-            control, (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K>>) f));
+            control,
+            (SerializableTriConsumer<Component, WizardModelSupport<K, T>, Wizard<K, T>>) f));
     footer.getElement().appendChild(control.getElement());
+  }
+
+  protected <U extends Component> Key getKey(U component) {
+    return Key.of(component.getElement().getAttribute("key"));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <U extends Component> Optional<U> getControl(Key key) {
+    return Optional.ofNullable(controls.get(key)).map(t -> (U) t.control);
   }
 
   protected Header createHeader() {
@@ -175,11 +233,13 @@ public class AbstractWizardPage<K, T> extends Component
   }
 
   protected void setTitle(Component title) {
-    header.getElement().appendChild(title.getElement());
+    if (header != null) {
+      header.getElement().appendChild(title.getElement());
+    }
   }
 
   protected void setModelElement(T value) {
-    Objects.requireNonNull(wizard).getModel().set(getKey(), value);
+    wizard.setModel(value);
   }
 
   protected void configureNavigationMenu() {
@@ -189,6 +249,7 @@ public class AbstractWizardPage<K, T> extends Component
 
   private Button createNextButton() {
     val button = new Button("Next", VaadinIcon.ANGLE_RIGHT.create());
+    button.getElement().setAttribute("key", "next");
     button.setIconAfterText(true);
     addNavigationControl(
         button,
@@ -201,6 +262,7 @@ public class AbstractWizardPage<K, T> extends Component
 
   private Button createPreviousButton() {
     val button = new Button("Previous", VaadinIcon.ANGLE_LEFT.create());
+    button.getElement().setAttribute("key", "previous");
     addNavigationControl(
         button,
         (control, modelSupport, wizard) -> {
@@ -210,12 +272,12 @@ public class AbstractWizardPage<K, T> extends Component
     return button;
   }
 
-  private void updateNavigationControls(Wizard<K> wizard) {
+  private void updateNavigationControls(Wizard<K, T> wizard) {
     getUI()
         .orElse(UI.getCurrent())
         .access(
             () -> {
-              for (val definition : controls) {
+              for (val definition : controls.values()) {
                 definition.f.accept((Component) definition.control, this, wizard);
               }
             });
@@ -252,6 +314,6 @@ public class AbstractWizardPage<K, T> extends Component
     }
   }
 
-  record ControlDefinition<U, K, T>(
-      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K>> f) {}
+  record ControlDefinition<U extends Component, K, T>(
+      U control, SerializableTriConsumer<U, WizardModelSupport<K, T>, Wizard<K, T>> f) {}
 }

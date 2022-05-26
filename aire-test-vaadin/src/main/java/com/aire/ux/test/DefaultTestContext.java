@@ -2,8 +2,6 @@ package com.aire.ux.test;
 
 import static java.lang.String.format;
 
-import com.aire.ux.plan.DefaultPlanContext;
-import com.aire.ux.select.css.CssSelectorParser;
 import com.aire.ux.test.Context.Mode;
 import com.aire.ux.test.vaadin.Frames;
 import com.vaadin.flow.component.Component;
@@ -11,6 +9,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.dom.Element;
 import io.sunshower.arcus.reflect.Reflect;
+import io.sunshower.arcus.selectors.css.CssSelectorParser;
+import io.sunshower.arcus.selectors.plan.DefaultPlanContext;
 import io.sunshower.lambda.Option;
 import java.io.Flushable;
 import java.io.IOException;
