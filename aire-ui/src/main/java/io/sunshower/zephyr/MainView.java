@@ -26,9 +26,9 @@ import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
+import io.sunshower.zephyr.ui.editor.EditorTest;
 import io.sunshower.zephyr.ui.identicon.Identicon;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
-import io.sunshower.zephyr.ui.layout.TestRoute;
 import java.util.List;
 import javax.annotation.security.PermitAll;
 import lombok.val;
@@ -50,10 +50,15 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
   protected HasComponents createNavigation() {
     val nav = super.createNavigation();
 
-    val button =
-        new NavigationBarButton(
-            TestRoute.class, List.of("test"), MatchMode.Contains, VaadinIcon.PAPERCLIP.create());
+//    val button =
+//        new NavigationBarButton(
+//            TestRoute.class, List.of("test"), MatchMode.Contains, VaadinIcon.PAPERCLIP.create());
+//    nav.add(button);
+
+    val button = new NavigationBarButton(EditorTest.class, List.of("editor"), MatchMode.Contains,
+        VaadinIcon.EDIT.create());
     nav.add(button);
+
     return nav;
   }
 
