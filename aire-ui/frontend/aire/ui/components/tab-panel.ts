@@ -4,18 +4,16 @@ import {css, customElement, html, LitElement} from "lit-element";
 export class TabPanel extends LitElement {
 
   static styles = css`
-    :host {
+    article {
       width: 100%;
     }
+    
     ::slotted(section) {
-      display: flex;
-      flex-direction: column;
       position: absolute;
-      top:50px;
-      bottom:0px;
-      left:0px;
-      right:0px;
-    } 
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+    
   `
 
   private computeSiblingWidth() : number {

@@ -1,0 +1,22 @@
+
+
+aire-tab-panel {
+  flex: 1 1;
+  display: flex;
+
+  article {
+    width: 100%;
+  }
+
+  nav {
+    display: flex;
+    width: 100%;
+    vaadin-tabs {
+      width: 100%;
+      & > .tab-control {
+        align-self: center;
+        justify-self: flex-end;
+      }
+    }
+  }
+}

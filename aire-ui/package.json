@@ -7,7 +7,7 @@
       "@antv/layout": "0.1.31",
       "@antv/x6": "1.30.0",
       "@codemirror/autocomplete": "0.20.2",
-      "@codemirror/basic-setup": "0.20.6",
+      "@codemirror/basic-setup": "0.20.0",
       "@codemirror/commands": "0.20.0",
       "@codemirror/language": "0.20.2",
       "@codemirror/language-data": "0.20.0",
@@ -157,13 +157,14 @@
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "f60533e7e9105ea444092bf5c5cd0445be7f970c89e4f799d7d327adc1e143a9"
+    "hash": "7fb21204b8d42b9440a317a621ed819c8febb9fdc3d5dd0f6cd0937f24248871"
   },
   "dependencies": {
     "@aire-ux/aire-condensation": "0.1.5",
     "@antv/layout": "0.1.31",
     "@antv/x6": "1.30.0",
     "@codemirror/autocomplete": "0.20.2",
+    "@codemirror/basic-setup": "0.20.0",
     "@codemirror/commands": "0.20.0",
     "@codemirror/language": "0.20.2",
     "@codemirror/language-data": "0.20.0",

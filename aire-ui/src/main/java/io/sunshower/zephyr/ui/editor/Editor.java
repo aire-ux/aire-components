@@ -7,7 +7,6 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import io.sunshower.zephyr.ui.editor.Constants.Versions;
 
-
 @Tag("aire-editor")
 @JsModule("./aire/ui/editor/aire-editor.ts")
 @CssImport("./styles/aire/ui/editor/editor.css")
@@ -19,6 +18,5 @@ import io.sunshower.zephyr.ui.editor.Constants.Versions;
 @NpmPackage(value = "@codemirror/search", version = Versions.Search)
 @NpmPackage(value = "@codemirror/autocomplete", version = Versions.Autocomplete)
 @NpmPackage(value = "@codemirror/language-data", version = Versions.LanguageData)
-public class Editor extends Component {
-
-}
+@NpmPackage(value = "@codemirror/basic-setup", version = Versions.BasicSetup)
+public class Editor extends Component {}

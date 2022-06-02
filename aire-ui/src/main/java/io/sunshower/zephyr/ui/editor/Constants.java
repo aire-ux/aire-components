@@ -3,7 +3,7 @@ package io.sunshower.zephyr.ui.editor;
 public final class Constants {
 
   static final class Versions {
-    static final String Base = "0.20." ;
+    static final String Base = "0.20.";
     static final String View = Base + "6";
     static final String Lint = Base + "3";
 
@@ -14,6 +14,6 @@ public final class Constants {
     static final String Autocomplete = Base + "2";
     static final String LanguageData = Base + "0";
 
+    public static final String BasicSetup = Base + "0";
   }
-
 }

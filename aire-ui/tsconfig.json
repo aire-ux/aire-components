@@ -18,6 +18,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "experimentalDecorators": true,
+    "strictNullChecks": false,
     "baseUrl": "frontend",
     "paths": {
       "Frontend/*": [

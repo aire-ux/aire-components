@@ -30,7 +30,7 @@
     <karibu-testing.version>1.3.11</karibu-testing.version>
     <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     <mockito-core.version>3.11.2</mockito-core.version>
-    <zephyr.version>2.0.125-SNAPSHOT</zephyr.version>
+    <zephyr.version>2.0.127-SNAPSHOT</zephyr.version>
     <java-semver.version>0.9.0</java-semver.version>
     <picocli.version>4.6.2</picocli.version>
     <jboss-modules.version>2.0.0.Final</jboss-modules.version>
