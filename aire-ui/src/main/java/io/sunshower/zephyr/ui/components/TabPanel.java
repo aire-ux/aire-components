@@ -12,7 +12,6 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.TabVariant;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.di.Instantiator;
@@ -41,19 +40,14 @@ public class TabPanel extends HtmlContainer
     implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
   static final String CLASS_NAME = "tab-panel";
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Tabs tabs;
 
   private final Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
-  @Getter
-  private final Map<Tab, ComponentDescriptor> components;
-  /**
-   * mutable state
-   */
+  @Getter private final Map<Tab, ComponentDescriptor> components;
+  /** mutable state */
   private Component current;
 
   private TabPlacement placement;
@@ -86,7 +80,6 @@ public class TabPanel extends HtmlContainer
     tabs.add(tab);
     return tab;
   }
-
 
   public void addControl(Component control) {
     val tab = new Tab(control);
@@ -156,8 +149,7 @@ public class TabPanel extends HtmlContainer
     }
   }
 
-  private void updateTab(@NonNull ComponentDescriptor next,
-      Tab selectedTab) {
+  private void updateTab(@NonNull ComponentDescriptor next, Tab selectedTab) {
     // use default routing mechanism for routes
     tabs.setSelectedTab(selectedTab);
     if (!next.isRoute) {
@@ -232,9 +224,9 @@ public class TabPanel extends HtmlContainer
     }
     for (val kv : this.components.entrySet()) {
       val value = kv.getValue();
-      if (
-          isChild(kv.getKey(), content) ||
-          (!(value == null || value.componentType == null) && value.componentType.equals(content.getClass()))) {
+      if (isChild(kv.getKey(), content)
+          || (!(value == null || value.componentType == null)
+              && value.componentType.equals(content.getClass()))) {
         return kv.getKey();
       }
     }

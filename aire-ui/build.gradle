@@ -21,6 +21,7 @@ dependencies {
 
 
     [
+            'javax.inject:javax.inject',
             'io.sunshower.base:model-api',
             'io.sunshower.base:model-core',
             'io.sunshower.base:file-realm',
@@ -60,7 +61,12 @@ dependencies {
     }
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
-    implementation 'io.sunshower.zephyr:spring-embedded-plugin'
+    compileOnly 'io.sunshower.zephyr:spring-embedded-plugin'
+    testImplementation 'io.sunshower.zephyr:spring-embedded-plugin'
+
+    implementation('io.sunshower.zephyr:spring-embedded-plugin') {
+        transitive = false
+    }
 
     ['gyre-api'].each {
         compileOnly "io.sunshower.arcus:$it"
@@ -160,7 +166,7 @@ build.dependsOn buildScss
 
 vaadin {
     pnpmEnable = false
-    productionMode = false
+    productionMode = true
 }
 defaultTasks("clean", "build")
 

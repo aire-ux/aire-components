@@ -114,7 +114,7 @@ export class Canvas extends LitElement {
         previousNodes = graph?.getNodes(),
         nodes = Canvas.layout.layout({
           nodes: [graph?.createNode(vertex)].concat(previousNodes ?? []),
-          edges: graph?.getEdges()
+          edges: graph?.getEdges() as any
         } as Model);
     this.graph = this.graph!.fromJSON(Canvas.layout.layout(nodes as any));
     this.graph.centerContent();
