@@ -20,7 +20,7 @@
       "textVerticalAnchor": "bottom"
     },
     "image": {
-      "xlink:href": "images/zephyr.svg",
+      "xlink:href": "/zephyr/images/zephyr.svg",
       "width": 25,
       "height": 25,
       "x": 12.5,

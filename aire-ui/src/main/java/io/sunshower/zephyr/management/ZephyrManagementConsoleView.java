@@ -39,7 +39,8 @@ public class ZephyrManagementConsoleView extends Panel implements ApplicationLay
 
   @Override
   public void decorate(ApplicationLayout layout) {
-    homeButton = new NavigationBarButton(MainView.class, new Image("images/icon.svg", "Home"));
+    homeButton =
+        new NavigationBarButton(MainView.class, new Image("/zephyr/images/icon.svg", "Home"));
     homeButton.setClassName("container-end");
     layout.getTop().add(homeButton);
 

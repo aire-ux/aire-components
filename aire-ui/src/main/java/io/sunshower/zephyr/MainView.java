@@ -31,6 +31,7 @@ import io.sunshower.zephyr.ui.identicon.Identicon;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import java.util.List;
 import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
 import lombok.val;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -42,6 +43,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Breadcrumb(name = "Home", icon = "vaadin:home")
 public class MainView extends ApplicationLayout implements AppShellConfigurator {
 
+  @Inject
   public MainView() {
     super();
   }
@@ -49,12 +51,6 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
   @Override
   protected HasComponents createNavigation() {
     val nav = super.createNavigation();
-
-    //    val button =
-    //        new NavigationBarButton(
-    //            TestRoute.class, List.of("test"), MatchMode.Contains,
-    // VaadinIcon.PAPERCLIP.create());
-    //    nav.add(button);
 
     val button =
         new NavigationBarButton(
@@ -71,7 +67,8 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
     val menuBar = new MenuBar();
     menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_ICON);
 
-    var homeButton = new NavigationBarButton(MainView.class, new Image("images/icon.svg", "Home"));
+    var homeButton =
+        new NavigationBarButton(MainView.class, new Image("/zephyr/images/icon.svg", "Home"));
     homeButton.setClassName("container-end");
     topNav.add(homeButton);
 

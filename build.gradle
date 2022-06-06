@@ -216,3 +216,7 @@ subprojects {
 
 
 }
+
+dependencies {
+    implementation 'com.vaadin:flow-server'
+}
