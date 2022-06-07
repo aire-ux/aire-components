@@ -4,18 +4,23 @@ import static io.zephyr.common.io.FilePermissionChecker.Type.DIRECTORY;
 import static io.zephyr.common.io.FilePermissionChecker.Type.FILE;
 import static io.zephyr.common.io.FilePermissionChecker.Type.READ;
 import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
+import static org.springframework.util.FileSystemUtils.deleteRecursively;
 
 import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.cloud.studio.Document;
+import io.sunshower.cloud.studio.DocumentDescriptor;
 import io.sunshower.cloud.studio.Workspace;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
 import io.sunshower.cloud.studio.WorkspaceManager;
 import io.sunshower.model.api.User;
+import io.sunshower.persistence.id.Identifier;
 import io.zephyr.common.io.Files;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.StandardOpenOption;
+import java.util.Set;
 import lombok.NonNull;
 import lombok.val;
 import org.eclipse.jgit.api.Git;
@@ -68,6 +73,11 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
   }
 
   @Override
+  public Set<WorkspaceDescriptor> getWorkspaces() {
+    return Set.copyOf(workspaces.getWorkspaces().values());
+  }
+
+  @Override
   public Workspace createWorkspace(@NonNull WorkspaceDescriptor workspaceDescriptor) {
     try {
       assert workspaces != null;
@@ -78,18 +88,43 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     }
   }
 
+  @Override
+  public void delete(WorkspaceDescriptor descriptor) {
+    try {
+      assert workspaces != null;
+      workspaces.remove(descriptor);
+      val definitionFile = getOrCreateWorkspaceDefinitionFile(root);
+      val workspaceRoot = getWorkspaceRoot(descriptor.getId());
+      deleteRecursively(workspaceRoot);
+      writeDescriptor(condensation, definitionFile);
+    } catch (IOException ex) {
+      throw new WorkspaceException(ex);
+    }
+  }
+
+
   private Workspace populateWorkspace(WorkspaceDescriptor result)
       throws IOException, GitAPIException {
     createOrPopulateWorkspaceDescriptor(result);
+    val root = getWorkspaceRoot(result.getId());
     val workspaceDirectory = new File(root, "workspace");
     final Git git;
     if (!workspaceDirectory.exists()) {
       createAndPopulate(workspaceDirectory);
-      git = Git.init().setDirectory(workspaceDirectory).call();
+      git = Git.init().setDirectory(workspaceDirectory)
+          .setInitialBranch("main").call();
     } else {
       git = Git.open(workspaceDirectory);
     }
-    return new DirectoryBackedWorkspace(git, workspaceDirectory);
+    return new DirectoryBackedWorkspace(git, workspaceDirectory, this, result);
+  }
+
+  private File getWorkspaceRoot(Identifier id) throws IOException {
+    val directory = new File(root, id.toString());
+    if (!directory.exists()) {
+      java.nio.file.Files.createDirectory(directory.toPath());
+    }
+    return Files.check(directory, DIRECTORY, READ, WRITE);
   }
 
   private File createAndPopulate(File workspaceDirectory) throws IOException {

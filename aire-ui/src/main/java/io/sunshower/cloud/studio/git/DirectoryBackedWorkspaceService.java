@@ -1,10 +1,8 @@
 package io.sunshower.cloud.studio.git;
 
-import static io.zephyr.common.io.FilePermissionChecker.Type.FILE;
-import static io.zephyr.common.io.FilePermissionChecker.Type.READ;
-import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
 
 import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
 import io.sunshower.cloud.studio.WorkspaceManager;
 import io.sunshower.cloud.studio.WorkspaceService;
@@ -15,6 +13,7 @@ import io.zephyr.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.Set;
 import lombok.NonNull;
 import lombok.val;
 
@@ -39,6 +38,11 @@ public class DirectoryBackedWorkspaceService implements WorkspaceService {
     } catch (IOException ex) {
       throw new WorkspaceException(ex);
     }
+  }
+
+  @Override
+  public Set<WorkspaceDescriptor> getWorkspaces(User user) {
+    return createScopedManager(user).getWorkspaces();
   }
 
 
