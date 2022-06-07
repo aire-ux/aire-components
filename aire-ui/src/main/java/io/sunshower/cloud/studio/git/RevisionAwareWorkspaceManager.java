@@ -7,8 +7,6 @@ import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
 import static org.springframework.util.FileSystemUtils.deleteRecursively;
 
 import io.sunshower.arcus.condensation.Condensation;
-import io.sunshower.cloud.studio.Document;
-import io.sunshower.cloud.studio.DocumentDescriptor;
 import io.sunshower.cloud.studio.Workspace;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
@@ -28,36 +26,30 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 /**
  * workspaces have the following directory-structure:
- * <p>
- * 1. Root: the root is the directory that the workspace service has been instantiated with 2.
- * Root/userId.workspace: The ID of the workspace directory 3. Root/userId.workspace/workspace.definition:
- * the workspace definition file (JSON) 4. Root/userId.workspace/workspace: the workspace directory
- * (git is initialized here)
+ *
+ * <p>1. Root: the root is the directory that the workspace service has been instantiated with 2.
+ * Root/userId.workspace: The ID of the workspace directory 3.
+ * Root/userId.workspace/workspace.definition: the workspace definition file (JSON) 4.
+ * Root/userId.workspace/workspace: the workspace directory (git is initialized here)
  */
 public class RevisionAwareWorkspaceManager implements WorkspaceManager {
 
-
   public static final String WORKSPACE_DEFINITION = "workspace.definition";
-  /**
-   * the root directory of this workspace manager
-   */
+  /** the root directory of this workspace manager */
   private final File root;
 
-  /**
-   * the owner of this workspace manager
-   */
+  /** the owner of this workspace manager */
   private final User owner;
-  private final Condensation condensation;
 
+  private final Condensation condensation;
 
   private WorkspaceSet workspaces;
 
   /**
-   * @param user         the owner for this workspace manager
-   * @param root         the root directory
+   * @param user the owner for this workspace manager
+   * @param root the root directory
    * @param condensation
    */
-
   public RevisionAwareWorkspaceManager(User user, File root, Condensation condensation)
       throws IOException {
     this.root = root;
@@ -65,7 +57,6 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     this.condensation = condensation;
     this.workspaces = readDescriptors(root, condensation);
   }
-
 
   @Override
   public User getOwner() {
@@ -102,7 +93,6 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     }
   }
 
-
   private Workspace populateWorkspace(WorkspaceDescriptor result)
       throws IOException, GitAPIException {
     createOrPopulateWorkspaceDescriptor(result);
@@ -111,8 +101,7 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     final Git git;
     if (!workspaceDirectory.exists()) {
       createAndPopulate(workspaceDirectory);
-      git = Git.init().setDirectory(workspaceDirectory)
-          .setInitialBranch("main").call();
+      git = Git.init().setDirectory(workspaceDirectory).setInitialBranch("main").call();
     } else {
       git = Git.open(workspaceDirectory);
     }
@@ -140,7 +129,6 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     return readDescriptors(root, condensation).get(workspaceDescriptor.getId());
   }
 
-
   private WorkspaceSet readDescriptors(File root, Condensation condensation) throws IOException {
     val definitionFile = getOrCreateWorkspaceDefinitionFile(root);
     if (definitionFile.length() == 0) {
@@ -155,8 +143,8 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
 
   private void writeDescriptor(Condensation condensation, File definitionFile) throws IOException {
     val definition = condensation.write(WorkspaceSet.class, workspaces);
-    java.nio.file.Files.writeString(definitionFile.toPath(), definition,
-        StandardOpenOption.CREATE, StandardOpenOption.SYNC);
+    java.nio.file.Files.writeString(
+        definitionFile.toPath(), definition, StandardOpenOption.CREATE, StandardOpenOption.SYNC);
   }
 
   private WorkspaceSet readDescriptor() throws IOException {

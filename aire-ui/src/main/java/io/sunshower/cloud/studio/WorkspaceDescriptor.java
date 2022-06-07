@@ -25,14 +25,9 @@ public class WorkspaceDescriptor {
   @Convert(IdentifierConverter.class)
   private Identifier id;
 
-  @Getter
-  @Setter
-  @Attribute
-  private String name;
+  @Getter @Setter @Attribute private String name;
 
   public WorkspaceDescriptor() {
     id = sequence.next();
   }
-
-
 }

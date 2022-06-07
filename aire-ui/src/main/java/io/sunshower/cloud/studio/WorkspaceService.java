@@ -7,6 +7,5 @@ public interface WorkspaceService {
 
   WorkspaceManager createScopedManager(User user);
 
-
   Set<WorkspaceDescriptor> getWorkspaces(User user);
 }

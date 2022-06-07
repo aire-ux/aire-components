@@ -1,6 +1,5 @@
 package io.sunshower.cloud.studio.git;
 
-
 import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
@@ -24,8 +23,9 @@ public class DirectoryBackedWorkspaceService implements WorkspaceService {
 
   private final @NonNull Condensation condensation;
 
-  public DirectoryBackedWorkspaceService(@NonNull final File root,
-      @NonNull final Condensation condensation) throws AccessDeniedException {
+  public DirectoryBackedWorkspaceService(
+      @NonNull final File root, @NonNull final Condensation condensation)
+      throws AccessDeniedException {
     this.condensation = condensation;
     this.root = Files.check(root, Type.WRITE, Type.READ, Type.DIRECTORY);
   }
@@ -44,7 +44,6 @@ public class DirectoryBackedWorkspaceService implements WorkspaceService {
   public Set<WorkspaceDescriptor> getWorkspaces(User user) {
     return createScopedManager(user).getWorkspaces();
   }
-
 
   private File getOrCreateWorkspaceManagerDirectory(User user) throws IOException {
     val userId = user.getId();

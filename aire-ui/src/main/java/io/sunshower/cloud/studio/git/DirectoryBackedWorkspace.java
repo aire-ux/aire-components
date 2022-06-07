@@ -18,8 +18,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 public class DirectoryBackedWorkspace implements Workspace {
 
-  @Getter
-  private final File root;
+  @Getter private final File root;
   private final Git storage;
   private final WorkspaceManager host;
   private final WorkspaceDescriptor descriptor;
@@ -28,8 +27,7 @@ public class DirectoryBackedWorkspace implements Workspace {
       @NonNull Git storage,
       @NonNull File root,
       @NonNull WorkspaceManager host,
-      @NonNull WorkspaceDescriptor descriptor
-  ) {
+      @NonNull WorkspaceDescriptor descriptor) {
     this.host = host;
     this.root = root;
     this.storage = storage;
@@ -42,9 +40,7 @@ public class DirectoryBackedWorkspace implements Workspace {
   }
 
   @Override
-  public void delete(DocumentDescriptor descriptor) {
-
-  }
+  public void delete(DocumentDescriptor descriptor) {}
 
   @Override
   public Document getOrCreate(DocumentDescriptor descriptor) {

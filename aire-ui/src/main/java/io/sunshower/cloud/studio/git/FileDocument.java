@@ -29,8 +29,11 @@ public class FileDocument implements Document {
   private final Git storage;
   private final DocumentDescriptor descriptor;
 
-  public FileDocument(@NonNull User user, @NonNull File file, @NonNull Git storage, @NonNull
-      DocumentDescriptor documentDescriptor) {
+  public FileDocument(
+      @NonNull User user,
+      @NonNull File file,
+      @NonNull Git storage,
+      @NonNull DocumentDescriptor documentDescriptor) {
     this.file = file;
     this.storage = storage;
     this.owner = user;
@@ -39,7 +42,8 @@ public class FileDocument implements Document {
     try {
       val ref = storage.getRepository().getRefDatabase().findRef(Constants.HEAD);
       if (ref == null || ref.getObjectId() == null) {
-        storage.commit()
+        storage
+            .commit()
             .setOnly(file.getName())
             .setCommitter(user.getUsername(), user.getUsername())
             .setMessage("Initial Commit of " + documentDescriptor.getName())
@@ -58,16 +62,12 @@ public class FileDocument implements Document {
   @Override
   public Document checkout(String branchName) {
     try {
-      storage
-          .checkout()
-          .setName(branchName)
-          .call();
+      storage.checkout().setName(branchName).call();
       return new FileDocument(owner, file, storage, descriptor);
     } catch (Exception ex) {
       throw new WorkspaceException(ex);
     }
   }
-
 
   @Override
   @WillNotClose
@@ -92,11 +92,13 @@ public class FileDocument implements Document {
   @Override
   public Revision commit(String commitMessage) {
     try {
-      val rev = storage.commit()
-          .setMessage(commitMessage)
-          .setOnly(file.getName())
-          .setCommitter(owner.getUsername(), owner.getUsername())
-          .call();
+      val rev =
+          storage
+              .commit()
+              .setMessage(commitMessage)
+              .setOnly(file.getName())
+              .setCommitter(owner.getUsername(), owner.getUsername())
+              .call();
       return new Revision(rev.getId().getName());
     } catch (Exception ex) {
       throw new WorkspaceException(ex);
@@ -122,7 +124,8 @@ public class FileDocument implements Document {
     try {
       val spliterator = storage.log().all().call();
       return StreamSupport.stream(spliterator.spliterator(), false)
-          .map(r -> new Revision(r.getId().name())).collect(Collectors.toList());
+          .map(r -> new Revision(r.getId().name()))
+          .collect(Collectors.toList());
     } catch (GitAPIException | IOException ex) {
       throw new WorkspaceException(ex);
     }

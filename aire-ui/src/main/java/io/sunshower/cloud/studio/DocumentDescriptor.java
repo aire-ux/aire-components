@@ -16,19 +16,12 @@ public class DocumentDescriptor {
     sequence = Identifiers.newSequence(true);
   }
 
-  @Getter
-  @Setter
-  private String name;
-  @Getter
-  @Setter
-  private Identifier id;
+  @Getter @Setter private String name;
+  @Getter @Setter private Identifier id;
 
-  @Getter
-  @Setter
-  private String extension;
+  @Getter @Setter private String extension;
 
   public DocumentDescriptor() {
     setId(sequence.next());
   }
-
 }

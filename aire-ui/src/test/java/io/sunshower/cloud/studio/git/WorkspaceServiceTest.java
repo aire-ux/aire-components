@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 public class WorkspaceServiceTest {
 
-
   static final Condensation condensation;
 
   static {
@@ -45,7 +44,6 @@ public class WorkspaceServiceTest {
     user.setUsername("kiersten");
     workspaceService = new DirectoryBackedWorkspaceService(directory, condensation);
   }
-
 
   @Test
   void ensureApiForWorkspaceServiceMakesSense() {
@@ -75,7 +73,6 @@ public class WorkspaceServiceTest {
     val ws = (DirectoryBackedWorkspace) manager.createWorkspace(workspaceDescriptor);
     assertNotEquals(ws.getRoot(), workspace.getRoot());
   }
-
 
   @Test
   void ensureWorkspaceManagerCanDeleteWorkspaceAndCorrespondingFiles() {
@@ -165,5 +162,4 @@ public class WorkspaceServiceTest {
     }
     assertEquals("hello world", outputStream.toString(StandardCharsets.UTF_8));
   }
-
 }

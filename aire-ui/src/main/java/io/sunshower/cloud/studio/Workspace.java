@@ -6,13 +6,11 @@ public interface Workspace {
 
   void delete();
 
-
   void delete(DocumentDescriptor descriptor);
 
   Document getOrCreate(DocumentDescriptor documentDescriptor);
 
   Document getOrCreate(DocumentDescriptor descriptor, String branch);
-
 
   List<DocumentDescriptor> getDocuments();
 }

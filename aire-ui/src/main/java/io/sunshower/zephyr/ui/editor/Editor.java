@@ -10,7 +10,7 @@ import io.sunshower.zephyr.ui.editor.Constants.Versions;
 @Tag("aire-editor")
 @JsModule("./aire/ui/editor/aire-editor.ts")
 @CssImport("./styles/aire/ui/editor/editor.css")
-//@NpmPackage(value = "@sunshower/breeze-lang", version = "0.0.0")
+// @NpmPackage(value = "@sunshower/breeze-lang", version = "0.0.0")
 @NpmPackage(value = "@codemirror/view", version = Versions.View)
 @NpmPackage(value = "@codemirror/lint", version = Versions.Lint)
 @NpmPackage(value = "@codemirror/state", version = Versions.State)

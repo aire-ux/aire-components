@@ -18,5 +18,4 @@ public interface Document {
   void checkout(Revision revision);
 
   List<Revision> getRevisions();
-
 }

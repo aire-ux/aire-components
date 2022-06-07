@@ -12,5 +12,4 @@ public interface WorkspaceManager {
   Workspace createWorkspace(WorkspaceDescriptor workspaceDescriptor);
 
   void delete(WorkspaceDescriptor descriptor);
-
 }

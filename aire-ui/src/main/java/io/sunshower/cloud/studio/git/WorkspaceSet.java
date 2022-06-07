@@ -16,17 +16,13 @@ import lombok.Setter;
 @RootElement
 public final class WorkspaceSet {
 
-  @Setter
-  @Getter
-  @Element
-  private User owner;
+  @Setter @Getter @Element private User owner;
 
   @Getter
   @Setter
   @Element
   @Convert(key = IdentifierConverter.class)
   private Map<Identifier, WorkspaceDescriptor> workspaces;
-
 
   public WorkspaceSet(User user) {
     setOwner(user);
@@ -40,7 +36,6 @@ public final class WorkspaceSet {
   public void add(WorkspaceDescriptor workspaceDescriptor) {
     workspaces.put(workspaceDescriptor.getId(), workspaceDescriptor);
   }
-
 
   public void remove(WorkspaceDescriptor descriptor) {
     workspaces.remove(descriptor.getId());
