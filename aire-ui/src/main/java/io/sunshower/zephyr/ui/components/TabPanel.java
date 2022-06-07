@@ -103,6 +103,7 @@ public class TabPanel extends HtmlContainer
   }
 
   public void activate(Tab tab) {
+    tabs.setSelectedTab(tab);
     UI.getCurrent().access(() -> updateTab(components.get(tab), tab));
   }
 
@@ -145,13 +146,13 @@ public class TabPanel extends HtmlContainer
     val selectedTab = selectedChangeEvent.getSelectedTab();
     val next = components.get(selectedTab);
     if (next != null) {
+      tabs.setSelectedTab(selectedTab);
       UI.getCurrent().access(() -> updateTab(next, selectedTab));
     }
   }
 
   private void updateTab(@NonNull ComponentDescriptor next, Tab selectedTab) {
     // use default routing mechanism for routes
-    tabs.setSelectedTab(selectedTab);
     if (!next.isRoute) {
       Component nextInstance;
       if (next.instance != null) {
