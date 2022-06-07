@@ -101,6 +101,13 @@ dependencies {
             exclude module: "spring-boot-starter-tomcat"
         }
     }
+    [
+    ]
+
+    implementation 'org.eclipse.jgit:org.eclipse.jgit'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit.archive'
+    testImplementation 'org.eclipse.jgit:org.eclipse.jgit.junit'
+
     implementation("org.springframework.boot:spring-boot-starter-undertow")
 
 

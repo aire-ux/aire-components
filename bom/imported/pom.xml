@@ -43,10 +43,29 @@
     <base.version>1.0.0-SNAPSHOT</base.version>
     <spring-boot.version>2.6.7</spring-boot.version>
     <javax.inject-version>1</javax.inject-version>
+    <org.eclipse.jgit.version>6.1.0.202203080745-r</org.eclipse.jgit.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit</artifactId>
+        <version>${org.eclipse.jgit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit.junit</artifactId>
+        <version>${org.eclipse.jgit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit.archive</artifactId>
+        <version>${org.eclipse.jgit.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>javax.inject</groupId>
