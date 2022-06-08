@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Breadcrumb {
 
+
+  Class<? extends CrumbResolver> resolver() default CrumbResolver.class;
+
   String name();
 
   String icon() default "";

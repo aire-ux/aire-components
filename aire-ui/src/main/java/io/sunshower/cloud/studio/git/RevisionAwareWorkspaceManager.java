@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 import java.util.Set;
 import lombok.NonNull;
 import lombok.val;
@@ -61,6 +62,23 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
   @Override
   public User getOwner() {
     return owner;
+  }
+
+  @Override
+  public Optional<Workspace> getWorkspace(@NonNull WorkspaceDescriptor descriptor) {
+    if(getWorkspaces().contains(descriptor)) {
+      try {
+        return Optional.of(populateWorkspace(descriptor));
+      } catch(Exception ex) {
+        throw new WorkspaceException(ex);
+      }
+    }
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<WorkspaceDescriptor> getWorkspaceDescriptor(@NonNull Identifier id) {
+    return Optional.ofNullable(workspaces.get(id));
   }
 
   @Override

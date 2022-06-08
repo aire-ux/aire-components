@@ -52,6 +52,23 @@ public class WorkspaceServiceTest {
   }
 
   @Test
+  void ensureRetrievingCreatedWorkspaceWorks() {
+    val descriptor = new WorkspaceDescriptor();
+    descriptor.setName("sup");
+    val mgr = workspaceService.createScopedManager(user);
+    mgr.createWorkspace(descriptor);
+    assertFalse(mgr.getWorkspace(descriptor).isEmpty());
+  }
+
+  @Test
+  void ensureRetrievingUncreatedWorkspaceWorks() {
+    val descriptor = new WorkspaceDescriptor();
+    descriptor.setName("sup");
+    val mgr = workspaceService.createScopedManager(user);
+    assertTrue(mgr.getWorkspace(descriptor).isEmpty());
+  }
+
+  @Test
   void ensureWorkspaceManagerCanCreateWorkspaceDirectory() {
     val manager = workspaceService.createScopedManager(user);
     val workspaceDescriptor = new WorkspaceDescriptor();

@@ -8,10 +8,14 @@ import io.sunshower.model.api.IdentifierConverter;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @RootElement
+@ToString
+@EqualsAndHashCode
 public class WorkspaceDescriptor {
 
   static final Sequence<Identifier> sequence;

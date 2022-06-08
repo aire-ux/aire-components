@@ -41,7 +41,6 @@ public final class WorkspaceSet {
     workspaces.remove(descriptor.getId());
   }
 
-  @NonNull
   public WorkspaceDescriptor get(Identifier id) {
     return workspaces.get(id);
   }
