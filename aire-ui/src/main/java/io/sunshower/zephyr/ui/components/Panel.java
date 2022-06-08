@@ -15,6 +15,20 @@ public class Panel extends HtmlContainer implements RouterLayout {
 
   public Panel(Component... components) {
     add(components);
+    setMode(Mode.Panel);
+  }
+
+  public void setMode(Mode mode) {
+    switch (mode) {
+      case Grid:
+        getElement().getClassList().remove("panel");
+        getElement().getClassList().add("grid");
+        break;
+      case Panel:
+        getElement().getClassList().remove("grid");
+        getElement().getClassList().add("panel");
+        break;
+    }
   }
 
   public void setNavigationBar(NavigationBar navigationBar) {
@@ -24,5 +38,10 @@ public class Panel extends HtmlContainer implements RouterLayout {
 
   public void removeNavigationBar(NavigationBar navigationBar) {
     remove(navigationBar);
+  }
+
+  public enum Mode {
+    Grid,
+    Panel
   }
 }

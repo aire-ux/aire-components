@@ -21,6 +21,6 @@ dependencies {
     api 'org.mockito:mockito-junit-jupiter'
     api 'org.springframework:spring-context'
     api 'org.springframework.boot:spring-boot'
-    api'javax.inject:javax.inject:1'
+    api'javax.inject:javax.inject'
     implementation 'com.github.mvysny.kaributesting:karibu-testing-v10-spring'
 }

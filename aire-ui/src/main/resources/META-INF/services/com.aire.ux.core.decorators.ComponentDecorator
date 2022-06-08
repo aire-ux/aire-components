@@ -1,1 +1,2 @@
 com.aire.ux.annotations.HostDecorator
+io.sunshower.zephyr.ui.components.DomAwareComponentDecorator

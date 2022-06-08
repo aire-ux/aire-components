@@ -7,11 +7,13 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
@@ -24,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +35,7 @@ import lombok.val;
 
 @Tag("aire-tab-panel")
 @JsModule("./aire/ui/components/tab-panel.ts")
+@CssImport("./styles/aire/ui/components/tab-panel.css")
 public class TabPanel extends HtmlContainer
     implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
@@ -77,6 +81,12 @@ public class TabPanel extends HtmlContainer
     return tab;
   }
 
+  public void addControl(Component control) {
+    val tab = new Tab(control);
+    tab.getElement().getClassList().set("tab-control", true);
+    tabs.add(tab);
+  }
+
   public List<Tab> getTabs() {
     return List.copyOf(components.keySet());
   }
@@ -88,8 +98,13 @@ public class TabPanel extends HtmlContainer
     return tab;
   }
 
+  public void activate(HasElement tabComponent) {
+    activate(tabForComponent(tabComponent));
+  }
+
   public void activate(Tab tab) {
-    UI.getCurrent().access(() -> updateTab(components.get(tab)));
+    tabs.setSelectedTab(tab);
+    UI.getCurrent().access(() -> updateTab(components.get(tab), tab));
   }
 
   public Tab addTab(String title, Class<? extends Component> componentType) {
@@ -122,16 +137,21 @@ public class TabPanel extends HtmlContainer
     updateTabOrientation(placement);
   }
 
+  public void addThemeVariants(TabsVariant... variant) {
+    tabs.addThemeVariants(variant);
+  }
+
   @Override
   public void onComponentEvent(Tabs.SelectedChangeEvent selectedChangeEvent) {
     val selectedTab = selectedChangeEvent.getSelectedTab();
     val next = components.get(selectedTab);
     if (next != null) {
-      UI.getCurrent().access(() -> updateTab(next));
+      tabs.setSelectedTab(selectedTab);
+      UI.getCurrent().access(() -> updateTab(next, selectedTab));
     }
   }
 
-  private void updateTab(@NonNull ComponentDescriptor next) {
+  private void updateTab(@NonNull ComponentDescriptor next, Tab selectedTab) {
     // use default routing mechanism for routes
     if (!next.isRoute) {
       Component nextInstance;
@@ -204,11 +224,18 @@ public class TabPanel extends HtmlContainer
       return null;
     }
     for (val kv : this.components.entrySet()) {
-      if (kv.getValue().componentType.equals(content.getClass())) {
+      val value = kv.getValue();
+      if (isChild(kv.getKey(), content)
+          || (!(value == null || value.componentType == null)
+              && value.componentType.equals(content.getClass()))) {
         return kv.getKey();
       }
     }
     return null;
+  }
+
+  private boolean isChild(Tab t, HasElement content) {
+    return t.getChildren().anyMatch(child -> Objects.equals(content, child));
   }
 
   public enum TabPlacement {

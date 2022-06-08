@@ -19,6 +19,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
+import io.sunshower.cloud.studio.components.workspace.WorkspaceListView;
 import io.sunshower.zephyr.configuration.SecurityUtils;
 import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.security.views.AuthenticationView;
@@ -28,9 +29,9 @@ import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
 import io.sunshower.zephyr.ui.identicon.Identicon;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
-import io.sunshower.zephyr.ui.layout.TestRoute;
 import java.util.List;
 import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
 import lombok.val;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -42,6 +43,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Breadcrumb(name = "Home", icon = "vaadin:home")
 public class MainView extends ApplicationLayout implements AppShellConfigurator {
 
+  @Inject
   public MainView() {
     super();
   }
@@ -52,8 +54,12 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
 
     val button =
         new NavigationBarButton(
-            TestRoute.class, List.of("test"), MatchMode.Contains, VaadinIcon.PAPERCLIP.create());
+            WorkspaceListView.class,
+            List.of("workspaces"),
+            MatchMode.Contains,
+            VaadinIcon.EDIT.create());
     nav.add(button);
+
     return nav;
   }
 
@@ -64,7 +70,8 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
     val menuBar = new MenuBar();
     menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_ICON);
 
-    var homeButton = new NavigationBarButton(MainView.class, new Image("images/icon.svg", "Home"));
+    var homeButton =
+        new NavigationBarButton(MainView.class, new Image("/zephyr/images/icon.svg", "Home"));
     homeButton.setClassName("container-end");
     topNav.add(homeButton);
 

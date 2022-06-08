@@ -13,6 +13,8 @@ dependencies {
     compileOnly project(':aire-ui')
     testImplementation(testFixtures(project(':aire-ui')))
 
+    testImplementation 'io.sunshower.zephyr:spring-embedded-plugin'
+
     [
             'com.vaadin:vaadin-spring-boot-starter'
     ].each {

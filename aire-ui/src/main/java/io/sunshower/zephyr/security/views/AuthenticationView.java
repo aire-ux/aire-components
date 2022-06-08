@@ -4,7 +4,6 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -22,7 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @Route("login")
 @PageTitle("Login")
-@CssImport(value = "./styles/themes/login-overlay.css", themeFor = "vaadin-login-overlay-wrapper")
+// @CssImport(value = "./styles/themes/login-overlay.css", themeFor =
+// "vaadin-login-overlay-wrapper")
 public class AuthenticationView extends VerticalLayout implements BeforeEnterObserver {
 
   private LoginOverlay overlay;

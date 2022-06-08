@@ -1,6 +1,5 @@
 package io.sunshower.zephyr.ui.canvas.geometry;
 
-import com.google.common.primitives.Doubles;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -12,6 +11,6 @@ public final class Point implements Comparable<Point> {
 
   @Override
   public int compareTo(@NonNull Point point) {
-    return -Doubles.compare(y, point.y);
+    return Double.compare(x, point.x) - Double.compare(y, point.y);
   }
 }

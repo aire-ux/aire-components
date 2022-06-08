@@ -14,6 +14,7 @@ import io.zephyr.api.ServiceRegistration;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,23 @@ public class VaadinSpringServletService extends SpringVaadinServletService
                 new FactoryServiceDefinition<>(
                     SpringDelegatingInstantiator.class, () -> instantiator)));
     return Optional.of(instantiator);
+  }
+
+  @Override
+  public URL getStaticResource(String path) {
+    var resource = super.getStaticResource(path);
+    if (resource != null) {
+      return resource;
+    }
+    val cl = getClassLoader();
+    if (path.startsWith("/VAADIN/static")) {
+      return cl.getResource("META-INF/resources" + path);
+    }
+    if (path.startsWith("/zephyr/")) {
+      val subpath = path.substring("/zephyr/".length());
+      return cl.getResource("ZEPHYR-INF/resources/" + subpath);
+    }
+    return null;
   }
 
   @Override

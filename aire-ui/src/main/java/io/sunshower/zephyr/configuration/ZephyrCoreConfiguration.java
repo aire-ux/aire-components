@@ -14,8 +14,12 @@ import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
+import io.sunshower.cloud.studio.WorkspaceService;
+import io.sunshower.cloud.studio.git.DirectoryBackedWorkspaceService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
+import io.sunshower.lang.Suppliers;
+import io.sunshower.model.api.Session;
 import io.sunshower.zephyr.ZephyrApplication;
 import io.sunshower.zephyr.security.AireRealmAggregator;
 import io.sunshower.zephyr.security.CompositeRealmManager;
@@ -113,6 +117,31 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public static BeanPostProcessor internationalizationBeanPostProcessor(
       ResourceBundleResolver resolver, ApplicationContext context) {
     return new InternationalizationBeanPostProcessor(resolver, context);
+  }
+
+  @Bean
+  public Session createSession() {
+    return new Session();
+  }
+
+  @Bean
+  public WorkspaceService workspaceService(Kernel kernel) {
+    val cache =
+        Suppliers.memoize(
+            () -> {
+              val file = kernel.getFileSystem().getPath("workspaces");
+              try {
+                if (!Files.exists(file)) {
+                  log.info("Initializing workspace service at {}", file);
+                  Files.createDirectory(file);
+                }
+              } catch (IOException ex) {
+                log.warn(
+                    "Error creating workspace directory {}.  Reason: {}", file, ex.getMessage());
+              }
+              return file.toFile();
+            });
+    return new DirectoryBackedWorkspaceService(cache, ZephyrApplication.getCondensation());
   }
 
   @Bean

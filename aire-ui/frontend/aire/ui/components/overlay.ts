@@ -3,6 +3,7 @@ import {css, customElement, html, LitElement} from "lit-element";
 @customElement('aire-overlay')
 export class Overlay extends LitElement {
 
+  // language=CSS
   static styles = css`
     :host {
       position: absolute;
@@ -10,6 +11,8 @@ export class Overlay extends LitElement {
       z-index: 150;
       display: flex;
       flex-direction: column;
+      top: unset;
+      left: unset;
       
       /*border: 10px solid red;*/
     }
@@ -26,6 +29,7 @@ export class Overlay extends LitElement {
       flex-direction: column;
       max-height: 100%;
       overflow-y: auto;
+      height: 100%;
     }
     ::slotted(footer) {
       height:32px;
@@ -51,6 +55,8 @@ export class Overlay extends LitElement {
     if (host) {
       this.style.width = `${host.clientWidth}px`;
       this.style.height = `${host.clientHeight - 2}px`;
+      this.style.left = 'unset';
+      this.style.top = 'unset';
     }
   };
 
