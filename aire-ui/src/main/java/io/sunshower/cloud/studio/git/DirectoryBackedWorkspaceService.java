@@ -1,5 +1,9 @@
 package io.sunshower.cloud.studio.git;
 
+import static io.zephyr.common.io.FilePermissionChecker.Type.DIRECTORY;
+import static io.zephyr.common.io.FilePermissionChecker.Type.READ;
+import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
+
 import io.sunshower.arcus.condensation.Condensation;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
@@ -7,27 +11,38 @@ import io.sunshower.cloud.studio.WorkspaceManager;
 import io.sunshower.cloud.studio.WorkspaceService;
 import io.sunshower.model.api.User;
 import io.sunshower.persistence.id.Identifier;
-import io.zephyr.common.io.FilePermissionChecker.Type;
 import io.zephyr.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.Set;
+import java.util.function.Supplier;
 import lombok.NonNull;
 import lombok.val;
 
 public class DirectoryBackedWorkspaceService implements WorkspaceService {
 
   static final String SUFFIX = ".workspace";
-  private final @NonNull File root;
+  private final @NonNull Supplier<File> root;
 
   private final @NonNull Condensation condensation;
 
   public DirectoryBackedWorkspaceService(
-      @NonNull final File root, @NonNull final Condensation condensation)
-      throws AccessDeniedException {
+      @NonNull final Supplier<File> root, @NonNull final Condensation condensation) {
     this.condensation = condensation;
-    this.root = Files.check(root, Type.WRITE, Type.READ, Type.DIRECTORY);
+    this.root =
+        () -> {
+          try {
+            return Files.check(root.get(), WRITE, READ, DIRECTORY);
+          } catch (AccessDeniedException ex) {
+            throw new WorkspaceException(ex);
+          }
+        };
+  }
+
+  public DirectoryBackedWorkspaceService(
+      @NonNull final File root, @NonNull final Condensation condensation) {
+    this(() -> root, condensation);
   }
 
   @Override
@@ -55,10 +70,10 @@ public class DirectoryBackedWorkspaceService implements WorkspaceService {
     if (!java.nio.file.Files.exists(path)) {
       java.nio.file.Files.createDirectory(path);
     }
-    return Files.check(directory, Type.DIRECTORY, Type.READ, Type.WRITE);
+    return Files.check(directory, DIRECTORY, READ, WRITE);
   }
 
   private File getDirectoryFor(Identifier userId) {
-    return new File(root, userId.toString() + SUFFIX);
+    return new File(root.get(), userId.toString() + SUFFIX);
   }
 }

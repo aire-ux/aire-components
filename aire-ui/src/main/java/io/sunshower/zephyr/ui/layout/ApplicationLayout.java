@@ -119,7 +119,9 @@ public class ApplicationLayout extends Main implements ThemableLayout, RouterLay
 
   protected HasComponents createNavigation() {
     val navigation = new NavigationBar(Direction.Vertical);
-    navigation.setDrawer(new Drawer(Drawer.Direction.Vertical));
+    val drawer = new Drawer(Drawer.Direction.Vertical);
+    navigation.setDrawer(drawer);
+    drawer.addClassName("primary-drawer");
     return navigation;
   }
 

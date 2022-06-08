@@ -17,7 +17,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
-@EnableVaadin
+@EnableVaadin({"io.sunshower.zephyr", "io.sunshower.cloud.studio"})
 @SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Import({ZephyrCoreConfiguration.class, EmbeddedZephyrConfiguration.class})
 public class ZephyrApplication extends SpringBootServletInitializer implements ModuleActivator {

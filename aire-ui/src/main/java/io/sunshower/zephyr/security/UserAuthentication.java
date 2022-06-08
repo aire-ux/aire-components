@@ -1,15 +1,15 @@
 package io.sunshower.zephyr.security;
 
 import io.sunshower.model.api.User;
-import io.sunshower.model.api.UserDetails;
 import java.util.Collection;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 final class UserAuthentication implements Authentication {
 
-  final User user;
+  @Getter private final User user;
   private boolean authenticated;
 
   public UserAuthentication(@NonNull User user) {
@@ -27,8 +27,8 @@ final class UserAuthentication implements Authentication {
   }
 
   @Override
-  public UserDetails getDetails() {
-    return user.getDetails();
+  public User getDetails() {
+    return user;
   }
 
   @Override

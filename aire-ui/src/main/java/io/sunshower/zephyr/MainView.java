@@ -19,6 +19,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
+import io.sunshower.cloud.studio.components.workspace.WorkspaceListView;
 import io.sunshower.zephyr.configuration.SecurityUtils;
 import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.security.views.AuthenticationView;
@@ -26,7 +27,6 @@ import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.BreadcrumbNavigation;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton;
 import io.sunshower.zephyr.ui.controls.NavigationBarButton.MatchMode;
-import io.sunshower.zephyr.ui.editor.EditorTabPanel;
 import io.sunshower.zephyr.ui.identicon.Identicon;
 import io.sunshower.zephyr.ui.layout.ApplicationLayout;
 import java.util.List;
@@ -54,7 +54,10 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
 
     val button =
         new NavigationBarButton(
-            EditorTabPanel.class, List.of("editor"), MatchMode.Contains, VaadinIcon.EDIT.create());
+            WorkspaceListView.class,
+            List.of("workspaces"),
+            MatchMode.Contains,
+            VaadinIcon.EDIT.create());
     nav.add(button);
 
     return nav;

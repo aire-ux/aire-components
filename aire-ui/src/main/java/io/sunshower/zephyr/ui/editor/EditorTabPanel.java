@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import lombok.val;
 
 @PermitAll
-@Route(value = "editor/test", layout = MainView.class)
+@Route(value = "editor", layout = MainView.class)
 @Breadcrumb(name = "Terraform", host = MainView.class)
 public class EditorTabPanel extends VerticalLayout {
 

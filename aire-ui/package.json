@@ -437,7 +437,6 @@
     "@polymer/polymer": "$@polymer/polymer",
     "@vaadin/common-frontend": "$@vaadin/common-frontend",
     "construct-style-sheets-polyfill": "$construct-style-sheets-polyfill",
-    "date-fns": "$date-fns",
     "gulp": "$gulp",
     "gulp-sass": "$gulp-sass",
     "lit": "$lit",

@@ -2,6 +2,7 @@ package io.sunshower.cloud.studio;
 
 import io.sunshower.arcus.condensation.Attribute;
 import io.sunshower.arcus.condensation.Convert;
+import io.sunshower.arcus.condensation.Element;
 import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.model.api.IdentifierConverter;
 import io.sunshower.persistence.id.Identifier;
@@ -26,6 +27,8 @@ public class WorkspaceDescriptor {
   private Identifier id;
 
   @Getter @Setter @Attribute private String name;
+
+  @Getter @Setter @Element private String description;
 
   public WorkspaceDescriptor() {
     id = sequence.next();

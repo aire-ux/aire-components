@@ -5,6 +5,10 @@ import {HTMLTemplateResult} from "lit";
 export class Card extends LitElement {
 
   static styles = css`
+    :host {
+      display: inline-block;
+      height:200px;
+    }
     article {
       width: 196px;
       height: 132px;
