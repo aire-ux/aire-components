@@ -11,6 +11,7 @@ import io.sunshower.persistence.id.Sequence;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -55,9 +56,25 @@ public class WorkspaceDescriptor {
   }
 
   @NonNull
-  public List<DocumentDescriptor> getDocuments() {
+  public List<DocumentDescriptor> getAllDocuments() {
     return List.copyOf(documents.values());
   }
 
+  @Nullable
+  public DocumentDescriptor getDocument(@NonNull Identifier id) {
+    return documents.get(id);
+  }
 
+
+  public boolean contains(@NonNull Identifier id) {
+    return documents.containsKey(id);
+  }
+
+  public void addDocument(DocumentDescriptor descriptor) {
+    documents.put(descriptor.getId(), descriptor);
+  }
+
+  public void remove(Identifier id) {
+    documents.remove(id);
+  }
 }

@@ -29,17 +29,21 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  * workspaces have the following directory-structure:
  *
  * <p>1. Root: the root is the directory that the workspace service has been instantiated with 2.
- * Root/userId.workspace: The ID of the workspace directory 3.
- * Root/userId.workspace/workspace.definition: the workspace definition file (JSON) 4.
- * Root/userId.workspace/workspace: the workspace directory (git is initialized here)
+ * Root/userId.workspace: The ID of the workspace directory 3. Root/userId.workspace/workspace.definition:
+ * the workspace definition file (JSON) 4. Root/userId.workspace/workspace: the workspace directory
+ * (git is initialized here)
  */
 public class RevisionAwareWorkspaceManager implements WorkspaceManager {
 
   public static final String WORKSPACE_DEFINITION = "workspace.definition";
-  /** the root directory of this workspace manager */
+  /**
+   * the root directory of this workspace manager
+   */
   private final File root;
 
-  /** the owner of this workspace manager */
+  /**
+   * the owner of this workspace manager
+   */
   private final User owner;
 
   private final Condensation condensation;
@@ -47,8 +51,8 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
   private WorkspaceSet workspaces;
 
   /**
-   * @param user the owner for this workspace manager
-   * @param root the root directory
+   * @param user         the owner for this workspace manager
+   * @param root         the root directory
    * @param condensation
    */
   public RevisionAwareWorkspaceManager(User user, File root, Condensation condensation)
@@ -66,10 +70,10 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
 
   @Override
   public Optional<Workspace> getWorkspace(@NonNull WorkspaceDescriptor descriptor) {
-    if(getWorkspaces().contains(descriptor)) {
+    if (getWorkspaces().contains(descriptor)) {
       try {
         return Optional.of(populateWorkspace(descriptor));
-      } catch(Exception ex) {
+      } catch (Exception ex) {
         throw new WorkspaceException(ex);
       }
     }
@@ -105,6 +109,16 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
       val definitionFile = getOrCreateWorkspaceDefinitionFile(root);
       val workspaceRoot = getWorkspaceRoot(descriptor.getId());
       deleteRecursively(workspaceRoot);
+      writeDescriptor(condensation, definitionFile);
+    } catch (IOException ex) {
+      throw new WorkspaceException(ex);
+    }
+  }
+
+  @Override
+  public void flush() {
+    try {
+      val definitionFile = getOrCreateWorkspaceDefinitionFile(root);
       writeDescriptor(condensation, definitionFile);
     } catch (IOException ex) {
       throw new WorkspaceException(ex);

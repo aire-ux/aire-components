@@ -3,6 +3,7 @@ package io.sunshower.cloud.studio.git;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.arcus.condensation.Condensation;
@@ -117,6 +118,37 @@ public class WorkspaceServiceTest {
     workspace.delete();
     assertFalse(workspace.getRoot().exists());
     assertFalse(new File(workspace.getRoot(), ".git").exists());
+  }
+
+  @Test
+  void ensureDeletingDocumentWorks() {
+    val manager = workspaceService.createScopedManager(user);
+    val workspaceDescriptor = new WorkspaceDescriptor();
+    workspaceDescriptor.setName("Test Workspace");
+    val workspace = manager.createWorkspace(workspaceDescriptor);
+
+    val doc = new DocumentDescriptor();
+    doc.setName("lol");
+
+    val document = (FileDocument) workspace.getOrCreate(doc);
+    assertNotNull(workspace.getDocumentDescriptor(doc.getId()));
+    workspace.delete(doc);
+    assertTrue(workspace.getDocuments().isEmpty());
+    assertFalse(document.getRoot().exists());
+  }
+
+  @Test
+  void ensureCreatingDocumentAllowsDocumentToBeRetrievedFromWorkspace() {
+    val manager = workspaceService.createScopedManager(user);
+    val workspaceDescriptor = new WorkspaceDescriptor();
+    workspaceDescriptor.setName("Test Workspace");
+    val workspace = manager.createWorkspace(workspaceDescriptor);
+
+    val doc = new DocumentDescriptor();
+    doc.setName("lol");
+
+    workspace.getOrCreate(doc);
+    assertNotNull(workspace.getDocumentDescriptor(doc.getId()));
   }
 
   @Test
