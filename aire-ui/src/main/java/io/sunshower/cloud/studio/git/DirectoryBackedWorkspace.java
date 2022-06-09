@@ -23,6 +23,7 @@ public class DirectoryBackedWorkspace implements Workspace {
   private final WorkspaceManager host;
   private final WorkspaceDescriptor descriptor;
 
+
   public DirectoryBackedWorkspace(
       @NonNull Git storage,
       @NonNull File root,

@@ -2,10 +2,29 @@
 aire-panel {
   display: flex;
   flex-grow: 1;
+  flex-direction: column;
   &.grid {
     display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    //grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));
+    //grid-template-columns: 100px 50px 100px;
+    //grid-template-rows: 100px auto 100px;
+    //width:100%;
+    //height: 100%;
     //grid-auto-columns: auto;
     //grid-auto-rows: min-content;
+  }
+  &.cta {
+    display: flex;
+    padding: 20%;
+    align-items: center;
+    justify-content: center;
+    h1, h2, h3 {
+      display: block;
+      width: 100%;
+      color: #660066;
+    }
   }
   &.subnav {
     margin: 8px;

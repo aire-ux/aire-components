@@ -4,9 +4,7 @@ import {css, customElement, html, LitElement} from "lit-element";
 export class TabPanel extends LitElement {
 
   static styles = css`
-    article {
-      width: 100%;
-    }
+    
     
     ::slotted(section) {
       position: absolute;
@@ -31,8 +29,8 @@ export class TabPanel extends LitElement {
           max-width: calc(100% - ${this.computeSiblingWidth()}px);
         }
       </style>
+      <slot name="tabs"></slot>
       <article>
-        <slot name="tabs"></slot>
         <slot name="content"></slot>
       </article>
     `;

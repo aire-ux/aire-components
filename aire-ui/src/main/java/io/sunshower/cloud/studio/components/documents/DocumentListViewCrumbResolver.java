@@ -36,7 +36,11 @@ public class DocumentListViewCrumbResolver implements CrumbResolver {
       val manager  = service.createScopedManager(session.getUser());
       val descriptor = manager.getWorkspaceDescriptor(id);
       if(descriptor.isPresent()) {
-        return List.of(new Span("Documents"), new Span(descriptor.get().getName()));
+        return List.of(new RouterLink(
+            "Documents",
+            DocumentListView.class,
+            id.toString()
+        ), new Span(descriptor.get().getName()));
       }
     }
     return Collections.emptyList();

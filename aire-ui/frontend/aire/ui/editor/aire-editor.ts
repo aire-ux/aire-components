@@ -1,7 +1,9 @@
 import {css, customElement, LitElement, PropertyValues, query} from "lit-element";
 import {terraform} from '@sunshower/breeze-lang'
 import {EditorView} from "@codemirror/view";
+import {Dynamic, Receive, Remotable, Remote} from "@aire-ux/aire-condensation";
 
+@Remotable
 @customElement('aire-editor')
 export class AireEditor extends LitElement {
 
@@ -17,8 +19,7 @@ export class AireEditor extends LitElement {
   static styles = css`
     div.cm-editor {
       margin-top: 4px;
-      width:100%;
-      height: 100%;
+      height: calc(100% - 4px);
     }
   `;
 
@@ -33,6 +34,25 @@ export class AireEditor extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.view?.destroy();
+  }
+
+  @Remote
+  public getContents() : string | undefined {
+    return this.view?.state.doc.toString();
+  }
+
+  @Remote
+  public setContents(@Receive(Dynamic) contents: string) : void {
+    const state = this.view?.state!;
+    const tx = state.update({
+      changes:{
+        from: 0,
+        to: state.doc.length,
+        insert: contents
+      }
+    });
+    this.view?.dispatch(tx);
   }
 
 }

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.router.RouterLayout;
 import io.sunshower.zephyr.ui.navigation.NavigationBar;
+import java.util.Set;
 
 @Tag("aire-panel")
 @JsModule("./aire/ui/components/panel.ts")
@@ -21,12 +22,16 @@ public class Panel extends HtmlContainer implements RouterLayout {
   public void setMode(Mode mode) {
     switch (mode) {
       case Grid:
-        getElement().getClassList().remove("panel");
+        getElement().getClassList().removeAll(Set.of("panel", "cta"));
         getElement().getClassList().add("grid");
         break;
       case Panel:
-        getElement().getClassList().remove("grid");
+        getElement().getClassList().removeAll(Set.of("grid", "cta"));
         getElement().getClassList().add("panel");
+        break;
+      case CallToAction:
+        getElement().getClassList().removeAll(Set.of("grid", "panel"));
+        getElement().getClassList().add("cta");
         break;
     }
   }
@@ -42,6 +47,8 @@ public class Panel extends HtmlContainer implements RouterLayout {
 
   public enum Mode {
     Grid,
-    Panel
+    Panel,
+    CallToAction,
+    ;
   }
 }
