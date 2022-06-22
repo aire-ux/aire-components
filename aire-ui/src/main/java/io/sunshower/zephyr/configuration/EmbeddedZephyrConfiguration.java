@@ -99,7 +99,7 @@ public class EmbeddedZephyrConfiguration
           0,
           kernelRootDirectory,
           Type.Plugin,
-          ModuleCoordinate.create("com.aire.ux", "aire-ui", "1.0.0"),
+          ModuleCoordinate.create("com.aire.ux.ui", "aire-ui", "1.0.0"),
           List.of(),
           List.of(),
           "Management UI for Zephyr");

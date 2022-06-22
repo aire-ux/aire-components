@@ -37,8 +37,8 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
   }
 
   @SuppressWarnings("unchecked")
-  private List<Component> collectLinks(Pair<Breadcrumb, Class<? extends Component>> target,
-      AfterNavigationEvent event) {
+  private List<Component> collectLinks(
+      Pair<Breadcrumb, Class<? extends Component>> target, AfterNavigationEvent event) {
 
     if (target != null) {
       val results = new ArrayList<Component>();
@@ -60,8 +60,8 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
     return Collections.emptyList();
   }
 
-  private void addBreadcrumbChain(AfterNavigationEvent event, List<Component> results,
-      Class<? extends Component> host) {
+  private void addBreadcrumbChain(
+      AfterNavigationEvent event, List<Component> results, Class<? extends Component> host) {
     val breadcrumb = host.getAnnotation(Breadcrumb.class);
     if (hasResolver(breadcrumb)) {
       val resolver = Instantiator.get(UI.getCurrent()).getOrCreate(breadcrumb.resolver());

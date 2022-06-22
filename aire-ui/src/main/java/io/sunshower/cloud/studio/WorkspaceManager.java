@@ -18,7 +18,6 @@ public interface WorkspaceManager {
 
   Optional<WorkspaceDescriptor> getWorkspaceDescriptor(@NonNull Identifier id);
 
-
   Set<WorkspaceDescriptor> getWorkspaces();
 
   Workspace createWorkspace(WorkspaceDescriptor workspaceDescriptor);
@@ -26,5 +25,4 @@ public interface WorkspaceManager {
   void delete(WorkspaceDescriptor descriptor);
 
   void flush();
-
 }

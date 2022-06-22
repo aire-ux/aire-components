@@ -41,19 +41,14 @@ public class TabPanel extends HtmlContainer
     implements RouterLayout, ComponentEventListener<Tabs.SelectedChangeEvent> {
 
   static final String CLASS_NAME = "tab-panel";
-  /**
-   * immutable state
-   */
+  /** immutable state */
   private final Tabs tabs;
 
   private Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
-  @Getter
-  private final Map<Tab, ComponentDescriptor> components;
-  /**
-   * mutable state
-   */
+  @Getter private final Map<Tab, ComponentDescriptor> components;
+  /** mutable state */
   private Component current;
 
   private TabPlacement placement;
@@ -69,7 +64,6 @@ public class TabPanel extends HtmlContainer
     this(placement, Mode.Contents);
   }
 
-
   public TabPanel(Mode mode) {
     this(TabPlacement.TOP, mode);
   }
@@ -81,7 +75,7 @@ public class TabPanel extends HtmlContainer
     decorate(tabs);
     tabContainer = new Nav();
     tabContainer.getElement().setAttribute("slot", "tabs");
-    if(mode == Mode.Contents) {
+    if (mode == Mode.Contents) {
       contents = new Section();
       contents.getElement().setAttribute("slot", "content");
       add(contents);
@@ -138,8 +132,8 @@ public class TabPanel extends HtmlContainer
     return addTab(title, componentType, null);
   }
 
-  public Tab addTab(String title, Class<? extends Component> componentType,
-      RouteParameters parameters) {
+  public Tab addTab(
+      String title, Class<? extends Component> componentType, RouteParameters parameters) {
     val route = isRoute(componentType);
     if (route) {
       val url = getTargetUrl(componentType);
@@ -161,9 +155,7 @@ public class TabPanel extends HtmlContainer
       tabs.add(tab);
       return tab;
     }
-
   }
-
 
   public void setTabPlacement(TabPlacement placement) {
     val classlist = getClassNames();
@@ -192,7 +184,7 @@ public class TabPanel extends HtmlContainer
 
   private void updateTab(@NonNull ComponentDescriptor next, Tab selectedTab) {
     // use default routing mechanism for routes
-    if(mode == Mode.Routes) {
+    if (mode == Mode.Routes) {
       return;
     }
     if (!next.isRoute) {
@@ -207,7 +199,7 @@ public class TabPanel extends HtmlContainer
   }
 
   private void setContent(Component content) {
-    if(mode != Mode.Routes) {
+    if (mode != Mode.Routes) {
       if (current != null) {
         contents.remove(current);
       }
@@ -281,7 +273,6 @@ public class TabPanel extends HtmlContainer
   private boolean isChild(Tab t, HasElement content) {
     return t.getChildren().anyMatch(child -> Objects.equals(content, child));
   }
-
 
   public enum TabPlacement {
     TOP,

@@ -8,6 +8,7 @@ import io.sunshower.model.api.IdentifierConverter;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
 import io.sunshower.persistence.id.Sequence;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-@RootElement
 @ToString
+@RootElement
 @EqualsAndHashCode
 public class WorkspaceDescriptor {
 
@@ -37,44 +38,49 @@ public class WorkspaceDescriptor {
 
   @Getter
   @Setter
+  @Element
   @Convert(key = IdentifierConverter.class)
   private Map<Identifier, DocumentDescriptor> documents;
 
-  @Getter
-  @Setter
-  @Attribute
-  private String name;
+  @Getter @Setter @Attribute private String name;
 
-  @Getter
-  @Setter
-  @Element
-  private String description;
+  @Getter @Setter @Element private String description;
 
   public WorkspaceDescriptor() {
     id = sequence.next();
-    documents = new HashMap<>();
   }
 
   @NonNull
   public List<DocumentDescriptor> getAllDocuments() {
-    return List.copyOf(documents.values());
+    return documents == null ? Collections.emptyList() : List.copyOf(documents.values());
   }
 
   @Nullable
   public DocumentDescriptor getDocument(@NonNull Identifier id) {
+    if (documents == null) {
+      return null;
+    }
     return documents.get(id);
   }
 
-
   public boolean contains(@NonNull Identifier id) {
+    if (documents == null) {
+      return false;
+    }
     return documents.containsKey(id);
   }
 
   public void addDocument(DocumentDescriptor descriptor) {
+    if (documents == null) {
+      documents = new HashMap<>();
+    }
     documents.put(descriptor.getId(), descriptor);
   }
 
   public void remove(Identifier id) {
+    if (documents == null) {
+      return;
+    }
     documents.remove(id);
   }
 }

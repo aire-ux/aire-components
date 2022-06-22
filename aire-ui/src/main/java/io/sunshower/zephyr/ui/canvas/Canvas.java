@@ -47,7 +47,7 @@ import lombok.val;
 @CssImport("./styles/aire/ui/canvas/canvas.css")
 @NpmPackage(value = "@antv/x6", version = "1.30.0")
 @NpmPackage(value = "@antv/layout", version = "0.1.31")
-@NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.5")
+@NpmPackage(value = "@aire-ux/aire-condensation", version = "0.1.7")
 public class Canvas extends HtmlContainer implements ComponentEventListener<CanvasReadyEvent> {
 
   /**

@@ -52,6 +52,23 @@ public class WorkspaceServiceTest {
     assertEquals(user, manager.getOwner());
   }
 
+  @Test
+  void ensureDocumentsAreSavedCorrectly() {
+    val ws = new WorkspaceDescriptor();
+    ws.setName("hello");
+
+    var mgr = workspaceService.createScopedManager(user);
+    var workspace = mgr.createWorkspace(ws);
+
+    var doc = new DocumentDescriptor();
+    doc.setName("test");
+    workspace.getOrCreate(doc);
+
+    mgr = workspaceService.createScopedManager(user);
+    workspace = mgr.getWorkspace(ws.getId()).get();
+
+    assertEquals(1, workspace.getDocuments().size());
+  }
 
   @Test
   void ensureRetrievingCreatedWorkspaceAndDocumentOnItWorks() {

@@ -9,7 +9,6 @@ final class DefaultEditorState implements EditorState {
     this.editor = editor;
   }
 
-
   @Override
   public CharSequence getContents() {
     return contents;
@@ -18,7 +17,6 @@ final class DefaultEditorState implements EditorState {
   @Override
   public void setContents(CharSequence contents) {
     this.contents = contents;
-
   }
 
   @Override

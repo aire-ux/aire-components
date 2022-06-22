@@ -3,7 +3,10 @@ package io.sunshower.cloud.studio.components.documents;
 import com.aire.ux.DomAware;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -23,6 +26,7 @@ import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.controls.FloatingActionButton;
+import io.sunshower.zephyr.ui.identicon.Identicon;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.security.PermitAll;
@@ -33,20 +37,22 @@ import lombok.val;
 @DomAware
 @PermitAll
 @Route(value = "documents", layout = MainView.class)
-@Breadcrumb(name = "Documents", host = WorkspaceListView.class, resolver = DocumentListViewCrumbResolver.class)
+@Breadcrumb(
+    name = "Documents",
+    host = WorkspaceListView.class,
+    resolver = DocumentListViewCrumbResolver.class)
 public class DocumentListView extends Panel implements HasUrlParameter<String> {
 
   /***
    * immutable state
    */
   private final Session session;
+
   private final WorkspaceService service;
 
-
-  /**
-   * mutable state
-   */
+  /** mutable state */
   private Identifier id;
+
   private Workspace workspace;
   private WorkspaceManager manager;
   private FloatingActionButton fab;
@@ -73,25 +79,38 @@ public class DocumentListView extends Panel implements HasUrlParameter<String> {
     layoutDocumentList(documents == null ? Collections.emptyList() : documents);
   }
 
-
   private void layoutDocumentList(@NonNull List<DocumentDescriptor> docs) {
     documents = new Grid<>();
     fab = new FloatingActionButton(VaadinIcon.PLUS.create());
 
-    fab.addClickListener(click -> {
-
-      val document = new DocumentDescriptor();
-      document.setExtension(".tf");
-      document.setName("untitled");
-      workspace.getOrCreate(document);
-      val params = new RouteParameters(
-          new RouteParam("workspaceId", id.toString()),
-          new RouteParam("documentId", document.getId().toString())
-      );
-      UI.getCurrent()
-          .navigate(DocumentEditor.class, params);
-    });
+    fab.addClickListener(
+        click -> {
+          val params =
+              new RouteParameters(
+                  new RouteParam("workspaceId", id.toString()),
+                  new RouteParam("documentId", "new"));
+          UI.getCurrent().navigate(DocumentEditor.class, params);
+        });
     documents.setItems(new ListDataProvider<>(docs));
+    documents.addComponentColumn(
+        c -> {
+          val layout = new HorizontalLayout();
+          val icon = Identicon.createFromObject(c.getId());
+
+          val verticalLayout = new VerticalLayout();
+          verticalLayout.add(new Span(c.getName()));
+          layout.add(icon, verticalLayout);
+
+          layout.addClickListener(
+              click -> {
+                val params =
+                    new RouteParameters(
+                        new RouteParam("workspaceId", id.toString()),
+                        new RouteParam("documentId", c.getId().toString()));
+                UI.getCurrent().navigate(DocumentEditor.class, params);
+              });
+          return layout;
+        });
     add(documents);
     add(fab);
   }

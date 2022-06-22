@@ -138,6 +138,19 @@
         <version>${aire.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.aire.ux.ui</groupId>
+        <artifactId>aire-ui</artifactId>
+        <version>${aire.version}</version>
+        <classifier>tests</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire.ux.ui</groupId>
+        <artifactId>aire-ui</artifactId>
+        <version>${aire.version}</version>
+        <classifier>test-fixtures</classifier>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

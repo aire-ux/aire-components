@@ -2,7 +2,7 @@ package io.sunshower.cloud.studio.components.documents;
 
 import static io.sunshower.cloud.studio.Document.read;
 
-import com.helger.commons.io.stream.StringInputStream;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
@@ -26,6 +26,8 @@ import io.sunshower.zephyr.ui.controls.Breadcrumb;
 import io.sunshower.zephyr.ui.editor.Editor;
 import io.sunshower.zephyr.ui.editor.actions.GetEditorContentsAction;
 import io.sunshower.zephyr.ui.editor.actions.SetEditorContentsAction;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import lombok.SneakyThrows;
@@ -33,11 +35,13 @@ import lombok.val;
 
 @PermitAll
 @Route(value = "documents/:workspaceId/edit/:documentId", layout = AbstractDocumentEditorView.class)
-@Breadcrumb(name = "Edit", host = DocumentEditorView.class, resolver = DocumentEditorCrumbResolver.class)
+@Breadcrumb(
+    name = "Edit",
+    host = DocumentEditorView.class,
+    resolver = DocumentEditorCrumbResolver.class)
 public class DocumentEditor extends VerticalLayout implements BeforeEnterObserver {
 
-  static final ComponentEventListener<ClickEvent<MenuItem>> NULL_LISTENER = e -> {
-  };
+  static final ComponentEventListener<ClickEvent<MenuItem>> NULL_LISTENER = e -> {};
   private final Editor editor;
   private final Session session;
   private final WorkspaceService service;
@@ -68,20 +72,36 @@ public class DocumentEditor extends VerticalLayout implements BeforeEnterObserve
     add(editor);
   }
 
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    try {
+      val docContents = read(actualDocument);
+      if (!(docContents == null || docContents.isEmpty())) {
+        editor.invoke(SetEditorContentsAction.class, docContents.toString());
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
   private void createMenubar() {
     val fileMenuBar = createIconItem(menubar, VaadinIcon.FILE_O, "File");
     val submenu = fileMenuBar.getSubMenu();
-//    createIconItem(submenu, VaadinIcon.FILE_O, "Commit", e -> {
-//      editor.invoke(SetEditorContentsAction.class, "hello");
-//    });
-    createIconItem(submenu, VaadinIcon.FILE_ADD, "Save", e -> {
-//      editor.invoke(SetEditorContentsAction.class, );
-      editor.invoke(GetEditorContentsAction.class).then(value -> {
-        System.out.println(value);
-//        actualDocument.write(new StringInputStream(value.toString()));
-      });
-
-    });
+    createIconItem(
+        submenu,
+        VaadinIcon.FILE_ADD,
+        "Save",
+        e -> {
+          editor
+              .invoke(GetEditorContentsAction.class)
+              .then(
+                  value -> {
+                    val svalue = value.asString();
+                    actualDocument.write(
+                        new ByteArrayInputStream(svalue.getBytes(StandardCharsets.UTF_8)));
+                    service.createScopedManager(session.getUser()).flush();
+                  });
+        });
 
     val editMenuBar = createIconItem(menubar, VaadinIcon.EDIT, "Edit");
     val codeMenuBar = createIconItem(menubar, VaadinIcon.CODE, "Code");
@@ -91,24 +111,35 @@ public class DocumentEditor extends VerticalLayout implements BeforeEnterObserve
     return createIconItem(menu, iconName, label, null, false, NULL_LISTENER);
   }
 
-
-  private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label,
+  private MenuItem createIconItem(
+      HasMenuItems menu,
+      VaadinIcon iconName,
+      String label,
       ComponentEventListener<ClickEvent<MenuItem>> listener) {
     return createIconItem(menu, iconName, label, null, false, listener);
   }
 
-  private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label,
-      String ariaLabel) {
+  private MenuItem createIconItem(
+      HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
     return createIconItem(menu, iconName, label, ariaLabel, false, NULL_LISTENER);
   }
 
-  private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label,
-      String ariaLabel, ComponentEventListener<ClickEvent<MenuItem>> listener) {
+  private MenuItem createIconItem(
+      HasMenuItems menu,
+      VaadinIcon iconName,
+      String label,
+      String ariaLabel,
+      ComponentEventListener<ClickEvent<MenuItem>> listener) {
     return createIconItem(menu, iconName, label, ariaLabel, false, listener);
   }
 
-  private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label,
-      String ariaLabel, boolean isChild, ComponentEventListener<ClickEvent<MenuItem>> listener) {
+  private MenuItem createIconItem(
+      HasMenuItems menu,
+      VaadinIcon iconName,
+      String label,
+      String ariaLabel,
+      boolean isChild,
+      ComponentEventListener<ClickEvent<MenuItem>> listener) {
     val icon = new Icon(iconName);
 
     if (isChild) {
@@ -134,11 +165,17 @@ public class DocumentEditor extends VerticalLayout implements BeforeEnterObserve
   public void beforeEnter(BeforeEnterEvent event) {
     val params = event.getRouteParameters();
     workspaceId = Identifier.valueOf(params.get("workspaceId").get());
-    documentId = Identifier.valueOf(params.get("documentId").get());
     workspace = service.createScopedManager(session.getUser()).getWorkspace(workspaceId).get();
-//    document = workspace.getDocuments().stream().filter(t -> t.getId().equals(documentId)).findFirst().get();
-//    actualDocument = workspace.getOrCreate(document);
-//    editor.invoke(SetEditorContentsAction.class, read(actualDocument));
+    //    documentId = Identifier.valueOf(params.get("documentId").get());
+    val isNew = params.get("documentId").map(t -> t.equals("new")).orElse(true);
+    if (isNew) {
+      document = new DocumentDescriptor();
+      document.setName("untitled");
+      document.setExtension(".tf");
+    } else {
+      documentId = params.get("documentId").map(Identifier::valueOf).get();
+      document = workspace.getDocumentDescriptor(documentId);
+    }
+    actualDocument = workspace.getOrCreate(document);
   }
-
 }

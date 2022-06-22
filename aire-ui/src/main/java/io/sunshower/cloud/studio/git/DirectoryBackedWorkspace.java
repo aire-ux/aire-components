@@ -7,13 +7,13 @@ import io.sunshower.cloud.studio.DocumentDescriptor;
 import io.sunshower.cloud.studio.Workspace;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
-import io.sunshower.cloud.studio.WorkspaceManager;
 import io.sunshower.persistence.id.Identifier;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
@@ -22,26 +22,25 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 public class DirectoryBackedWorkspace implements Workspace {
 
-  @Getter private final File root;
   private final Git storage;
-  private final WorkspaceManager host;
-  private final WorkspaceDescriptor descriptor;
-
+  private final Identifier id;
+  @Getter private final File root;
+  private final RevisionAwareWorkspaceManager host;
 
   public DirectoryBackedWorkspace(
       @NonNull Git storage,
       @NonNull File root,
-      @NonNull WorkspaceManager host,
-      @NonNull WorkspaceDescriptor descriptor) {
+      @NonNull RevisionAwareWorkspaceManager host,
+      @NonNull Identifier id) {
+    this.id = id;
     this.host = host;
     this.root = root;
     this.storage = storage;
-    this.descriptor = descriptor;
   }
 
   @Override
   public void delete() {
-    host.delete(descriptor);
+    host.getWorkspaceDescriptor(id).ifPresent(host::delete);
   }
 
   @Override
@@ -51,7 +50,7 @@ public class DirectoryBackedWorkspace implements Workspace {
     if (file.exists()) {
       deleteRecursively(file);
     }
-    this.descriptor.remove(descriptor.getId());
+    host.removeWorkspaceById(id);
     host.flush();
   }
 
@@ -67,9 +66,6 @@ public class DirectoryBackedWorkspace implements Workspace {
 
   @Override
   public Document getOrCreate(DocumentDescriptor descriptor, String branch) {
-    if(!this.descriptor.contains(descriptor.getId())) {
-      this.descriptor.addDocument(descriptor);
-    }
     try {
       val file = registerDescriptor(descriptor);
       return new FileDocument(host.getOwner(), file, storage, descriptor).checkout(branch);
@@ -80,9 +76,7 @@ public class DirectoryBackedWorkspace implements Workspace {
 
   private File registerDescriptor(DocumentDescriptor descriptor)
       throws IOException, GitAPIException {
-    if(!this.descriptor.contains(descriptor.getId())) {
-      this.descriptor.addDocument(descriptor);
-    }
+    host.registerDescriptor(id, descriptor);
     val documentId = descriptor.getId().toString() + "." + descriptor.getExtension();
     val file = new File(root, documentId);
     val path = file.toPath();
@@ -96,11 +90,20 @@ public class DirectoryBackedWorkspace implements Workspace {
   @Override
   @NonNull
   public List<DocumentDescriptor> getDocuments() {
-    return descriptor.getAllDocuments();
+    return host.getWorkspaceDescriptor(id)
+        .map(WorkspaceDescriptor::getAllDocuments)
+        .orElse(Collections.emptyList());
   }
 
   @Override
   public DocumentDescriptor getDocumentDescriptor(Identifier id) {
-    return descriptor.getDocument(id);
+    return host
+        .getWorkspaceDescriptor(this.id)
+        .map(WorkspaceDescriptor::getAllDocuments)
+        .orElse(Collections.emptyList())
+        .stream()
+        .filter(t -> Objects.equals(t.getId(), id))
+        .findFirst()
+        .orElse(null);
   }
 }

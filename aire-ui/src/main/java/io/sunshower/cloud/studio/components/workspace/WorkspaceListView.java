@@ -151,11 +151,10 @@ public class WorkspaceListView extends Panel {
       card.add(Slot.Content, dl);
       add(card);
 
-      card.addClickListener(click -> {
-        UI.getCurrent().navigate(DocumentListView.class, workspace.getId().toString());
-      });
-
-
+      card.addClickListener(
+          click -> {
+            UI.getCurrent().navigate(DocumentListView.class, workspace.getId().toString());
+          });
     }
     refreshTree();
   }

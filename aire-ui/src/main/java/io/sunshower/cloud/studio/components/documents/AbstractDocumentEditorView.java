@@ -7,7 +7,6 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.ParentLayout;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLayout;
@@ -20,7 +19,6 @@ import io.sunshower.persistence.id.Identifier;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Panel;
 import io.sunshower.zephyr.ui.components.TabPanel;
-import io.sunshower.zephyr.ui.components.TabPanel.Mode;
 import javax.inject.Inject;
 import lombok.val;
 
@@ -40,12 +38,9 @@ public class AbstractDocumentEditorView extends Panel implements RouterLayout, B
     this.session = session;
     this.workspaceService = workspaceService;
     tabs = new TabPanel(TabPanel.Mode.Routes);
-//    tabs.setHeight("calc(100% - 40px)");
+    //    tabs.setHeight("calc(100% - 40px)");
 
-    tabs.addThemeVariants(
-        TabsVariant.LUMO_MINIMAL,
-        TabsVariant.LUMO_MINIMAL
-    );
+    tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL, TabsVariant.LUMO_MINIMAL);
     add(tabs);
     addButton = new Button(VaadinIcon.PLUS.create());
 
@@ -56,16 +51,17 @@ public class AbstractDocumentEditorView extends Panel implements RouterLayout, B
           document.setExtension(".tf");
           document.setName("untitled");
           workspace.getOrCreate(document);
-          val tab = tabs.addTab("Doc", DocumentEditor.class,
-              new RouteParameters(
-                  new RouteParam("workspaceId", workspaceId.toString()),
-                  new RouteParam("documentId", document.getId().toString())
-              ));
+          val tab =
+              tabs.addTab(
+                  "Doc",
+                  DocumentEditor.class,
+                  new RouteParameters(
+                      new RouteParam("workspaceId", workspaceId.toString()),
+                      new RouteParam("documentId", document.getId().toString())));
           tabs.activate(tab);
         });
     tabs.addControl(addButton);
   }
-
 
   @Override
   public void beforeEnter(BeforeEnterEvent event) {

@@ -3,7 +3,7 @@
   "license": "UNLICENSED",
   "vaadin": {
     "dependencies": {
-      "@aire-ux/aire-condensation": "0.1.5",
+      "@aire-ux/aire-condensation": "0.1.7",
       "@antv/layout": "0.1.31",
       "@antv/x6": "1.30.0",
       "@codemirror/autocomplete": "0.20.3",
@@ -155,10 +155,10 @@
       "workbox-precaching": "6.5.0",
       "workbox-webpack-plugin": "6.5.0"
     },
-    "hash": "ec4be8ebcd7bb565d36685c0e944e6c2f00c2c82524b12ebdd7b7ae589717d6d"
+    "hash": "f3e6f81f31ac3742d8e1f7463f9b79c9212787e2fce132f31049dee06c37b945"
   },
   "dependencies": {
-    "@aire-ux/aire-condensation": "0.1.5",
+    "@aire-ux/aire-condensation": "0.1.7",
     "@antv/layout": "0.1.31",
     "@antv/x6": "1.30.0",
     "@codemirror/autocomplete": "0.20.3",

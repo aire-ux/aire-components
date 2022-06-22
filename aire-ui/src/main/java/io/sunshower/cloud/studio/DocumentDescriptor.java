@@ -1,5 +1,6 @@
 package io.sunshower.cloud.studio;
 
+import io.sunshower.arcus.condensation.Attribute;
 import io.sunshower.arcus.condensation.RootElement;
 import io.sunshower.persistence.id.Identifier;
 import io.sunshower.persistence.id.Identifiers;
@@ -16,10 +17,10 @@ public class DocumentDescriptor {
     sequence = Identifiers.newSequence(true);
   }
 
-  @Getter @Setter private String name;
-  @Getter @Setter private Identifier id;
+  @Getter @Setter @Attribute private String name;
+  @Getter @Setter @Attribute private Identifier id;
 
-  @Getter @Setter private String extension;
+  @Getter @Setter @Attribute private String extension;
 
   public DocumentDescriptor() {
     setId(sequence.next());

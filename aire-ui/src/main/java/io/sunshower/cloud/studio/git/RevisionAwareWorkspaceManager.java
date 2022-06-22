@@ -7,6 +7,7 @@ import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
 import static org.springframework.util.FileSystemUtils.deleteRecursively;
 
 import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.cloud.studio.DocumentDescriptor;
 import io.sunshower.cloud.studio.Workspace;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
@@ -29,21 +30,17 @@ import org.eclipse.jgit.api.errors.GitAPIException;
  * workspaces have the following directory-structure:
  *
  * <p>1. Root: the root is the directory that the workspace service has been instantiated with 2.
- * Root/userId.workspace: The ID of the workspace directory 3. Root/userId.workspace/workspace.definition:
- * the workspace definition file (JSON) 4. Root/userId.workspace/workspace: the workspace directory
- * (git is initialized here)
+ * Root/userId.workspace: The ID of the workspace directory 3.
+ * Root/userId.workspace/workspace.definition: the workspace definition file (JSON) 4.
+ * Root/userId.workspace/workspace: the workspace directory (git is initialized here)
  */
 public class RevisionAwareWorkspaceManager implements WorkspaceManager {
 
   public static final String WORKSPACE_DEFINITION = "workspace.definition";
-  /**
-   * the root directory of this workspace manager
-   */
+  /** the root directory of this workspace manager */
   private final File root;
 
-  /**
-   * the owner of this workspace manager
-   */
+  /** the owner of this workspace manager */
   private final User owner;
 
   private final Condensation condensation;
@@ -51,8 +48,8 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
   private WorkspaceSet workspaces;
 
   /**
-   * @param user         the owner for this workspace manager
-   * @param root         the root directory
+   * @param user the owner for this workspace manager
+   * @param root the root directory
    * @param condensation
    */
   public RevisionAwareWorkspaceManager(User user, File root, Condensation condensation)
@@ -125,6 +122,13 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     }
   }
 
+  void removeWorkspaceById(Identifier id) {
+    val result = workspaces.get(id);
+    if (result != null) {
+      delete(result);
+    }
+  }
+
   private Workspace populateWorkspace(WorkspaceDescriptor result)
       throws IOException, GitAPIException {
     createOrPopulateWorkspaceDescriptor(result);
@@ -137,7 +141,7 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     } else {
       git = Git.open(workspaceDirectory);
     }
-    return new DirectoryBackedWorkspace(git, workspaceDirectory, this, result);
+    return new DirectoryBackedWorkspace(git, workspaceDirectory, this, result.getId());
   }
 
   private File getWorkspaceRoot(Identifier id) throws IOException {
@@ -167,10 +171,8 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
       workspaces = new WorkspaceSet();
       workspaces.setOwner(owner);
       writeDescriptor(condensation, definitionFile);
-      return workspaces;
-    } else {
-      return readDescriptor();
     }
+    return readDescriptor();
   }
 
   private void writeDescriptor(Condensation condensation, File definitionFile) throws IOException {
@@ -198,5 +200,14 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
       throw new IOException("Error: File '%s' exists, but is not a file".formatted(ws));
     }
     return Files.check(ws, FILE, READ, WRITE);
+  }
+
+  public void registerDescriptor(Identifier id, DocumentDescriptor descriptor) {
+    val ws = workspaces.get(id);
+    assert ws != null;
+    if (ws.getDocument(descriptor.getId()) == null) {
+      ws.addDocument(descriptor);
+      flush();
+    }
   }
 }
