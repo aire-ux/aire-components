@@ -67,6 +67,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Slf4j
 @Configuration
@@ -367,6 +368,11 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public AuthenticationProvider defaultLocalRealmAuthenticationProvider() {
     return new CryptkeeperAuthenticationProvider(
         getApplicationContext().getBean(AireRealmAggregator.class));
+  }
+
+  @Bean
+  public LogoutHandler logoutHandler(SecretService service, ApplicationContext context) {
+    return new VaultDestroyingLogoutHandler(service, context);
   }
 
   @Override

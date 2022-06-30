@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.theme.TestTheme;
@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 @AireTest
 @Disabled
 @EnableAireThemeServlet
-@Routes(scanClassPackage = MainView.class)
+@RouteLocation(scanClassPackage = MainView.class)
 @com.aire.ux.theme.decorators.TestTheme(AireTestTheme.class)
 class AireThemeResourceServletTest extends AireThemeServletTestCase {
 

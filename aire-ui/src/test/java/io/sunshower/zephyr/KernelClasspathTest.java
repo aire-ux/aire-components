@@ -3,7 +3,7 @@ package io.sunshower.zephyr;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
-public class KernelClassptaTest {
+public class KernelClasspathTest {
 
   @Test
   @SneakyThrows

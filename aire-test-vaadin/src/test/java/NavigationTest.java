@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.vaadin.scenarios.classroutes.ClassScenarioRouteLayout;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Order;
 
 @AireTest
 @Navigate("test")
-@Routes(scanClassPackage = ClassScenarioRouteLayout.class)
+@RouteLocation(scanClassPackage = ClassScenarioRouteLayout.class)
 public class NavigationTest {
 
   static {
@@ -31,7 +31,7 @@ public class NavigationTest {
   @Order(2)
   @ViewTest
   @Navigate("main")
-  @Routes(scanClassPackage = MainLayout.class)
+  @RouteLocation(scanClassPackage = MainLayout.class)
   void ensureRouteIsAvailable(@Context TestContext context) {
     val layout = context.selectFirst(MainLayout.class);
     assertTrue(layout.isPresent());

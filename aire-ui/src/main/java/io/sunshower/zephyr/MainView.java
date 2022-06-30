@@ -19,6 +19,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
+import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
 import io.sunshower.cloud.studio.components.workspace.WorkspaceListView;
 import io.sunshower.zephyr.configuration.SecurityUtils;
 import io.sunshower.zephyr.management.ModuleGrid;
@@ -96,6 +98,27 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
                 val ui = UI.getCurrent();
                 ui.navigate(AuthenticationView.class);
               });
+      subMenu.addItem(
+          "Toggle Dark",
+          e -> {
+            val themeList = UI.getCurrent().getElement().getThemeList();
+            if (themeList.contains(Lumo.DARK)) {
+              themeList.remove(Lumo.DARK);
+            } else {
+              themeList.add(Lumo.DARK);
+            }
+          });
+
+      subMenu.addItem(
+          "Toggle Material Dark",
+          e -> {
+            val themeList = UI.getCurrent().getElement().getThemeList();
+            if (themeList.contains(Material.DARK)) {
+              themeList.remove(Material.DARK);
+            } else {
+              themeList.add(Material.DARK);
+            }
+          });
     }
 
     return topNav;

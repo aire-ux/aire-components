@@ -3,7 +3,7 @@ package io.sunshower.zephyr;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import io.sunshower.zephyr.management.ZephyrManagementConsoleView;
 import io.zephyr.cli.Zephyr;
 import io.zephyr.kernel.core.Kernel;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 
 @AireUITest
-@Routes(scanClassPackage = ZephyrManagementConsoleView.class)
+@RouteLocation(scanClassPackage = ZephyrManagementConsoleView.class)
 class ZephyrApplicationTests {
 
   @Test

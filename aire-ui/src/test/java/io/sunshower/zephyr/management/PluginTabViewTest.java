@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
@@ -13,7 +13,7 @@ import io.sunshower.zephyr.ui.components.TabPanel;
 import lombok.val;
 
 @AireUITest
-@Routes(scanClassPackage = ModuleGrid.class)
+@RouteLocation(scanClassPackage = ModuleGrid.class)
 class PluginTabViewTest {
 
   @ViewTest

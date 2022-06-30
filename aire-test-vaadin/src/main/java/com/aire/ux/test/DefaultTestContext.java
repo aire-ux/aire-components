@@ -135,6 +135,12 @@ public class DefaultTestContext implements TestContext {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public <T extends Component> Optional<T> selectFirst(String selector) {
+    return selectFirst(selector, Component.class).map(t -> (T) t);
+  }
+
+  @Override
   public List<?> selectComponents(String selector) {
     return new CssSelectorParser()
             .parse(selector)

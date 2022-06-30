@@ -6,7 +6,7 @@ import com.aire.ux.core.instantiators.BaseAireInstantiatorTest.Cfg;
 import com.aire.ux.core.instantiators.scenario1.MainView;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 @AireTest
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
-@Routes(scanPackage = "com.aire.ux.core.instantiators.scenario1")
+@RouteLocation(scanPackage = "com.aire.ux.core.instantiators.scenario1")
 class BaseAireInstantiatorTest {
 
   @ViewTest

@@ -8,6 +8,8 @@ import io.sunshower.lang.common.encodings.Encodings.Type;
 import io.sunshower.zephyr.security.model.initialization.SecurityInitializationModel;
 import io.sunshower.zephyr.ui.components.Wizard;
 import javax.inject.Inject;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.val;
 import org.apache.commons.configuration2.Configuration;
 
@@ -16,7 +18,10 @@ public class InitializationWizard extends VerticalLayout {
 
   private final SecretService service;
   private final Configuration configuration;
+
+  @Getter(AccessLevel.MODULE)
   private final SecurityInitializationModel model;
+  @Getter(AccessLevel.MODULE)
   private final Wizard<String, SecurityInitializationModel> wizard;
 
   @Inject

@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.val;
 
 /**
  * A wizard is a structured information flow. The wizard has a <i>Key</i> type, which is how
- * individual pages are identified within the flow, and a value-type, which is the type of the model
+ * individual pages are identified within the flow, and a value-type, which is the type of the
+ * model
  *
  * @param <K>
  * @param <V>
@@ -49,15 +49,20 @@ public class Wizard<K, V> extends HtmlContainer {
   public static final String NOT_COMPLETE = "not-complete";
   public static final String LEAVING = "leaving";
   public static final String ENTERING = "entering";
-  static final TransitionListener<?, ?> NO_OP = new TransitionListener<>() {};
-  /** immutable state */
+  static final TransitionListener<?, ?> NO_OP = new TransitionListener<>() {
+  };
+  /**
+   * immutable state
+   */
   private final Nav header;
 
   private final Map<K, WizardStep<K, ?>> steps;
   private final Deque<WizardStep<K, ?>> history;
   private final Map<K, Transition<K, V>> transitions;
   private V model;
-  /** mutable state */
+  /**
+   * mutable state
+   */
   private WizardStep<K, ?> currentStep;
 
   public Wizard() {
@@ -127,8 +132,8 @@ public class Wizard<K, V> extends HtmlContainer {
   /**
    * add a transition from <code>from</code> to <code>to</code>
    *
-   * @param from the starting state
-   * @param to the end state
+   * @param from     the starting state
+   * @param to       the end state
    * @param listener the listener to apply when the transition is triggered
    */
   public void addTransition(K from, K to, TransitionListener<K, V> listener) {
@@ -139,7 +144,7 @@ public class Wizard<K, V> extends HtmlContainer {
    * add a transition from <code>from</code> to <code>to</code>
    *
    * @param from the starting state
-   * @param to the end state
+   * @param to   the end state
    */
   @SuppressWarnings("unchecked")
   public void addTransition(K from, K to) {
@@ -179,11 +184,11 @@ public class Wizard<K, V> extends HtmlContainer {
   }
 
   /**
-   * @param from the annotated source state
-   * @param to the annotated target state
+   * @param from     the annotated source state
+   * @param to       the annotated target state
    * @param listener the listener to bind to the transition
-   * @param <T> the type-parameter of the source state
-   * @param <U> the type-parameter of the target state
+   * @param <T>      the type-parameter of the source state
+   * @param <U>      the type-parameter of the target state
    */
   public <T extends Component, U extends Component> void addTransition(
       Class<T> from, Class<U> to, TransitionListener<K, V> listener) {
@@ -220,7 +225,7 @@ public class Wizard<K, V> extends HtmlContainer {
    *
    * @return the next state after transition
    * @throws IllegalStateException if the current step is not defined or if there is no transition
-   *     from the current step to a next step
+   *                               from the current step to a next step
    */
   public K advance() {
     checkCurrentStep();
@@ -447,30 +452,28 @@ public class Wizard<K, V> extends HtmlContainer {
   }
 
   private void updateProgressView(WizardStep<K, ?> step) {
-    val listItem =
-        header
-            .getChildren()
-            .filter(child -> child.getClass().equals(UnorderedList.class))
-            .findFirst()
-            .orElseThrow(
-                () ->
-                    new NoSuchElementException(
-                        "Could not find progress list.  Component is misconfigured"));
+    header
+        .getChildren()
+        .filter(child -> child.getClass().equals(UnorderedList.class))
+        .findFirst().ifPresent(listItem -> {
+          val iter = listItem.getChildren().iterator();
+          for (int i = 0; i < steps.size(); i++) {
+            val cl = iter.next().getElement().getClassList();
+            if (i <= history.size()) {
+              cl.remove(NOT_COMPLETE);
+              cl.add(COMPLETE);
+            } else {
+              cl.remove(COMPLETE);
+              cl.add(NOT_COMPLETE);
+            }
+          }
+        });
 
-    val iter = listItem.getChildren().iterator();
-    for (int i = 0; i < steps.size(); i++) {
-      val cl = iter.next().getElement().getClassList();
-      if (i <= history.size()) {
-        cl.remove(NOT_COMPLETE);
-        cl.add(COMPLETE);
-      } else {
-        cl.remove(COMPLETE);
-        cl.add(NOT_COMPLETE);
-      }
-    }
   }
 
-  /** ensure that all states are connected */
+  /**
+   * ensure that all states are connected
+   */
   private void validate() {
     checkCurrentStep();
 
@@ -502,16 +505,24 @@ public class Wizard<K, V> extends HtmlContainer {
 
   public interface Step<K, V extends Component> {
 
-    /** @return the key for this step */
+    /**
+     * @return the key for this step
+     */
     K getKey();
 
-    /** @return the title for this step */
+    /**
+     * @return the title for this step
+     */
     String getTitle();
 
-    /** @return the icon factory for this step */
+    /**
+     * @return the icon factory for this step
+     */
     IconFactory getIconFactory();
 
-    /** @return the component for this wizard */
+    /**
+     * @return the component for this wizard
+     */
     Class<V> getPage();
   }
 
@@ -520,8 +531,8 @@ public class Wizard<K, V> extends HtmlContainer {
     /**
      * determine if the wizard can transition between this state and the next state
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current wizard page
      * @return true if the transition can be made
      */
@@ -532,20 +543,22 @@ public class Wizard<K, V> extends HtmlContainer {
     /**
      * fired before the wizard makes the transition
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current page
      */
-    default void beforeTransition(K state, Wizard<K, V> host, Component currentPage) {}
+    default void beforeTransition(K state, Wizard<K, V> host, Component currentPage) {
+    }
 
     /**
      * fired after the wizard makes the transition
      *
-     * @param state the current state
-     * @param host the current wizard
+     * @param state       the current state
+     * @param host        the current wizard
      * @param currentPage the current page
      */
-    default void afterTransition(K state, Wizard<K, V> host, Component currentPage) {}
+    default void afterTransition(K state, Wizard<K, V> host, Component currentPage) {
+    }
   }
 
   private static final class WizardStep<K, V extends Component> {

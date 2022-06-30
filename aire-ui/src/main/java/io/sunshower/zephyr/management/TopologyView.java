@@ -361,8 +361,10 @@ public class TopologyView extends AbstractModuleView
       for (val dependency : module.getDependencies()) {
         val target = vertices.get(dependency.getCoordinate());
         val source = vertices.get(module.getCoordinate());
-        val edge = new Edge(source.getId(), target.getId(), defaultEdgeTemplate);
-        edges.add(edge);
+        if (!(source == null || target == null)) {
+          val edge = new Edge(source.getId(), target.getId(), defaultEdgeTemplate);
+          edges.add(edge);
+        }
       }
     }
     canvas
