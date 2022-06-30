@@ -45,7 +45,9 @@ class InitializationWizardTest {
   }
 
   @ViewTest
-  void ensurePageIsConfiguredCorrectly(@Context TestContext $, @View AireSecurityPage start,
+  void ensurePageIsConfiguredCorrectly(
+      @Context TestContext $,
+      @View AireSecurityPage start,
       @View InitializationWizard wizardContainer,
       @View Wizard<String, SecurityInitializationModel> model) {
 
@@ -69,38 +71,46 @@ class InitializationWizardTest {
   @DirtiesContext(hierarchyMode = HierarchyMode.EXHAUSTIVE, methodMode = MethodMode.AFTER_METHOD)
   void ensureAuthenticationDoesNotWorkInitially(
       @Autowired AuthenticationManager authenticationManager) {
-    assertThrows(NoSuchElementException.class, () -> {
-      authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken("josiah@sunshower.io", "password"));
-    });
+    assertThrows(
+        NoSuchElementException.class,
+        () -> {
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken("josiah@sunshower.io", "password"));
+        });
   }
 
   @ViewTest
-  void ensureNavigatingEntireWizardWorks(@Context TestContext $, @Autowired Configuration cfg,
-      @Autowired
-          SecretService service, @Autowired AuthenticationManager authenticationManager) {
+  void ensureNavigatingEntireWizardWorks(
+      @Context TestContext $,
+      @Autowired Configuration cfg,
+      @Autowired SecretService service,
+      @Autowired AuthenticationManager authenticationManager) {
     $.navigate("aire/initialize");
     val initializationWizard = $.selectFirst(InitializationWizard.class).get();
     val wizard = initializationWizard.getWizard();
     wizard.advance();
     Forms.populate($)
-        .field("vaadin-form-layout > vaadin-text-field:nth-child(1)").value("josiah")
-        .field("vaadin-form-layout > vaadin-text-field:nth-child(2)").value("haswell")
-        .field("vaadin-form-layout > vaadin-email-field:nth-child(3)").value("josiah@sunshower.io")
-        .field("vaadin-form-layout > vaadin-password-field:nth-child(4)").value("password")
-        .field("vaadin-form-layout > vaadin-password-field:nth-child(5)").value("password");
+        .field("vaadin-form-layout > vaadin-text-field:nth-child(1)")
+        .value("josiah")
+        .field("vaadin-form-layout > vaadin-text-field:nth-child(2)")
+        .value("haswell")
+        .field("vaadin-form-layout > vaadin-email-field:nth-child(3)")
+        .value("josiah@sunshower.io")
+        .field("vaadin-form-layout > vaadin-password-field:nth-child(4)")
+        .value("password")
+        .field("vaadin-form-layout > vaadin-password-field:nth-child(5)")
+        .value("password");
 
     $.selectFirst("vaadin-button[key='next']", Button.class).get().click();
     val vaultId = cfg.getString("primary.vault.id");
     assertNotNull(vaultId);
 
-    val vault = service.lease(Identifier.valueOf(vaultId),
-        Leases.forPassword("password").expiresIn(1, TimeUnit.SECONDS));
+    val vault =
+        service.lease(
+            Identifier.valueOf(vaultId),
+            Leases.forPassword("password").expiresIn(1, TimeUnit.SECONDS));
     assertNotNull(vault);
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken("josiah@sunshower.io", "password"));
-
-
   }
-
 }

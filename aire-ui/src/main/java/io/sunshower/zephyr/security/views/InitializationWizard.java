@@ -21,6 +21,7 @@ public class InitializationWizard extends VerticalLayout {
 
   @Getter(AccessLevel.MODULE)
   private final SecurityInitializationModel model;
+
   @Getter(AccessLevel.MODULE)
   private final Wizard<String, SecurityInitializationModel> wizard;
 

@@ -44,9 +44,11 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
 
   @Inject
   public AuthenticationView(
-      Configuration configuration, AuthenticationManager authenticationManager,
+      Configuration configuration,
+      AuthenticationManager authenticationManager,
       CompositeRealmManager realmManager,
-      SecretService secretService, ApplicationContext context) {
+      SecretService secretService,
+      ApplicationContext context) {
     this.context = context;
     this.configuration = configuration;
     this.realmManager = realmManager;
@@ -62,7 +64,6 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
     overlay.addLoginListener(this::handleLoginAttempt);
   }
 
-
   private void handleLoginAttempt(AbstractLogin.LoginEvent event) {
     try {
       if (realmManager.getRealms().isEmpty()) {
@@ -70,8 +71,7 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
       }
       val auth =
           authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(
-                  event.getUsername(), event.getPassword()));
+              new UsernamePasswordAuthenticationToken(event.getUsername(), event.getPassword()));
       val sc = SecurityContextHolder.getContext();
       sc.setAuthentication(auth);
       VaadinSession.getCurrent().setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
@@ -87,20 +87,21 @@ public class AuthenticationView extends VerticalLayout implements BeforeEnterObs
     } catch (Exception ex) {
       overlay.setError(true);
     }
-
   }
 
   private void doRegisterVault(SecretService secretService, String password) {
     val vaultId = Identifier.valueOf(configuration.getString("primary.vault.id"));
-    val lease = secretService.lease(vaultId,
-        Leases.forPassword(password).expiresIn(1, TimeUnit.DAYS));
+    val lease =
+        secretService.lease(vaultId, Leases.forPassword(password).expiresIn(1, TimeUnit.DAYS));
 
-    val bean = BeanDefinitionBuilder.genericBeanDefinition(DelegatingVault.class)
-        .addConstructorArgValue(lease.get())
-        .setScope("vaadin-session")
-        .setDestroyMethodName("close").getBeanDefinition();
-    ((BeanDefinitionRegistry) context.getAutowireCapableBeanFactory()).registerBeanDefinition(
-        "default-vault", bean);
+    val bean =
+        BeanDefinitionBuilder.genericBeanDefinition(DelegatingVault.class)
+            .addConstructorArgValue(lease.get())
+            .setScope("vaadin-session")
+            .setDestroyMethodName("close")
+            .getBeanDefinition();
+    ((BeanDefinitionRegistry) context.getAutowireCapableBeanFactory())
+        .registerBeanDefinition("default-vault", bean);
   }
 
   @Override

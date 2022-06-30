@@ -61,9 +61,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   private SplitPanel content;
   private SecurityInitializationModel model;
 
-  /**
-   * localized content
-   */
+  /** localized content */
   @Localized("title.key")
   private H1 header;
 
@@ -79,9 +77,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   @Localized("description.realm.3")
   private Paragraph p4;
 
-  /**
-   * labels
-   */
+  /** labels */
   @Localized("labels.firstname")
   private String firstNameLabel;
 
@@ -230,10 +226,11 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
 
       val plaintextPassword = passwordField.getValue();
 
-      val defaultVault = secretService.createVault(UUID.randomUUID().toString(),
-          "default vault for" + user.getUsername(), plaintextPassword);
-
-
+      val defaultVault =
+          secretService.createVault(
+              UUID.randomUUID().toString(),
+              "default vault for" + user.getUsername(),
+              plaintextPassword);
 
       val realmConfiguration =
           new RealmConfiguration(

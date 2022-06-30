@@ -6,11 +6,9 @@ import lombok.experimental.Delegate;
 
 public class DelegatingVault implements Vault {
 
-  @Delegate
-  private final Vault delegate;
+  @Delegate private final Vault delegate;
 
   public DelegatingVault(@NonNull final Vault delegate) {
     this.delegate = delegate;
   }
-
 }
