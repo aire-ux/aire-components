@@ -53,13 +53,14 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
               .flatMap(
                   t ->
                       Optional.ofNullable(
-                          (AnnotatedElement) (t.isAnnotationPresent(RouteLocation.class) ? t : null)))
+                          (AnnotatedElement)
+                              (t.isAnnotationPresent(RouteLocation.class) ? t : null)))
               .or(context::getTestClass);
       val routes = new com.github.mvysny.kaributesting.v10.Routes();
       if (elementOpt.isPresent()) {
 
         val routeAnnotations = elementOpt.get().getAnnotationsByType(RouteLocation.class);
-        for(val route : routeAnnotations) {
+        for (val route : routeAnnotations) {
           val result = getRoutePackage(route);
           if (result != null) {
             routes.autoDiscoverViews(result);

@@ -20,7 +20,7 @@ public interface TestContext {
 
   /**
    * @param types the collection of types to select. If this list is empty or null, return
-   *              <i>all</i> matching types
+   *     <i>all</i> matching types
    * @return the matching types, or the component hierarchy if no types are specified
    */
   @Nonnull
@@ -28,7 +28,7 @@ public interface TestContext {
 
   /**
    * @param types the collection of types to select. If this list is empty or null, return
-   *              <i>all</i> matching types
+   *     <i>all</i> matching types
    * @return the matching types, or the component hierarchy if no types are specified
    */
   @Nonnull
@@ -36,14 +36,14 @@ public interface TestContext {
 
   /**
    * @param type the type to select
-   * @param <T>  the type-parameter of the type
+   * @param <T> the type-parameter of the type
    * @return a (possibly empty) list of matching elements
    */
   <T> List<T> select(Class<T> type);
 
   /**
    * @param type the type to match
-   * @param <T>  the type-parameter of the element class
+   * @param <T> the type-parameter of the element class
    * @return the first matching element
    * @throws java.util.NoSuchElementException if no element is found
    */
@@ -67,22 +67,27 @@ public interface TestContext {
     return detach(c, new DetachEvent(c));
   }
 
-  private <T extends Component> Optional<Throwable> performLifecycle(T c,
-      String name,
-      ComponentEvent<Component> event) {
-    return Reflect.methodsMatching(Component.class, HierarchyTraversalMode.LinearSupertypes,
-        method -> {
-          val mods = method.getModifiers();
-          return method.getName().equals(name) && (!(Modifier.isAbstract(mods)) && (
-              method.canAccess(c) || method.trySetAccessible()));
-        }).findAny().flatMap(method -> {
-      try {
-        method.invoke(c, event);
-        return Optional.empty();
-      } catch (Exception ex) {
-        return Optional.of(ex);
-      }
-    });
+  private <T extends Component> Optional<Throwable> performLifecycle(
+      T c, String name, ComponentEvent<Component> event) {
+    return Reflect.methodsMatching(
+            Component.class,
+            HierarchyTraversalMode.LinearSupertypes,
+            method -> {
+              val mods = method.getModifiers();
+              return method.getName().equals(name)
+                  && (!(Modifier.isAbstract(mods))
+                      && (method.canAccess(c) || method.trySetAccessible()));
+            })
+        .findAny()
+        .flatMap(
+            method -> {
+              try {
+                method.invoke(c, event);
+                return Optional.empty();
+              } catch (Exception ex) {
+                return Optional.of(ex);
+              }
+            });
   }
 
   /**
@@ -97,11 +102,11 @@ public interface TestContext {
 
   /**
    * @param contextClass the context-class to resolve
-   * @param mode         the mode (mock, spy, none) to apply to the context variable
-   * @param <T>          the type-parameter of the context class
+   * @param mode the mode (mock, spy, none) to apply to the context variable
+   * @param <T> the type-parameter of the context class
    * @return the context class
    * @throws java.util.NoSuchElementException if the context class is not available from any
-   *                                          provider
+   *     provider
    */
   <T> T resolve(Class<T> contextClass, Mode mode);
 

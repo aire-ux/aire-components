@@ -14,13 +14,16 @@ public class FormPopulator {
   }
 
   public <E extends ValueChangeEvent<V>, V> FieldPopulationRequest<E, V> field(String selector) {
-    val field = context.selectFirst(selector, HasValue.class)
-        .orElseThrow(() -> new NoSuchElementException("No element at '" + selector + "'"));
+    val field =
+        context
+            .selectFirst(selector, HasValue.class)
+            .orElseThrow(() -> new NoSuchElementException("No element at '" + selector + "'"));
     return new FieldPopulationRequest<>(field);
   }
 
   public final class FieldPopulationRequest<E extends ValueChangeEvent<V>, V> {
     private final HasValue<E, V> field;
+
     public FieldPopulationRequest(HasValue<E, V> field) {
       this.field = field;
     }

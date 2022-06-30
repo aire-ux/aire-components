@@ -28,6 +28,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 @Log
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class DefaultTestContext implements TestContext {
 
   private final Supplier<Element> supplier;
