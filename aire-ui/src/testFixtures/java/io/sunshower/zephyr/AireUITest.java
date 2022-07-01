@@ -13,11 +13,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @AireTest
 @Inherited
 @EnableSpring
 @SpringBootTest(
+    webEnvironment = WebEnvironment.MOCK,
     classes = {
       AireVaadinOverrideAutoConfiguration.class,
       EmbeddedZephyrConfiguration.class,
