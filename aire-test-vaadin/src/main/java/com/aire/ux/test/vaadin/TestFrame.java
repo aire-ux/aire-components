@@ -115,8 +115,11 @@ public final class TestFrame implements AutoCloseable {
     checkLiveness();
     deactivateResolvers();
     log.log(Level.INFO, "Deactivating test frame {0}...", this);
-    MockVaadin.tearDown();
-
+    try {
+      MockVaadin.tearDown();
+    } catch (Exception ex) {
+      log.log(Level.INFO, "Encountered issue tearing frame down: {0}", ex.getMessage());
+    }
     resetMocks();
     resetSpies();
     values.clear();
