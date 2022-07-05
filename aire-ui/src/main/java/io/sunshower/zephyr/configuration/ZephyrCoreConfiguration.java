@@ -12,7 +12,6 @@ import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
 import io.sunshower.cloud.studio.WorkspaceService;
 import io.sunshower.cloud.studio.git.DirectoryBackedWorkspaceService;
@@ -279,28 +278,23 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   private void registerServices(
       Module module, ConfigurableApplicationContext context, Kernel kernel) {
     log.info("Registering UserInterface service");
+    val ui = context.getBean(UserInterface.class);
     result =
         kernel
             .getServiceRegistry()
             .register(
                 module,
                 new FactoryServiceDefinition<>(
-                    UserInterface.class,
-                    "aire:user-interface",
-                    () -> context.getBean(UserInterface.class)));
+                    UserInterface.class, "aire:user-interface", () -> ui));
 
     kernel.addEventListener(
         (type, event) -> {
-          val ui = UI.getCurrent();
-          if (ui != null) {
-            ui.access(
-                () -> {
-                  ui.getPage().reload();
-                });
-          }
+          ui.reload();
         },
         ModuleEvents.STOPPED,
-        ModuleEvents.STARTED);
+        ModuleEvents.STARTED,
+        ModuleEvents.INSTALLED,
+        ModuleEvents.REMOVED);
     log.info("Successfully registered UserInterface service");
   }
 

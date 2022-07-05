@@ -3,11 +3,15 @@ package com.aire.ux;
 import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.concurrency.AccessQueue;
-import com.aire.ux.concurrency.AccessQueue.Target;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.server.ServiceException;
+import com.vaadin.flow.server.SessionDestroyEvent;
+import com.vaadin.flow.server.SessionInitEvent;
+import com.vaadin.flow.server.VaadinSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -20,6 +24,8 @@ public class DefaultUserInterface implements UserInterface {
   private final ActionManager actionManager;
   private final ExtensionRegistry registry;
 
+  private final List<VaadinSession> activeUis;
+
   public DefaultUserInterface(
       @NonNull final ExtensionRegistry registry,
       @NonNull AccessQueue accessQueue,
@@ -27,6 +33,7 @@ public class DefaultUserInterface implements UserInterface {
     this.registry = registry;
     this.accessQueue = accessQueue;
     this.actionManager = actionManager;
+    this.activeUis = new ArrayList<>();
   }
 
   @Override
@@ -41,13 +48,19 @@ public class DefaultUserInterface implements UserInterface {
 
   @Override
   public void reload() {
-    accessQueue.broadcast(
-        Target.UI,
-        ui -> {
-          if (ui instanceof UI u) {
-            u.getPage().reload();
-          }
-        });
+    synchronized (activeUis) {
+      for (val session : activeUis) {
+        session.access(
+            () -> {
+              val uis = session.getUIs();
+              synchronized (uis) {
+                for (val ui : uis) {
+                  ui.access(() -> ui.getPage().reload());
+                }
+              }
+            });
+      }
+    }
   }
 
   @Override
@@ -70,5 +83,21 @@ public class DefaultUserInterface implements UserInterface {
 
   private <T> Extension<T> extensionFor(PartialSelection<T> path) {
     return new DefaultComponentExtension<>(path.getSegment(), c -> {});
+  }
+
+  @Override
+  public void sessionDestroy(SessionDestroyEvent event) {
+    synchronized (activeUis) {
+      val session = event.getSession();
+      activeUis.remove(session);
+    }
+  }
+
+  @Override
+  public void sessionInit(SessionInitEvent event) throws ServiceException {
+    synchronized (activeUis) {
+      val session = event.getSession();
+      activeUis.add(session);
+    }
   }
 }

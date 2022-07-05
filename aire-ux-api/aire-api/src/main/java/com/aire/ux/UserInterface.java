@@ -6,6 +6,8 @@ import com.aire.ux.ext.ExtensionRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.server.SessionDestroyListener;
+import com.vaadin.flow.server.SessionInitListener;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
@@ -14,7 +16,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import lombok.NonNull;
 
 @ThreadSafe
-public interface UserInterface {
+public interface UserInterface extends SessionInitListener, SessionDestroyListener {
 
   static Optional<UserInterface> getInstance() {
     return ServiceLoader.load(UserInterfaceProvider.class).stream()
