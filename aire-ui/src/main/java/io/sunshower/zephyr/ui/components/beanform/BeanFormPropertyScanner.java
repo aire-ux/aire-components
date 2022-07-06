@@ -22,11 +22,7 @@ import lombok.val;
 
 public class BeanFormPropertyScanner implements PropertyScanner, TypeInstantiator {
 
-
-  public BeanFormPropertyScanner() {
-
-  }
-
+  public BeanFormPropertyScanner() {}
 
   @Override
   public <T> TypeDescriptor<T> scan(Class<T> type, boolean b, boolean b1) {
@@ -48,35 +44,42 @@ public class BeanFormPropertyScanner implements PropertyScanner, TypeInstantiato
     return Reflect.instantiate(aClass, pairs);
   }
 
-
   private List<Property<?>> doScan(Class<?> type) {
-    return Reflect.collectOverHierarchy(type, (c) -> {
-      try {
-        val propertyDescriptors = Introspector.getBeanInfo(type);
+    return Reflect.collectOverHierarchy(
+            type,
+            (c) -> {
+              try {
+                val propertyDescriptors = Introspector.getBeanInfo(type);
 
-        return Stream.concat(
-            Arrays.stream(type.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Field.class))
-                .map(field -> new FieldProperty(this, field, type, field.getName(),
-                    field.getName())),
-            Arrays.stream(type.getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(Field.class))
-                .map(method -> lookup(propertyDescriptors, method))
-        );
-      } catch (IntrospectionException ex) {
-        return Stream.empty();
-      }
-    }).toList();
+                return Stream.concat(
+                    Arrays.stream(type.getDeclaredFields())
+                        .filter(field -> field.isAnnotationPresent(Field.class))
+                        .map(
+                            field ->
+                                new FieldProperty(
+                                    this, field, type, field.getName(), field.getName())),
+                    Arrays.stream(type.getDeclaredMethods())
+                        .filter(method -> method.isAnnotationPresent(Field.class))
+                        .map(method -> lookup(propertyDescriptors, method)));
+              } catch (IntrospectionException ex) {
+                return Stream.empty();
+              }
+            })
+        .toList();
   }
 
   private Property<?> lookup(BeanInfo propertyDescriptors, Method method) {
     val properties = propertyDescriptors.getPropertyDescriptors();
     for (val property : properties) {
-      if (Objects.equals(property.getReadMethod(), method) || Objects.equals(
-          property.getWriteMethod(), method)) {
-        return new MutatorProperty(this, property.getReadMethod(), property.getWriteMethod(),
+      if (Objects.equals(property.getReadMethod(), method)
+          || Objects.equals(property.getWriteMethod(), method)) {
+        return new MutatorProperty(
+            this,
+            property.getReadMethod(),
+            property.getWriteMethod(),
             propertyDescriptors.getBeanDescriptor().getBeanClass(),
-            property.getName(), property.getName());
+            property.getName(),
+            property.getName());
       }
     }
     throw new NoSuchElementException(

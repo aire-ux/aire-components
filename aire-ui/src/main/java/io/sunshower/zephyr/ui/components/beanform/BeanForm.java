@@ -11,11 +11,7 @@ import elemental.json.JsonString;
 import io.sunshower.arcus.condensation.Property;
 import io.sunshower.arcus.condensation.PropertyScanner;
 import io.sunshower.arcus.reflect.Reflect;
-import io.sunshower.gyre.Pair;
-import java.beans.BeanDescriptor;
-import java.beans.Beans;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -52,7 +47,6 @@ public class BeanForm<T> extends FormLayout {
   private final Class<T> type;
   private final PropertyScanner propertyScanner;
   private final Map<String, SupplierBinder> fieldDescriptors;
-
 
   public BeanForm(@NonNull final Class<T> type, @NonNull final T value) {
     this.type = type;
@@ -121,26 +115,29 @@ public class BeanForm<T> extends FormLayout {
   private void scanFields(Class<T> type) {
     val bundle = ResourceBundle.getBundle("i18n." + type.getName());
     val typeDescriptor = propertyScanner.scan(type);
-    typeDescriptor.getProperties().forEach(property -> {
-      val name = property.getMemberNormalizedName();
-      val member = property.getMember();
-      val fieldAnnotation = member.getAnnotation(Field.class);
-      val keyName = getKeyName(property, fieldAnnotation);
-      val label = bundle.getString(keyName);
-      val fieldName = property.getMemberNormalizedName();
-      val fd = new FieldDescriptor(label, property);
+    typeDescriptor
+        .getProperties()
+        .forEach(
+            property -> {
+              val name = property.getMemberNormalizedName();
+              val member = property.getMember();
+              val fieldAnnotation = member.getAnnotation(Field.class);
+              val keyName = getKeyName(property, fieldAnnotation);
+              val label = bundle.getString(keyName);
+              val fieldName = property.getMemberNormalizedName();
+              val fd = new FieldDescriptor(label, property);
 
-      val supplier = resolveComponentSupplier(property.getType());
-      if(supplier == null) {
-        add(new BeanForm<>(property.getType()));
-      } else {
-        val binder = new SupplierBinder(fd, fieldAnnotation,
-            resolveComponentSupplier(property.getType()));
-        fieldDescriptors.put(fieldName, binder);
-        addFormElement(binder);
-      }
-
-    });
+              val supplier = resolveComponentSupplier(property.getType());
+              if (supplier == null) {
+                add(new BeanForm<>(property.getType()));
+              } else {
+                val binder =
+                    new SupplierBinder(
+                        fd, fieldAnnotation, resolveComponentSupplier(property.getType()));
+                fieldDescriptors.put(fieldName, binder);
+                addFormElement(binder);
+              }
+            });
   }
 
   private void addFormElement(SupplierBinder binder) {
@@ -151,8 +148,9 @@ public class BeanForm<T> extends FormLayout {
   }
 
   private String getKeyName(Property<?> property, Field fieldAnnotation) {
-    return "__default__".equals(fieldAnnotation.key()) ?
-        property.getMemberNormalizedName() : fieldAnnotation.key();
+    return "__default__".equals(fieldAnnotation.key())
+        ? property.getMemberNormalizedName()
+        : fieldAnnotation.key();
   }
 
   private Set<? extends Annotation> collectFieldAnnotations(java.lang.reflect.Field field) {

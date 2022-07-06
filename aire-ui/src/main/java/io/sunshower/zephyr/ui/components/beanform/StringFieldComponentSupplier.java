@@ -6,8 +6,8 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
 @SuppressWarnings("unchecked")
-public class StringFieldComponentSupplier<T extends Component & HasValue<?, ?>> implements
-    FieldComponentSupplier<T> {
+public class StringFieldComponentSupplier<T extends Component & HasValue<?, ?>>
+    implements FieldComponentSupplier<T> {
 
   @Override
   public T create(FieldDescriptor descriptor, Field fieldAnnotation) {
@@ -17,7 +17,6 @@ public class StringFieldComponentSupplier<T extends Component & HasValue<?, ?>> 
       return createTextField(descriptor, fieldAnnotation);
     }
   }
-
 
   private T createPasswordField(FieldDescriptor descriptor, Field fieldAnnotation) {
     return (T) new PasswordField();

@@ -10,5 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Bind {
 
   String get();
+
   String set();
 }
