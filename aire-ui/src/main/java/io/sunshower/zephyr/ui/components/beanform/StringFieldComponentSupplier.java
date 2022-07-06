@@ -1,13 +1,16 @@
 package io.sunshower.zephyr.ui.components.beanform;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class StringFieldComponentSupplier implements FieldComponentSupplier<Component> {
+@SuppressWarnings("unchecked")
+public class StringFieldComponentSupplier<T extends Component & HasValue<?, ?>> implements
+    FieldComponentSupplier<T> {
 
   @Override
-  public Component create(FieldDescriptor descriptor, Field fieldAnnotation) {
+  public T create(FieldDescriptor descriptor, Field fieldAnnotation) {
     if (descriptor.has(Password.class)) {
       return createPasswordField(descriptor, fieldAnnotation);
     } else {
@@ -15,11 +18,12 @@ public class StringFieldComponentSupplier implements FieldComponentSupplier<Comp
     }
   }
 
-  private Component createPasswordField(FieldDescriptor descriptor, Field fieldAnnotation) {
-    return new PasswordField();
+
+  private T createPasswordField(FieldDescriptor descriptor, Field fieldAnnotation) {
+    return (T) new PasswordField();
   }
 
-  private Component createTextField(FieldDescriptor descriptor, Field fieldAnnotation) {
-    return new TextField();
+  private T createTextField(FieldDescriptor descriptor, Field fieldAnnotation) {
+    return (T) new TextField();
   }
 }

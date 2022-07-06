@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 @Documented
 @Inherited
+@FieldMarker
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {}

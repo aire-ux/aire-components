@@ -1,14 +1,21 @@
 package io.sunshower.zephyr.ui.components.beanform;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
+import com.vaadin.flow.data.binder.Binder;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import elemental.json.JsonString;
+import io.sunshower.arcus.condensation.Property;
+import io.sunshower.arcus.condensation.PropertyScanner;
 import io.sunshower.arcus.reflect.Reflect;
 import io.sunshower.gyre.Pair;
+import java.beans.BeanDescriptor;
+import java.beans.Beans;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,17 +45,25 @@ public class BeanForm<T> extends FormLayout {
   static {
     typeRegistry = new HashMap<>();
     typeRegistry.put(String.class, new StringFieldComponentSupplier());
+    typeRegistry.put(Boolean.class, new CheckboxFieldComponentSupplier());
   }
 
   private final T value;
   private final Class<T> type;
+  private final PropertyScanner propertyScanner;
   private final Map<String, SupplierBinder> fieldDescriptors;
+
 
   public BeanForm(@NonNull final Class<T> type, @NonNull final T value) {
     this.type = type;
     this.value = value;
     this.fieldDescriptors = new LinkedHashMap<>();
+    this.propertyScanner = new BeanFormPropertyScanner();
     scan(type);
+  }
+
+  public BeanForm(@NonNull final Class<T> type) {
+    this(type, Reflect.instantiate(type));
   }
 
   public T getValue() {
@@ -105,31 +120,39 @@ public class BeanForm<T> extends FormLayout {
 
   private void scanFields(Class<T> type) {
     val bundle = ResourceBundle.getBundle("i18n." + type.getName());
-    Reflect.collectOverHierarchy(
-            type,
-            (t) -> {
-              return Arrays.stream(type.getDeclaredFields())
-                  .filter(field -> field.isAnnotationPresent(Field.class))
-                  .map(field -> Pair.of(field, field.getAnnotation(Field.class)));
-            })
-        .forEach(
-            p -> {
-              val field = p.fst;
-              val fieldAnnotation = p.snd;
-              final String keyName = getKeyName(field, fieldAnnotation);
-              val label = bundle.getString(keyName);
-              val fieldName = field.getName();
-              val fd = new FieldDescriptor(fieldName, label, collectFieldAnnotations(field));
-              val binder =
-                  new SupplierBinder(
-                      fd, fieldAnnotation, resolveComponentSupplier(field.getType()));
-              fieldDescriptors.put(fieldName, binder);
-              add(binder.create());
-            });
+    val typeDescriptor = propertyScanner.scan(type);
+    typeDescriptor.getProperties().forEach(property -> {
+      val name = property.getMemberNormalizedName();
+      val member = property.getMember();
+      val fieldAnnotation = member.getAnnotation(Field.class);
+      val keyName = getKeyName(property, fieldAnnotation);
+      val label = bundle.getString(keyName);
+      val fieldName = property.getMemberNormalizedName();
+      val fd = new FieldDescriptor(label, property);
+
+      val supplier = resolveComponentSupplier(property.getType());
+      if(supplier == null) {
+        add(new BeanForm<>(property.getType()));
+      } else {
+        val binder = new SupplierBinder(fd, fieldAnnotation,
+            resolveComponentSupplier(property.getType()));
+        fieldDescriptors.put(fieldName, binder);
+        addFormElement(binder);
+      }
+
+    });
   }
 
-  private String getKeyName(java.lang.reflect.Field field, Field fieldAnnotation) {
-    return "__default__".equals(fieldAnnotation.key()) ? field.getName() : fieldAnnotation.key();
+  private void addFormElement(SupplierBinder binder) {
+    val element = binder.create();
+    val itemBinder = new Binder<>(type);
+    itemBinder.bind(element, binder.descriptor.property()::get, binder.descriptor.property()::set);
+    this.add((Component) element);
+  }
+
+  private String getKeyName(Property<?> property, Field fieldAnnotation) {
+    return "__default__".equals(fieldAnnotation.key()) ?
+        property.getMemberNormalizedName() : fieldAnnotation.key();
   }
 
   private Set<? extends Annotation> collectFieldAnnotations(java.lang.reflect.Field field) {
@@ -139,12 +162,7 @@ public class BeanForm<T> extends FormLayout {
   }
 
   private FieldComponentSupplier<?> resolveComponentSupplier(Class<?> type) {
-    val result = typeRegistry.get(type);
-    if (result == null) {
-      throw new NoSuchElementException(
-          "Error: no component supplier for type '%s' found in this type registry".formatted(type));
-    }
-    return result;
+    return typeRegistry.get(type);
   }
 
   private void scanResponsiveSteps(Class<T> type) {
@@ -168,7 +186,7 @@ public class BeanForm<T> extends FormLayout {
   private static record SupplierBinder(
       FieldDescriptor descriptor, Field fieldAnnotation, FieldComponentSupplier<?> supplier) {
 
-    public Component create() {
+    public HasValue<?, ?> create() {
       return supplier.create(descriptor, fieldAnnotation);
     }
   }

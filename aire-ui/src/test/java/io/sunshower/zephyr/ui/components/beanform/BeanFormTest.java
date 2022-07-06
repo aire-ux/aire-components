@@ -1,6 +1,8 @@
 package io.sunshower.zephyr.ui.components.beanform;
 
+import static io.sunshower.zephyr.ui.aire.DOM.$;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.arcus.reflect.Reflect;
@@ -22,7 +24,7 @@ class BeanFormTest {
 
   @Test
   void ensureSelectingWorks() {
-    io.sunshower.zephyr.ui.aire.DOM.$(formType);
+    assertFalse($(formType).querySelector("vaadin-text-field").isEmpty());
   }
 
   @Test
