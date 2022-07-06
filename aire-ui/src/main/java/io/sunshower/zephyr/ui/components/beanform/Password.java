@@ -11,6 +11,4 @@ import java.lang.annotation.Target;
 @Inherited
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Password {
-
-}
+public @interface Password {}

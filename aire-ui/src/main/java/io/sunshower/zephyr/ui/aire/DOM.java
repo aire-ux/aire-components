@@ -8,7 +8,7 @@ import io.sunshower.arcus.selectors.test.NodeAdapter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DOM {
+public final class DOM {
 
   private static final CssSelectorParser parser;
   private static final NodeAdapter<Element> adapter;

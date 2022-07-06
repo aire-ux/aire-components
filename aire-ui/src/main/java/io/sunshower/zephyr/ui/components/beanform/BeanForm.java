@@ -44,7 +44,6 @@ public class BeanForm<T> extends FormLayout {
   private final Class<T> type;
   private final Map<String, SupplierBinder> fieldDescriptors;
 
-
   public BeanForm(@NonNull final Class<T> type, @NonNull final T value) {
     this.type = type;
     this.value = value;
@@ -65,10 +64,10 @@ public class BeanForm<T> extends FormLayout {
   }
 
   public Collection<FieldDescriptor> getFields() {
-    return fieldDescriptors.values().stream().map(SupplierBinder::descriptor)
+    return fieldDescriptors.values().stream()
+        .map(SupplierBinder::descriptor)
         .collect(Collectors.toUnmodifiableSet());
   }
-
 
   public List<ResponsiveStep> getResponsiveSteps() {
     val stepsJsonArray = (JsonArray) getElement().getPropertyRaw("responsiveSteps");
@@ -106,27 +105,31 @@ public class BeanForm<T> extends FormLayout {
 
   private void scanFields(Class<T> type) {
     val bundle = ResourceBundle.getBundle("i18n." + type.getName());
-    Reflect.collectOverHierarchy(type, (t) -> {
-      return Arrays.stream(type.getDeclaredFields())
-          .filter(field -> field.isAnnotationPresent(Field.class))
-          .map(field -> Pair.of(field, field.getAnnotation(Field.class)));
-    }).forEach(p -> {
-      val field = p.fst;
-      val fieldAnnotation = p.snd;
-      final String keyName = getKeyName(field, fieldAnnotation);
-      val label = bundle.getString(keyName);
-      val fieldName = field.getName();
-      val fd = new FieldDescriptor(fieldName, label, collectFieldAnnotations(field));
-      val binder = new SupplierBinder(fd, fieldAnnotation,
-          resolveComponentSupplier(field.getType()));
-      fieldDescriptors.put(fieldName, binder);
-      add(binder.create());
-    });
+    Reflect.collectOverHierarchy(
+            type,
+            (t) -> {
+              return Arrays.stream(type.getDeclaredFields())
+                  .filter(field -> field.isAnnotationPresent(Field.class))
+                  .map(field -> Pair.of(field, field.getAnnotation(Field.class)));
+            })
+        .forEach(
+            p -> {
+              val field = p.fst;
+              val fieldAnnotation = p.snd;
+              final String keyName = getKeyName(field, fieldAnnotation);
+              val label = bundle.getString(keyName);
+              val fieldName = field.getName();
+              val fd = new FieldDescriptor(fieldName, label, collectFieldAnnotations(field));
+              val binder =
+                  new SupplierBinder(
+                      fd, fieldAnnotation, resolveComponentSupplier(field.getType()));
+              fieldDescriptors.put(fieldName, binder);
+              add(binder.create());
+            });
   }
 
   private String getKeyName(java.lang.reflect.Field field, Field fieldAnnotation) {
-    return
-        "__default__".equals(fieldAnnotation.key()) ? field.getName() : fieldAnnotation.key();
+    return "__default__".equals(fieldAnnotation.key()) ? field.getName() : fieldAnnotation.key();
   }
 
   private Set<? extends Annotation> collectFieldAnnotations(java.lang.reflect.Field field) {
@@ -143,7 +146,6 @@ public class BeanForm<T> extends FormLayout {
     }
     return result;
   }
-
 
   private void scanResponsiveSteps(Class<T> type) {
     setResponsiveSteps(
@@ -163,12 +165,11 @@ public class BeanForm<T> extends FormLayout {
     return new ResponsiveStep(width, columns);
   }
 
-  private static record SupplierBinder(FieldDescriptor descriptor, Field fieldAnnotation,
-                                       FieldComponentSupplier<?> supplier) {
+  private static record SupplierBinder(
+      FieldDescriptor descriptor, Field fieldAnnotation, FieldComponentSupplier<?> supplier) {
 
     public Component create() {
       return supplier.create(descriptor, fieldAnnotation);
     }
   }
-
 }

@@ -5,7 +5,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import lombok.Data;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -13,5 +12,4 @@ import lombok.Data;
 public @interface Field {
 
   String key() default "__default__";
-
 }

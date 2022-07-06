@@ -6,5 +6,4 @@ import com.vaadin.flow.component.Component;
 public interface FieldComponentSupplier<T extends Component> {
 
   public T create(FieldDescriptor descriptor, Field fieldAnnotation);
-
 }

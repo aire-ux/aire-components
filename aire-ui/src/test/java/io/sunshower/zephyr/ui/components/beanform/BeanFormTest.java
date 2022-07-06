@@ -21,6 +21,11 @@ class BeanFormTest {
   }
 
   @Test
+  void ensureSelectingWorks() {
+    io.sunshower.zephyr.ui.aire.DOM.$(formType);
+  }
+
+  @Test
   void ensureResponsiveFormsAreScanned() {
     assertEquals(2, formType.getResponsiveSteps().size());
   }
