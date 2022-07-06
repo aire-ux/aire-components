@@ -1,11 +1,11 @@
 package io.sunshower.zephyr.ui.components.beanform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.arcus.reflect.Reflect;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +27,7 @@ class BeanFormTest {
 
   @Test
   void ensureBasicFieldIsScanned() {
-    val field = formType.getFields().stream().filter(f -> f.getName().equals("basicField")).findAny().get();
-
+    assertTrue(formType.getDescriptor("basicField").isPresent());
   }
 
   @Test
