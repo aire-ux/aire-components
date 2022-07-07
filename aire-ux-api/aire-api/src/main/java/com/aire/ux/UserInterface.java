@@ -3,6 +3,7 @@ package com.aire.ux;
 import com.aire.ux.RouteDefinition.Scope;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.ext.ExtensionRegistry;
+import com.aire.ux.zephyr.ZephyrService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
@@ -16,6 +17,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import lombok.NonNull;
 
 @ThreadSafe
+@ZephyrService(type = UserInterface.class)
 public interface UserInterface extends SessionInitListener, SessionDestroyListener {
 
   static Optional<UserInterface> getInstance() {

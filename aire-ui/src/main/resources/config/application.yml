@@ -25,4 +25,4 @@ logging:
   config: classpath:config/logback-spring.xml
 
 vaadin:
-  whitelisted-packages: io.sunshower.zephyr,io.sunshower.cloud.studio,io.sunshower.zephyr.ui
+  whitelisted-packages: io.sunshower.zephyr,io.sunshower.cloud.studio,io.sunshower.zephyr.ui,io.sunshower.cloud.studio.home.ui,io.sunshower.zephyr.management

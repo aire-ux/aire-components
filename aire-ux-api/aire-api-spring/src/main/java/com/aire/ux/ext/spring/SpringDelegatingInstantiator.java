@@ -9,6 +9,7 @@ import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.NavigationEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
@@ -55,6 +56,12 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
 
   @Override
   protected <T> T doGetOrCreate(Class<T> type) {
+
+    val result = loadFromRoot(type);
+    if (result != null) {
+      return result;
+    }
+
     synchronized (contexts) {
       val ctx = contexts.get(keyFor(type.getClassLoader()));
       if (ctx != null) {
@@ -74,12 +81,30 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
             log.log(
                 Level.INFO,
                 "Failed to resolve bean of type ''{0}'' from context: ''{1}''",
-                new Object[] {type, ctx.getClassLoader()});
+                new Object[]{type, ctx.getClassLoader()});
           }
         }
       }
       return super.doGetOrCreate(type);
     }
+  }
+
+  private <T> T loadFromRoot(Class<T> type) {
+
+    if (!Objects.equals(type.getClassLoader(), rootApplicationContext.getClassLoader())) {
+      return null;
+    }
+    val names = rootApplicationContext.getBeanNamesForType(type);
+    if (names.length > 0) {
+      return rootApplicationContext.getBean(names[0], type);
+    }
+    try {
+      return rootApplicationContext.getAutowireCapableBeanFactory().createBean(type);
+    } catch (BeansException ex) {
+      log.log(Level.WARNING, "Failed to instantiate bean  of type {0}.  Reason: {1}",
+          new Object[]{type, ex.getMessage()});
+    }
+    return null;
   }
 
   @Override

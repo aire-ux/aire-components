@@ -22,6 +22,7 @@ import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 import io.sunshower.cloud.studio.components.workspace.WorkspaceListView;
+import io.sunshower.cloud.studio.home.ui.HomeView;
 import io.sunshower.zephyr.configuration.SecurityUtils;
 import io.sunshower.zephyr.management.ModuleGrid;
 import io.sunshower.zephyr.security.views.AuthenticationView;
@@ -54,7 +55,12 @@ public class MainView extends ApplicationLayout implements AppShellConfigurator 
   protected HasComponents createNavigation() {
     val nav = super.createNavigation();
 
-    val button =
+    var button =
+        new NavigationBarButton(
+            HomeView.class, List.of("start"), MatchMode.Contains, VaadinIcon.HOME_O.create());
+
+    nav.add(button);
+    button =
         new NavigationBarButton(
             WorkspaceListView.class,
             List.of("workspaces"),

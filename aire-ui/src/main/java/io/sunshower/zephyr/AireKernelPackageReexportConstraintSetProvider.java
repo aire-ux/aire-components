@@ -31,6 +31,7 @@ public class AireKernelPackageReexportConstraintSetProvider
         "io.sunshower.lang.*",
         "io.sunshower.zephyr.aire.*",
         "io.sunshower.zephyr.ui.*",
+        "io.sunshower.cloud.studio.workflows.*",
         "io.sunshower.zephyr");
   }
 

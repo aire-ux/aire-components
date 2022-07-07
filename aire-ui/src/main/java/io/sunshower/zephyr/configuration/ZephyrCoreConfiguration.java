@@ -130,7 +130,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public static BeanPostProcessor internationalizationBeanPostProcessor(
+  public BeanPostProcessor internationalizationBeanPostProcessor(
       ResourceBundleResolver resolver, ApplicationContext context) {
     return new InternationalizationBeanPostProcessor(resolver, context);
   }
