@@ -30,7 +30,6 @@ import io.sunshower.zephyr.security.CryptkeeperAuthenticationProvider;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
 import io.sunshower.zephyr.ui.i18n.ResourceBundleResolver;
-import io.zephyr.api.ModuleEvents;
 import io.zephyr.api.ServiceRegistration;
 import io.zephyr.api.ServiceRegistry;
 import io.zephyr.kernel.Module;
@@ -306,14 +305,14 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
       registerAnnotatedServices(module, context, registry, serviceRegistry);
     }
 
-    kernel.addEventListener(
-        (type, event) -> {
-          ui.reload();
-        },
-        ModuleEvents.STOPPED,
-        ModuleEvents.STARTED,
-        ModuleEvents.INSTALLED,
-        ModuleEvents.REMOVED);
+    //    kernel.addEventListener(
+    //        (type, event) -> {
+    //          ui.reload();
+    //        },
+    //        ModuleEvents.STOPPED,
+    //        ModuleEvents.STARTED,
+    //        ModuleEvents.INSTALLED,
+    //        ModuleEvents.REMOVED);
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})

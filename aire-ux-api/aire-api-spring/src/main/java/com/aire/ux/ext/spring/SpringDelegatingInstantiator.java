@@ -81,7 +81,7 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
             log.log(
                 Level.INFO,
                 "Failed to resolve bean of type ''{0}'' from context: ''{1}''",
-                new Object[]{type, ctx.getClassLoader()});
+                new Object[] {type, ctx.getClassLoader()});
           }
         }
       }
@@ -101,8 +101,10 @@ public class SpringDelegatingInstantiator extends BaseAireInstantiator {
     try {
       return rootApplicationContext.getAutowireCapableBeanFactory().createBean(type);
     } catch (BeansException ex) {
-      log.log(Level.WARNING, "Failed to instantiate bean  of type {0}.  Reason: {1}",
-          new Object[]{type, ex.getMessage()});
+      log.log(
+          Level.WARNING,
+          "Failed to instantiate bean  of type {0}.  Reason: {1}",
+          new Object[] {type, ex.getMessage()});
     }
     return null;
   }
