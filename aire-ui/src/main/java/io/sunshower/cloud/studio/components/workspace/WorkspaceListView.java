@@ -4,6 +4,7 @@ import com.aire.ux.DomAware;
 import com.aire.ux.Element;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -17,6 +18,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceService;
+import io.sunshower.cloud.studio.components.documents.DocumentListView;
 import io.sunshower.model.api.Session;
 import io.sunshower.zephyr.MainView;
 import io.sunshower.zephyr.ui.components.Badge;
@@ -148,6 +150,11 @@ public class WorkspaceListView extends Panel {
               .value(new Badge(Badge.Mode.Contrast, workspace.getDescription()));
       card.add(Slot.Content, dl);
       add(card);
+
+      card.addClickListener(
+          click -> {
+            UI.getCurrent().navigate(DocumentListView.class, workspace.getId().toString());
+          });
     }
     refreshTree();
   }

@@ -10,7 +10,6 @@ import io.sunshower.persistence.id.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @RootElement
@@ -41,7 +40,6 @@ public final class WorkspaceSet {
     workspaces.remove(descriptor.getId());
   }
 
-  @NonNull
   public WorkspaceDescriptor get(Identifier id) {
     return workspaces.get(id);
   }

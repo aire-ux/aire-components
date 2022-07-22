@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.textfield.TextField;
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
 @AireUITest
-@Routes(scanClassPackage = TestView.class)
+@RouteLocation(scanClassPackage = TestView.class)
 @ContextConfiguration(classes = Cfg.class)
 class InternationalizationBeanPostProcessorTest {
 

@@ -14,7 +14,7 @@ import java.util.List;
 import lombok.val;
 
 @AireTest
-@Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.routes")
+@RouteLocation(scanPackage = "com.aire.ux.test.vaadin.scenarios.routes")
 class ComponentHierarchyNodeAdapterTest {
 
   @ViewTest

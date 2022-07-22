@@ -7,6 +7,7 @@ import static io.zephyr.common.io.FilePermissionChecker.Type.WRITE;
 import static org.springframework.util.FileSystemUtils.deleteRecursively;
 
 import io.sunshower.arcus.condensation.Condensation;
+import io.sunshower.cloud.studio.DocumentDescriptor;
 import io.sunshower.cloud.studio.Workspace;
 import io.sunshower.cloud.studio.WorkspaceDescriptor;
 import io.sunshower.cloud.studio.WorkspaceException;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 import java.util.Set;
 import lombok.NonNull;
 import lombok.val;
@@ -64,6 +66,23 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
   }
 
   @Override
+  public Optional<Workspace> getWorkspace(@NonNull WorkspaceDescriptor descriptor) {
+    if (getWorkspaces().contains(descriptor)) {
+      try {
+        return Optional.of(populateWorkspace(descriptor));
+      } catch (Exception ex) {
+        throw new WorkspaceException(ex);
+      }
+    }
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<WorkspaceDescriptor> getWorkspaceDescriptor(@NonNull Identifier id) {
+    return Optional.ofNullable(workspaces.get(id));
+  }
+
+  @Override
   public Set<WorkspaceDescriptor> getWorkspaces() {
     return Set.copyOf(workspaces.getWorkspaces().values());
   }
@@ -93,6 +112,23 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     }
   }
 
+  @Override
+  public void flush() {
+    try {
+      val definitionFile = getOrCreateWorkspaceDefinitionFile(root);
+      writeDescriptor(condensation, definitionFile);
+    } catch (IOException ex) {
+      throw new WorkspaceException(ex);
+    }
+  }
+
+  void removeWorkspaceById(Identifier id) {
+    val result = workspaces.get(id);
+    if (result != null) {
+      delete(result);
+    }
+  }
+
   private Workspace populateWorkspace(WorkspaceDescriptor result)
       throws IOException, GitAPIException {
     createOrPopulateWorkspaceDescriptor(result);
@@ -105,7 +141,7 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
     } else {
       git = Git.open(workspaceDirectory);
     }
-    return new DirectoryBackedWorkspace(git, workspaceDirectory, this, result);
+    return new DirectoryBackedWorkspace(git, workspaceDirectory, this, result.getId());
   }
 
   private File getWorkspaceRoot(Identifier id) throws IOException {
@@ -135,10 +171,8 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
       workspaces = new WorkspaceSet();
       workspaces.setOwner(owner);
       writeDescriptor(condensation, definitionFile);
-      return workspaces;
-    } else {
-      return readDescriptor();
     }
+    return readDescriptor();
   }
 
   private void writeDescriptor(Condensation condensation, File definitionFile) throws IOException {
@@ -166,5 +200,14 @@ public class RevisionAwareWorkspaceManager implements WorkspaceManager {
       throw new IOException("Error: File '%s' exists, but is not a file".formatted(ws));
     }
     return Files.check(ws, FILE, READ, WRITE);
+  }
+
+  public void registerDescriptor(Identifier id, DocumentDescriptor descriptor) {
+    val ws = workspaces.get(id);
+    assert ws != null;
+    if (ws.getDocument(descriptor.getId()) == null) {
+      ws.addDocument(descriptor);
+      flush();
+    }
   }
 }

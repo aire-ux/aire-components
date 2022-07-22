@@ -19,7 +19,7 @@ import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.features.scenarios.scenario1.TestFeatureView;
 import com.aire.ux.test.Context;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.TestContext;
 import com.aire.ux.test.ViewTest;
 import com.vaadin.flow.component.button.Button;
@@ -35,7 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @AireUITest
 @Navigate
-@Routes(scanClassPackage = MainView.class)
+@RouteLocation(scanClassPackage = MainView.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 class InMemoryFeatureManagerTest {
 

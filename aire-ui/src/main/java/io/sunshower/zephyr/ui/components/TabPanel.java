@@ -17,6 +17,7 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import io.sunshower.gyre.CompactTrieMap;
@@ -43,7 +44,7 @@ public class TabPanel extends HtmlContainer
   /** immutable state */
   private final Tabs tabs;
 
-  private final Section contents;
+  private Section contents;
   private final Nav tabContainer;
   private final TrieMap<String, Tab> locations;
   @Getter private final Map<Tab, ComponentDescriptor> components;
@@ -52,18 +53,38 @@ public class TabPanel extends HtmlContainer
 
   private TabPlacement placement;
 
+  public enum Mode {
+    Routes,
+    Contents
+  }
+
+  private final Mode mode;
+
   public TabPanel(TabPlacement placement) {
+    this(placement, Mode.Contents);
+  }
+
+  public TabPanel(Mode mode) {
+    this(TabPlacement.TOP, mode);
+  }
+
+  public TabPanel(TabPlacement placement, Mode mode) {
+    this.mode = mode;
     getClassNames().add(CLASS_NAME);
     tabs = new Tabs();
     decorate(tabs);
     tabContainer = new Nav();
     tabContainer.getElement().setAttribute("slot", "tabs");
-    contents = new Section();
-    contents.getElement().setAttribute("slot", "content");
+    if (mode == Mode.Contents) {
+      contents = new Section();
+      contents.getElement().setAttribute("slot", "content");
+      add(contents);
+    } else {
+      addClassName("routes");
+    }
 
     tabContainer.add(tabs);
     add(tabContainer);
-    add(contents);
     setTabPlacement(placement);
 
     components = new LinkedHashMap<>();
@@ -108,10 +129,20 @@ public class TabPanel extends HtmlContainer
   }
 
   public Tab addTab(String title, Class<? extends Component> componentType) {
+    return addTab(title, componentType, null);
+  }
+
+  public Tab addTab(
+      String title, Class<? extends Component> componentType, RouteParameters parameters) {
     val route = isRoute(componentType);
     if (route) {
       val url = getTargetUrl(componentType);
-      val link = new RouterLink(title, componentType);
+      RouterLink link;
+      if (parameters == null) {
+        link = new RouterLink(title, componentType);
+      } else {
+        link = new RouterLink(title, componentType, parameters);
+      }
       val tab = new Tab(link);
       val descriptor = new ComponentDescriptor(true, null, componentType);
       components.put(tab, descriptor);
@@ -153,6 +184,9 @@ public class TabPanel extends HtmlContainer
 
   private void updateTab(@NonNull ComponentDescriptor next, Tab selectedTab) {
     // use default routing mechanism for routes
+    if (mode == Mode.Routes) {
+      return;
+    }
     if (!next.isRoute) {
       Component nextInstance;
       if (next.instance != null) {
@@ -165,11 +199,13 @@ public class TabPanel extends HtmlContainer
   }
 
   private void setContent(Component content) {
-    if (current != null) {
-      contents.remove(current);
+    if (mode != Mode.Routes) {
+      if (current != null) {
+        contents.remove(current);
+      }
+      current = content;
+      contents.add(content);
     }
-    current = content;
-    contents.add(content);
   }
 
   public void showRouterLayoutContent(HasElement content) {

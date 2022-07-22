@@ -1,11 +1,18 @@
 package com.aire.ux.test;
 
 import com.aire.ux.test.Context.Mode;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.dom.Element;
+import io.sunshower.arcus.reflect.HierarchyTraversalMode;
+import io.sunshower.arcus.reflect.Reflect;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import lombok.val;
 
 public interface TestContext {
 
@@ -42,6 +49,47 @@ public interface TestContext {
    */
   <T extends Component> Optional<T> selectFirst(Class<T> type);
 
+  <T extends Component> Optional<T> selectFirst(String selector);
+
+  default <T extends Component> Optional<Throwable> attach(T c, AttachEvent event) {
+    return performLifecycle(c, LifecycleEvents.ATTACH, new AttachEvent(c, true));
+  }
+
+  default <T extends Component> Optional<Throwable> detach(T c, DetachEvent event) {
+    return performLifecycle(c, LifecycleEvents.DETACH, new AttachEvent(c, true));
+  }
+
+  default <T extends Component> Optional<Throwable> attach(T c) {
+    return attach(c, new AttachEvent(c, true));
+  }
+
+  default <T extends Component> Optional<Throwable> detach(T c) {
+    return detach(c, new DetachEvent(c));
+  }
+
+  private <T extends Component> Optional<Throwable> performLifecycle(
+      T c, String name, ComponentEvent<Component> event) {
+    return Reflect.methodsMatching(
+            Component.class,
+            HierarchyTraversalMode.LinearSupertypes,
+            method -> {
+              val mods = method.getModifiers();
+              return method.getName().equals(name)
+                  && (!(Modifier.isAbstract(mods))
+                      && (method.canAccess(c) || method.trySetAccessible()));
+            })
+        .findAny()
+        .flatMap(
+            method -> {
+              try {
+                method.invoke(c, event);
+                return Optional.empty();
+              } catch (Exception ex) {
+                return Optional.of(ex);
+              }
+            });
+  }
+
   /**
    * @param selector the item to match
    * @return a (possibly empty) list of matching elements
@@ -74,5 +122,11 @@ public interface TestContext {
 
   default void flush() {
     flush(false);
+  }
+
+  final class LifecycleEvents {
+
+    static final String ATTACH = "onAttach";
+    static final String DETACH = "onDetach";
   }
 }

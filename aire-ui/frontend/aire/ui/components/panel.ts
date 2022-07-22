@@ -4,16 +4,7 @@ import {css, customElement, html, LitElement} from "lit-element";
 export class AirePanel extends LitElement {
 
   static styles = css`
-    article {
-      width:100%;
-      height:100%;
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
+    
     
     ::slotted(section) {
       max-width: calc(100% - 24px);
@@ -28,12 +19,11 @@ export class AirePanel extends LitElement {
     }
   
   `;
+
   render() {
     return html`
-      <article>
-        <slot part="content"></slot>
-        <slot name="navigation-bar"></slot>
-      </article>
+      <slot part="content"></slot>
+      <slot name="navigation-bar"></slot>
     `
   }
 

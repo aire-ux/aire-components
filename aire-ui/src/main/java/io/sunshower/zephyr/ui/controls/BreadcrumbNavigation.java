@@ -1,13 +1,16 @@
 package io.sunshower.zephyr.ui.controls;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Nav;
+import com.vaadin.flow.di.Instantiator;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import io.sunshower.gyre.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.val;
 
@@ -23,7 +26,7 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
   public void afterNavigation(AfterNavigationEvent event) {
     removeAll();
     val target = locateRouteTarget(event);
-    val links = collectLinks(target);
+    val links = collectLinks(target, event);
     val iter = links.listIterator(links.size());
     while (iter.hasPrevious()) {
       add(iter.previous());
@@ -34,16 +37,16 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
   }
 
   @SuppressWarnings("unchecked")
-  private List<RouterLink> collectLinks(Pair<Breadcrumb, Class<? extends Component>> target) {
-    val results = new ArrayList<RouterLink>();
+  private List<Component> collectLinks(
+      Pair<Breadcrumb, Class<? extends Component>> target, AfterNavigationEvent event) {
+
     if (target != null) {
-      val routerLink = new RouterLink(target.fst.name(), target.snd);
-      results.add(routerLink);
+      val results = new ArrayList<Component>();
+      addBreadcrumbChain(event, results, target.snd);
       var host = target.fst.host();
       while (host != null) {
         if (!RouterLayout.class.equals(host)) {
-          val breadcrumb = host.getAnnotation(Breadcrumb.class);
-          results.add(new RouterLink(breadcrumb.name(), (Class<? extends Component>) host));
+          addBreadcrumbChain(event, results, (Class<? extends Component>) host);
           val bc = host.getAnnotation(Breadcrumb.class);
           if (bc != null) {
             host = bc.host();
@@ -52,8 +55,24 @@ public class BreadcrumbNavigation extends Nav implements AfterNavigationObserver
           break;
         }
       }
+      return results;
     }
-    return results;
+    return Collections.emptyList();
+  }
+
+  private void addBreadcrumbChain(
+      AfterNavigationEvent event, List<Component> results, Class<? extends Component> host) {
+    val breadcrumb = host.getAnnotation(Breadcrumb.class);
+    if (hasResolver(breadcrumb)) {
+      val resolver = Instantiator.get(UI.getCurrent()).getOrCreate(breadcrumb.resolver());
+      results.addAll(resolver.resolve(breadcrumb, event));
+    } else {
+      results.add(new RouterLink(breadcrumb.name(), host));
+    }
+  }
+
+  private boolean hasResolver(Breadcrumb breadcrumb) {
+    return !CrumbResolver.class.equals(breadcrumb.resolver());
   }
 
   private Pair<Breadcrumb, Class<? extends Component>> locateRouteTarget(

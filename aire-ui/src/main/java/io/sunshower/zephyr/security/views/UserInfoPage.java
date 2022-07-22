@@ -20,6 +20,7 @@ import com.vaadin.flow.data.binder.BindingValidationStatus;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import io.sunshower.crypt.core.SecretService;
 import io.sunshower.lang.common.encodings.Encodings;
 import io.sunshower.lang.common.encodings.Encodings.Type;
 import io.sunshower.model.api.User;
@@ -39,6 +40,7 @@ import io.sunshower.zephyr.ui.i18n.Localize;
 import io.sunshower.zephyr.ui.i18n.Localized;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.val;
@@ -54,6 +56,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   private final Configuration configuration;
   private final CompositeRealmManager realmManager;
   private final Path configurationFile;
+  private final SecretService secretService;
 
   private SplitPanel content;
   private SecurityInitializationModel model;
@@ -106,14 +109,17 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
   private PasswordField passwordConfirmField;
 
   private Binder<User> userBinder;
+
   private Binder<UserDetails> userDetailsBinder;
 
   @Inject
   public UserInfoPage(
       CompositeRealmManager realmManager,
       Configuration configuration,
+      SecretService secretService,
       @Named("realmDirectory") File realmDirectory,
       @Named("aireConfigurationFile") Path configurationFile) {
+    this.secretService = secretService;
     this.realmManager = realmManager;
     this.configuration = configuration;
     this.realmDirectory = realmDirectory;
@@ -220,6 +226,12 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
 
       val plaintextPassword = passwordField.getValue();
 
+      val defaultVault =
+          secretService.createVault(
+              UUID.randomUUID().toString(),
+              "default vault for" + user.getUsername(),
+              plaintextPassword);
+
       val realmConfiguration =
           new RealmConfiguration(
               realmDirectory,
@@ -235,6 +247,7 @@ public class UserInfoPage extends AbstractWizardPage<String, SecurityInitializat
       configuration.setProperty(
           "default.realm.salt", encoding.encode(realmConfiguration.getSalt()));
       configuration.setProperty("aire.initialized", true);
+      configuration.setProperty("primary.vault.id", String.valueOf(defaultVault.getId()));
       saveConfiguration(configuration);
       realmManager.register(realm);
       UI.getCurrent().navigate(AuthenticationView.class);

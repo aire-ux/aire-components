@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.val;
 
@@ -447,27 +446,24 @@ public class Wizard<K, V> extends HtmlContainer {
   }
 
   private void updateProgressView(WizardStep<K, ?> step) {
-    val listItem =
-        header
-            .getChildren()
-            .filter(child -> child.getClass().equals(UnorderedList.class))
-            .findFirst()
-            .orElseThrow(
-                () ->
-                    new NoSuchElementException(
-                        "Could not find progress list.  Component is misconfigured"));
-
-    val iter = listItem.getChildren().iterator();
-    for (int i = 0; i < steps.size(); i++) {
-      val cl = iter.next().getElement().getClassList();
-      if (i <= history.size()) {
-        cl.remove(NOT_COMPLETE);
-        cl.add(COMPLETE);
-      } else {
-        cl.remove(COMPLETE);
-        cl.add(NOT_COMPLETE);
-      }
-    }
+    header
+        .getChildren()
+        .filter(child -> child.getClass().equals(UnorderedList.class))
+        .findFirst()
+        .ifPresent(
+            listItem -> {
+              val iter = listItem.getChildren().iterator();
+              for (int i = 0; i < steps.size(); i++) {
+                val cl = iter.next().getElement().getClassList();
+                if (i <= history.size()) {
+                  cl.remove(NOT_COMPLETE);
+                  cl.add(COMPLETE);
+                } else {
+                  cl.remove(COMPLETE);
+                  cl.add(NOT_COMPLETE);
+                }
+              }
+            });
   }
 
   /** ensure that all states are connected */

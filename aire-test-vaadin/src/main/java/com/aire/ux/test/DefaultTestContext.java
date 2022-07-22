@@ -28,6 +28,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 @Log
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class DefaultTestContext implements TestContext {
 
   private final Supplier<Element> supplier;
@@ -132,6 +133,12 @@ public class DefaultTestContext implements TestContext {
       }
     }
     return Optional.empty();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends Component> Optional<T> selectFirst(String selector) {
+    return selectFirst(selector, Component.class).map(t -> (T) t);
   }
 
   @Override

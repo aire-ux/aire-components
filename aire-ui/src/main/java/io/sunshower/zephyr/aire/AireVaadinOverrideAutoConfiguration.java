@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.aire;
 
+import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.server.InitParameters;
 import com.vaadin.flow.spring.RootMappedCondition;
@@ -69,7 +70,7 @@ public class AireVaadinOverrideAutoConfiguration {
    */
   @Bean
   public ServletRegistrationBean<SpringServlet> servletRegistrationBean(
-      Module module, Kernel kernel, AccessQueue queue) {
+      Module module, Kernel kernel, AccessQueue queue, UserInterface userInterface) {
     var mapping = configurationProperties.getUrlMapping();
     val initParameters = new HashMap<String, String>();
     var rootMapping = RootMappedCondition.isRootMapping(mapping);
@@ -80,7 +81,8 @@ public class AireVaadinOverrideAutoConfiguration {
     }
     val registration =
         new ServletRegistrationBean<SpringServlet>(
-            new AireVaadinServlet(kernel, module, queue, context, rootMapping), mapping);
+            new AireVaadinServlet(kernel, module, queue, userInterface, context, rootMapping),
+            mapping);
     registration.setInitParameters(initParameters);
     registration.setAsyncSupported(configurationProperties.isAsyncSupported());
     registration.setName(ClassUtils.getShortNameAsProperty(SpringServlet.class));

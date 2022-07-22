@@ -199,6 +199,15 @@ subprojects {
     dependencies {
 
 
+        [
+                '',
+                '.jsonrpc',
+                '.debug',
+                '.websocket'
+        ].each {
+            implementation "org.eclipse.lsp4j:org.eclipse.lsp4j$it"
+        }
+
         testImplementation 'org.mockito:mockito-inline'
         testImplementation 'org.junit-pioneer:junit-pioneer'
         testImplementation 'org.mockito:mockito-junit-jupiter'

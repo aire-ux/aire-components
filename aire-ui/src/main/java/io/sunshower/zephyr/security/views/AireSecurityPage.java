@@ -111,7 +111,6 @@ public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitial
             ui -> {
               ((Panel) content.getSecond()).remove(form);
               form = new FormLayout();
-              ((Panel) content.getSecond()).add(form);
 
               val parameters = model.getInitialParameters();
               val img = Identicon.createFromObject(parameters, "Encoded Initialization Parameters");
@@ -147,6 +146,7 @@ public class AireSecurityPage extends AbstractWizardPage<String, SecurityInitial
               group.add(button);
               form.addFormItem(group, "Security Init Params");
               form.setColspan(group, 1);
+              ((Panel) content.getSecond()).add(form);
             });
   }
 

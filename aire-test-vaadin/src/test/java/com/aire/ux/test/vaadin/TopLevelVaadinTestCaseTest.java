@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.vaadin.scenarios.classroutes.ClassScenarioRouteLayout;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 @AireTest
 @Navigate("main")
-@Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.routes")
+@RouteLocation(scanPackage = "com.aire.ux.test.vaadin.scenarios.routes")
 public class TopLevelVaadinTestCaseTest {
 
   @ViewTest
@@ -38,7 +38,7 @@ public class TopLevelVaadinTestCaseTest {
 
   @ViewTest
   @Navigate("test")
-  @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
+  @RouteLocation(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
   void ensureTestMethodWithViewTestGeneratesFrameEntryWithMethod() {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();
     assertTrue(method.isPresent());
@@ -46,7 +46,7 @@ public class TopLevelVaadinTestCaseTest {
 
   @ViewTest
   @Navigate("test")
-  @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
+  @RouteLocation(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
   void ensureTestMethodGeneratesFrameWithCurrentMethod() throws NoSuchMethodException {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();
     assertTrue(method.isPresent());
@@ -59,7 +59,7 @@ public class TopLevelVaadinTestCaseTest {
 
   @ViewTest
   @Navigate("test")
-  @Routes(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
+  @RouteLocation(scanPackage = "com.aire.ux.test.vaadin.scenarios.classroutes")
   void ensureTestMethodGeneratesFrameWithCurrentMethod2(@Select ClassScenarioRouteLayout layout)
       throws NoSuchMethodException {
     val method = Frames.resolveCurrentFrame().getContext().getTestMethod();

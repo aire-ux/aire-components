@@ -3,6 +3,7 @@ package io.sunshower.cloud.studio.git;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.arcus.condensation.Condensation;
@@ -52,6 +53,55 @@ public class WorkspaceServiceTest {
   }
 
   @Test
+  void ensureDocumentsAreSavedCorrectly() {
+    val ws = new WorkspaceDescriptor();
+    ws.setName("hello");
+
+    var mgr = workspaceService.createScopedManager(user);
+    var workspace = mgr.createWorkspace(ws);
+
+    var doc = new DocumentDescriptor();
+    doc.setName("test");
+    workspace.getOrCreate(doc);
+
+    mgr = workspaceService.createScopedManager(user);
+    workspace = mgr.getWorkspace(ws.getId()).get();
+
+    assertEquals(1, workspace.getDocuments().size());
+  }
+
+  @Test
+  void ensureRetrievingCreatedWorkspaceAndDocumentOnItWorks() {
+    val descriptor = new WorkspaceDescriptor();
+    descriptor.setName("sup");
+    val mgr = workspaceService.createScopedManager(user);
+    val workspace = mgr.createWorkspace(descriptor);
+
+    val doc = new DocumentDescriptor();
+    doc.setName("test");
+
+    workspace.getOrCreate(doc);
+    assertEquals(1, workspace.getDocuments().size());
+  }
+
+  @Test
+  void ensureRetrievingCreatedWorkspaceWorks() {
+    val descriptor = new WorkspaceDescriptor();
+    descriptor.setName("sup");
+    val mgr = workspaceService.createScopedManager(user);
+    mgr.createWorkspace(descriptor);
+    assertFalse(mgr.getWorkspace(descriptor).isEmpty());
+  }
+
+  @Test
+  void ensureRetrievingUncreatedWorkspaceWorks() {
+    val descriptor = new WorkspaceDescriptor();
+    descriptor.setName("sup");
+    val mgr = workspaceService.createScopedManager(user);
+    assertTrue(mgr.getWorkspace(descriptor).isEmpty());
+  }
+
+  @Test
   void ensureWorkspaceManagerCanCreateWorkspaceDirectory() {
     val manager = workspaceService.createScopedManager(user);
     val workspaceDescriptor = new WorkspaceDescriptor();
@@ -85,6 +135,37 @@ public class WorkspaceServiceTest {
     workspace.delete();
     assertFalse(workspace.getRoot().exists());
     assertFalse(new File(workspace.getRoot(), ".git").exists());
+  }
+
+  @Test
+  void ensureDeletingDocumentWorks() {
+    val manager = workspaceService.createScopedManager(user);
+    val workspaceDescriptor = new WorkspaceDescriptor();
+    workspaceDescriptor.setName("Test Workspace");
+    val workspace = manager.createWorkspace(workspaceDescriptor);
+
+    val doc = new DocumentDescriptor();
+    doc.setName("lol");
+
+    val document = (FileDocument) workspace.getOrCreate(doc);
+    assertNotNull(workspace.getDocumentDescriptor(doc.getId()));
+    workspace.delete(doc);
+    assertTrue(workspace.getDocuments().isEmpty());
+    assertFalse(document.getRoot().exists());
+  }
+
+  @Test
+  void ensureCreatingDocumentAllowsDocumentToBeRetrievedFromWorkspace() {
+    val manager = workspaceService.createScopedManager(user);
+    val workspaceDescriptor = new WorkspaceDescriptor();
+    workspaceDescriptor.setName("Test Workspace");
+    val workspace = manager.createWorkspace(workspaceDescriptor);
+
+    val doc = new DocumentDescriptor();
+    doc.setName("lol");
+
+    workspace.getOrCreate(doc);
+    assertNotNull(workspace.getDocumentDescriptor(doc.getId()));
   }
 
   @Test

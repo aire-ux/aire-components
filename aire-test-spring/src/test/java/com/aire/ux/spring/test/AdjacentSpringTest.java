@@ -8,7 +8,7 @@ import com.aire.ux.spring.test.scenario2.Scenario2Configuration;
 import com.aire.ux.spring.test.scenario2.TestService;
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 /** just want to be sure that running tests against different scenarios works */
 @AireTest
 @EnableSpring
-@Routes(scanClassPackage = com.aire.ux.spring.test.scenario2.TestService.class)
+@RouteLocation(scanClassPackage = com.aire.ux.spring.test.scenario2.TestService.class)
 @ContextConfiguration(classes = Scenario2Configuration.class)
 public class AdjacentSpringTest {
 

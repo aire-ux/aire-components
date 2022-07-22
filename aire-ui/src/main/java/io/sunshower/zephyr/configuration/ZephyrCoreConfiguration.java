@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import com.aire.ux.Aire;
 import com.aire.ux.ComponentInclusionManager;
 import com.aire.ux.DefaultUserInterface;
+import com.aire.ux.Registration;
 import com.aire.ux.UserInterface;
 import com.aire.ux.actions.ActionManager;
 import com.aire.ux.actions.DefaultActionManager;
@@ -12,10 +13,12 @@ import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.ext.ExtensionRegistry;
 import com.aire.ux.ext.spring.SpringComponentInclusionManager;
 import com.aire.ux.ext.spring.SpringExtensionRegistry;
-import com.vaadin.flow.component.UI;
+import com.aire.ux.zephyr.ZephyrService;
 import com.vaadin.flow.server.VaadinService;
 import io.sunshower.cloud.studio.WorkspaceService;
 import io.sunshower.cloud.studio.git.DirectoryBackedWorkspaceService;
+import io.sunshower.cloud.studio.workflows.ModuleDrivenWorkflowService;
+import io.sunshower.cloud.studio.workflows.WorkflowService;
 import io.sunshower.crypt.DefaultSecretService;
 import io.sunshower.crypt.core.SecretService;
 import io.sunshower.lang.Suppliers;
@@ -27,8 +30,8 @@ import io.sunshower.zephyr.security.CryptkeeperAuthenticationProvider;
 import io.sunshower.zephyr.ui.i18n.AireResourceBundleResolver;
 import io.sunshower.zephyr.ui.i18n.InternationalizationBeanPostProcessor;
 import io.sunshower.zephyr.ui.i18n.ResourceBundleResolver;
-import io.zephyr.api.ModuleEvents;
 import io.zephyr.api.ServiceRegistration;
+import io.zephyr.api.ServiceRegistry;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.FactoryServiceDefinition;
 import io.zephyr.kernel.core.Kernel;
@@ -39,6 +42,8 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +53,9 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
@@ -67,6 +74,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Slf4j
 @Configuration
@@ -82,13 +90,20 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   private static final String LOGIN_PROCESSING_URL = "/login";
   private static final String LOGOUT_SUCCESS_URL = "/login";
 
+  private final List<Registration> registrations;
+
   static {
     initialized = new AtomicBoolean();
   }
 
-  private ServiceRegistration<UserInterface> result;
+  public ZephyrCoreConfiguration() {
+    registrations = new ArrayList<>();
+  }
+
+  private ServiceRegistration<UserInterface> userInterfaceRegistration;
 
   @Bean
+  @ZephyrService(type = UserInterface.class)
   public static UserInterface userInterface(
       ExtensionRegistry extensionRegistry, AccessQueue accessQueue, ActionManager actionManager) {
     return Aire.setUserInterface(
@@ -114,7 +129,7 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   }
 
   @Bean
-  public static BeanPostProcessor internationalizationBeanPostProcessor(
+  public BeanPostProcessor internationalizationBeanPostProcessor(
       ResourceBundleResolver resolver, ApplicationContext context) {
     return new InternationalizationBeanPostProcessor(resolver, context);
   }
@@ -275,38 +290,68 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
     return new CompositeRealmManager(kernel, realm.toPath(), configuration);
   }
 
+  @Bean
+  @ZephyrService(type = WorkflowService.class)
+  public WorkflowService workflowService() {
+    return new ModuleDrivenWorkflowService();
+  }
+
   private void registerServices(
       Module module, ConfigurableApplicationContext context, Kernel kernel) {
-    log.info("Registering UserInterface service");
-    result =
-        kernel
-            .getServiceRegistry()
-            .register(
-                module,
-                new FactoryServiceDefinition<>(
-                    UserInterface.class,
-                    "aire:user-interface",
-                    () -> context.getBean(UserInterface.class)));
+    val ui = context.getBean(UserInterface.class);
+    val serviceRegistry = kernel.getServiceRegistry();
 
-    kernel.addEventListener(
-        (type, event) -> {
-          val ui = UI.getCurrent();
-          if (ui != null) {
-            ui.access(
-                () -> {
-                  ui.getPage().reload();
-                });
+    if (context instanceof BeanDefinitionRegistry registry) {
+      registerAnnotatedServices(module, context, registry, serviceRegistry);
+    }
+
+    //    kernel.addEventListener(
+    //        (type, event) -> {
+    //          ui.reload();
+    //        },
+    //        ModuleEvents.STOPPED,
+    //        ModuleEvents.STARTED,
+    //        ModuleEvents.INSTALLED,
+    //        ModuleEvents.REMOVED);
+  }
+
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  private void registerAnnotatedServices(
+      Module module,
+      ConfigurableApplicationContext context,
+      BeanDefinitionRegistry registry,
+      ServiceRegistry serviceRegistry) {
+
+    log.info("Registering Zephyr Services");
+    val beanNames = context.getBeanNamesForAnnotation(ZephyrService.class);
+    val serviceAnnotationName = ZephyrService.class.getName();
+
+    for (val name : beanNames) {
+      val definition = registry.getBeanDefinition(name);
+      if (definition instanceof AnnotatedBeanDefinition def) {
+
+        val annotationAttributes =
+            def.getFactoryMethodMetadata().getAllAnnotationAttributes(serviceAnnotationName);
+        if (annotationAttributes != null) {
+          val type = (Class<?>) annotationAttributes.getFirst("type");
+          if (type != null) {
+            log.info("Registering service [bean name: {}, type: {}]...", name, type);
+            serviceRegistry.register(
+                module, new FactoryServiceDefinition(type, () -> context.getBean(name)));
           }
-        },
-        ModuleEvents.STOPPED,
-        ModuleEvents.STARTED);
-    log.info("Successfully registered UserInterface service");
+        }
+      }
+    }
   }
 
   @Override
   public void destroy() throws Exception {
-    if (result != null) {
-      result.dispose();
+    for (val registration : registrations) {
+      try {
+        registration.close();
+      } catch (Exception ex) {
+        log.warn("Error attempting to close registration: {}", ex.getMessage());
+      }
     }
   }
 
@@ -367,6 +412,11 @@ public class ZephyrCoreConfiguration extends WebSecurityConfigurerAdapter
   public AuthenticationProvider defaultLocalRealmAuthenticationProvider() {
     return new CryptkeeperAuthenticationProvider(
         getApplicationContext().getBean(AireRealmAggregator.class));
+  }
+
+  @Bean
+  public LogoutHandler logoutHandler(SecretService service, ApplicationContext context) {
+    return new VaultDestroyingLogoutHandler(service, context);
   }
 
   @Override

@@ -1,7 +1,7 @@
 package com.aire.ux.test.vaadin;
 
 import com.aire.ux.test.AireExtension;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
@@ -22,10 +22,11 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
       return false;
     }
     val element = opt.get();
-    return element.isAnnotationPresent(Routes.class)
+
+    return element.getAnnotationsByType(RouteLocation.class).length > 0
         || context
             .getTestClass()
-            .flatMap(cl -> Optional.ofNullable(cl.getAnnotation(Routes.class)))
+            .flatMap(cl -> Optional.of(cl.getAnnotationsByType(RouteLocation.class).length > 0))
             .isPresent();
   }
 
@@ -52,13 +53,18 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
               .flatMap(
                   t ->
                       Optional.ofNullable(
-                          (AnnotatedElement) (t.isAnnotationPresent(Routes.class) ? t : null)))
+                          (AnnotatedElement)
+                              (t.isAnnotationPresent(RouteLocation.class) ? t : null)))
               .or(context::getTestClass);
       val routes = new com.github.mvysny.kaributesting.v10.Routes();
       if (elementOpt.isPresent()) {
-        val result = getRoutePackage(elementOpt.get().getAnnotation(Routes.class));
-        if (result != null) {
-          routes.autoDiscoverViews(result);
+
+        val routeAnnotations = elementOpt.get().getAnnotationsByType(RouteLocation.class);
+        for (val route : routeAnnotations) {
+          val result = getRoutePackage(route);
+          if (result != null) {
+            routes.autoDiscoverViews(result);
+          }
         }
       } else {
         routes.autoDiscoverViews();
@@ -66,15 +72,15 @@ public class AireTestClassRoutesCreatorFactory implements RoutesCreatorFactory {
       return routes;
     }
 
-    private String getRoutePackage(Routes routes) {
-      if (routes == null) {
+    private String getRoutePackage(RouteLocation routeLocation) {
+      if (routeLocation == null) {
         return null;
       }
-      if (!Void.class.equals(routes.scanClassPackage())) {
-        return routes.scanClassPackage().getPackageName();
+      if (!Void.class.equals(routeLocation.scanClassPackage())) {
+        return routeLocation.scanClassPackage().getPackageName();
       }
-      if (!routes.scanPackage().equals(Select.default_value)) {
-        return routes.scanPackage();
+      if (!routeLocation.scanPackage().equals(Select.default_value)) {
+        return routeLocation.scanPackage();
       }
       return null;
     }

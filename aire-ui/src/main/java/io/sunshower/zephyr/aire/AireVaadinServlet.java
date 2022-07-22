@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.aire;
 
+import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.function.DeploymentConfiguration;
 import com.vaadin.flow.server.ServiceException;
@@ -8,6 +9,8 @@ import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.SpringServlet;
 import io.zephyr.kernel.Module;
 import io.zephyr.kernel.core.Kernel;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import lombok.val;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.web.context.WebApplicationContext;
@@ -18,6 +21,7 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
   private final AccessQueue queue;
   private final Module kernelModule;
   private final WebApplicationContext context;
+  private final UserInterface userInterface;
   private Registration uiListenerRegistration;
   private Registration sessionInitRegistration;
   private Registration sessionDestroyRegistration;
@@ -26,6 +30,7 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
       Kernel kernel,
       Module kernelModule,
       AccessQueue queue,
+      UserInterface userInterface,
       WebApplicationContext context,
       boolean rootMapping) {
     super(context, rootMapping);
@@ -33,6 +38,7 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
     this.kernel = kernel;
     this.context = context;
     this.kernelModule = kernelModule;
+    this.userInterface = userInterface;
   }
 
   @Override
@@ -46,6 +52,14 @@ public class AireVaadinServlet extends SpringServlet implements DisposableBean {
     sessionDestroyRegistration = service.addSessionDestroyListener(queue);
     service.init();
     return service;
+  }
+
+  @Override
+  public void init(ServletConfig servletConfig) throws ServletException {
+    super.init(servletConfig);
+    val service = getService();
+    service.addSessionDestroyListener(userInterface);
+    service.addSessionInitListener(userInterface);
   }
 
   @Override

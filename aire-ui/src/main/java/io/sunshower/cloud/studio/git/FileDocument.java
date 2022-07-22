@@ -54,6 +54,10 @@ public class FileDocument implements Document {
     }
   }
 
+  public File getRoot() {
+    return file;
+  }
+
   @Override
   public Document checkout() {
     return checkout("main");

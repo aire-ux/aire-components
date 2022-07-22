@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.aire.ux.test.AireTest;
 import com.aire.ux.test.Navigate;
-import com.aire.ux.test.Routes;
+import com.aire.ux.test.RouteLocation;
 import com.aire.ux.test.Select;
 import com.aire.ux.test.ViewTest;
 import com.aire.ux.test.spring.EnableSpring;
@@ -20,7 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 @Disabled
 @EnableSpring
 @ContextConfiguration(classes = Cfg.class)
-@Routes(scanClassPackage = ScenarioView.class)
+@RouteLocation(scanClassPackage = ScenarioView.class)
 @EnableThemes(listeners = ThemeChangeListener.class)
 class AireThemeInstantiatorTest {
 

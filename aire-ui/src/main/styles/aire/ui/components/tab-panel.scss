@@ -3,10 +3,12 @@
 aire-tab-panel {
   flex: 1 1;
   display: flex;
-
-  article {
-    width: 100%;
+  flex-direction: column;
+  &.routes {
+    height: 38px;
+    flex: unset;
   }
+
 
   nav {
     display: flex;
