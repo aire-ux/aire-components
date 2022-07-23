@@ -14,6 +14,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -45,27 +46,28 @@ public class BeanFormPropertyScanner implements PropertyScanner, TypeInstantiato
   }
 
   private List<Property<?>> doScan(Class<?> type) {
-    return Reflect.collectOverHierarchy(
-            type,
-            (c) -> {
-              try {
-                val propertyDescriptors = Introspector.getBeanInfo(type);
-
-                return Stream.concat(
-                    Arrays.stream(type.getDeclaredFields())
-                        .filter(field -> field.isAnnotationPresent(Field.class))
-                        .map(
-                            field ->
-                                new FieldProperty(
-                                    this, field, type, field.getName(), field.getName())),
-                    Arrays.stream(type.getDeclaredMethods())
-                        .filter(method -> method.isAnnotationPresent(Field.class))
-                        .map(method -> lookup(propertyDescriptors, method)));
-              } catch (IntrospectionException ex) {
-                return Stream.empty();
-              }
-            })
-        .toList();
+    return Collections.emptyList();
+//    return Reflect.collectOverHierarchy(
+//            type,
+//            (c) -> {
+//              try {
+//                val propertyDescriptors = Introspector.getBeanInfo(type);
+//
+//                return Stream.concat(
+//                    Arrays.stream(type.getDeclaredFields())
+//                        .filter(field -> field.isAnnotationPresent(Field.class))
+//                        .map(
+//                            field ->
+//                                new FieldProperty(
+//                                    this, field, type, field.getName(), field.getName())),
+//                    Arrays.stream(type.getDeclaredMethods())
+//                        .filter(method -> method.isAnnotationPresent(Field.class))
+//                        .map(method -> lookup(propertyDescriptors, method)));
+//              } catch (IntrospectionException ex) {
+//                return Stream.empty();
+//              }
+//            })
+//        .toList();
   }
 
   private Property<?> lookup(BeanInfo propertyDescriptors, Method method) {
