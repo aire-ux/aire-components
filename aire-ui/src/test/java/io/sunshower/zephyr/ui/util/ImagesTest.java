@@ -7,8 +7,5 @@ import org.junit.jupiter.api.Test;
 class ImagesTest {
 
   @Test
-  void ensureApiMakesSense() {
-
-  }
-
+  void ensureApiMakesSense() {}
 }
