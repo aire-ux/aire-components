@@ -3,7 +3,7 @@ package com.aire.ux.core.decorators;
 import com.aire.ux.DomAware;
 import com.aire.ux.Element;
 import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
-import com.aire.ux.core.decorators.ComponentDecorator;
+import com.aire.ux.ComponentDecorator;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.internal.JavaScriptBootstrapUI;

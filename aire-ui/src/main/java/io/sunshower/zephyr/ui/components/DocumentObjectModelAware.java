@@ -13,14 +13,15 @@ import org.springframework.aop.support.AopUtils;
 
 public interface DocumentObjectModelAware {
 
-  DomAwareComponentDecorator decorator = new DomAwareComponentDecorator() {
+  DomAwareComponentDecorator decorator =
+      new DomAwareComponentDecorator() {
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected <T> Class<T> getTargetClass(Object o) {
-      return (Class<T>) AopUtils.getTargetClass(o);
-    }
-  };
+        @Override
+        @SuppressWarnings("unchecked")
+        protected <T> Class<T> getTargetClass(Object o) {
+          return (Class<T>) AopUtils.getTargetClass(o);
+        }
+      };
 
   default Registration register(Object o) {
     val registrations = new ArrayList<Registration>(2);

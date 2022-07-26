@@ -1,4 +1,4 @@
-package com.aire.ux.core.decorators;
+package com.aire.ux;
 
 import com.vaadin.flow.component.HasElement;
 import javax.annotation.Nonnull;

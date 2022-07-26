@@ -5,7 +5,6 @@ plugins {
 dependencies {
     api "io.sunshower.arcus:gyre-api"
     api 'com.vaadin:flow-server'
-    api project(':aire-ux-core')
     api 'io.sunshower.arcus:arcus-lang'
     compileOnly 'javax.servlet:javax.servlet-api'
 

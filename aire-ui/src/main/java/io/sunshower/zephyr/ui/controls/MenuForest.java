@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.ui.controls;
 
+import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
@@ -16,7 +17,6 @@ import io.sunshower.arcus.selectors.css.CssSelectorParser;
 import io.sunshower.arcus.selectors.plan.DefaultPlanContext;
 import io.sunshower.arcus.selectors.plan.PlanContext;
 import io.sunshower.arcus.selectors.test.NodeAdapter;
-import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

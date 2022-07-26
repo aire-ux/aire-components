@@ -2,7 +2,7 @@ package com.aire.ux.theme;
 
 import com.aire.ux.DefaultTheme;
 import com.aire.ux.Theme;
-import com.aire.ux.core.decorators.ComponentDecorator;
+import com.aire.ux.ComponentDecorator;
 import com.aire.ux.core.instantiators.BaseAireInstantiator;
 import com.aire.ux.theme.context.ThemeContextHolder;
 import com.vaadin.flow.component.HasElement;
