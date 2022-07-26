@@ -1,4 +1,4 @@
-package io.sunshower.zephyr.ui.aire;
+package com.aire.ux.core.adapters;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.dom.Element;

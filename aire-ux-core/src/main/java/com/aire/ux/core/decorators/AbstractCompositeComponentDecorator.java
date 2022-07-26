@@ -1,5 +1,6 @@
 package com.aire.ux.core.decorators;
 
+import com.aire.ux.ComponentDecorator;
 import com.vaadin.flow.component.HasElement;
 import java.util.function.Supplier;
 import java.util.stream.Stream;

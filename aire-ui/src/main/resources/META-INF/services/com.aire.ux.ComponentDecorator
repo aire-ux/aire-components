@@ -1,0 +1,2 @@
+com.aire.ux.annotations.HostDecorator
+com.aire.ux.core.decorators.DomAwareComponentDecorator

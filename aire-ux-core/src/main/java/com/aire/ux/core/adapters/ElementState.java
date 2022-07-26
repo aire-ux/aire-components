@@ -1,4 +1,4 @@
-package io.sunshower.zephyr.ui.aire;
+package com.aire.ux.core.adapters;
 
 import io.sunshower.arcus.ast.Symbol;
 import io.sunshower.arcus.selectors.test.NodeAdapter;

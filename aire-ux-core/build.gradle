@@ -4,7 +4,14 @@ plugins {
 }
 
 dependencies {
+    api project(':aire-ux-api:aire-api')
     api 'com.vaadin:flow-server'
+    api 'io.sunshower.arcus:css-selectors'
+    api 'io.sunshower.arcus:arcus-reflect'
+    api 'io.sunshower.arcus:arcus-ast'
+    api 'io.sunshower.arcus:condensation-core'
+
+    implementation 'org.springframework:spring-core'
 
     testFixturesApi project(':aire-test-spring')
     testImplementation project(':aire-test-spring')

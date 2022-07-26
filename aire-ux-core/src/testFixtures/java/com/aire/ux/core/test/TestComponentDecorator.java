@@ -1,6 +1,6 @@
 package com.aire.ux.core.test;
 
-import com.aire.ux.core.decorators.ComponentDecorator;
+import com.aire.ux.ComponentDecorator;
 import com.vaadin.flow.component.HasElement;
 import javax.annotation.Nonnull;
 

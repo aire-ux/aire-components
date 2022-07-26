@@ -1,6 +1,6 @@
 package com.aire.ux.core.instantiators;
 
-import com.aire.ux.core.decorators.ComponentDecorator;
+import com.aire.ux.ComponentDecorator;
 import com.aire.ux.core.decorators.ServiceLoaderComponentDecorator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
