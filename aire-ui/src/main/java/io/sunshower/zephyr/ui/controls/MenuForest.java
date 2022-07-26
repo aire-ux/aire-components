@@ -16,7 +16,7 @@ import io.sunshower.arcus.selectors.css.CssSelectorParser;
 import io.sunshower.arcus.selectors.plan.DefaultPlanContext;
 import io.sunshower.arcus.selectors.plan.PlanContext;
 import io.sunshower.arcus.selectors.test.NodeAdapter;
-import io.sunshower.zephyr.ui.aire.ComponentHierarchyNodeAdapter;
+import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

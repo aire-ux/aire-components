@@ -6,7 +6,7 @@ import com.aire.ux.test.spring.EnableSpring;
 import io.sunshower.zephyr.aire.AireVaadinOverrideAutoConfiguration;
 import io.sunshower.zephyr.configuration.EmbeddedZephyrConfiguration;
 import io.sunshower.zephyr.configuration.ZephyrCoreConfiguration;
-import io.sunshower.zephyr.ui.aire.ComponentHierarchyNodeAdapter;
+import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
