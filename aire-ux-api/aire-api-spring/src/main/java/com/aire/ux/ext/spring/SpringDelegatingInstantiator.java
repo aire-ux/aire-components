@@ -1,7 +1,7 @@
 package com.aire.ux.ext.spring;
 
-import com.aire.ux.Registration;
 import com.aire.ux.ComponentDecorator;
+import com.aire.ux.Registration;
 import com.aire.ux.core.instantiators.BaseAireInstantiator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;

@@ -1,7 +1,7 @@
 package com.aire.ux.annotations;
 
-import com.aire.ux.Host;
 import com.aire.ux.ComponentDecorator;
+import com.aire.ux.Host;
 import com.vaadin.flow.component.HasElement;
 import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;

@@ -1,9 +1,9 @@
 package com.aire.ux.core.decorators;
 
+import com.aire.ux.ComponentDecorator;
 import com.aire.ux.DomAware;
 import com.aire.ux.Element;
 import com.aire.ux.core.adapters.ComponentHierarchyNodeAdapter;
-import com.aire.ux.ComponentDecorator;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.internal.JavaScriptBootstrapUI;
@@ -21,7 +21,7 @@ import org.springframework.util.ReflectionUtils;
 
 @Slf4j
 @SuppressWarnings("PMD")
-public abstract class DomAwareComponentDecorator implements ComponentDecorator {
+public class DomAwareComponentDecorator implements ComponentDecorator {
 
   static final CssSelectorParser parser = new CssSelectorParser();
 
@@ -90,8 +90,9 @@ public abstract class DomAwareComponentDecorator implements ComponentDecorator {
         });
   }
 
-  protected abstract <T> Class<T> getTargetClass(Object o);
-
+  protected <T> Class<T> getTargetClass(Object o) {
+    return (Class<T>) o.getClass();
+  }
 
   @Override
   public void onComponentExited(@NonNull HasElement component) {}
