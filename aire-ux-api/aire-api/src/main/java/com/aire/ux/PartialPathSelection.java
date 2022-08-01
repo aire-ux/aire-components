@@ -15,11 +15,16 @@ class PartialPathSelection<T> implements PartialSelection<T> {
   private final Class<T> type;
 
   private WeakReference<Referent<Class<T>>> cache;
+  private final String trunk;
+  private final String leaf;
 
   public PartialPathSelection(String path, Class<T> type) {
     this.path = path;
     this.type = type;
     this.cache = new WeakReference<>(new Referent<>());
+
+    this.trunk = path.substring(0, path.lastIndexOf(':'));
+    this.leaf = path.substring(trunk.length());
   }
 
   @Override
@@ -101,6 +106,22 @@ class PartialPathSelection<T> implements PartialSelection<T> {
   @Override
   public String getSegment() {
     return path;
+  }
+
+  /**
+   * @return the trunk of a path.  For instance :a:b:c:d:e has trunk :a:b:c:d
+   */
+  @Override
+  public String trunk() {
+    return trunk;
+  }
+
+  /**
+   * @return the leaf of a path.  For instance :a:b:c:d:e has leaf :e
+   */
+  @Override
+  public String leaf() {
+    return leaf;
   }
 
   private UI supplierFor(HasElement component) {
