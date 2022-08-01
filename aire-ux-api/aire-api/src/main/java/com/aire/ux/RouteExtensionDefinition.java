@@ -49,6 +49,11 @@ public class RouteExtensionDefinition<T> implements ExtensionDefinition<T>, Exte
   }
 
   @Override
+  public Class<?> getSource() {
+    return getType();
+  }
+
+  @Override
   public void decorate(T value) {}
 
   public ExtensionRegistration getFinalizer() {
