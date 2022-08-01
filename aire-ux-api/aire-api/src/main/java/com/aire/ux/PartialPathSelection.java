@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.val;
 
+@SuppressWarnings("PMD")
 class PartialPathSelection<T> implements PartialSelection<T> {
 
   private final String path;
@@ -108,17 +109,13 @@ class PartialPathSelection<T> implements PartialSelection<T> {
     return path;
   }
 
-  /**
-   * @return the trunk of a path.  For instance :a:b:c:d:e has trunk :a:b:c:d
-   */
+  /** @return the trunk of a path. For instance :a:b:c:d:e has trunk :a:b:c:d */
   @Override
   public String trunk() {
     return trunk;
   }
 
-  /**
-   * @return the leaf of a path.  For instance :a:b:c:d:e has leaf :e
-   */
+  /** @return the leaf of a path. For instance :a:b:c:d:e has leaf :e */
   @Override
   public String leaf() {
     return leaf;

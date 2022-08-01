@@ -14,12 +14,10 @@ class PartialPathSelectionTest {
     assertEquals(":world", sel.leaf());
   }
 
-
   @Test
   void ensurePathWorksForExample() {
     val sel = Selection.path(":a:b:c:d:e");
     assertEquals(":a:b:c:d", sel.trunk());
     assertEquals(":e", sel.leaf());
   }
-
 }

@@ -18,5 +18,6 @@ public interface PartialSelection<T> {
   String getSegment();
 
   String trunk();
+
   String leaf();
 }
