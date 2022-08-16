@@ -1,6 +1,5 @@
-package io.sunshower.zephyr.aire;
+package com.aire.ux.concurrency;
 
-import com.aire.ux.concurrency.AccessQueue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.Command;
 import com.vaadin.flow.server.FutureAccess;

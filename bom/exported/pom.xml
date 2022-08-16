@@ -68,6 +68,12 @@
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-ux-spring</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
         <artifactId>aire-json-mapper</artifactId>
         <version>${aire.version}</version>
       </dependency>
