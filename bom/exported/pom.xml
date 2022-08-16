@@ -110,6 +110,12 @@
 
       <dependency>
         <groupId>com.aire-ux.components</groupId>
+        <artifactId>aire-ux-spring</artifactId>
+        <version>${aire.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.aire-ux.components</groupId>
         <artifactId>aire-test-vaadin</artifactId>
         <version>${aire.version}</version>
       </dependency>

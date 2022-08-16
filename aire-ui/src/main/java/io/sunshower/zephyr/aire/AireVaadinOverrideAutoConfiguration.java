@@ -1,5 +1,6 @@
 package io.sunshower.zephyr.aire;
 
+import com.aire.ux.AsynchronousSessionQueue;
 import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
 import com.aire.ux.concurrency.AsynchronousSessionQueue;

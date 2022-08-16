@@ -16,4 +16,8 @@ public interface PartialSelection<T> {
       HasElement component, UserInterface userInterface, Extension<T> extension);
 
   String getSegment();
+
+  String trunk();
+
+  String leaf();
 }
