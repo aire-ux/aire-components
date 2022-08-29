@@ -3,7 +3,6 @@ package io.sunshower.zephyr.aire;
 import com.aire.ux.AsynchronousSessionQueue;
 import com.aire.ux.UserInterface;
 import com.aire.ux.concurrency.AccessQueue;
-import com.aire.ux.concurrency.AsynchronousSessionQueue;
 import com.vaadin.flow.server.InitParameters;
 import com.vaadin.flow.spring.RootMappedCondition;
 import com.vaadin.flow.spring.SpringServlet;
