@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -54,7 +55,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   private final AccessQueue accessQueue;
   private final Supplier<VaadinContext> vaadinContext;
   private final Map<Class<?>, Set<RouteExtensionDefinition<?>>> routeExtensions;
-  private final Map<Class<?>, DefaultExtensionRegistration<?>> extensionCache;
+  private final Map<Class<?>, Set<DefaultExtensionRegistration<?>>> extensionCache;
   private final Map<PartialSelection<?>, DefaultExtensionRegistration<?>> extensions;
   private final ComponentInclusionManager inclusionManager;
   private ApplicationContext context;
@@ -74,7 +75,7 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
         new LinkedHashMap<>() {
           @Override
           protected boolean removeEldestEntry(
-              Entry<Class<?>, DefaultExtensionRegistration<?>> eldest) {
+              Entry<Class<?>, Set<DefaultExtensionRegistration<?>>> eldest) {
             return size() >= CACHE_SIZE;
           }
         };
@@ -194,14 +195,16 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean isRegistered(Class<?> type) {
     synchronized (lock) {
-      return getExtension((Class) type).isPresent();
+      return !getExtension((Class) type).isEmpty();
     }
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends HasElement> Optional<Extension<T>> getExtension(Class<T> type) {
+  public <T extends HasElement> List<Extension<T>> getExtension(Class<T> type) {
     synchronized (lock) {
-      return resolve(type).map(ext -> (Extension<T>) ext.getExtension());
+      return resolve(type).stream()
+          .map(ext -> (Extension<T>) ext.getExtension())
+          .collect(Collectors.toList());
     }
   }
 
@@ -210,10 +213,11 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   public void decorate(Class<?> type, HasElement component) {
     synchronized (lock) {
       resolve(type)
-          .ifPresent(
+          .forEach(
               ext -> {
                 val selection = ext.getSelection();
-                val opt = selection.select(component, getUserInterface(), ext.getExtension());
+                val opt =
+                    selection.select(component, getUserInterface(), (Extension) ext.getExtension());
                 opt.ifPresent(
                     extDef -> {
                       val definition = (ExtensionDefinition<?>) extDef;
@@ -269,24 +273,18 @@ public class SpringExtensionRegistry extends AbstractRouteRegistry
   }
 
   @SuppressWarnings("PMD.CloseResource")
-  private Optional<DefaultExtensionRegistration> resolve(Class<?> type) {
+  private Set<DefaultExtensionRegistration<?>> resolve(Class<?> type) {
+    Set<DefaultExtensionRegistration<?>> results = new LinkedHashSet<>();
     synchronized (lock) {
-      DefaultExtensionRegistration result = null;
-      synchronized (extensionCache) {
-        if (extensionCache.containsKey(type)) {
-          result = extensionCache.get(type);
-        }
-      }
-
       synchronized (extensions) {
         for (val ext : extensions.entrySet()) {
           if (ext.getKey().isHostedBy(type)) {
-            result = ext.getValue();
-            extensionCache.put(type, result);
+            val result = ext.getValue();
+            results.add(result);
           }
         }
       }
-      return Optional.ofNullable(result);
+      return results;
     }
   }
 
