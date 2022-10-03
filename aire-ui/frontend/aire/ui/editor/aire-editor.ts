@@ -1,5 +1,5 @@
 import {css, customElement, LitElement, PropertyValues, query} from "lit-element";
-import {terraform} from '@sunshower/breeze-lang'
+// import {terraform} from '@sunshower/breeze-lang'
 import {EditorView} from "@codemirror/view";
 import {Receive, Remotable, Remote,} from "@aire-ux/aire-condensation";
 
@@ -28,7 +28,7 @@ export class AireEditor extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.view = terraform(this.shadowRoot!);
+    // this.view = terraform(this.shadowRoot!);
     this.refreshContents();
   }
 

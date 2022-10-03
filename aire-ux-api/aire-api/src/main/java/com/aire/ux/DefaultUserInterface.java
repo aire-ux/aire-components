@@ -71,9 +71,7 @@ public class DefaultUserInterface implements UserInterface {
   @Override
   public <T extends HasElement> Registration register(
       PartialSelection<T> path, Extension<T> extension) {
-    val result = registry.register(path, extension);
-    Optional.ofNullable(UI.getCurrent()).ifPresent(UI::push);
-    return result;
+    return registry.register(path, extension);
   }
 
   @Override
